@@ -1,3 +1,10 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Lib
+** Source: https://github.com/aphenriques/thread.git
+** printer.hpp
+*/
+
 #if __cplusplus >= 201703L
 #    ifndef thread_printer_hpp
 #        define thread_printer_hpp

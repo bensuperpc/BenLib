@@ -1,3 +1,10 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Lib
+** Source: https://github.com/aphenriques/thread.git
+** Pool.hpp
+*/
+
 #if __cplusplus >= 201703L
 #    ifndef thread_Pool_hpp
 #        define thread_Pool_hpp

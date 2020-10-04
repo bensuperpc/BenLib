@@ -1,3 +1,10 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Lib
+** Source: https://github.com/aphenriques/thread.git
+** printer.cpp
+*/
+
 
 #if __cplusplus >= 201703L
 #    include "printer.hpp"
