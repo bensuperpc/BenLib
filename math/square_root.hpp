@@ -1,7 +1,9 @@
 /*
 ** BENSUPERPC PROJECT, 2020
 ** Math
-** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
+** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know 
+** https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
+** https://en.wikibooks.org/wiki/Optimizing_C%2B%2B/Code_optimization/Faster_operations
 ** square_root.cpp
 */
 
@@ -33,6 +35,4 @@ double sqrt(double x);
 template <typename T, char iterations = 2> inline T math::square_root::invsqrt(T);
 } // namespace square_root
 } // namespace math
-
-// https://en.wikibooks.org/wiki/Optimizing_C%2B%2B/Code_optimization/Faster_operations
 #endif

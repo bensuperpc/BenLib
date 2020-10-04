@@ -1,7 +1,10 @@
 /*
 ** BENSUPERPC PROJECT, 2020
 ** Math
-** F
+** Sources: 
+** https://github.com/niklasb/tcr/blob/master/zahlentheorie/NumberTheory.cpp
+** https://stackoverflow.com/questions/4424374/determining-if-a-number-is-prime
+** https://www.geeksforgeeks.org/c-program-to-check-prime-number/
 ** prime.cpp
 */
 
@@ -38,6 +41,4 @@ bool isPrime_opti_8(const long long int &);
 } // namespace prime
 } // namespace math
 } // namespace my
-// THANK https://www.geeksforgeeks.org/c-program-to-check-prime-number/
-// THANK https://stackoverflow.com/questions/4424374/determining-if-a-number-is-prime
 #endif
