@@ -1,0 +1,37 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Math
+** File description:
+** constant.hpp
+*/
+
+#ifndef CONSTANT_HPP_
+#define CONSTANT_HPP_
+//#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+// BUILD_BUG_ON((sizeof(struct mystruct) % 8) != 0);
+
+#if CMAKE_CXX_EXTENSIONS == 1
+#    define O_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280O
+#    define Q_PI 3.1415926535897932384626433832795028841971693993751058Q
+#endif
+
+#define PI 3.141592653589793238462643383279502884L /* pi */
+#define F_PI 3.14159265358979323846
+
+#define LIGHT_SPEED 299792458 // ms
+#define CONSTANTE_G 6.67408e-11
+
+#define EARTH_MASS 5.972e24     // kg
+#define SUN_MASS 1.98847e30     // kg
+#define JUPITER_MASS 1.89813e27 // kg
+
+#define EARTH_SUN_DISTANCE 149597870e3
+#define EARTH_RADIUS 6.3781 * 10e6
+
+#define MOON_RADIUS 1737.4e3
+
+// Blackhole
+#define SAGITTARIUS_A_STAR 4.154e6 * SUN_MASS
+#define TON_618 6.6e10 * SUN_MASS
+
+#endif
