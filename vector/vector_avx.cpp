@@ -9,10 +9,10 @@
 
 #if (__AVX2__ || __AVX__ || __SSE3__)
 //__SSE__ __SSE2__
+#pragma GCC push_options
+#pragma GCC optimize ("-O2")
 
 #if (__AVX2__ || __AVX__)
-#pragma GCC push_options
-#pragma GCC optimize("-O1")
 __m256 my::vector_avx::HorizontalSums(__m256 &v0, __m256 &v1, __m256 &v2, __m256 &v3, __m256 &v4, __m256 &v5, __m256 &v6, __m256 &v7)
 {
     const __m256 &&s01 = _mm256_hadd_ps(v0, v1);
@@ -49,7 +49,6 @@ __m256 my::vector_avx::HorizontalSums_less_p5_pressure(__m256 &v0, __m256 &v1, _
     v1 = _mm256_permute2f128_ps(s0123, s4556, 0x21);
     return _mm256_add_ps(v0, v1);
 }
-#pragma GCC pop_options
 #endif
 
 
@@ -166,7 +165,7 @@ inline __m128d my::vector_avx::int64_to_double_full(__m128i &x)
 }
 
 #    if (__AVX2__ || __AVX__)
-__attribute__((optimize("no-fast-math"))) 
+//__attribute__((optimize("no-fast-math"))) 
 inline __m256d my::vector_avx::int64_to_double_fast_precise_no_FM(const __m256i &v)
 /* Optimized full range int64_t to double conversion           */
 /* Emulate _mm256_cvtepi64_pd()                                */
@@ -259,9 +258,6 @@ inline __m256d my::vector_avx::uint64_to_double_full_range(const __m256i &v)
 }
 #endif
 
-
-#pragma GCC push_options
-#pragma GCC optimize ("-O2")
 __m128i my::vector_avx::_mm_shuffle_epi16(__m128i &_A, int &_Imm)
 {
     _Imm &= 0xffffff;
@@ -282,10 +278,6 @@ __m128i my::vector_avx::_mm_shuffle_epi16(__m128i &_A, int &_Imm)
         m08, m09, m10, m11, m12, m13, m14, m15);
     return _mm_shuffle_epi8(_A, vMask);
 }
-#pragma GCC pop_options
-
-#pragma GCC push_options
-#pragma GCC optimize ("-O2")
 __m128i my::vector_avx::vperm(__m128i &a, __m128i &idx)
 {
     idx = _mm_and_si128  (idx, _mm_set1_epi32(0x00000003));
@@ -294,5 +286,4 @@ __m128i my::vector_avx::vperm(__m128i &a, __m128i &idx)
     return _mm_shuffle_epi8(a, idx);
 }
 #pragma GCC pop_options
-
 #endif
