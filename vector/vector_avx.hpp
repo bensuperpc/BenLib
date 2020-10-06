@@ -7,6 +7,11 @@
 **          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm_add_sd&expand=154
 **          https://stackoverflow.com/questions/41144668/how-to-efficiently-perform-double-int64-conversions-with-sse-avx
 **          https://godbolt.org/z/OLgHUs
+**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,3576,5194&techs=SSE,SSE2,SSE3,SSSE3,SSE4_1,SSE4_2&text=Shuffle%25252525252525252520
+**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,5153,5144,4174,4179&text=_mm256_permute4x64_epi64&techs=AVX,AVX2,FMA
+**          https://www.programmersought.com/article/85712182324/
+**          https://db.in.tum.de/~finis/x86-intrin-cheatsheet-v2.1.pdf
+**          https://stackoverflow.com/questions/56033329/sse-shuffle-permutevar-4x32-integers
 ** vector.hpp
 */
 
@@ -14,6 +19,13 @@
 #define VECTOR_AVX_HPP_
 #if (__AVX2__ || __AVX__ || __SSE3__)
 #include <immintrin.h>
+#include <emmintrin.h>
+#include <mmintrin.h>
+
+#define _MM_SHUFFLE8(fp7, fp6, fp5, fp4, fp3, fp2, fp1, fp0)\
+(((fp7) << 21) | ((fp6) << 18) | ((fp5) << 15) | ((fp4) << 12)) | \
+(((fp3) << 9) | ((fp2) << 6) | ((fp1) << 3) | ((fp0)))
+
 
 //__m256 m1 = _mm256_setr_ps(2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0);
 
@@ -55,7 +67,7 @@ inline __m128d uint64_to_double(__m128i &);
 inline __m128d int64_to_double(__m128i &);
 inline __m128d uint64_to_double_full(__m128i &);
 inline __m128d int64_to_double_full(__m128i &);
-#        if (__AVX2__ || __AVX__)
+#if (__AVX2__ || __AVX__)
 inline __m256d int64_to_double_fast_precise(const __m256i &);
 
 inline __m256d uint64_to_double_full_range(const __m256i &);
@@ -63,6 +75,9 @@ inline __m256d int64_to_double_fast_precise_no_FM(const __m256i &);
 inline __m256d int64_to_double_based_on_cvtsi2sd(const __m256i &);
 inline __m256d int64_to_double_full_range(const __m256i &);
 #        endif
+
+__m128i _mm_shuffle_epi16(__m128i &, int &);
+__m128i vperm(__m128i &, __m128i &);
 
 } // namespace vector_avx
 } // namespace my

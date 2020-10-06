@@ -10,9 +10,9 @@
 #if (__AVX2__ || __AVX__ || __SSE3__)
 //__SSE__ __SSE2__
 
-#    if (__AVX2__ || __AVX__)
-#        pragma GCC push_options
-#        pragma GCC optimize("-O1")
+#if (__AVX2__ || __AVX__)
+#pragma GCC push_options
+#pragma GCC optimize("-O1")
 __m256 my::vector_avx::HorizontalSums(__m256 &v0, __m256 &v1, __m256 &v2, __m256 &v3, __m256 &v4, __m256 &v5, __m256 &v6, __m256 &v7)
 {
     const __m256 &&s01 = _mm256_hadd_ps(v0, v1);
@@ -49,10 +49,13 @@ __m256 my::vector_avx::HorizontalSums_less_p5_pressure(__m256 &v0, __m256 &v1, _
     v1 = _mm256_permute2f128_ps(s0123, s4556, 0x21);
     return _mm256_add_ps(v0, v1);
 }
-#        pragma GCC pop_options
-#    endif
+#pragma GCC pop_options
+#endif
 
-#    if (__AVX2__ || __AVX__)
+
+
+
+#if (__AVX2__ || __AVX__)
 inline double my::vector_avx::hsum_double_avx(__m256d &v)
 {
     __m128d &&vlow = _mm256_castpd256_pd128(v);
@@ -74,7 +77,7 @@ inline void my::vector_avx::multiply_and_add(__m256 &a, __m256 &b, __m256 &c, __
 {
     d = _mm256_fmadd_ps(a, b, c);
 }
-#    endif
+#endif
 
 inline float my::vector_avx::extract_float(const __m128 &v, const int i)
 {
@@ -198,19 +201,19 @@ inline __m256d my::vector_avx::int64_to_double_fast_precise(const __m256i &v)
     return result;
 }
 
-inline __m256d uint64_to_double256(__m256i x)
+inline __m256d __m256d my::vector_avx::uint64_to_double256(__m256i x)
 { /*  Mysticial's fast uint64_to_double. Works for inputs in the range: [0, 2^52)     */
     x = _mm256_or_si256(x, _mm256_castpd_si256(_mm256_set1_pd(0x0010000000000000)));
     return _mm256_sub_pd(_mm256_castsi256_pd(x), _mm256_set1_pd(0x0010000000000000));
 }
 
-inline __m256d int64_to_double256(__m256i x)
+inline __m256d __m256d my::vector_avx::int64_to_double256(__m256i x)
 { /*  Mysticial's fast int64_to_double. Works for inputs in the range: (-2^51, 2^51)  */
     x = _mm256_add_epi64(x, _mm256_castpd_si256(_mm256_set1_pd(0x0018000000000000)));
     return _mm256_sub_pd(_mm256_castsi256_pd(x), _mm256_set1_pd(0x0018000000000000));
 }
 
-inline __m256d int64_to_double_full_range(const __m256i &v)
+inline __m256d __m256d my::vector_avx::int64_to_double_full_range(const __m256i &v)
 {
     __m256i msk_lo = _mm256_set1_epi64x(0xFFFFFFFF);
     __m256d cnst2_32_dbl = _mm256_set1_pd(4294967296.0); /* 2^32                                                                    */
@@ -218,14 +221,32 @@ inline __m256d int64_to_double_full_range(const __m256i &v)
     __m256i v_lo = _mm256_and_si256(v, msk_lo);          /* extract the 32 lowest significant bits of v                             */
     __m256i v_hi = _mm256_srli_epi64(v, 32);             /* 32 most significant bits of v. srai_epi64 doesn't exist                 */
     __m256i v_sign = _mm256_srai_epi32(v, 32);           /* broadcast sign bit to the 32 most significant bits                      */
-    v_hi = _mm256_blend_epi32(v_hi, v_sign, 0b10101010); /* restore the correct sign of v_hi                                        */
-    __m256d v_lo_dbl = int64_to_double256(v_lo);         /* v_lo is within specified range of int64_to_double                       */
+    v_hi = _mm256_blend_epi32(v___m128i _mm_shuffle_epi16(__m128i _A, int _Imm)
+{
+    _Imm &= 0xffffff;
+    char m01 = (_Imm >> 0) & 0x7, m03 = (_Imm >> 3) & 0x7;
+    char m05 = (_Imm >> 6) & 0x7, m07 = (_Imm >> 9) & 0x7;
+    char m09 = (_Imm >> 12) & 0x7, m11 = (_Imm >> 15) & 0x7;
+    char m13 = (_Imm >> 18) & 0x7, m15 = (_Imm >> 21) & 0x7;
+    m01 <<= 1; m03 <<= 1; m05 <<= 1; m07 <<= 1;
+    m09 <<= 1; m11 <<= 1; m13 <<= 1; m15 <<= 1;
+    char m00 = m01 + 1, m02 = m03 + 1, m04 = m05 + 1, m06 = m07 + 1;
+    char m08 = m09 + 1, m10 = m11 + 1, m12 = m13 + 1, m14 = m15 + 1;
+   
+    //__m128i vMask = _mm_set_epi8(m00, m01, m02, m03, m04, m05, m06, m07,
+    //  m08, m09, m10, m11, m12, m13, m14, m15);
+    //__m128i vMask = _mm_set_epi8(m14, m15, m12, m13, m10, m11, m08, m09,
+    //    m06, m07, m04, m05, m02, m03, m00, m01);
+__m128i vMask = _mm_set_epi8(m00, m01, m02, m03, m04, m05, m06, m07,
+        m08, m09, m10, m11, m12, m13, m14, m15);
+    return _mm_shuffle_epi8(_A, vMask);
+}_double256(v_lo);         /* v_lo is within specified range of int64_to_double                       */
     __m256d v_hi_dbl = int64_to_double256(v_hi);         /* v_hi is within specified range of int64_to_double                       */
-    v_hi_dbl = _mm256_mul_pd(cnst2_32_dbl, v_hi_dbl);    /* _mm256_mul_pd and _mm256_add_pd may compile to a single fma instruction */
+    v_hi_dint64_to_double_fast_precisebl = _mm256_mul_pd(cnst2_32_dbl, v_hi_dbl);    /* _mm256_mul_pd and _mm256_add_pd may compile to a single fma instruction */
     return _mm256_add_pd(v_hi_dbl, v_lo_dbl);            /* rounding occurs if the integer doesn't exist as a double                */
 }
 
-inline __m256d int64_to_double_based_on_cvtsi2sd(const __m256i &v)
+inline __m256d __m256d my::vector_avx::int64_to_double_based_on_cvtsi2sd(const __m256i &v)
 {
     __m128d zero = _mm_setzero_pd(); /* to avoid uninitialized variables in_mm_cvtsi64_sd                       */
     __m128i v_lo = _mm256_castsi256_si128(v);
@@ -241,7 +262,7 @@ inline __m256d int64_to_double_based_on_cvtsi2sd(const __m256i &v)
     return v_dbl;
 }
 
-inline __m256d uint64_to_double_full_range(const __m256i &v)
+inline __m256d __m256d my::vector_avx::uint64_to_double_full_range(const __m256i &v)
 {
     __m256i msk_lo = _mm256_set1_epi64x(0xFFFFFFFF);
     __m256d cnst2_32_dbl = _mm256_set1_pd(4294967296.0); /* 2^32                                                                    */
@@ -254,4 +275,40 @@ inline __m256d uint64_to_double_full_range(const __m256i &v)
     return _mm256_add_pd(v_hi_dbl, v_lo_dbl); /* rounding may occur for inputs >2^52                                     */
 }
 #endif
+
+
+#pragma GCC push_options
+#pragma GCC optimize ("-O2")
+__m128i __m256d my::vector_avx::_mm_shuffle_epi16(__m128i &_A, int &_Imm)
+{
+    _Imm &= 0xffffff;
+    char m01 = (_Imm >> 0) & 0x7, m03 = (_Imm >> 3) & 0x7;
+    char m05 = (_Imm >> 6) & 0x7, m07 = (_Imm >> 9) & 0x7;
+    char m09 = (_Imm >> 12) & 0x7, m11 = (_Imm >> 15) & 0x7;
+    char m13 = (_Imm >> 18) & 0x7, m15 = (_Imm >> 21) & 0x7;
+    m01 <<= 1; m03 <<= 1; m05 <<= 1; m07 <<= 1;
+    m09 <<= 1; m11 <<= 1; m13 <<= 1; m15 <<= 1;
+    char m00 = m01 + 1, m02 = m03 + 1, m04 = m05 + 1, m06 = m07 + 1;
+    char m08 = m09 + 1, m10 = m11 + 1, m12 = m13 + 1, m14 = m15 + 1;
+   
+    //__m128i vMask = _mm_set_epi8(m00, m01, m02, m03, m04, m05, m06, m07,
+    //  m08, m09, m10, m11, m12, m13, m14, m15);
+    //__m128i vMask = _mm_set_epi8(m14, m15, m12, m13, m10, m11, m08, m09,
+    //    m06, m07, m04, m05, m02, m03, m00, m01);
+    __m128i vMask = _mm_set_epi8(m00, m01, m02, m03, m04, m05, m06, m07,
+        m08, m09, m10, m11, m12, m13, m14, m15);
+    return _mm_shuffle_epi8(_A, vMask);
+}
+#pragma GCC pop_options
+
+#pragma GCC push_options
+#pragma GCC optimize ("-O2")
+__m128i my::vector_avx::vperm(__m128i &a, __m128i &idx){
+    idx = _mm_and_si128  (idx, _mm_set1_epi32(0x00000003));
+    idx = _mm_mullo_epi32(idx, _mm_set1_epi32(0x04040404));
+    idx = _mm_or_si128   (idx, _mm_set1_epi32(0x03020100));
+    return _mm_shuffle_epi8(a, idx);
+}
+#pragma GCC pop_options
+
 #endif
