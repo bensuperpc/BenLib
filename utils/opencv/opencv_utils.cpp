@@ -24,7 +24,7 @@ void opencv_utils::cropimgrect(const cv::Mat &src, cv::Mat &des, const cv::Rect 
 
 void opencv_utils::imgdiff_prev(cv::Mat &img1, cv::Mat &img2, cv::Mat &out)
 {
-    int th = 10;  // 0
+    int th = 10; // 0
     imgdiff_prev(img1, img2, out, th);
 }
 
@@ -38,12 +38,12 @@ void opencv_utils::imgdiff_prev(cv::Mat &img1, cv::Mat &img2, cv::Mat &out, int 
     absdiff(img1, img2, diff);
 
     cv::Mat mask(img1.size(), CV_8UC1);
-    for(size_t j=0; j<diff.rows; ++j) {
-        for(size_t i=0; i<diff.cols; ++i){
-            cv::Vec3b pix = diff.at<cv::Vec3b>(j,i);
+    for (size_t j = 0; j < diff.rows; ++j) {
+        for (size_t i = 0; i < diff.cols; ++i) {
+            cv::Vec3b pix = diff.at<cv::Vec3b>(j, i);
             long long int val = (pix[0] + pix[1] + pix[2]);
-            if(val>th){
-                mask.at<unsigned char>(j,i) = 255;
+            if (val > th) {
+                mask.at<unsigned char>(j, i) = 255;
             }
         }
     }

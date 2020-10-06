@@ -1,7 +1,7 @@
 /*
 ** BENSUPERPC PROJECT, 2020
 ** Math
-** Sources: 
+** Sources:
 ** https://github.com/niklasb/tcr/blob/master/zahlentheorie/NumberTheory.cpp
 ** https://stackoverflow.com/questions/4424374/determining-if-a-number-is-prime
 ** https://www.geeksforgeeks.org/c-program-to-check-prime-number/

@@ -5,7 +5,6 @@
 ** printer.cpp
 */
 
-
 #if __cplusplus >= 201703L
 #    include "printer.hpp"
 

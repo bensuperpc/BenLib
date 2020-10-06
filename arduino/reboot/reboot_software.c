@@ -6,6 +6,7 @@
 ** >reboot_software.c
 */
 
-void reboot_software(void) {
-  wdt_enable(WDTO_15MS);
+void reboot_software(void)
+{
+    wdt_enable(WDTO_15MS);
 }

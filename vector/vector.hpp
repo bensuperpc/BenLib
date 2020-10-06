@@ -64,7 +64,7 @@ template <typename T> void sort_bogo(std::vector<T> &);
 template <typename T> void shuffle(std::vector<T> &, size_t &);
 template <typename T> bool isSorted(std::vector<T> &, size_t &);
 
-#include "vector_imp.hpp"
+#    include "vector_imp.hpp"
 
 } // namespace vector
 } // namespace my

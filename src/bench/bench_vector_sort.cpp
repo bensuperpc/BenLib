@@ -11,9 +11,9 @@
 #include "../../vector/vector.hpp"
 
 #if __cplusplus >= 201703L
-#include "../../thread/Pool.hpp"
+#    include "../../thread/Pool.hpp"
 #else
-#include "../../thread/ThreadPool.h"
+#    include "../../thread/ThreadPool.h"
 #endif
 #include <algorithm>
 #include <chrono>

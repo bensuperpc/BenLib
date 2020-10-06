@@ -20,16 +20,14 @@
 // Add GCC optimize ("-O2") to avoid -ftree-vectorize in O3
 
 #ifndef VECTOR_AVX_HPP_
-#define VECTOR_AVX_HPP_
-#if (__AVX2__ || __AVX__ || __SSE3__)
-#include <immintrin.h>
-#include <emmintrin.h>
-#include <mmintrin.h>
+#    define VECTOR_AVX_HPP_
+#    if (__AVX2__ || __AVX__ || __SSE3__)
+#        include <emmintrin.h>
+#        include <immintrin.h>
+#        include <mmintrin.h>
 
-#define _MM_SHUFFLE8(fp7, fp6, fp5, fp4, fp3, fp2, fp1, fp0)\
-(((fp7) << 21) | ((fp6) << 18) | ((fp5) << 15) | ((fp4) << 12)) | \
-(((fp3) << 9) | ((fp2) << 6) | ((fp1) << 3) | ((fp0)))
-
+#        define _MM_SHUFFLE8(fp7, fp6, fp5, fp4, fp3, fp2, fp1, fp0)                                                                                           \
+            (((fp7) << 21) | ((fp6) << 18) | ((fp5) << 15) | ((fp4) << 12)) | (((fp3) << 9) | ((fp2) << 6) | ((fp1) << 3) | ((fp0)))
 
 //__m256 m1 = _mm256_setr_ps(2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0);
 
@@ -71,7 +69,7 @@ inline __m128d uint64_to_double(__m128i &);
 inline __m128d int64_to_double(__m128i &);
 inline __m128d uint64_to_double_full(__m128i &);
 inline __m128d int64_to_double_full(__m128i &);
-#if (__AVX2__ || __AVX__)
+#        if (__AVX2__ || __AVX__)
 inline __m256d int64_to_double_fast_precise(const __m256i &);
 
 inline __m256d uint64_to_double_full_range(const __m256i &);
@@ -86,7 +84,9 @@ __m128i _mm_shuffle_epi16(__m128i &, int);
 __m128i vperm(__m128i &, __m128i &);
 
 int find_max_normal(const int32_t *, size_t &);
+#        if (__AVX2__ || __AVX__)
 int find_max_avx(const int32_t *, size_t &);
+#        endif
 int find_max_sse(const int32_t *, size_t &);
 
 } // namespace vector_avx

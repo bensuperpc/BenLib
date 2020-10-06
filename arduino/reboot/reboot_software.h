@@ -9,7 +9,7 @@
 #include <avr/wdt.h>
 
 #ifndef REBOOT_SOFTWARE
-#define REBOOT_SOFTWARE
+#    define REBOOT_SOFTWARE
 
 void reboot_software(void);
 
