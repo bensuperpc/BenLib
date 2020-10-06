@@ -36,59 +36,61 @@ namespace my
 namespace vector_avx
 {
 #        if (__AVX2__ || __AVX__)
-inline __m256 HorizontalSums(__m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &);
-inline __m256 HorizontalSums_less_p5_pressure(__m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &);
-inline __m256 sort_of_alternative_hadd_ps(__m256 &, __m256 &);
+__m256 HorizontalSums(__m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &);
+__m256 HorizontalSums_less_p5_pressure(__m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &, __m256 &);
+__m256 sort_of_alternative_hadd_ps(__m256 &, __m256 &);
 
-inline double hsum_double_avx(__m256d &);
-inline float hsum_float_avx(__m256 &);
+double hsum_double_avx(__m256d &);
+float hsum_float_avx(__m256 &);
 
-inline void multiply_and_add(__m256 &, __m256 &, __m256 &, __m256 &);
+void multiply_and_add(__m256 &, __m256 &, __m256 &, __m256 &);
 #        endif
 
-inline float extract_float(const __m128 &, const int i);
+float extract_float(const __m128 &, const int i);
 
-inline float *__m128_to_float(const __m128 &);
+float *__m128_to_float(const __m128 &);
 #        if (__AVX2__ || __AVX__)
-inline float *__m256_to_float(const __m256 &);
+float *__m256_to_float(const __m256 &);
 #        endif
 
-inline double *__m128_to_double(const __m128d &);
+double *__m128_to_double(const __m128d &);
 #        if (__AVX2__ || __AVX__)
-inline double *__m256_to_double(const __m256d &);
+double *__m256_to_double(const __m256d &);
 #        endif
 
-inline int *__m128_to_integer(const __m128i &);
+int *__m128_to_integer(const __m128i &);
 #        if (__AVX2__ || __AVX__)
-inline int *__m256_to_integer(const __m256i &);
+int *__m256_to_integer(const __m256i &);
 #        endif
 
-inline __m128i double_to_uint64(__m128d &);
-inline __m128i double_to_int64(__m128d &);
-inline __m128d uint64_to_double(__m128i &);
-inline __m128d int64_to_double(__m128i &);
-inline __m128d uint64_to_double_full(__m128i &);
-inline __m128d int64_to_double_full(__m128i &);
+__m128i double_to_uint64(__m128d &);
+__m128i double_to_int64(__m128d &);
+__m128d uint64_to_double(__m128i &);
+__m128d int64_to_double(__m128i &);
+__m128d uint64_to_double_full(__m128i &);
+__m128d int64_to_double_full(__m128i &);
 #        if (__AVX2__ || __AVX__)
-inline __m256d int64_to_double_fast_precise(const __m256i &);
+__m256d int64_to_double_fast_precise(const __m256i &);
 
-inline __m256d uint64_to_double_full_range(const __m256i &);
-inline __m256d int64_to_double_fast_precise_no_FM(const __m256i &);
-inline __m256d int64_to_double_based_on_cvtsi2sd(const __m256i &);
-inline __m256d int64_to_double_full_range(const __m256i &);
-inline __m256d uint64_to_double256(__m256i &);
-inline __m256d int64_to_double256(__m256i &);
+__m256d uint64_to_double_full_range(const __m256i &);
+__m256d int64_to_double_fast_precise_no_FM(const __m256i &);
+__m256d int64_to_double_based_on_cvtsi2sd(const __m256i &);
+__m256d int64_to_double_full_range(const __m256i &);
+__m256d uint64_to_double256(__m256i &);
+__m256d int64_to_double256(__m256i &);
 #        endif
 
 __m128i _mm_shuffle_epi16(__m128i &, int);
 __m128i vperm(__m128i &, __m128i &);
 
-int find_max_normal(const int32_t *, size_t &);
+#    pragma GCC push_options
+#    pragma GCC optimize("-O2")
+int find_max_normal(const int32_t *, size_t);
 #        if (__AVX2__ || __AVX__)
-int find_max_avx(const int32_t *, size_t &);
+int find_max_avx(const int32_t *, size_t);
 #        endif
-int find_max_sse(const int32_t *, size_t &);
-
+int find_max_sse(const int32_t *, size_t);
+#    pragma GCC pop_options
 } // namespace vector_avx
 } // namespace my
 #    endif

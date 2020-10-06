@@ -357,6 +357,7 @@ set(BENCH_VECTOR_SORT src/bench/bench_vector_sort.cpp)
 
 set(BENCH_DIGITS_COUNT src/bench/bench_digits_count.cpp)
 
+set(BENCH_FIND_MAX src/bench/bench_find_max.cpp)
 
 set(SRCS
     )
@@ -393,6 +394,11 @@ add_dependencies(bench_vector_sort ${CUSTOM_LIBS})
 add_executable(bench_digits_count ${BENCH_DIGITS_COUNT} ${SRCS} ${HEADERS})
 target_link_libraries(bench_digits_count PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
 add_dependencies(bench_digits_count ${CUSTOM_LIBS})
+
+add_executable(bench_find_max ${BENCH_FIND_MAX} ${SRCS} ${HEADERS})
+target_link_libraries(bench_find_max PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+add_dependencies(bench_find_max ${CUSTOM_LIBS})
+
 
 #   ======================================================
 #   ====================    TESTS    =====================
