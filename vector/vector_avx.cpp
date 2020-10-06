@@ -1,7 +1,19 @@
 /*
 ** BENSUPERPC PROJECT, 2020
-** CPU
-** File description:
+** Vector
+** Source:  https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm256_max_epi&expand=3327,3579,3597
+**          https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know
+**          https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
+**          https://stackoverflow.com/questions/51274287/computing-8-horizontal-sums-of-eight-avx-single-precision-floating-point-vectors
+**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm_add_sd&expand=154
+**          https://stackoverflow.com/questions/41144668/how-to-efficiently-perform-double-int64-conversions-with-sse-avx
+**          https://godbolt.org/z/OLgHUs
+**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,3576,5194&techs=SSE,SSE2,SSE3,SSSE3,SSE4_1,SSE4_2&text=Shuffle%25252525252525252520
+**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,5153,5144,4174,4179&text=_mm256_permute4x64_epi64&techs=AVX,AVX2,FMA
+**          https://www.programmersought.com/article/85712182324/
+**          https://db.in.tum.de/~finis/x86-intrin-cheatsheet-v2.1.pdf
+**          https://stackoverflow.com/questions/56033329/sse-shuffle-permutevar-4x32-integers
+**          https://stackoverflow.com/questions/9795529/how-to-find-the-horizontal-maximum-in-a-256-bit-avx-vector
 ** vector.cpp
 */
 
@@ -187,17 +199,17 @@ inline __m256d my::vector_avx::int64_to_double_fast_precise_no_FM(const __m256i 
 
 inline __m256d my::vector_avx::int64_to_double_fast_precise(const __m256i &v)
 {
-    __m256i magic_i_lo = _mm256_set1_epi64x(0x4330000000000000);   /* 2^52        encoded as floating-point  */
-    __m256i magic_i_hi32 = _mm256_set1_epi64x(0x4530000000000000); /* 2^84        encoded as floating-point  */
-    __m256i magic_i_all = _mm256_set1_epi64x(0x4530000000100000);  /* 2^84 + 2^52 encoded as floating-point  */
+    __m256i magic_i_lo = _mm256_set1_epi64x(0x4330000000000000);    /* 2^52        encoded as floating-point  */
+    __m256i magic_i_hi32 = _mm256_set1_epi64x(0x4530000000000000);  /* 2^84        encoded as floating-point  */
+    __m256i magic_i_all = _mm256_set1_epi64x(0x4530000000100000);   /* 2^84 + 2^52 encoded as floating-point  */
     __m256d magic_d_all = _mm256_castsi256_pd(magic_i_all);
 
-    __m256i v_lo = _mm256_blend_epi32(magic_i_lo, v, 0b01010101); /* Blend the 32 lowest significant bits of v with magic_int_lo */
-    __m256i v_hi = _mm256_srli_epi64(v, 32); /* Extract the 32 most significant bits of v                                                                     */
-    v_hi = _mm256_xor_si256(v_hi, magic_i_hi32);                              /* Blend v_hi with 0x45300000                              */
-    __m256d v_hi_dbl = _mm256_sub_pd(_mm256_castsi256_pd(v_hi), magic_d_all); /* Compute in double precision: */
+    __m256i v_lo = _mm256_blend_epi32(magic_i_lo, v, 0b01010101);               /* Blend the 32 lowest significant bits of v with magic_int_lo */
+    __m256i v_hi = _mm256_srli_epi64(v, 32);                                    /* Extract the 32 most significant bits of v                                                                     */
+    v_hi = _mm256_xor_si256(v_hi, magic_i_hi32);                                /* Blend v_hi with 0x45300000                              */
+    __m256d v_hi_dbl = _mm256_sub_pd(_mm256_castsi256_pd(v_hi), magic_d_all);   /* Compute in double precision: */
     __m256d result
-        = _mm256_add_pd(v_hi_dbl, _mm256_castsi256_pd(v_lo)); /* (v_hi - magic_d_all) + v_lo  Do not assume associativity of floating point addition !! */
+        = _mm256_add_pd(v_hi_dbl, _mm256_castsi256_pd(v_lo));                    /* (v_hi - magic_d_all) + v_lo  Do not assume associativity of floating point addition !! */
     return result;
 }
 
@@ -258,8 +270,9 @@ inline __m256d my::vector_avx::uint64_to_double_full_range(const __m256i &v)
 }
 #endif
 
-__m128i my::vector_avx::_mm_shuffle_epi16(__m128i &_A, int &_Imm)
+__m128i my::vector_avx::_mm_shuffle_epi16(__m128i &_A, int _Imm)
 {
+    // _MM_SHUFFLE8(0, 1, 2, 3, 4, 5, 6, 7)
     _Imm &= 0xffffff;
     char m01 = (_Imm >> 0) & 0x7, m03 = (_Imm >> 3) & 0x7;
     char m05 = (_Imm >> 6) & 0x7, m07 = (_Imm >> 9) & 0x7;
@@ -280,10 +293,70 @@ __m128i my::vector_avx::_mm_shuffle_epi16(__m128i &_A, int &_Imm)
 }
 __m128i my::vector_avx::vperm(__m128i &a, __m128i &idx)
 {
+    //__m128i idx = _mm_set_epi32(0, 1, 2, 3)
     idx = _mm_and_si128  (idx, _mm_set1_epi32(0x00000003));
     idx = _mm_mullo_epi32(idx, _mm_set1_epi32(0x04040404));
     idx = _mm_or_si128   (idx, _mm_set1_epi32(0x03020100));
     return _mm_shuffle_epi8(a, idx);
 }
+
+#        if (__AVX2__ || __AVX__)
+int my::vector_avx::find_max_avx(const int32_t * array, size_t &n) {
+    __m256i vresult = _mm256_set1_epi32(0);
+    __m256i v;
+
+    // Find max value in array 8 by 8
+    for (size_t k = 0; k < n; k += 8) {
+        v = _mm256_load_si256((__m256i *) & array[k]);
+        vresult = _mm256_max_epi32(vresult, v);
+    }
+    v      = _mm256_permute2x128_si256(vresult,vresult,1);
+    vresult = _mm256_max_epi32(vresult, v);
+    v      = _mm256_permute4x64_epi64(vresult,1);
+    vresult = _mm256_max_epi32(vresult, v);
+    v      = _mm256_shuffle_epi32(vresult,1);
+    vresult = _mm256_max_epi32(vresult, v);
+    __m128i vres128 = _mm256_extracti128_si256(vresult,0);
+    return _mm_extract_epi32(vres128,0);
+}
+#endif
+
+int my::vector_avx::find_max_sse(const int32_t * array, size_t &n) {
+    __m128i vresult = _mm_set1_epi32(0);
+    __m128i v;
+    // Find max value in array 4 by 4
+    for (size_t k = 0; k < n; k += 4) {
+        v = _mm_load_si128((__m128i *) & array[k]);
+        vresult = _mm_max_epi32(vresult, v);
+    }
+    v      = _mm_shuffle_epi32(vresult,1);
+    vresult =  _mm_max_epi32(vresult, v);
+    __m128i idx = _mm_set_epi32(0, 1, 2, 3);
+    v = vperm(vresult, idx);
+
+    vresult =  _mm_max_epi32(vresult, v);
+    v = _mm_shuffle_epi16(vresult, _MM_SHUFFLE8(0, 1, 2, 3, 4, 5, 6, 7));
+    vresult =  _mm_max_epi32(vresult, v);
+
+    __int64_t vres64 = _mm_extract_epi64(vresult, 0);
+
+    __m64 v64 = _mm_set_pi64x(vres64);
+
+    return _mm_extract_pi16(v64, 0);
+}
+
+
+int my::vector_avx::find_max_normal(const int32_t * array, size_t &n) {
+    int max = 0;
+    int tempMax;
+    for (size_t k = 0; k < n; k++) {
+        tempMax = array[k];
+        if (max < tempMax) {
+            max = tempMax;
+        }
+    }
+    return max;
+}
+
 #pragma GCC pop_options
 #endif

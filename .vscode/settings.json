@@ -2,6 +2,7 @@
     "files.associations": {
         "mutex": "cpp",
         "chrono": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "array": "cpp"
     }
 }

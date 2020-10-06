@@ -1,7 +1,8 @@
 /*
 ** BENSUPERPC PROJECT, 2020
 ** Vector
-** Source:  https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know
+** Source:  https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm256_max_epi&expand=3327,3579,3597
+**          https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know
 **          https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
 **          https://stackoverflow.com/questions/51274287/computing-8-horizontal-sums-of-eight-avx-single-precision-floating-point-vectors
 **          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm_add_sd&expand=154
@@ -12,8 +13,11 @@
 **          https://www.programmersought.com/article/85712182324/
 **          https://db.in.tum.de/~finis/x86-intrin-cheatsheet-v2.1.pdf
 **          https://stackoverflow.com/questions/56033329/sse-shuffle-permutevar-4x32-integers
+**          https://stackoverflow.com/questions/9795529/how-to-find-the-horizontal-maximum-in-a-256-bit-avx-vector
 ** vector.hpp
 */
+
+// Add GCC optimize ("-O2") to avoid -ftree-vectorize in O3
 
 #ifndef VECTOR_AVX_HPP_
 #define VECTOR_AVX_HPP_
@@ -76,18 +80,21 @@ inline __m256d int64_to_double_based_on_cvtsi2sd(const __m256i &);
 inline __m256d int64_to_double_full_range(const __m256i &);
 inline __m256d uint64_to_double256(__m256i &);
 inline __m256d int64_to_double256(__m256i &);
-inline __m256d int64_to_double_full_range(const __m256i &);
 #        endif
 
-__m128i _mm_shuffle_epi16(__m128i &, int &);
+__m128i _mm_shuffle_epi16(__m128i &, int);
 __m128i vperm(__m128i &, __m128i &);
+
+int find_max_normal(const int32_t *, size_t &);
+int find_max_avx(const int32_t *, size_t &);
+int find_max_sse(const int32_t *, size_t &);
 
 } // namespace vector_avx
 } // namespace my
 #    endif
 #endif
 //_mm256_add_ps/_mm256_add_pd
-//_mm256_add_epi8/16/32/64 / _mm256_add_epu8/16/32/64
+//_mm256_add_epi8/16/32/64 / _mm 256_add_epu8/16/32/64
 //_mm256_mul_ps/_mm256_mul_pd
 //_mm256_div_ps/_mm256_div_pd
 //_mm256_sub_ps/_mm256_sub_pd
