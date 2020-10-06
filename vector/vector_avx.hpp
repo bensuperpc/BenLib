@@ -74,6 +74,9 @@ inline __m256d uint64_to_double_full_range(const __m256i &);
 inline __m256d int64_to_double_fast_precise_no_FM(const __m256i &);
 inline __m256d int64_to_double_based_on_cvtsi2sd(const __m256i &);
 inline __m256d int64_to_double_full_range(const __m256i &);
+inline __m256d uint64_to_double256(__m256i &);
+inline __m256d int64_to_double256(__m256i &);
+inline __m256d int64_to_double_full_range(const __m256i &);
 #        endif
 
 __m128i _mm_shuffle_epi16(__m128i &, int &);
