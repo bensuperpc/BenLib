@@ -34,3 +34,7 @@
 build/*
 !build/.gitignore
 .vscode/settings.json
+tools/*
+!tools/graph.py
+coverage/*
+!coverage/.gitignore
