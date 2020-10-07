@@ -17,7 +17,7 @@ extern "C"
 #    include <boost/multiprecision/float128.hpp>
 #endif
 #include <boost/test/unit_test.hpp>
-#include "../../../vector/vector.hpp"
+#include "../../../lib/vector/vector.hpp"
 
 BOOST_AUTO_TEST_CASE(test_vector_sort_sort_1)
 {

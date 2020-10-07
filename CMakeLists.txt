@@ -304,29 +304,29 @@ endif()
 #   =================================================
 
 # C libs
-add_subdirectory(libhello "lib/libhello")
-add_subdirectory(C/string "lib/string")
+add_subdirectory(lib/libhello "lib/libhello")
+add_subdirectory(lib/C/string "lib/string")
 
 # C++ libs
-add_subdirectory(convert_utils "lib/convert_utils")
+add_subdirectory(lib/convert_utils "lib/convert_utils")
 
-add_subdirectory(texture "lib/texture")
+add_subdirectory(lib/texture "lib/texture")
 
-add_subdirectory(math "lib/math")
+add_subdirectory(lib/math "lib/math")
 
-add_subdirectory(utils/opencv "lib/utils/opencv")
+add_subdirectory(lib/utils/opencv "lib/utils/opencv")
 
-add_subdirectory(utils/opengl "lib/utils/opengl")
+add_subdirectory(lib/utils/opengl "lib/utils/opengl")
 
 #add_subdirectory(utils/sfml "lib/utils/sfml")
 
-add_subdirectory(time "lib/time")
+add_subdirectory(lib/time "lib/time")
 
-add_subdirectory(cpu "lib/cpu")
+add_subdirectory(lib/cpu "lib/cpu")
 
-add_subdirectory(vector "lib/vector")
+add_subdirectory(lib/vector "lib/vector")
 
-add_subdirectory(thread "lib/thread")
+add_subdirectory(lib/thread "lib/thread")
 
 if(EXTERNAL_LIB)
     add_dependencies(hello ${EXTERNAL_LIB})

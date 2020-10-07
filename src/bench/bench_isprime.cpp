@@ -6,14 +6,14 @@
 #include <random>
 #include <thread>
 #include <vector>
-#include "../../math/prime.hpp"
-#include "../../time/chrono/chrono.hpp"
-#include "../../vector/vector.hpp"
+#include "../../lib/math/prime.hpp"
+#include "../../lib/time/chrono/chrono.hpp"
+#include "../../lib/vector/vector.hpp"
 
 #if __cplusplus >= 201703L
-#    include "../../thread/Pool.hpp"
+#    include "../../lib/thread/Pool.hpp"
 #else
-#    include "../../thread/ThreadPool.h"
+#    include "../../lib/thread/ThreadPool.h"
 #endif
 #include <algorithm>
 #include <chrono>

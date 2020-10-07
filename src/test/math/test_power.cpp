@@ -9,7 +9,7 @@ extern "C" {
 //#include <boost/multiprecision/cpp_int.hpp>
 // boost::multiprecision::uint1024_t i = 0;
 
-#include "../../../math/power.hpp"
+#include "../../../lib/math/power.hpp"
 
 BOOST_AUTO_TEST_CASE(test_power_1)
 {
