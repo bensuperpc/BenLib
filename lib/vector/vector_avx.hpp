@@ -88,6 +88,7 @@ __m128i vperm(__m128i &, __m128i &);
 int find_max_normal(const int32_t *, size_t);
 #        if (__AVX2__ || __AVX__)
 int find_max_avx(const int32_t *, size_t);
+__m256i _mm256_div_epi16 (const __m256i &, const int);
 #        endif
 int find_max_sse(const int32_t *, size_t);
 #    pragma GCC pop_options

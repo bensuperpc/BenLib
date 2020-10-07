@@ -112,9 +112,9 @@ set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 #-Wold-style-cast
 set(WARNINGS_COMPILER_CXX "-Wpedantic -Wall -Wextra -Wshadow -Wstrict-overflow=5 -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter -Woverloaded-virtual  -Wdisabled-optimization -Winline -Wredundant-decls -Wsign-conversion -Wformat-nonliteral -Wformat-security -Wmissing-include-dirs -Wmissing-noreturn -Wimport -Winit-self -Winvalid-pch -Wstrict-aliasing=2 -Wswitch-default -Wunreachable-code -Wunused -Wwrite-strings -Wcast-align -Wcast-qual -Wfloat-equal -Wvariadic-macros -Wpacked  -Wpadded -Wpointer-arith -Weffc++ -Wformat=2 -Wfloat-equal -Wabi=11")
 #-Wdouble-promotion -fstack-usage
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference -Wuseless-cast")
+set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference")
 
-# Removed : -Wconversion
+# Removed : -Wconversion -Wuseless-cast
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -fprofile-arcs -ftest-coverage
 
 #Add -lstdc++fs for old compiler
@@ -304,8 +304,14 @@ endif()
 #   =================================================
 
 # C libs
-add_subdirectory(lib/libhello "lib/libhello")
+add_subdirectory(lib/C/libhello "lib/libhello")
 add_subdirectory(lib/C/string "lib/string")
+
+add_subdirectory(lib/C/string_is "lib/string_is_c")
+add_subdirectory(lib/C/pointer "lib/pointer_c")
+add_subdirectory(lib/C/display "lib/display_c")
+#add_subdirectory(lib/C/integer "lib/integer_c")
+
 
 # C++ libs
 add_subdirectory(lib/convert_utils "lib/convert_utils")

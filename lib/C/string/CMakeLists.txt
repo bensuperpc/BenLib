@@ -4,10 +4,18 @@ project(string_c C)
 
 set(SRCS
 	revstr.c
+	my_strcpy.c
+	my_strdup.c
+	my_strlen.c
+	my_strllen.c
 	)
 	
 set(HEADERS
 	revstr.h
+    my_strcpy.h
+	my_strdup.h
+	my_strlen.h
+	my_strllen.h
 	)
 
 #add_library(string_c_static STATIC ${SRCS} ${HEADERS})

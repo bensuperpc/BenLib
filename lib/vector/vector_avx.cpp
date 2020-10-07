@@ -324,6 +324,15 @@ int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
 }
 #    endif
 
+#    if (__AVX2__ || __AVX__)
+__m256i my::vector_avx::_mm256_div_epi16 (const __m256i &va, const int b)
+{
+    __m256i &&vb = _mm256_set1_epi16(32768 / b);
+    return _mm256_mulhrs_epi16(va, vb);
+}
+#    endif
+
+
 int my::vector_avx::find_max_sse(const int32_t *array, size_t n)
 {
     __m128i vresult = _mm_set1_epi32(0);
