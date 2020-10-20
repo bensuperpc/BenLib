@@ -7,7 +7,7 @@
 */
 
 #ifndef BLINK_NUMBER_H
-#    define BLINK_NUMBER_H
+#define BLINK_NUMBER_H
 
 void blink_led(byte targetPin, int numBlinks, int blinkRate);
 

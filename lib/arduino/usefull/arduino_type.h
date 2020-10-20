@@ -7,7 +7,7 @@
 */
 
 #ifndef ARDUINO_TYPE
-#    define ARDUINO_TYPE
+#define ARDUINO_TYPE
 
 int arduino_type();
 void arduino_type_serial();

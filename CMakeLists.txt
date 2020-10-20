@@ -334,6 +334,8 @@ add_subdirectory(lib/vector "lib/vector")
 
 add_subdirectory(lib/thread "lib/thread")
 
+add_subdirectory(lib/filesystem "lib/filesystem")
+
 if(EXTERNAL_LIB)
     add_dependencies(hello ${EXTERNAL_LIB})
     add_dependencies(convert_utils ${EXTERNAL_LIB})
@@ -346,6 +348,7 @@ if(EXTERNAL_LIB)
     add_dependencies(cpu ${EXTERNAL_LIB})
     add_dependencies(vector ${EXTERNAL_LIB})
     add_dependencies(thread ${EXTERNAL_LIB})
+    add_dependencies(filesystem ${EXTERNAL_LIB})
 endif()
 
 #   =================================================
@@ -379,7 +382,7 @@ set(HEADERS
 #set(MAIN_LLIBS Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia sfml-graphics sfml-window sfml-audio sfml-network sfml-system ${Boost_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${OpenCV_LIBS})
 set(MAIN_LLIBS sfml-graphics sfml-window sfml-audio sfml-network sfml-system ${Boost_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${OpenCV_LIBS})
 
-set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread)
+set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem)
 
 #   ==================================================
 #   ===============    EXEC FILES    =================
