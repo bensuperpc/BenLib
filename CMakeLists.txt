@@ -106,7 +106,7 @@ set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-
 set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -std=c99 -pipe")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v")
+set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v -march=native")
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
 #-Wold-style-cast -Wdouble-promotion -fstack-usage
@@ -123,7 +123,7 @@ set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wdupl
 set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v")
+set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v -march=native")
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${SEC_COMPILER_LINK_REL}")
@@ -392,28 +392,30 @@ set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu ve
 #   ===============    EXEC FILES    =================
 #   ==================================================
 
+#${MAIN_LLIBS} ${CUSTOM_LIBS}
+
 add_executable(bench_isprime ${BENCH_ISPRIME} ${SRCS} ${HEADERS})
-target_link_libraries(bench_isprime PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+target_link_libraries(bench_isprime PRIVATE thread vector math time hello stdc++fs)
 add_dependencies(bench_isprime ${CUSTOM_LIBS})
 
 add_executable(bench_vector_copy ${BENCH_VECTOR_COPY} ${SRCS} ${HEADERS})
-target_link_libraries(bench_vector_copy PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+target_link_libraries(bench_vector_copy PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_vector_copy ${CUSTOM_LIBS})
 
 add_executable(bench_vector_sort ${BENCH_VECTOR_SORT} ${SRCS} ${HEADERS})
-target_link_libraries(bench_vector_sort PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+target_link_libraries(bench_vector_sort PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_vector_sort ${CUSTOM_LIBS})
 
 add_executable(bench_digits_count ${BENCH_DIGITS_COUNT} ${SRCS} ${HEADERS})
-target_link_libraries(bench_digits_count PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+target_link_libraries(bench_digits_count PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_digits_count ${CUSTOM_LIBS})
 
 add_executable(bench_find_max ${BENCH_FIND_MAX} ${SRCS} ${HEADERS})
-target_link_libraries(bench_find_max PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+target_link_libraries(bench_find_max PRIVATE thread vector math time)
 add_dependencies(bench_find_max ${CUSTOM_LIBS})
 
 add_executable(list_all_file ${LIST_ALL_FILE} ${SRCS} ${HEADERS})
-target_link_libraries(list_all_file PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+target_link_libraries(list_all_file PRIVATE filesystem stdc++fs)
 add_dependencies(list_all_file ${CUSTOM_LIBS})
 
 
