@@ -40,6 +40,8 @@ namespace filesystem
 
 #if (__cplusplus == 201103L || __cplusplus == 201402L)
 
+void list_all_files(std::vector<std::string> &, const std::string &);
+
 void search_by_name(std::vector<std::string> &, const std::string &, const std::string &);
 
 void search_by_ext(std::vector<std::string> &, const std::string &, const std::string &);
@@ -47,6 +49,8 @@ void search_by_ext(std::vector<std::string> &, const std::string &, const std::s
 void search_by_ext_and_name(std::vector<std::string> &, const std::string &, const std::string &, const std::string &);
 
 #elif __cplusplus >= 201703L
+
+void list_all_files(std::vector<std::string> &, std::string_view);
 
 void search_by_name(std::vector<std::string> &, std::string_view, std::string_view);
 

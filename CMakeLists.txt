@@ -109,9 +109,11 @@ set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v")
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
-#-Wold-style-cast
-set(WARNINGS_COMPILER_CXX "-Wpedantic -Wall -Wextra -Wshadow -Wstrict-overflow=5 -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter -Woverloaded-virtual  -Wdisabled-optimization -Winline -Wredundant-decls -Wsign-conversion -Wformat-nonliteral -Wformat-security -Wmissing-include-dirs -Wmissing-noreturn -Wimport -Winit-self -Winvalid-pch -Wstrict-aliasing=2 -Wswitch-default -Wunreachable-code -Wunused -Wwrite-strings -Wcast-align -Wcast-qual -Wfloat-equal -Wvariadic-macros -Wpacked  -Wpadded -Wpointer-arith -Weffc++ -Wformat=2 -Wfloat-equal -Wabi=11")
-#-Wdouble-promotion -fstack-usage
+#-Wold-style-cast -Wdouble-promotion -fstack-usage
+set(WARNINGS_COMPILER_CXX "-Wpedantic -Wall -Wextra -Wshadow -Wstrict-overflow=5 -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter")
+set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wmissing-include-dirs -Wmissing-noreturn -Wimport -Winit-self -Winvalid-pch -Wstrict-aliasing=2 -Wswitch-default -Wunreachable-code -Wunused")
+set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Woverloaded-virtual  -Wdisabled-optimization -Winline -Wredundant-decls -Wsign-conversion -Wformat-nonliteral -Wformat-security")
+set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wwrite-strings -Wcast-align -Wcast-qual -Wfloat-equal -Wvariadic-macros -Wpacked  -Wpadded -Wpointer-arith -Weffc++ -Wformat=2 -Wfloat-equal -Wabi=11")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference")
 
 # Removed : -Wconversion -Wuseless-cast
@@ -368,6 +370,8 @@ set(BENCH_DIGITS_COUNT src/bench/bench_digits_count.cpp)
 
 set(BENCH_FIND_MAX src/bench/bench_find_max.cpp)
 
+set(LIST_ALL_FILE src/exemple/list_all_file.cpp)
+
 set(SRCS
     )
 
@@ -407,6 +411,10 @@ add_dependencies(bench_digits_count ${CUSTOM_LIBS})
 add_executable(bench_find_max ${BENCH_FIND_MAX} ${SRCS} ${HEADERS})
 target_link_libraries(bench_find_max PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
 add_dependencies(bench_find_max ${CUSTOM_LIBS})
+
+add_executable(list_all_file ${LIST_ALL_FILE} ${SRCS} ${HEADERS})
+target_link_libraries(list_all_file PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} hello stdc++fs)
+add_dependencies(list_all_file ${CUSTOM_LIBS})
 
 
 #   ======================================================

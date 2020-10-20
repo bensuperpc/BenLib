@@ -9,6 +9,13 @@
 
 #if (__cplusplus == 201103L || __cplusplus == 201402L)
 
+void my::filesystem::list_all_files(std::vector<std::string> &list, const std::string &path)
+{
+    for (const auto &entry : fs::recursive_directory_iterator(path)) {
+            list.emplace_back(entry.path().string());
+    }
+}
+
 void my::filesystem::search_by_name(std::vector<std::string> &list, const std::string &path, const std::string &name)
 {
     for (const auto &entry : fs::recursive_directory_iterator(path)) {
@@ -39,6 +46,13 @@ void my::filesystem::search_by_ext_and_name(std::vector<std::string> &list, cons
 }
 
 #elif __cplusplus >= 201703L
+
+void my::filesystem::list_all_files(std::vector<std::string> &list, std::string_view path)
+{
+    for (const auto &entry : fs::recursive_directory_iterator(path)) {
+            list.emplace_back(entry.path().string());
+    }
+}
 
 void my::filesystem::search_by_name(std::vector<std::string> &list, std::string_view path, std::string_view name)
 {
