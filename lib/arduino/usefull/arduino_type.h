@@ -3,12 +3,12 @@
 ** Servolent 2016 and Jeu de réflexe 2017
 ** BAC project 2016-2017
 ** File description:
-** >reboot_software.c
+** >arduino_type.c
 */
 
-#include "reboot_software.h"
+#ifndef ARDUINO_TYPE
+#    define ARDUINO_TYPE
 
-void reboot_software(void)
-{
-    wdt_enable(WDTO_15MS);
-}
+int arduino_type();
+void arduino_type_serial();
+#endif
