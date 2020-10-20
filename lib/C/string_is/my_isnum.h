@@ -1,6 +1,6 @@
 /*
 ** BENSUPERPC, 2019
-** 
+**
 ** File description:
 ** my_isnum.c
 */
@@ -11,4 +11,3 @@
 int my_isnum(char);
 
 #endif
-

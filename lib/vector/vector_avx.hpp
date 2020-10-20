@@ -83,15 +83,15 @@ __m256d int64_to_double256(__m256i &);
 __m128i _mm_shuffle_epi16(__m128i &, int);
 __m128i vperm(__m128i &, __m128i &);
 
-#    pragma GCC push_options
-#    pragma GCC optimize("-O2")
+#        pragma GCC push_options
+#        pragma GCC optimize("-O2")
 int find_max_normal(const int32_t *, size_t);
 #        if (__AVX2__ || __AVX__)
 int find_max_avx(const int32_t *, size_t);
-__m256i _mm256_div_epi16 (const __m256i &, const int);
+__m256i _mm256_div_epi16(const __m256i &, const int);
 #        endif
 int find_max_sse(const int32_t *, size_t);
-#    pragma GCC pop_options
+#        pragma GCC pop_options
 } // namespace vector_avx
 } // namespace my
 #    endif

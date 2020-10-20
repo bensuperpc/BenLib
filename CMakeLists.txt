@@ -310,7 +310,7 @@ add_subdirectory(lib/C/string "lib/string")
 add_subdirectory(lib/C/string_is "lib/string_is_c")
 add_subdirectory(lib/C/pointer "lib/pointer_c")
 add_subdirectory(lib/C/display "lib/display_c")
-#add_subdirectory(lib/C/integer "lib/integer_c")
+add_subdirectory(lib/C/integer "lib/integer_c")
 
 
 # C++ libs

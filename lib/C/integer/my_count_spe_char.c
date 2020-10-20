@@ -1,11 +1,11 @@
 /*
 ** BENSUPERPC, 2019
-** 
+**
 ** File description:
 ** >my_find_prime_sup
 */
 
-#include "my.h"
+#include "my_count_spe_char.h"
 
 int my_count_spe_char(const char *str, char c)
 {

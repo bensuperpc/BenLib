@@ -1,11 +1,11 @@
 /*
 ** BENSUPERPC, 2019
-** 
+**
 ** File description:
 **
 */
 
-#include "my.h"
+#include "my_sort_int_array.h"
 
 void my_sort_int_array(int *array, int size)
 {

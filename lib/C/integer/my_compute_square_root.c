@@ -5,7 +5,7 @@
 ** >my_compute_square_root
 */
 
-#include "my.h"
+#include "my_compute_square_root.h"
 
 int my_compute_square_root(int nb)
 {

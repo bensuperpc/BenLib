@@ -1,6 +1,6 @@
 /*
 ** BENSUPERPC, 2019
-** 
+**
 ** File description:
 ** >my_inv_two_str_pt
 */

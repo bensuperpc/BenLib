@@ -1,11 +1,11 @@
 /*
 ** BENSUPERPC, 2019
-** 
+**
 ** File description:
 ** >my_compute_power_rec
 */
 
-#include "my.h"
+#include "my_compute_power_rec.h"
 
 int my_compute_power_rec(int nb, int p)
 {
