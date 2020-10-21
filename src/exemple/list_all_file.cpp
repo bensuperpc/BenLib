@@ -20,5 +20,4 @@ int main()
         }
     }
     std::cout << "There is " << list_files.size() << " Files" << std::endl;
-
 }

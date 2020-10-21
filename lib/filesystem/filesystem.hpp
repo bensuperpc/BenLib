@@ -5,10 +5,12 @@
 ** filesystem.hpp
 */
 
-//https://stackoverflow.com/questions/62409409/how-to-make-stdfilesystemdirectory-iterator-to-list-filenames-in-order
+// https://stackoverflow.com/questions/62409409/how-to-make-stdfilesystemdirectory-iterator-to-list-filenames-in-order
+// https://stackoverflow.com/a/8520815/10152334
+// https://stackoverflow.com/a/46931770/10152334
 
-#ifndef LOAD_TEXTURE_HPP_
-#define LOAD_TEXTURE_HPP_
+#ifndef FILE_SYSTEM_HPP_
+#define FILE_SYSTEM_HPP_
 
 #if defined(__GNUC__) || defined(__clang__)
 #    define DEPRECATED __attribute__((deprecated))
@@ -38,7 +40,14 @@ namespace my
 namespace filesystem
 {
 
+void filename_from_str(std::string &);
+
+std::string filename_from_str(const std::string &);
+
+
 #if (__cplusplus == 201103L || __cplusplus == 201402L)
+
+size_t count_files(const std::string &);
 
 void list_all_files(std::vector<std::string> &, const std::string &);
 
@@ -49,6 +58,8 @@ void search_by_ext(std::vector<std::string> &, const std::string &, const std::s
 void search_by_ext_and_name(std::vector<std::string> &, const std::string &, const std::string &, const std::string &);
 
 #elif __cplusplus >= 201703L
+
+size_t count_files(std::string_view);
 
 void list_all_files(std::vector<std::string> &, std::string_view);
 

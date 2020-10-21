@@ -338,6 +338,8 @@ add_subdirectory(lib/thread "lib/thread")
 
 add_subdirectory(lib/filesystem "lib/filesystem")
 
+add_subdirectory(lib/string_lib "lib/string_lib")
+
 if(EXTERNAL_LIB)
     add_dependencies(hello ${EXTERNAL_LIB})
     add_dependencies(convert_utils ${EXTERNAL_LIB})
@@ -371,6 +373,8 @@ set(BENCH_DIGITS_COUNT src/bench/bench_digits_count.cpp)
 set(BENCH_FIND_MAX src/bench/bench_find_max.cpp)
 
 set(LIST_ALL_FILE src/exemple/list_all_file.cpp)
+
+set(COUNT_ALL_FILE src/exemple/count_all_file.cpp)
 
 set(SRCS
     )
@@ -418,6 +422,9 @@ add_executable(list_all_file ${LIST_ALL_FILE} ${SRCS} ${HEADERS})
 target_link_libraries(list_all_file PRIVATE filesystem stdc++fs)
 add_dependencies(list_all_file ${CUSTOM_LIBS})
 
+add_executable(count_all_file ${COUNT_ALL_FILE} ${SRCS} ${HEADERS})
+target_link_libraries(count_all_file PRIVATE filesystem stdc++fs)
+add_dependencies(count_all_file ${CUSTOM_LIBS})
 
 #   ======================================================
 #   ====================    TESTS    =====================
