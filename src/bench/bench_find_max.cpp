@@ -49,7 +49,7 @@ int main()
 #else
     ThreadPool thread_pool(1);
 #endif
-    const size_t n = 2; // 16384
+    const size_t n = 2; // 32768
     const int nofTestCases = 100000;
     int n1[n * 2] __attribute__((aligned(32)));
     int n2[n * 4] __attribute__((aligned(32)));
@@ -65,8 +65,9 @@ int main()
     int n12[n * 4096] __attribute__((aligned(32)));
     int n13[n * 8192] __attribute__((aligned(32)));
     int n14[n * 16384] __attribute__((aligned(32)));
+    int n15[n * 32768] __attribute__((aligned(32)));
     std::vector<std::pair<const size_t, int *>> n_ptr = {{n * 2, n1}, {n * 4, n2}, {n * 8, n3}, {n * 16, n4}, {n * 32, n5}, {n * 64, n6}, {n * 128, n7},
-        {n * 256, n8}, {n * 512, n9}, {n * 1024, n10}, {n * 2048, n11}, {n * 4096, n12}, {n * 8192, n13}, {n * 16384, n14}};
+        {n * 256, n8}, {n * 512, n9}, {n * 1024, n10}, {n * 2048, n11}, {n * 4096, n12}, {n * 8192, n13}, {n * 16384, n14}, {n * 32768, n15}};
 
     // Fill array with random values
     for (auto &n_ptr_s : n_ptr) {
@@ -78,7 +79,8 @@ int main()
     // Declare point to function
     const std::vector<std::pair<const std::string, std::function<int(const int32_t *, size_t)>>> pointer_fn_map {
         {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse},
-        {"find_max_avx", &my::vector_avx::find_max_avx}};
+        {"find_max_sse_v2", &my::vector_avx::find_max_sse_v2}, {"find_max_avx", &my::vector_avx::find_max_avx},
+        {"find_max_avx_v2", &my::vector_avx::find_max_avx_v2}};
 
     results2.reserve(pointer_fn_map.size());
 

@@ -14,7 +14,7 @@ void my::vector::fill_row(std::vector<int> &row)
 
 void my::vector::fill_rowull(std::vector<uint64_t> &row)
 {
-    std::generate(row.begin(), row.end(), []() { return rand() % (18446744073709551615 - 0 + 1) + 0; });
+    std::generate(row.begin(), row.end(), []() { return rand() % (2147483648); });
 }
 
 void my::vector::fill_matrix_1(std::vector<std::vector<int>> &mat)

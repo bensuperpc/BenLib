@@ -374,6 +374,8 @@ set(BENCH_FIND_MAX src/bench/bench_find_max.cpp)
 
 set(LIST_ALL_FILE src/exemple/list_all_file.cpp)
 
+set(LIST_ALL_FILE_OPENCV src/exemple/list_all_file_opencv.cpp)
+
 set(COUNT_ALL_FILE src/exemple/count_all_file.cpp)
 
 set(SRCS
@@ -421,6 +423,10 @@ add_dependencies(bench_find_max ${CUSTOM_LIBS})
 add_executable(list_all_file ${LIST_ALL_FILE} ${SRCS} ${HEADERS})
 target_link_libraries(list_all_file PRIVATE filesystem stdc++fs)
 add_dependencies(list_all_file ${CUSTOM_LIBS})
+
+add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV} ${SRCS} ${HEADERS})
+target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS} stdc++fs)
+add_dependencies(list_all_file_opencv ${CUSTOM_LIBS})
 
 add_executable(count_all_file ${COUNT_ALL_FILE} ${SRCS} ${HEADERS})
 target_link_libraries(count_all_file PRIVATE filesystem stdc++fs)
