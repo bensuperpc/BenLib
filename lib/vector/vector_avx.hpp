@@ -14,6 +14,9 @@
 **          https://db.in.tum.de/~finis/x86-intrin-cheatsheet-v2.1.pdf
 **          https://stackoverflow.com/questions/56033329/sse-shuffle-permutevar-4x32-integers
 **          https://stackoverflow.com/questions/9795529/how-to-find-the-horizontal-maximum-in-a-256-bit-avx-vector
+**          https://stackoverflow.com/questions/9795529/how-to-find-the-horizontal-maximum-in-a-256-bit-avx-vector
+**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3304,3582,3582,2429&techs=AVX,AVX2&text=extract_epi32
+**          https://stackoverflow.com/questions/28939652/how-to-detect-sse-sse2-avx-avx2-avx-512-avx-128-fma-kcvi-availability-at-compile
 ** vector.hpp
 */
 
