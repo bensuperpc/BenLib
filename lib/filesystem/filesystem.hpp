@@ -44,7 +44,6 @@ void filename_from_str(std::string &);
 
 std::string filename_from_str(const std::string &);
 
-
 #if (__cplusplus == 201103L || __cplusplus == 201402L)
 
 size_t count_files(const std::string &);

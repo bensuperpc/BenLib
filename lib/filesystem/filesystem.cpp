@@ -7,22 +7,19 @@
 
 #include "filesystem.hpp"
 
-
-void my::filesystem::filename_from_str(std::string & path)
+void my::filesystem::filename_from_str(std::string &path)
 {
     const size_t last_slash_idx = path.find_last_of("\\/");
-    if (std::string::npos != last_slash_idx)
-    {
+    if (std::string::npos != last_slash_idx) {
         path.erase(0, last_slash_idx + 1);
     }
 }
 
-std::string my::filesystem::filename_from_str(const std::string & path)
+std::string my::filesystem::filename_from_str(const std::string &path)
 {
     std::string filename = std::string(path);
     const size_t last_slash_idx = filename.find_last_of("\\/");
-    if (std::string::npos != last_slash_idx)
-    {
+    if (std::string::npos != last_slash_idx) {
         filename.erase(0, last_slash_idx + 1);
     }
     return filename;
@@ -34,7 +31,7 @@ size_t my::filesystem::count_files(const std::string &path)
 {
     size_t i = size_t(0);
     for (const auto &entry : fs::recursive_directory_iterator(path)) {
-            i++;
+        i++;
     }
     return i;
 }
@@ -42,7 +39,7 @@ size_t my::filesystem::count_files(const std::string &path)
 void my::filesystem::list_all_files(std::vector<std::string> &list, const std::string &path)
 {
     for (const auto &entry : fs::recursive_directory_iterator(path)) {
-            list.emplace_back(entry.path().string());
+        list.emplace_back(entry.path().string());
     }
 }
 
@@ -81,7 +78,7 @@ size_t my::filesystem::count_files(std::string_view path)
 {
     size_t i = 0;
     for (const auto &entry : fs::recursive_directory_iterator(path)) {
-            i++;
+        i++;
     }
     return i;
 }
@@ -89,7 +86,7 @@ size_t my::filesystem::count_files(std::string_view path)
 void my::filesystem::list_all_files(std::vector<std::string> &list, std::string_view path)
 {
     for (const auto &entry : fs::recursive_directory_iterator(path)) {
-            list.emplace_back(entry.path().string());
+        list.emplace_back(entry.path().string());
     }
 }
 

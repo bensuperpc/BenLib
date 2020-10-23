@@ -303,6 +303,7 @@ __m128i my::vector_avx::vperm(__m128i &a, __m128i &idx)
 }
 
 #    if (__AVX2__ || __AVX__)
+/*
 int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
 {
     __m256i vresult = _mm256_set1_epi32(0);
@@ -322,9 +323,9 @@ int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
     vresult = _mm256_max_epi32(vresult, v);
     __m128i vres128 = _mm256_extracti128_si256(vresult, 0);
     return _mm_extract_epi32(vres128, 0);
-}
+}*/
 
-int my::vector_avx::find_max_avx_v2(const int32_t *array, size_t n)
+int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
 {
     __m256i vresult = _mm256_set1_epi32(0);
     __m256i v;
@@ -340,7 +341,6 @@ int my::vector_avx::find_max_avx_v2(const int32_t *array, size_t n)
 
 #    endif
 
-
 #    if (__AVX2__ || __AVX__)
 __m256i my::vector_avx::_mm256_div_epi16(const __m256i &va, const int b)
 {
@@ -349,16 +349,19 @@ __m256i my::vector_avx::_mm256_div_epi16(const __m256i &va, const int b)
 }
 #    endif
 
-int my::vector_avx::horizontal_max_Vec4i(__m128i &x) {
+int my::vector_avx::horizontal_max_Vec4i(__m128i &x)
+{
     int result[4] __attribute__((aligned(16))) = {0};
-    _mm_store_si128((__m128i *) result, x);
-    return std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]); 
+    _mm_store_si128((__m128i *)result, x);
+    return std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]);
 }
 
-int my::vector_avx::horizontal_max_Vec8i(__m256i &x) {
+int my::vector_avx::horizontal_max_Vec8i(__m256i &x)
+{
     int result[8] __attribute__((aligned(32))) = {0};
-    _mm256_store_si256((__m256i *) result, x);
-    return std::max(std::max(std::max(std::max(std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]), result[4]), result[5]), result[6]), result[7]); 
+    _mm256_store_si256((__m256i *)result, x);
+    return std::max(
+        std::max(std::max(std::max(std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]), result[4]), result[5]), result[6]), result[7]);
 }
 
 /*
@@ -370,7 +373,7 @@ int my::vector_avx::horizontal_max_Vec4i(__m128i &x) {
     return _mm_cvtsi128_si32(max4);
 }*/
 
-int my::vector_avx::find_max_sse_v2(const int32_t *array, size_t n)
+int my::vector_avx::find_max_sse(const int32_t *array, size_t n)
 {
     __m128i vresult = _mm_set1_epi32(0);
     __m128i v;
@@ -383,7 +386,7 @@ int my::vector_avx::find_max_sse_v2(const int32_t *array, size_t n)
     return horizontal_max_Vec4i(vresult);
 }
 
-
+/*
 int my::vector_avx::find_max_sse(const int32_t *array, size_t n)
 {
     __m128i vresult = _mm_set1_epi32(0);
@@ -409,7 +412,7 @@ int my::vector_avx::find_max_sse(const int32_t *array, size_t n)
     __m64 v64 = _mm_set_pi64x(vres64);
 
     return _mm_extract_pi16(v64, 0);
-}
+}*/
 
 int my::vector_avx::find_max_normal(const int32_t *array, size_t n)
 {
@@ -428,7 +431,7 @@ int my::vector_avx::find_max_normal(const int32_t *array, size_t n)
 #endif
 
 //__AVX512CD__ __AVX512BW__ __AVX512DQ__ __AVX512VL__
-#    ifdef __AVX512F__
+#ifdef __AVX512F__
 #    if (__AVX512F__)
 int my::vector_avx::find_max_avx512(const int32_t *array, size_t n)
 {
@@ -450,7 +453,7 @@ int my::vector_avx::find_max_avx512(const int32_t *array, size_t n)
     __m128i vres128 = _mm256_extracti128_si256(vresult, 0);
     return _mm_extract_epi32(vres128, 0);
     */
-   return 0;
+    return 0;
 }
 #    endif
-#    endif
+#endif

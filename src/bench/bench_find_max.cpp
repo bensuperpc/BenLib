@@ -79,8 +79,7 @@ int main()
     // Declare point to function
     const std::vector<std::pair<const std::string, std::function<int(const int32_t *, size_t)>>> pointer_fn_map {
         {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse},
-        {"find_max_sse_v2", &my::vector_avx::find_max_sse_v2}, {"find_max_avx", &my::vector_avx::find_max_avx},
-        {"find_max_avx_v2", &my::vector_avx::find_max_avx_v2}};
+        {"find_max_avx", &my::vector_avx::find_max_avx}};
 
     results2.reserve(pointer_fn_map.size());
 

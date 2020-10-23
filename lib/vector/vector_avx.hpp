@@ -88,20 +88,20 @@ __m128i vperm(__m128i &, __m128i &);
 int find_max_normal(const int32_t *, size_t);
 #        if (__AVX2__ || __AVX__)
 int find_max_avx(const int32_t *, size_t);
-int find_max_avx_v2(const int32_t *, size_t);
+// int find_max_avx_v2(const int32_t *, size_t);
 __m256i _mm256_div_epi16(const __m256i &, const int);
 #        endif
-#    ifdef __AVX512F__
-#    if (__AVX512F__)
+#        ifdef __AVX512F__
+#            if (__AVX512F__)
 int find_max_avx512(const int32_t *array, size_t n);
-#    endif
-#    endif
+#            endif
+#        endif
 
 int horizontal_max_Vec4i(__m128i &x);
 int horizontal_max_Vec8i(__m256i &x);
 
 int find_max_sse(const int32_t *, size_t);
-int find_max_sse_v2(const int32_t *array, size_t n);
+// int find_max_sse_v2(const int32_t *array, size_t n);
 #        pragma GCC pop_options
 } // namespace vector_avx
 } // namespace my
