@@ -47,16 +47,17 @@ if(NOT CMAKE_CXX_STANDARD)
         message(STATUS "C++20: OK")
     elseif(COMPILER_SUPPORTS_CXX17)
         set(CMAKE_CXX_STANDARD 17)
-        message(STATUS "C++17: OK")
+        message(WARNING "C++17: OK")
     elseif(COMPILER_SUPPORTS_CXX14)
         set(CMAKE_CXX_STANDARD 14)
-        message(STATUS "C++14: OK")
+        message(STATUS "C++14: ERROR")
+        message(FATAL_ERROR "C++14 is old, please use newer compiler.")
     elseif(COMPILER_SUPPORTS_CXX11)
         set(CMAKE_CXX_STANDARD 11)
-        message(STATUS "C++11: OK")
-        message(WARNING "C++11 is old, please use newer compiler.")
+        message(STATUS "C++11: ERROR")
+        message(FATAL_ERROR "C++11 is old, please use newer compiler.")
     else()
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 or above support. Please use a different C++ compiler.")
+        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
     endif()
 
     # Compiler-specific C++11 activation.
@@ -372,6 +373,8 @@ set(BENCH_DIGITS_COUNT src/bench/bench_digits_count.cpp)
 
 set(BENCH_FIND_MAX src/bench/bench_find_max.cpp)
 
+set(BENCH_PC src/bench/benchmark_pc.cpp)
+
 set(LIST_ALL_FILE src/exemple/list_all_file.cpp)
 
 set(LIST_ALL_FILE_OPENCV src/exemple/list_all_file_opencv.cpp)
@@ -390,7 +393,29 @@ set(HEADERS
 #   ====================================================
 
 #set(MAIN_LLIBS Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia sfml-graphics sfml-window sfml-audio sfml-network sfml-system ${Boost_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${OpenCV_LIBS})
-set(MAIN_LLIBS sfml-graphics sfml-window sfml-audio sfml-network sfml-system ${Boost_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${OpenCV_LIBS})
+#set(MAIN_LLIBS sfml-graphics sfml-window sfml-audio sfml-network sfml-system ${Boost_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${OpenCV_LIBS})
+
+set(MAIN_LLIBS "")
+
+if(Boost_FOUND)
+    set(MAIN_LLIBS ${MAIN_LLIBS} ${Boost_LIBRARIES})
+endif()
+
+if(SFML_FOUND)
+    set(MAIN_LLIBS ${MAIN_LLIBS} sfml-graphics sfml-window sfml-audio sfml-network sfml-system)
+endif()
+
+if (OPENCV_FOUND)
+    set(MAIN_LLIBS ${MAIN_LLIBS} ${OpenCV_LIBS})
+endif()
+
+if (OPENGL_FOUND)
+    set(MAIN_LLIBS ${MAIN_LLIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+endif()
+
+if (QT_FOUND)
+    set(MAIN_LLIBS ${MAIN_LLIBS} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia)
+endif()
 
 set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem)
 
@@ -420,13 +445,19 @@ add_executable(bench_find_max ${BENCH_FIND_MAX} ${SRCS} ${HEADERS})
 target_link_libraries(bench_find_max PRIVATE thread vector math time)
 add_dependencies(bench_find_max ${CUSTOM_LIBS})
 
+add_executable(bench_pc ${BENCH_PC} ${SRCS} ${HEADERS})
+target_link_libraries(bench_pc PRIVATE time vector)
+add_dependencies(bench_pc ${CUSTOM_LIBS})
+
 add_executable(list_all_file ${LIST_ALL_FILE} ${SRCS} ${HEADERS})
 target_link_libraries(list_all_file PRIVATE filesystem stdc++fs)
 add_dependencies(list_all_file ${CUSTOM_LIBS})
 
-add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV} ${SRCS} ${HEADERS})
-target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS} stdc++fs)
-add_dependencies(list_all_file_opencv ${CUSTOM_LIBS})
+if (OPENCV_FOUND)
+    add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV} ${SRCS} ${HEADERS})
+    target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS} stdc++fs)
+    add_dependencies(list_all_file_opencv ${CUSTOM_LIBS})
+endif()
 
 add_executable(count_all_file ${COUNT_ALL_FILE} ${SRCS} ${HEADERS})
 target_link_libraries(count_all_file PRIVATE filesystem stdc++fs)

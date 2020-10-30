@@ -364,12 +364,12 @@ int my::vector_avx::horizontal_max_Vec8i(__m256i &x)
         std::max(std::max(std::max(std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]), result[4]), result[5]), result[6]), result[7]);
 }
 
-
-int my::vector_avx::horizontal_max_Vec4i(__m128i &x) {
-    __m128i max1 = _mm_shuffle_epi32(x, _MM_SHUFFLE(0,0,3,2));
-    __m128i max2 = _mm_max_epi32(x,max1);
-    __m128i max3 = _mm_shuffle_epi32(max2, _MM_SHUFFLE(0,0,0,1));
-    __m128i max4 = _mm_max_epi32(max2,max3);
+int my::vector_avx::horizontal_max_Vec4i(__m128i &x)
+{
+    __m128i max1 = _mm_shuffle_epi32(x, _MM_SHUFFLE(0, 0, 3, 2));
+    __m128i max2 = _mm_max_epi32(x, max1);
+    __m128i max3 = _mm_shuffle_epi32(max2, _MM_SHUFFLE(0, 0, 0, 1));
+    __m128i max4 = _mm_max_epi32(max2, max3);
     return _mm_cvtsi128_si32(max4);
 }
 /*
@@ -396,7 +396,6 @@ int my::vector_avx::find_max_sse(const int32_t *array, size_t n)
         v = _mm_load_si128((__m128i *)&array[k]);
         vresult = _mm_max_epi32(vresult, v);
     }
-
 
     v = _mm_shuffle_epi32(vresult, 1);
     vresult = _mm_max_epi32(vresult, v);
@@ -433,6 +432,16 @@ int my::vector_avx::find_max_normal(const int32_t *array, size_t n)
 //__AVX512CD__ __AVX512BW__ __AVX512DQ__ __AVX512VL__
 #ifdef __AVX512F__
 #    if (__AVX512F__)
+
+int my::vector_avx::horizontal_max_Vec16i(__m512i &x)
+{
+    int result[16] __attribute__((aligned(64))) = {0};
+    _mm512_store_si512((__m512i *)result, x);
+    return std::max(
+        std::max(std::max(std::max(std::max(std::max(std::max(td::max(
+        std::max(std::max(std::max(std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]), result[4]), result[5]), result[6]), result[7], result[8], result[9]), result[10]), result[11]), result[12]), result[13]), result[14]), result[15]);
+}
+
 int my::vector_avx::find_max_avx512(const int32_t *array, size_t n)
 {
     __m512i vresult = _mm512_set1_epi32(0);

@@ -26,27 +26,65 @@ template <typename T> std::vector<std::vector<T>> my::vector::generate_matrix(si
 
 template <typename T> void my::vector::rnd_fill(std::vector<T> &V, const T lower, const T upper, const uint64_t seed)
 {
-    // std::random_device seed;
+    std::random_device rnd_device(seed);
+    std::mt19937 mersenne_engine {rnd_device()};
+    if constexpr (std::is_integral<T>::value) {
+        std::uniform_int_distribution<T> dist {lower, upper};
+        auto gen = [&dist, &mersenne_engine]() { return dist(mersenne_engine); };
+        std::generate(begin(V), end(V), gen);
+    } else /*if (std::is_floating_point<T>::value)*/ {
+        std::uniform_real_distribution<T> dist {lower, upper};
+        auto gen = [&dist, &mersenne_engine]() { return dist(mersenne_engine); };
+        std::generate(begin(V), end(V), gen);
+    }
+    /*
     std::default_random_engine eng(seed);
     std::uniform_real_distribution<T> distr(lower, upper);
     for (auto &elem : V) {
         elem = distr(eng);
     }
+    */
 }
 
 template <typename T> void my::vector::rnd_fill(std::vector<T> &V, const T lower, const T upper)
 {
+    std::random_device rnd_device;
+    std::mt19937 mersenne_engine {rnd_device()};
+    if constexpr (std::is_integral<T>::value) {
+        std::uniform_int_distribution<T> dist {lower, upper};
+        auto gen = [&dist, &mersenne_engine]() { return dist(mersenne_engine); };
+        std::generate(begin(V), end(V), gen);
+    } else /*if (std::is_floating_point<T>::value)*/ {
+        std::uniform_real_distribution<T> dist {lower, upper};
+        auto gen = [&dist, &mersenne_engine]() { return dist(mersenne_engine); };
+        std::generate(begin(V), end(V), gen);
+    }
+    /*
     std::random_device r;
     std::seed_seq seed2 {r(), r(), r(), r(), r(), r(), r(), r()};
     std::mt19937_64 e2(seed2);
     std::normal_distribution<T> distr(lower, upper);
     for (auto &elem : V) {
         elem = distr(e2);
-    }
+    }*/
 }
 
 template <typename T> void my::vector::rnd_fill(std::vector<T> &V)
 {
+    std::random_device rnd_device;
+    std::mt19937 mersenne_engine {rnd_device()};
+
+    if constexpr (std::is_integral<T>::value) {
+        std::uniform_int_distribution<T> dist {1, std::numeric_limits<T>::max()};
+        auto gen = [&dist, &mersenne_engine]() { return dist(mersenne_engine); };
+        std::generate(begin(V), end(V), gen);
+    } else {
+        std::uniform_real_distribution<T> dist {0.000001, std::numeric_limits<T>::max()};
+        auto gen = [&dist, &mersenne_engine]() { return dist(mersenne_engine); };
+        std::generate(begin(V), end(V), gen);
+    }
+
+    /*
     std::random_device r;
     std::seed_seq seed2 {r(), r(), r(), r(), r(), r(), r(), r()};
     std::mt19937_64 e2(seed2);
@@ -54,7 +92,7 @@ template <typename T> void my::vector::rnd_fill(std::vector<T> &V)
     std::normal_distribution<double> distr(0.0, 100000.0);
     for (auto &elem : V) {
         elem = T(distr(e2));
-    }
+    }*/
 }
 
 template <typename T> void my::vector::cache_unfriendly_copy(std::vector<std::vector<T>> &mat1, std::vector<std::vector<T>> &mat2)

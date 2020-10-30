@@ -96,7 +96,8 @@ __m256i _mm256_div_epi16(const __m256i &, const int);
 #        endif
 #        ifdef __AVX512F__
 #            if (__AVX512F__)
-int find_max_avx512(const int32_t *array, size_t n);
+int horizontal_max_Vec16i(__m512i &);
+int find_max_avx512(const int32_t *, size_t);
 #            endif
 #        endif
 
