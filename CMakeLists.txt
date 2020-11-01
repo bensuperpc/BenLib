@@ -264,6 +264,18 @@ else()
     message(STATUS "VULKAN: NOT FOUND")
 endif()
 
+#   ================    OPENSSL    ================
+
+find_package(OpenSSL QUIET)
+
+if (OPENSSL_FOUND)
+    include_directories( ${OPENSSL_INCLUDE_DIR})
+    link_directories(${OPENSSL_LIBRARIES})
+    message(STATUS "OPENSSL: FOUND")
+else()
+    message(STATUS "OPENSSL: NOT FOUND")
+endif()
+
 #   ================    Qt    ================
 
 #set(CMAKE_AUTOUIC ON)
@@ -376,6 +388,8 @@ set(BENCH_PC src/bench/benchmark_pc.cpp)
 
 set(LIST_ALL_FILE src/exemple/list_all_file.cpp)
 
+set(LIST_ALL_FILE_HASH src/exemple/list_all_file_hash.cpp)
+
 set(LIST_ALL_FILE_OPENCV src/exemple/list_all_file_opencv.cpp)
 
 set(COUNT_ALL_FILE src/exemple/count_all_file.cpp)
@@ -451,6 +465,12 @@ add_dependencies(bench_pc ${CUSTOM_LIBS})
 add_executable(list_all_file ${LIST_ALL_FILE} ${SRCS} ${HEADERS})
 target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
 add_dependencies(list_all_file ${CUSTOM_LIBS})
+
+if (OPENSSL_FOUND)
+    add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH} ${SRCS} ${HEADERS})
+    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs ssl crypto thread)
+    add_dependencies(list_all_file_hash ${CUSTOM_LIBS})
+endif()
 
 if (OPENCV_FOUND)
     add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV} ${SRCS} ${HEADERS})

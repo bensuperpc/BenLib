@@ -9,8 +9,8 @@
 #define MY_STRDUP_H
 
 #include <stdlib.h>
-#include "my_strllen.h"
 #include "my_strcpy.h"
+#include "my_strllen.h"
 
 char *my_strdup(char const *);
 

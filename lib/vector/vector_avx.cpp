@@ -437,9 +437,24 @@ int my::vector_avx::horizontal_max_Vec16i(__m512i &x)
 {
     int result[16] __attribute__((aligned(64))) = {0};
     _mm512_store_si512((__m512i *)result, x);
-    return std::max(std::max(
-        std::max(std::max(std::max(std::max(std::max(std::max(std::max(
-        std::max(std::max(std::max(std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]), result[4]), result[5]), result[6]), result[7]), result[8]), result[9]), result[10]), result[11]), result[12]), result[13]), result[14]), result[15]);
+    return std::max(
+        std::max(
+            std::max(
+                std::max(
+                    std::max(
+                        std::max(std::max(std::max(std::max(std::max(std::max(std::max(std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]),
+                                                                                  result[4]),
+                                                                         result[5]),
+                                                                result[6]),
+                                                       result[7]),
+                                              result[8]),
+                                     result[9]),
+                            result[10]),
+                        result[11]),
+                    result[12]),
+                result[13]),
+            result[14]),
+        result[15]);
 }
 
 int my::vector_avx::find_max_avx512(const int32_t *array, size_t n)

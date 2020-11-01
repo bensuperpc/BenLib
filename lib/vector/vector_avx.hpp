@@ -24,7 +24,7 @@
 
 #ifndef VECTOR_AVX_HPP_
 #    define VECTOR_AVX_HPP_
-#include <algorithm>
+#    include <algorithm>
 
 #    if (__AVX2__ || __AVX__ || __SSE3__)
 #        include <emmintrin.h>
