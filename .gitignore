@@ -38,3 +38,4 @@ tools/*
 !tools/graph.py
 coverage/*
 !coverage/.gitignore
+*/build/*
