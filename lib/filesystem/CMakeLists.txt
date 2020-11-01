@@ -13,3 +13,4 @@ set(HEADERS
 
 #add_library(filesystem_static STATIC ${SRCS} ${HEADERS})
 add_library(filesystem SHARED ${SRCS} ${HEADERS})
+target_link_libraries(filesystem ${Boost_LIBRARIES})

@@ -8,8 +8,8 @@
 
 #include <avr/wdt.h>
 
-#ifndef REBOOT_SOFTWARE
-#    define REBOOT_SOFTWARE
+#ifndef REBOOT_SOFTWARE_H
+#    define REBOOT_SOFTWARE_H
 
 void reboot_software(void);
 

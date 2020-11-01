@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include "my_strllen.h"
+#include "my_strcpy.h"
 
 char *my_strdup(char const *);
 

@@ -6,8 +6,8 @@
 ** >arduino_type.c
 */
 
-#ifndef ARDUINO_TYPE
-#define ARDUINO_TYPE
+#ifndef ARDUINO_TYPE_H
+#define ARDUINO_TYPE_H
 
 int arduino_type();
 void arduino_type_serial();

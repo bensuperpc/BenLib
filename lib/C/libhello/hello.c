@@ -1,4 +1,10 @@
-#include <stdio.h>
+/*
+** BENSUPERPC, 2019
+**
+** File description:
+** >hello.h
+*/
+
 #include "hello.h"
 
 void sayHello()

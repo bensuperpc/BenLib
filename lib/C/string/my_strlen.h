@@ -7,6 +7,7 @@
 
 #ifndef STRLEN_H
 #define STRLEN_H
+#include <stddef.h>
 
 int my_strlen(char const *);
 
