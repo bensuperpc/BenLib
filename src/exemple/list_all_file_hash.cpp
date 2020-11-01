@@ -1,11 +1,6 @@
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <openssl/md5.h>
-#include <openssl/sha.h>
-#include <sstream>
 #include <string>
 #include <vector>
+#include "../../lib/crypto/crypto.hpp"
 #include "../../lib/filesystem/filesystem.hpp"
 #if __cplusplus >= 201703L
 #    include "../../lib/thread/Pool.hpp"
@@ -25,154 +20,6 @@ struct Processor
 
 // Source https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C
 
-std::string get_md5hash(const std::string &fname)
-{
-
-    char buffer[BUFFSIZE];
-    unsigned char digest[MD5_DIGEST_LENGTH];
-
-    std::stringstream ss;
-    std::string md5string;
-
-    std::ifstream ifs(fname, std::ifstream::binary);
-
-    MD5_CTX md5Context;
-
-    MD5_Init(&md5Context);
-
-    while (ifs.good()) {
-        ifs.read(buffer, BUFFSIZE);
-        MD5_Update(&md5Context, buffer, ifs.gcount());
-    }
-
-    ifs.close();
-
-    int res = MD5_Final(digest, &md5Context);
-
-    if (res == 0)  // hash failed
-        return {}; // or raise an exception
-
-    // ss << std::hex << std::uppercase << std::setfill('0');
-    ss << std::hex << std::setfill('0');
-    for (unsigned char uc : digest)
-        ss << std::setw(2) << (int)uc;
-
-    md5string = ss.str();
-
-    return md5string;
-}
-
-std::string get_sha1hash(const std::string &fname)
-{
-
-    char buffer[BUFFSIZE];
-    unsigned char digest[SHA_DIGEST_LENGTH];
-
-    std::stringstream ss;
-    std::string sha1string;
-
-    std::ifstream ifs(fname, std::ifstream::binary);
-
-    SHA_CTX sha1Context;
-
-    SHA1_Init(&sha1Context);
-
-    while (ifs.good()) {
-        ifs.read(buffer, BUFFSIZE);
-        SHA1_Update(&sha1Context, buffer, ifs.gcount());
-    }
-
-    ifs.close();
-
-    int res = SHA1_Final(digest, &sha1Context);
-
-    if (res == 0)  // hash failed
-        return {}; // or raise an exception
-
-    // ss << std::hex << std::uppercase << std::setfill('0');
-    ss << std::hex << std::setfill('0');
-    for (unsigned char uc : digest)
-        ss << std::setw(2) << (int)uc;
-
-    sha1string = ss.str();
-
-    return sha1string;
-}
-
-std::string get_sha256hash(const std::string &fname)
-{
-
-    char buffer[BUFFSIZE];
-    unsigned char digest[SHA256_DIGEST_LENGTH];
-
-    std::stringstream ss;
-    std::string sha256string;
-
-    std::ifstream ifs(fname, std::ifstream::binary);
-
-    SHA256_CTX sha256Context;
-
-    SHA256_Init(&sha256Context);
-
-    while (ifs.good()) {
-        ifs.read(buffer, BUFFSIZE);
-        SHA256_Update(&sha256Context, buffer, ifs.gcount());
-    }
-
-    ifs.close();
-
-    int res = SHA256_Final(digest, &sha256Context);
-
-    if (res == 0)  // hash failed
-        return {}; // or raise an exception
-
-    // ss << std::hex << std::uppercase << std::setfill('0');
-    ss << std::hex << std::setfill('0');
-    for (unsigned char uc : digest)
-        ss << std::setw(2) << (int)uc;
-
-    sha256string = ss.str();
-
-    return sha256string;
-}
-
-std::string get_sha512hash(const std::string &fname)
-{
-
-    char buffer[BUFFSIZE];
-    unsigned char digest[SHA512_DIGEST_LENGTH];
-
-    std::stringstream ss;
-    std::string sha512string;
-
-    std::ifstream ifs(fname, std::ifstream::binary);
-
-    SHA512_CTX sha512Context;
-
-    SHA512_Init(&sha512Context);
-
-    while (ifs.good()) {
-        ifs.read(buffer, BUFFSIZE);
-        SHA512_Update(&sha512Context, buffer, ifs.gcount());
-    }
-
-    ifs.close();
-
-    int res = SHA512_Final(digest, &sha512Context);
-
-    if (res == 0)  // hash failed
-        return {}; // or raise an exception
-
-    // ss << std::hex << std::uppercase << std::setfill('0');
-    ss << std::hex << std::setfill('0');
-    for (unsigned char uc : digest)
-        ss << std::setw(2) << (int)uc;
-
-    sha512string = ss.str();
-
-    return sha512string;
-}
-
 int main()
 {
     std::vector<std::string> list_files = {};
@@ -189,8 +36,8 @@ int main()
     ThreadPool thread_pool(8);
 #endif
 
-    const std::vector<std::pair<const std::string, std::string (*)(const std::string &)>> pointer_map {
-        {"get_md5hash", &get_md5hash}, {"get_sha1hash", &get_sha1hash}, {"get_sha256hash", &get_sha256hash}, {"get_sha512hash", &get_sha512hash}};
+    const std::vector<std::pair<const std::string, std::string (*)(const std::string &)>> pointer_map {{"get_md5hash", &my::crypto::get_md5hash},
+        {"get_sha1hash", &my::crypto::get_sha1hash}, {"get_sha256hash", &my::crypto::get_sha256hash}, {"get_sha512hash", &my::crypto::get_sha512hash}};
 
     results.reserve(list_files.size());
 

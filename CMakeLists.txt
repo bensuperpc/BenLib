@@ -352,6 +352,8 @@ add_subdirectory(lib/filesystem "lib/filesystem")
 
 add_subdirectory(lib/string_lib "lib/string_lib")
 
+add_subdirectory(lib/crypto "lib/crypto")
+
 if(EXTERNAL_LIB)
     add_dependencies(hello ${EXTERNAL_LIB})
     add_dependencies(convert_utils ${EXTERNAL_LIB})
@@ -365,6 +367,7 @@ if(EXTERNAL_LIB)
     add_dependencies(vector ${EXTERNAL_LIB})
     add_dependencies(thread ${EXTERNAL_LIB})
     add_dependencies(filesystem ${EXTERNAL_LIB})
+    add_dependencies(my_crypto ${EXTERNAL_LIB})
 endif()
 
 #   =================================================
@@ -468,7 +471,7 @@ add_dependencies(list_all_file ${CUSTOM_LIBS})
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH} ${SRCS} ${HEADERS})
-    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs ssl crypto thread)
+    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs my_crypto thread)
     add_dependencies(list_all_file_hash ${CUSTOM_LIBS})
 endif()
 
