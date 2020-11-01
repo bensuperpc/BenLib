@@ -40,7 +40,8 @@ coverage/*
 !coverage/.gitignore
 build_docker/*
 !build_docker/.gitkeep
-!build_docker/debian/.gitkeep
+!build_docker/debian/buster/.gitkeep
+!build_docker/debian/bullseye/.gitkeep
 !build_docker/archlinux/.gitkeep
 !build_docker/manjaro/.gitkeep
 !build_docker/ubuntu/20.10/.gitkeep
