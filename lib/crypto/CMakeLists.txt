@@ -24,4 +24,4 @@ set(HEADERS
 
 #add_library(math_static STATIC ${SRCS} ${HEADERS})
 add_library(my_crypto SHARED ${SRCS} ${HEADERS})
-target_link_libraries(my_crypto PRIVATE ssl)
+target_link_libraries(my_crypto PRIVATE ssl crypto)
