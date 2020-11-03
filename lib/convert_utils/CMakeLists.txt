@@ -5,15 +5,14 @@ cmake_minimum_required(VERSION 3.11)
 
 project(convert_utils CXX C)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON) 
+#set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 
-set(CMAKE_AUTOMOC ON)  
-set(CMAKE_AUTOUIC ON)     
-set(CMAKE_INCLUDE_CURRENT_DIR ON) 
+#set(CMAKE_AUTOMOC ON)  
+#set(CMAKE_AUTOUIC ON)     
+#set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 #REQUIRED
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
-
+#find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
+#find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
 #Qt5_FOUND
 if (QT_FOUND)
     message(STATUS "QT: FOUND on convert_utils")
@@ -23,12 +22,10 @@ else()
 endif()
 
 set(SRCS
-	sfml_utils.cpp
 	binary.cpp
 	)
 	
 set(HEADERS
-	sfml_utils.hpp
 	binary.hpp
 	binary_imp.hpp
 	)
@@ -36,7 +33,10 @@ if (QT_FOUND)
 	set(SRCS ${SRCS} qt_utils.cpp)
 	set(HEADERS ${HEADERS} qt_utils.hpp)
 endif()
-
+if(SFML_FOUND)
+	set(SRCS ${SRCS} sfml_utils.cpp)
+	set(HEADERS ${HEADERS} sfml_utils.hpp)
+endif()
 #add_library(convert_utils_static STATIC ${SRCS} ${HEADERS})
 add_library(convert_utils SHARED ${SRCS} ${HEADERS})
 

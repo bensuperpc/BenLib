@@ -12,7 +12,7 @@ inline QImage my::qt_utils::Mat2QImage(cv::Mat const &src)
     cv::Mat temp;
     cvtColor(src, temp, cv::COLOR_RGB2BGR);
     QImage dest((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-    dest.bits();
+    //dest.bits();
     return dest;
 }
 
@@ -21,7 +21,7 @@ inline void my::qt_utils::Mat2QImage(cv::Mat const &src, QImage &dst)
     cv::Mat temp;
     cvtColor(src, temp, cv::COLOR_RGB2BGR);
     QImage *dest = new QImage((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-    dest->bits();
+    //dest->bits();
     dst = dest->copy();
     delete dest;
 }

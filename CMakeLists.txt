@@ -175,7 +175,8 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
 #)
 
-
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
 
 #   ================    SFML    ================
 #set(SFML_USE_STATIC_STD_LIBS 0)
