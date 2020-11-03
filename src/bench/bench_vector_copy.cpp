@@ -1,3 +1,9 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Texture
+** File description:
+** bench_vector_copy.cpp
+*/
 #include <cstdio>
 #include <fstream>
 #include <iomanip>

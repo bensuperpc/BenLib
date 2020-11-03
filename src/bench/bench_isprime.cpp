@@ -1,3 +1,9 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Texture
+** File description:
+** bench_isprime.cpp
+*/
 #include <cstdio>
 #include <fstream>
 #include <iomanip>

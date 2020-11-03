@@ -1,13 +1,11 @@
-//#include <boost/multiprecision/cpp_int.hpp>
+/*
+** BENSUPERPC PROJECT, 2020
+** Texture
+** File description:
+** benchmark_pc.cpp
+*/
 #include <stdio.h>
 #include <stdlib.h>
-/*
-#ifdef _WIN32
-#include <sys/timeb.h>
-#else
-#include <sys/time.h>
-#endif
-*/
 #include <algorithm>
 #include <functional>
 #include <iostream>
@@ -29,23 +27,6 @@ template <typename Type> Type divide(Type a, Type b)
     return (Type)q;
 }
 
-/*
-double
-mygettime(void) {
-# ifdef _WIN32
-  struct _timeb tb;
-  _ftime(&tb);
-  return (double)tb.time + (0.001 * (double)tb.millitm);
-# else
-  struct timeval tv;
-  if(gettimeofday(&tv, 0) < 0) {
-    perror("oops");
-  }
-  return (double)tv.tv_sec + (0.000001 * (double)tv.tv_usec);
-# endif
-}
-*/
-
 template <typename Type> void my_test(const char *name)
 {
     std::random_device rnd_device;
@@ -61,7 +42,7 @@ template <typename Type> void my_test(const char *name)
         v[i] += t[i];
     }
     auto &&t2 = my::chrono::now();
-    std::cout << name << " add: " << (((double)NBRS / my::chrono::duration(t1, t2).count()) * 1.0f) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " add: " << (((double)NBRS / my::chrono::duration(t1, t2).count()))/ 1000000.0f << " MIPS" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
@@ -69,48 +50,37 @@ template <typename Type> void my_test(const char *name)
     }
     t2 = my::chrono::now();
     // typeid(Type).name()
-    std::cout << name << " sub: " << (((double)NBRS / my::chrono::duration(t1, t2).count()) * 1.0f) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " sub: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] *= t[i];
     }
     t2 = my::chrono::now();
-    std::cout << name << " mul: " << (((double)NBRS / my::chrono::duration(t1, t2).count()) * 1.0f) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " mul: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] /= t[i];
     }
     t2 = my::chrono::now();
-    std::cout << name << " div: " << (((double)NBRS / my::chrono::duration(t1, t2).count()) * 1.0f) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " div: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
     if constexpr (std::is_integral<Type>::value) {
         t1 = my::chrono::now();
         for (size_t i = 0; i < NBRS; ++i) {
             v[i] %= t[i];
         }
         t2 = my::chrono::now();
-        std::cout << name << " mod: " << (((double)NBRS / my::chrono::duration(t1, t2).count()) * 1.0f) / 1000000.0f << " MIPS" << std::endl;
+        std::cout << name << " mod: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
     }
 }
 
 int main()
 {
-    // using namespace boost::multiprecision;
-    /*
-    my_test<      short >("      short");
-    my_test<        int >("        int");
-    my_test<       long >("       long");
-    my_test<  long long >("  long long");*/
-    my_test<int8_t>("      int8_t");
-    my_test<int16_t>("     int16_t");
-    my_test<int32_t>("     int32_t");
-    my_test<int64_t>("     int64_t");
-
-    // my_test<int128_t>("    int128_t");
-    // my_test<int256_t>("    int256_t");
-    // my_test<int512_t>("    int512_t");
-
+    my_test<      int8_t>("     int8_t");
+    my_test<     int16_t>("    int16_t");
+    my_test<     int32_t>("    int32_t");
+    my_test<     int64_t>("    int64_t");
     my_test<float>("      float");
     my_test<double>("     double");
     my_test<long double>("long double");

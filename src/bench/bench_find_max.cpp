@@ -1,3 +1,9 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Texture
+** File description:
+** bench_find_max.cpp
+*/
 #include <cstdio>
 #include <fstream>
 #include <iomanip>
@@ -78,9 +84,15 @@ int main()
 
     // Declare point to function
     const std::vector<std::pair<const std::string, std::function<int(const int32_t *, size_t)>>> pointer_fn_map {
-        {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse},
-        {"find_max_avx", &my::vector_avx::find_max_avx}};
-
+        {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse},       
+        {"find_max_avx", &my::vector_avx::find_max_avx}
+#ifdef __AVX512F__
+#if (__AVX512F__)
+,{"find_max_avx512", &my::vector_avx::find_max_avx512}};
+#endif
+#else
+ };
+#endif
     results2.reserve(pointer_fn_map.size());
 
     for (auto &elem_fn : pointer_fn_map) {

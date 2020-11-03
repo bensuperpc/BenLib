@@ -1,3 +1,9 @@
+/*
+** BENSUPERPC PROJECT, 2020
+** Texture
+** File description:
+** bench_digits_count.cpp
+*/
 #include <cstdio>
 #include <fstream>
 #include <iomanip>
