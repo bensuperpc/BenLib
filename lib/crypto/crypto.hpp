@@ -18,7 +18,7 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
+#define BUFFSIZE 16384
 
 namespace my
 {
@@ -27,6 +27,7 @@ namespace crypto
 std::string get_md5hash(const std::string &);
 std::string get_sha1hash(const std::string &);
 std::string get_sha256hash(const std::string &);
+std::string get_sha384hash(const std::string &);
 std::string get_sha512hash(const std::string &);
 
 } // namespace crypto

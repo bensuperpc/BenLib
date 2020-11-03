@@ -24,12 +24,12 @@ std::string my::crypto::get_md5hash(const std::string &fname)
 
     while (ifs.good()) {
         ifs.read(buffer, BUFFSIZE);
-        MD5_Update(&md5Context, buffer, ifs.gcount());
+        MD5_Update(&md5Context, buffer, static_cast<size_t>(ifs.gcount()));
     }
 
     ifs.close();
 
-    int res = MD5_Final(digest, &md5Context);
+    auto&& res = MD5_Final(digest, &md5Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
@@ -61,12 +61,12 @@ std::string my::crypto::get_sha1hash(const std::string &fname)
 
     while (ifs.good()) {
         ifs.read(buffer, BUFFSIZE);
-        SHA1_Update(&sha1Context, buffer, ifs.gcount());
+        SHA1_Update(&sha1Context, buffer, static_cast<size_t>(ifs.gcount()));
     }
 
     ifs.close();
 
-    int res = SHA1_Final(digest, &sha1Context);
+    auto&& res = SHA1_Final(digest, &sha1Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
@@ -98,12 +98,12 @@ std::string my::crypto::get_sha256hash(const std::string &fname)
 
     while (ifs.good()) {
         ifs.read(buffer, BUFFSIZE);
-        SHA256_Update(&sha256Context, buffer, ifs.gcount());
+        SHA256_Update(&sha256Context, buffer, static_cast<size_t>(ifs.gcount()));
     }
 
     ifs.close();
 
-    int res = SHA256_Final(digest, &sha256Context);
+    auto&& res = SHA256_Final(digest, &sha256Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
@@ -116,6 +116,43 @@ std::string my::crypto::get_sha256hash(const std::string &fname)
     sha256string = ss.str();
 
     return sha256string;
+}
+
+std::string my::crypto::get_sha384hash(const std::string &fname)
+{
+
+    char buffer[BUFFSIZE];
+    unsigned char digest[SHA384_DIGEST_LENGTH];
+
+    std::stringstream ss;
+    std::string sha384string;
+
+    std::ifstream ifs(fname, std::ifstream::binary);
+
+    SHA512_CTX sha384Context;
+
+    SHA384_Init(&sha384Context);
+
+    while (ifs.good()) {
+        ifs.read(buffer, BUFFSIZE);
+        SHA384_Update(&sha384Context, buffer, static_cast<size_t>(ifs.gcount()));
+    }
+
+    ifs.close();
+
+    auto&& res = SHA384_Final(digest, &sha384Context);
+
+    if (res == 0)  // hash failed
+        return {}; // or raise an exception
+
+    // ss << std::hex << std::uppercase << std::setfill('0');
+    ss << std::hex << std::setfill('0');
+    for (unsigned char uc : digest)
+        ss << std::setw(2) << (int)uc;
+
+    sha384string = ss.str();
+
+    return sha384string;
 }
 
 std::string my::crypto::get_sha512hash(const std::string &fname)
@@ -135,12 +172,12 @@ std::string my::crypto::get_sha512hash(const std::string &fname)
 
     while (ifs.good()) {
         ifs.read(buffer, BUFFSIZE);
-        SHA512_Update(&sha512Context, buffer, ifs.gcount());
+        SHA512_Update(&sha512Context, buffer, static_cast<size_t>(ifs.gcount()));
     }
 
     ifs.close();
 
-    int res = SHA512_Final(digest, &sha512Context);
+    auto&& res = SHA512_Final(digest, &sha512Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
