@@ -12,7 +12,7 @@ template <typename T> T my::math::sphere::sphereVolume(const T &r)
 }
 template <typename T> T my::math::sphere::sphereSurface(const T &r)
 {
-    return 4.0 * PI * r;
+    return (4.0 * PI * r);
 }
 
 #if __cplusplus < 202002L
@@ -25,7 +25,7 @@ template <typename T> T my::math::sphere::sphereVolume_Q(const T &r)
 template <typename T> T my::math::sphere::sphereSurface_Q(const T &r)
 {
 #        pragma GCC diagnostic ignored "-Wpedantic"
-    return 4.0 * Q_PI * r;
+    return (4.0 * Q_PI * r);
 }
 #    endif
 #else
@@ -35,6 +35,6 @@ template <typename T> T my::math::sphere::sphereVolume_Q(const T &r)
 }
 template <typename T> T my::math::sphere::sphereSurface_Q(const T &r)
 {
-    return 4.0 * std::numbers::pi * r;
+    return (4.0 * std::numbers::pi * r);
 }
 #endif

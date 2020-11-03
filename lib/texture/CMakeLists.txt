@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(texture)
+project(texture CXX C)
 
 set(SRCS
 	#sfml_screenshot.cpp
