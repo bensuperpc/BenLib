@@ -7,14 +7,17 @@
 //  |____/ \___|_| |_|___/\__,_| .__/ \___|_|  | .__/ \___| //
 //                             |_|             |_|          //
 //////////////////////////////////////////////////////////////
-//
-//  BenLib, 2020
-//  benchmark_pc.cpp
-//  Benchmark CPU with Optimization
-//  Source: -
-//  OS: ALL
-//  CPU: ALL
-//
+//                                                          //
+//  BenLib, 2020                                            //
+//  Created: 30, October, 2020                              //
+//  Modified: 4, November, 2020                             //
+//  file: benchmark_pc.cpp                                  //
+//  Benchmark CPU with Optimization                         //
+//  Source: -                                               //
+//  OS: ALL                                                 //
+//  CPU: ALL                                                //
+//                                                          //
+//////////////////////////////////////////////////////////////
 
 #include <algorithm>
 #include <functional>
