@@ -4,14 +4,14 @@
 ** File description:
 ** benchmark_pc.cpp
 */
-#include <stdio.h>
-#include <stdlib.h>
 #include <algorithm>
 #include <functional>
 #include <iostream>
 #include <iterator>
 #include <limits>
 #include <random>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <vector>
 #include "../../lib/time/chrono/chrono.hpp"
@@ -42,7 +42,7 @@ template <typename Type> void my_test(const char *name)
         v[i] += t[i];
     }
     auto &&t2 = my::chrono::now();
-    std::cout << name << " add: " << (((double)NBRS / my::chrono::duration(t1, t2).count()))/ 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " add: " << (((double)NBRS / my::chrono::duration(t1, t2).count())) / 1000000.0f << " MIPS" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
@@ -50,37 +50,37 @@ template <typename Type> void my_test(const char *name)
     }
     t2 = my::chrono::now();
     // typeid(Type).name()
-    std::cout << name << " sub: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " sub: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] *= t[i];
     }
     t2 = my::chrono::now();
-    std::cout << name << " mul: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " mul: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] /= t[i];
     }
     t2 = my::chrono::now();
-    std::cout << name << " div: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " div: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
     if constexpr (std::is_integral<Type>::value) {
         t1 = my::chrono::now();
         for (size_t i = 0; i < NBRS; ++i) {
             v[i] %= t[i];
         }
         t2 = my::chrono::now();
-        std::cout << name << " mod: " << ((double)NBRS / my::chrono::duration(t1, t2).count())/ 1000000.0f << " MIPS" << std::endl;
+        std::cout << name << " mod: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
     }
 }
 
 int main()
 {
-    my_test<      int8_t>("     int8_t");
-    my_test<     int16_t>("    int16_t");
-    my_test<     int32_t>("    int32_t");
-    my_test<     int64_t>("    int64_t");
+    my_test<int8_t>("     int8_t");
+    my_test<int16_t>("    int16_t");
+    my_test<int32_t>("    int32_t");
+    my_test<int64_t>("    int64_t");
     my_test<float>("      float");
     my_test<double>("     double");
     my_test<long double>("long double");
