@@ -35,8 +35,6 @@ struct Processor
     }
 };
 
-// Source https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C
-
 int main()
 {
     std::vector<std::string> list_files = {};
