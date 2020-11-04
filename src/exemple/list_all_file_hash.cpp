@@ -48,9 +48,9 @@ int main()
 
     std::vector<std::pair<std::string, std::vector<std::future<std::pair<std::string, std::string>>>>> results {};
 #if __cplusplus >= 201703L
-    thread::Pool thread_pool(12);
+    thread::Pool thread_pool(std::thread::hardware_concurrency());
 #else
-    ThreadPool thread_pool(12);
+    ThreadPool thread_pool(std::thread::hardware_concurrency());
 #endif
 
     const std::vector<std::pair<const std::string, std::string (*)(const std::string &)>> pointer_map {{"get_md5hash", &my::crypto::get_md5hash},
