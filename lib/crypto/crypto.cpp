@@ -29,7 +29,7 @@ std::string my::crypto::get_md5hash(const std::string &fname)
 
     ifs.close();
 
-    auto&& res = MD5_Final(digest, &md5Context);
+    auto &&res = MD5_Final(digest, &md5Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
@@ -66,7 +66,7 @@ std::string my::crypto::get_sha1hash(const std::string &fname)
 
     ifs.close();
 
-    auto&& res = SHA1_Final(digest, &sha1Context);
+    auto &&res = SHA1_Final(digest, &sha1Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
@@ -103,7 +103,7 @@ std::string my::crypto::get_sha256hash(const std::string &fname)
 
     ifs.close();
 
-    auto&& res = SHA256_Final(digest, &sha256Context);
+    auto &&res = SHA256_Final(digest, &sha256Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
@@ -140,7 +140,7 @@ std::string my::crypto::get_sha384hash(const std::string &fname)
 
     ifs.close();
 
-    auto&& res = SHA384_Final(digest, &sha384Context);
+    auto &&res = SHA384_Final(digest, &sha384Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception
@@ -177,7 +177,7 @@ std::string my::crypto::get_sha512hash(const std::string &fname)
 
     ifs.close();
 
-    auto&& res = SHA512_Final(digest, &sha512Context);
+    auto &&res = SHA512_Final(digest, &sha512Context);
 
     if (res == 0)  // hash failed
         return {}; // or raise an exception

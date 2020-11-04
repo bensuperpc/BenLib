@@ -65,11 +65,9 @@ int main()
         }
     }
     std::cout << "Get data: OK" << std::endl;
-    for (const auto &x : time)
-    {
-        //std::cout << x.first << std::endl;
-        for (const auto &y : x.second)
-        {
+    for (const auto &x : time) {
+        // std::cout << x.first << std::endl;
+        for (const auto &y : x.second) {
             std::cout << x.first << " : " << y.first << " : " << y.second << std::endl;
         }
     }

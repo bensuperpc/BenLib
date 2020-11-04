@@ -129,7 +129,6 @@ set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${SEC_COMPILER_LINK_REL}")
 set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "${SEC_COMPILER_LINK_REL}")
 set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
-
 set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} --coverage")
 
 #set(BUILD_SHARED_LIBRARIES 0)
@@ -150,12 +149,16 @@ add_definitions(-DCMAKE_CXX_EXTENSIONS=${CMAKE_CXX_EXTENSIONS})
 add_definitions(-DCMAKE_CXX_COMPILER_ID="${CMAKE_CXX_COMPILER_ID}")
 add_definitions(-DCMAKE_CXX_COMPILER_VERSION="${CMAKE_CXX_COMPILER_VERSION}")
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+if(CMAKE_SIZEOF_VOID_P EQUAL 2)
+    message(STATUS "16 bit mode")
+elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
     message(STATUS "32 bit mode")
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
     message(STATUS "64 bit mode")
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 16)
     message(STATUS "128 bit mode")
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 32)
+    message(STATUS "256 bit mode")
 else()
     message(STATUS "unknow size")
 endif()
@@ -174,9 +177,6 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
     #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
 #)
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
 
 #   ================    SFML    ================
 #set(SFML_USE_STATIC_STD_LIBS 0)
@@ -279,21 +279,21 @@ endif()
 
 #   ================    Qt    ================
 
-#set(CMAKE_AUTOUIC ON)
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
 
 #find_package(Qt5 COMPONENTS Quick Widgets Core Gui Multimedia Network REQUIRED)
 #find_package(Qt5QuickCompiler)
 #qtquick_compiler_add_resources(RESOURCES example.qrc)
 #qt5_use_modules(myapp Quick Widgets Core Gui Multimedia Network)
 
-#find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia REQUIRED)
-#find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia REQUIRED)
-
 if (QT_FOUND)
     message(STATUS "QT: FOUND")
-    #include_directories( ${QT_INCLUDES})
+    include_directories( ${QT_INCLUDES})
 else()
     message(STATUS "QT: NOT FOUND")
 endif()
@@ -398,6 +398,8 @@ set(LIST_ALL_FILE_OPENCV src/exemple/list_all_file_opencv.cpp)
 
 set(COUNT_ALL_FILE src/exemple/count_all_file.cpp)
 
+set(IMAGE_DIFF src/exemple/image_diff.cpp)
+
 set(SRCS
     )
 
@@ -480,6 +482,10 @@ if (OPENCV_FOUND)
     add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV} ${SRCS} ${HEADERS})
     target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS} stdc++fs)
     add_dependencies(list_all_file_opencv ${CUSTOM_LIBS})
+
+    add_executable(image_diff ${IMAGE_DIFF} ${SRCS} ${HEADERS})
+    target_link_libraries(image_diff PRIVATE filesystem ${OpenCV_LIBS} stdc++fs utils_opencv)
+    add_dependencies(image_diff ${CUSTOM_LIBS})
 endif()
 
 add_executable(count_all_file ${COUNT_ALL_FILE} ${SRCS} ${HEADERS})
