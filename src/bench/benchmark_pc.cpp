@@ -11,6 +11,9 @@
 //  BenLib, 2020
 //  benchmark_pc.cpp
 //  Benchmark CPU with Optimization
+//  Source: -
+//  OS: ALL
+//  CPU: ALL
 //
 
 #include <algorithm>
