@@ -82,3 +82,10 @@ docker run --rm -it --name ben_lib_builder_08 \
 --mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
 --mount type=bind,source="$(pwd)/build_docker/fedora/32",destination=/usr/src/app/build \
 ben_lib_builder_fedora_32
+
+docker build -t ben_lib_builder_fedora_31 -f config_docker/Dockerfile_fedora . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=fedora:31
+
+docker run --rm -it --name ben_lib_builder_09 \
+--mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
+--mount type=bind,source="$(pwd)/build_docker/fedora/31",destination=/usr/src/app/build \
+ben_lib_builder_fedora_31
