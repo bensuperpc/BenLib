@@ -12,12 +12,21 @@
 #
 # ==============================================================================
 
+docker build -t ben_lib_builder_manjaro_stable -f config_docker/Dockerfile_manjaro . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=manjarolinux/base
+
+docker run --rm -it --name ben_lib_builder_00 \
+--mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
+--mount type=bind,source="$(pwd)/build_docker/manjaro/stable",destination=/usr/src/app/build \
+ben_lib_builder_manjaro_stable
+
+
 docker build -t ben_lib_builder_manjaro_unstable -f config_docker/Dockerfile_manjaro . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=manjarolinux/build-unstable
 
 docker run --rm -it --name ben_lib_builder_01 \
 --mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
---mount type=bind,source="$(pwd)/build_docker/manjaro",destination=/usr/src/app/build \
+--mount type=bind,source="$(pwd)/build_docker/manjaro/unstable",destination=/usr/src/app/build \
 ben_lib_builder_manjaro_unstable
+
 
 
 docker build -t ben_lib_builder_archlinux -f config_docker/Dockerfile_archlinux . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=archlinux
@@ -59,3 +68,16 @@ docker run --rm -it --name ben_lib_builder_06 \
 --mount type=bind,source="$(pwd)/build_docker/debian/bullseye",destination=/usr/src/app/build \
 ben_lib_builder_bullseye
 
+docker build -t ben_lib_builder_fedora_33 -f config_docker/Dockerfile_fedora . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=fedora:33
+
+docker run --rm -it --name ben_lib_builder_07 \
+--mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
+--mount type=bind,source="$(pwd)/build_docker/fedora/33",destination=/usr/src/app/build \
+ben_lib_builder_fedora_33
+
+docker build -t ben_lib_builder_fedora_32 -f config_docker/Dockerfile_fedora . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=fedora:32
+
+docker run --rm -it --name ben_lib_builder_08 \
+--mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
+--mount type=bind,source="$(pwd)/build_docker/fedora/32",destination=/usr/src/app/build \
+ben_lib_builder_fedora_32

@@ -1,13 +1,12 @@
-ARG IMAGE=manjarolinux/build-unstable
+ARG IMAGE=fedora:33
 
 FROM $IMAGE
 
-RUN dnf upgrade -y --refresh
-RUN dnf install -y SFML gcc boost opencv opencv-devel cmake ninja-build gcc-c++ \
+RUN dnf upgrade -y --refresh && dnf install -y gcc boost opencv opencv-devel cmake ninja-build gcc-c++ \
     git freeglut-devel xorg-x11-apps libudev-devel libXrandr libXrandr-devel libX11 \
-    qt5-qtbase qt5-devel openal-soft && dnf autoremove -y
-RUN dnf install -y openal-soft-devel
-RUN dnf install -y vorbis-tools libvorbis
+    qt5-qtbase-devel qt5-qtbase openal-soft vorbis-tools libvorbis openal-soft-devel openssl SFML-devel \
+    boost-devel openssl-devel qt5-qtmultimedia-devel qt5-qtquickcontrols2-devel && dnf autoremove -y
+RUN dnf install -y qt5-qtmultimedia qt5-qtquickcontrols2 qt5-qtquickcontrols
 
 ARG UNAME=testuser
 ARG UID=1000

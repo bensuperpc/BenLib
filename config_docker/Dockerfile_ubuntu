@@ -4,15 +4,14 @@ FROM $IMAGE
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \ 
     && apt-get install -y --allow-unauthenticated \ 
-    libsfml-dev ninja-build libopencv-dev qml-module-qtquick-controls \ 
+    libsfml-dev ninja-build libopencv-dev qml-module-qtquick-controls qml-module-qtquick-controls2 \ 
     g++ build-essential cmake qt5-default qtmultimedia5-dev mesa-common-dev libpcap-dev libssl-dev \ 
-    freeglut3-dev libboost-all-dev libqt5multimedia5 openssl \ 
+    freeglut3-dev libboost-all-dev qtbase5-dev-tools qtdeclarative5-dev libqt5multimedia5 openssl \ 
     && apt clean -y \ 
     && apt autoclean -y \ 
     && apt autoremove -y \ 
     && rm -rf /var/lib/apt/lists/*
-
-    
+  
 ARG UNAME=testuser
 ARG UID=1000
 ARG GID=1000

@@ -43,6 +43,8 @@ build_docker/*
 !build_docker/debian/buster/.gitkeep
 !build_docker/debian/bullseye/.gitkeep
 !build_docker/archlinux/.gitkeep
-!build_docker/manjaro/.gitkeep
-!build_docker/ubuntu/20.10/.gitkeep
+!build_docker/manjaro/stable/.gitkeep
+!build_docker/manjaro/unstable/.gitkeep
 !build_docker/ubuntu/20.04/.gitkeep
+!build_docker/ubuntu/20.10/.gitkeep
+!build_docker/archlinux/.gitkeep

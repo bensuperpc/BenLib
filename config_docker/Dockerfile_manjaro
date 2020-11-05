@@ -1,4 +1,4 @@
-ARG IMAGE=manjarolinux/build-unstable
+ARG IMAGE=manjarolinux/base
 
 FROM $IMAGE
 ADD config_docker/pacman.conf /etc/pacman.conf
