@@ -13,13 +13,12 @@
 #
 # ==============================================================================
 
-docker build -t ben_lib_builder_manjaro_stable -f config_docker/Dockerfile_manjaro . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=manjarolinux/base
+#docker build -t ben_lib_builder_manjaro_stable -f config_docker/Dockerfile_manjaro . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=manjarolinux/base
 
-docker run --rm -it --name ben_lib_builder_00 \
---mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
---mount type=bind,source="$(pwd)/build_docker/manjaro/stable",destination=/usr/src/app/build \
-ben_lib_builder_manjaro_stable
-
+#docker run --rm -it --name ben_lib_builder_00 \
+#--mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
+#--mount type=bind,source="$(pwd)/build_docker/manjaro/stable",destination=/usr/src/app/build \
+#ben_lib_builder_manjaro_stable
 
 docker build -t ben_lib_builder_manjaro_unstable -f config_docker/Dockerfile_manjaro . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=manjarolinux/build-unstable
 
@@ -96,3 +95,10 @@ docker run --rm -it --name ben_lib_builder_10 \
 --mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
 --mount type=bind,source="$(pwd)/build_docker/fedora/34",destination=/usr/src/app/build \
 ben_lib_builder_fedora_34
+
+docker build -t ben_lib_builder_fedora_30 -f config_docker/Dockerfile_fedora . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=fedora:30
+
+docker run --rm -it --name ben_lib_builder_11 \
+--mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly \
+--mount type=bind,source="$(pwd)/build_docker/fedora/30",destination=/usr/src/app/build \
+ben_lib_builder_fedora_30

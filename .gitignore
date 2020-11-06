@@ -47,6 +47,7 @@ build_docker/*
 !build_docker/manjaro/unstable/.gitkeep
 !build_docker/ubuntu/20.04/.gitkeep
 !build_docker/ubuntu/20.10/.gitkeep
+!build_docker/fedora/30/.gitkeep
 !build_docker/fedora/31/.gitkeep
 !build_docker/fedora/32/.gitkeep
 !build_docker/fedora/33/.gitkeep
