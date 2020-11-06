@@ -5,7 +5,6 @@
 ** crypto.cpp
 */
 
-
 // Source https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C
 #include "crypto.hpp"
 

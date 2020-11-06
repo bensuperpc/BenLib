@@ -303,7 +303,7 @@ __m128i my::vector_avx::vperm(__m128i &a, __m128i &idx)
 }
 
 #    if (__AVX2__ || __AVX__)
-/*
+
 int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
 {
     __m256i vresult = _mm256_set1_epi32(0);
@@ -323,8 +323,8 @@ int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
     vresult = _mm256_max_epi32(vresult, v);
     __m128i vres128 = _mm256_extracti128_si256(vresult, 0);
     return _mm_extract_epi32(vres128, 0);
-}*/
-
+}
+/*
 int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
 {
     __m256i vresult = _mm256_set1_epi32(0);
@@ -338,7 +338,7 @@ int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
 
     return horizontal_max_Vec8i(vresult);
 }
-
+*/
 #    endif
 
 #    if (__AVX2__ || __AVX__)

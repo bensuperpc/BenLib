@@ -68,34 +68,28 @@ int main()
 #else
     ThreadPool thread_pool(1);
 #endif
-    const size_t n = 2; // 32768
+    const size_t N = 20;
+    const size_t S = 0;
     const int nofTestCases = 100000;
-    int n1[n * 2] __attribute__((aligned(32)));
-    int n2[n * 4] __attribute__((aligned(32)));
-    int n3[n * 8] __attribute__((aligned(32)));
-    int n4[n * 16] __attribute__((aligned(32)));
-    int n5[n * 32] __attribute__((aligned(32)));
-    int n6[n * 64] __attribute__((aligned(32)));
-    int n7[n * 128] __attribute__((aligned(32)));
-    int n8[n * 256] __attribute__((aligned(32)));
-    int n9[n * 512] __attribute__((aligned(32)));
-    int n10[n * 1024] __attribute__((aligned(32)));
-    int n11[n * 2048] __attribute__((aligned(32)));
-    int n12[n * 4096] __attribute__((aligned(32)));
-    int n13[n * 8192] __attribute__((aligned(32)));
-    int n14[n * 16384] __attribute__((aligned(32)));
-    int n15[n * 32768] __attribute__((aligned(32)));
-    std::vector<std::pair<const size_t, int *>> n_ptr = {{n * 2, n1}, {n * 4, n2}, {n * 8, n3}, {n * 16, n4}, {n * 32, n5}, {n * 64, n6}, {n * 128, n7},
-        {n * 256, n8}, {n * 512, n9}, {n * 1024, n10}, {n * 2048, n11}, {n * 4096, n12}, {n * 8192, n13}, {n * 16384, n14}, {n * 32768, n15}};
-
-    // Fill array with random values
-    for (auto &n_ptr_s : n_ptr) {
-        for (auto k = 0; k < n_ptr_s.first; k++) {
-            n_ptr_s.second[k] = rand() % 10000;
-        }
+    
+    int** nx = new int*[N];
+    std::cout << std::setprecision(10) << std::fixed;
+    for(size_t x = 0; x < N; ++x) {
+        nx[x] = new int[(int)std::pow(2, x + S)];
+        std::cout << (int)std::pow(2, x + S) << std::endl;
     }
 
-    // Declare point to function
+    for(size_t x = 0; x < N; ++x) {
+        for(size_t y = 0; y < (size_t)std::pow(2, x); ++y) {
+           nx[x][y] = rand() % 2000000000;
+        }   
+    }
+    std::vector<std::pair<const size_t, int *>> n_ptr = {};
+    for(size_t x = 0; x < N; ++x) {
+        n_ptr.emplace_back(std::make_pair((size_t)std::pow(2, x + S), nx[x]));
+    }
+
+// Declare point to function
     const std::vector<std::pair<const std::string, std::function<int(const int32_t *, size_t)>>> pointer_fn_map
     {
         {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse},
@@ -113,6 +107,7 @@ int main()
 #else
     };
 #endif
+    //int n1[n * 2] __attribute__((aligned(32)));
     results2.reserve(pointer_fn_map.size());
 
     for (auto &elem_fn : pointer_fn_map) {
@@ -147,7 +142,8 @@ int main()
     }
     std::cout << "Get data: OK" << std::endl;
 
-    std::ifstream in("in.txt");
+
+   std::ifstream in("in.txt");
     std::cin.tie(0);
     auto cinbuf = std::cin.rdbuf(in.rdbuf()); // save and redirect
 
@@ -180,4 +176,8 @@ int main()
 
     std::cin.rdbuf(cinbuf);
     std::cout.rdbuf(coutbuf);
+    for(size_t i = 0; i < N; ++i) {
+        delete nx[i];
+    }
+    delete nx;
 }
