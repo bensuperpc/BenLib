@@ -348,14 +348,7 @@ __m256i my::vector_avx::_mm256_div_epi16(const __m256i &va, const int b)
     return _mm256_mulhrs_epi16(va, vb);
 }
 #    endif
-/*
-int my::vector_avx::horizontal_max_Vec4i(__m128i &x)
-{
-    int result[4] __attribute__((aligned(16))) = {0};
-    _mm_store_si128((__m128i *)result, x);
-    return std::max(std::max(std::max(result[0], result[1]), result[2]), result[3]);
-}
-*/
+
 int my::vector_avx::horizontal_max_Vec8i(__m256i &x)
 {
     int result[8] __attribute__((aligned(32))) = {0};
@@ -372,25 +365,12 @@ int my::vector_avx::horizontal_max_Vec4i(__m128i &x)
     __m128i max4 = _mm_max_epi32(max2, max3);
     return _mm_cvtsi128_si32(max4);
 }
-/*
-int my::vector_avx::find_max_sse(const int32_t *array, size_t n)
-{
-    __m128i vresult = _mm_set1_epi32(0);
-    __m128i v;
-    // Find max value in array 4 by 4
-    for (size_t k = 0; k < n; k += 4) {
-        v = _mm_load_si128((__m128i *)&array[k]);
-        vresult = _mm_max_epi32(vresult, v);
-    }
-
-    return horizontal_max_Vec4i(vresult);
-}
-*/
 
 int my::vector_avx::find_max_sse(const int32_t *array, size_t n)
 {
     __m128i vresult = _mm_set1_epi32(0);
     __m128i v;
+    //__m128i arraysmd       = _mm_loadu_si128((__m128i*)array);
     // Find max value in array 4 by 4
     for (size_t k = 0; k < n; k += 4) {
         v = _mm_load_si128((__m128i *)&array[k]);
@@ -467,8 +447,9 @@ int my::vector_avx::find_max_avx512(const int32_t *array, size_t n)
         v = _mm512_load_epi32((__m512i *)&array[k]);
         vresult = _mm512_max_epi32(vresult, v);
     }
-    return my::vector_avx::horizontal_max_Vec16i(vresult);
-
+    //return my::vector_avx::horizontal_max_Vec16i(vresult);
+    //v = _mm512_permute4f128_epi32(vresult, 1);
+    //vresult = _mm512_max_epi32(vresult, v);
     /*
     v = _mm256_permute2x128_si256(vresult, vresult, 1);
     vresult = _mm512_max_epi32(vresult, v);
