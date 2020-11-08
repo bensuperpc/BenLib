@@ -5,7 +5,7 @@
 //#include <boost/multiprecision/cpp_int.hpp>
 // boost::multiprecision::uint1024_t i = 0;
 
-#include "../../../lib/math/cylinder.hpp"
+#include "math/cylinder.hpp"
 
 BOOST_AUTO_TEST_CASE(test_cylinder_volume_1)
 {

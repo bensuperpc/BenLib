@@ -447,9 +447,9 @@ int my::vector_avx::find_max_avx512(const int32_t *array, size_t n)
         v = _mm512_load_epi32((__m512i *)&array[k]);
         vresult = _mm512_max_epi32(vresult, v);
     }
-    //return my::vector_avx::horizontal_max_Vec16i(vresult);
-    //v = _mm512_permute4f128_epi32(vresult, 1);
-    //vresult = _mm512_max_epi32(vresult, v);
+    // return my::vector_avx::horizontal_max_Vec16i(vresult);
+    // v = _mm512_permute4f128_epi32(vresult, 1);
+    // vresult = _mm512_max_epi32(vresult, v);
     /*
     v = _mm256_permute2x128_si256(vresult, vresult, 1);
     vresult = _mm512_max_epi32(vresult, v);

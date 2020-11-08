@@ -19,12 +19,12 @@
 //////////////////////////////////////////////////////////////
 #include <string>
 #include <vector>
-#include "../../lib/crypto/crypto.hpp"
-#include "../../lib/filesystem/filesystem.hpp"
+#include "crypto/crypto.hpp"
+#include "filesystem/filesystem.hpp"
 #if __cplusplus >= 201703L
-#    include "../../lib/thread/Pool.hpp"
+#    include "thread/Pool.hpp"
 #else
-#    include "../../lib/thread/ThreadPool.h"
+#    include "thread/ThreadPool.h"
 #endif
 
 struct Processor

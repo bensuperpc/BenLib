@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
-#include "../../lib/filesystem/filesystem.hpp"
+#include "filesystem/filesystem.hpp"
 
 int main()
 {

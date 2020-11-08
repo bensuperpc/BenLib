@@ -25,14 +25,14 @@
 #include <random>
 #include <thread>
 #include <vector>
-#include "../../lib/time/chrono/chrono.hpp"
-#include "../../lib/vector/vector.hpp"
-#include "../../lib/vector/vector_avx.hpp"
+#include "time/chrono/chrono.hpp"
+#include "vector/vector.hpp"
+#include "vector/vector_avx.hpp"
 
 #if __cplusplus >= 201703L
-#    include "../../lib/thread/Pool.hpp"
+#    include "thread/Pool.hpp"
 #else
-#    include "../../lib/thread/ThreadPool.h"
+#    include "thread/ThreadPool.h"
 #endif
 #include <algorithm>
 #include <chrono>
@@ -71,25 +71,25 @@ int main()
     const size_t N = 20;
     const size_t S = 0;
     const int nofTestCases = 100000;
-    
-    int** nx = new int*[N];
+
+    int **nx = new int *[N];
     std::cout << std::setprecision(10) << std::fixed;
-    for(size_t x = 0; x < N; ++x) {
+    for (size_t x = 0; x < N; ++x) {
         nx[x] = new int[(int)std::pow(2, x + S)];
         std::cout << (int)std::pow(2, x + S) << std::endl;
     }
 
-    for(size_t x = 0; x < N; ++x) {
-        for(size_t y = 0; y < (size_t)std::pow(2, x); ++y) {
-           nx[x][y] = rand() % 2000000000;
-        }   
+    for (size_t x = 0; x < N; ++x) {
+        for (size_t y = 0; y < (size_t)std::pow(2, x); ++y) {
+            nx[x][y] = rand() % 2000000000;
+        }
     }
     std::vector<std::pair<const size_t, int *>> n_ptr = {};
-    for(size_t x = 0; x < N; ++x) {
+    for (size_t x = 0; x < N; ++x) {
         n_ptr.emplace_back(std::make_pair((size_t)std::pow(2, x + S), nx[x]));
     }
 
-// Declare point to function
+    // Declare point to function
     const std::vector<std::pair<const std::string, std::function<int(const int32_t *, size_t)>>> pointer_fn_map
     {
         {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse},
@@ -107,7 +107,7 @@ int main()
 #else
     };
 #endif
-    //int n1[n * 2] __attribute__((aligned(32)));
+    // int n1[n * 2] __attribute__((aligned(32)));
     results2.reserve(pointer_fn_map.size());
 
     for (auto &elem_fn : pointer_fn_map) {
@@ -142,8 +142,7 @@ int main()
     }
     std::cout << "Get data: OK" << std::endl;
 
-
-   std::ifstream in("in.txt");
+    std::ifstream in("in.txt");
     std::cin.tie(0);
     auto cinbuf = std::cin.rdbuf(in.rdbuf()); // save and redirect
 
@@ -176,7 +175,7 @@ int main()
 
     std::cin.rdbuf(cinbuf);
     std::cout.rdbuf(coutbuf);
-    for(size_t i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
         delete nx[i];
     }
     delete nx;

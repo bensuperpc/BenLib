@@ -2,8 +2,8 @@
 #define BOOST_TEST_MODULE getGravitationalAttraction
 
 #include <boost/test/unit_test.hpp>
-#include "../../../lib/math/constant.hpp"
-#include "../../../lib/math/getGravitationalAttraction.hpp"
+#include "math/constant.hpp"
+#include "math/getGravitationalAttraction.hpp"
 
 BOOST_AUTO_TEST_CASE(test_getGravitationalAttraction_1)
 {

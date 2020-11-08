@@ -317,6 +317,10 @@ endif()
 #   =================================================
 #   =============    INTERNAL LIBS    ===============
 #   =================================================
+#set(BASEPATH "${CMAKE_SOURCE_DIR}")
+#include_directories("${BASEPATH}")
+
+include_directories("lib/")
 
 # C libs
 add_subdirectory(lib/C/libhello "lib/libhello")

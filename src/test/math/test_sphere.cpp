@@ -15,7 +15,7 @@ extern "C"
 #    include <boost/multiprecision/float128.hpp>
 #endif
 #include <boost/test/unit_test.hpp>
-#include "../../../lib/math/sphere.hpp"
+#include "math/sphere.hpp"
 
 BOOST_AUTO_TEST_CASE(test_sphere_volume_1)
 {

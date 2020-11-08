@@ -12,14 +12,14 @@
 #include <random>
 #include <thread>
 #include <vector>
-#include "../../lib/math/prime.hpp"
-#include "../../lib/time/chrono/chrono.hpp"
-#include "../../lib/vector/vector.hpp"
+#include "math/prime.hpp"
+#include "time/chrono/chrono.hpp"
+#include "vector/vector.hpp"
 
 #if __cplusplus >= 201703L
-#    include "../../lib/thread/Pool.hpp"
+#    include "thread/Pool.hpp"
 #else
-#    include "../../lib/thread/ThreadPool.h"
+#    include "thread/ThreadPool.h"
 #endif
 #include <algorithm>
 #include <chrono>

@@ -1,8 +1,8 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE getSchwarzschild
 #include <boost/test/unit_test.hpp>
-#include "../../../lib/math/constant.hpp"
-#include "../../../lib/math/getSchwarzschild.hpp"
+#include "math/constant.hpp"
+#include "math/getSchwarzschild.hpp"
 
 namespace schwarzschild = my::math::schwarzschild;
 

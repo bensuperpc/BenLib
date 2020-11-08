@@ -29,8 +29,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <vector>
-#include "../../lib/time/chrono/chrono.hpp"
-#include "../../lib/vector/vector.hpp"
+#include "time/chrono/chrono.hpp"
+#include "vector/vector.hpp"
 
 #define NBRS 10000000
 
