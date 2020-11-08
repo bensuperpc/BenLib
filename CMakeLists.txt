@@ -556,6 +556,15 @@ endif()
 target_link_libraries(${TEST_VECTOR_COPY} ${Boost_LIBRARIES} vector)
 add_test(NAME ${TEST_VECTOR_COPY} COMMAND ${TEST_VECTOR_COPY})
 
+#Test vector copy
+set(TEST_VECTOR_MAX_SIMD test_vector_max_simd)
+add_executable(${TEST_VECTOR_MAX_SIMD} src/test/vector/test_vector_max_simd.cpp)
+if(EXTERNAL_LIB)
+    add_dependencies(${TEST_VECTOR_MAX_SIMD} ${EXTERNAL_LIB})
+endif()
+target_link_libraries(${TEST_VECTOR_MAX_SIMD} ${Boost_LIBRARIES} vector)
+add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
+
 #Test power
 set(TEST_POWER test_power)
 add_executable(${TEST_POWER} src/test/math/test_power.cpp)

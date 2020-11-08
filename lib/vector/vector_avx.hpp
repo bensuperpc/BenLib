@@ -103,8 +103,8 @@ int find_max_avx512(const int32_t *, size_t);
 #            endif
 #        endif
 
-int horizontal_max_Vec4i(__m128i &x);
-int horizontal_max_Vec8i(__m256i &x);
+int horizontal_max_Vec4i(const __m128i &x);
+int horizontal_max_Vec8i(const __m256i &x);
 
 int find_max_sse(const int32_t *, size_t);
 // int find_max_sse_v2(const int32_t *array, size_t n);
