@@ -38,7 +38,6 @@ tools/*
 !tools/graph.py
 coverage/*
 !coverage/.gitignore
-build_docker/*
 !build_docker/.gitkeep
 !build_docker/debian/buster/.gitkeep
 !build_docker/debian/bullseye/.gitkeep

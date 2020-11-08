@@ -224,7 +224,7 @@ endif()
 find_package(OpenCV REQUIRED QUIET)
 
 if (OPENCV_FOUND)
-    INCLUDE_DIRECTORIES( ${OpenCV_INCLUDE_DIRS})
+    include_directories(${OpenCV_INCLUDE_DIRS})
     message(STATUS "OPENCV: FOUND")
 else()
     message(STATUS "OPENCV: NOT FOUND")
