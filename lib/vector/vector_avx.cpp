@@ -324,7 +324,7 @@ int my::vector_avx::find_max_avx(const int32_t *array, size_t n)
     __m128i vres128 = _mm256_extracti128_si256(vresult, 0);
     return _mm_extract_epi32(vres128, 0);
     */
-   return horizontal_max_Vec8i(vresult);
+    return horizontal_max_Vec8i(vresult);
 }
 #    endif
 
@@ -338,13 +338,13 @@ __m256i my::vector_avx::_mm256_div_epi16(const __m256i &va, const int b)
 
 int my::vector_avx::horizontal_max_Vec8i(const __m256i &x)
 {
-    auto && v = _mm256_permute2x128_si256(x, x, 1);
-    auto && vresult = _mm256_max_epi32(x, v);
+    auto &&v = _mm256_permute2x128_si256(x, x, 1);
+    auto &&vresult = _mm256_max_epi32(x, v);
     v = _mm256_permute4x64_epi64(vresult, 1);
     vresult = _mm256_max_epi32(vresult, v);
     v = _mm256_shuffle_epi32(vresult, 1);
     vresult = _mm256_max_epi32(vresult, v);
-    auto && vres128 = _mm256_extracti128_si256(vresult, 0);
+    auto &&vres128 = _mm256_extracti128_si256(vresult, 0);
     return _mm_extract_epi32(vres128, 0);
 }
 

@@ -21,112 +21,112 @@ extern "C"
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_1)
 {
-    const size_t i = 8000; 
-    int *n = new int [i];
+    const size_t i = 8000;
+    int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = rand() % 2000000000;
     }
-#        if (__AVX2__ || __AVX__)    
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_normal != find_max_avx");
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_sse != find_max_avx");
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
 #endif
-#    if (__SSE3__ || __SSE2__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_sse(n,i), "find_max_normal != find_max_sse");
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_2)
 {
-    const size_t i = 100000; 
-    int *n = new int [i];
+    const size_t i = 100000;
+    int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = rand() % 8000;
     }
-#        if (__AVX2__ || __AVX__)    
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_normal != find_max_avx");
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_sse != find_max_avx");
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
 #endif
-#    if (__SSE3__ || __SSE2__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_sse(n,i), "find_max_normal != find_max_sse");
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_3)
 {
-    const size_t i = 1000; 
-    int *n = new int [i];
+    const size_t i = 1000;
+    int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = rand() % 1000;
     }
-#        if (__AVX2__ || __AVX__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_normal != find_max_avx");
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_sse != find_max_avx");
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
 #endif
-#    if (__SSE3__ || __SSE2__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_sse(n,i), "find_max_normal != find_max_sse");
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_4)
 {
-    const size_t i = 10000; 
-    int *n = new int [i];
+    const size_t i = 10000;
+    int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = 1000;
     }
-#        if (__AVX2__ || __AVX__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_normal != find_max_avx");
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_sse != find_max_avx");
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
 #endif
-#    if (__SSE3__ || __SSE2__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_sse(n,i), "find_max_normal != find_max_sse");
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_5)
 {
-    const size_t i = 10000; 
-    int *n = new int [i];
+    const size_t i = 10000;
+    int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = 0;
     }
-#        if (__AVX2__ || __AVX__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_normal != find_max_avx");
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_sse != find_max_avx");
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
 #endif
-#    if (__SSE3__ || __SSE2__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_sse(n,i), "find_max_normal != find_max_sse");
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_6)
 {
-    const size_t i = 10000; 
-    int *n = new int [i];
+    const size_t i = 10000;
+    int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = 2147483647;
     }
-#        if (__AVX2__ || __AVX__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_normal != find_max_avx");
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_sse != find_max_avx");
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
 #endif
-#    if (__SSE3__ || __SSE2__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_sse(n,i), "find_max_normal != find_max_sse");
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_7)
 {
-    const size_t i = 10000; 
-    int *n = new int [i];
+    const size_t i = 10000;
+    int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = -2147483647;
     }
-#        if (__AVX2__ || __AVX__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_normal != find_max_avx");
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n,i) == my::vector_avx::find_max_avx(n,i), "find_max_sse != find_max_avx");
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
 #endif
-#    if (__SSE3__ || __SSE2__)
-    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n,i) == my::vector_avx::find_max_sse(n,i), "find_max_normal != find_max_sse");
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
