@@ -1,5 +1,5 @@
-#ifndef REVSTR_H
-#define REVSTR_H
+#ifndef MY_REVSTR_H
+#define MY_REVSTR_H
 
 #define XOR_SWAP(a, b)                                                                                                                                         \
     do {                                                                                                                                                       \
@@ -7,5 +7,5 @@
         b ^= a;                                                                                                                                                \
         a ^= b;                                                                                                                                                \
     } while (0)
-void revstr(char *);
+void my_revstr(char *);
 #endif

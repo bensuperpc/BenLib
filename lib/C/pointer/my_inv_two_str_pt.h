@@ -9,7 +9,7 @@
 #define MY_INV_TWO_STR_PT_H
 
 #include <stdlib.h>
-#include "../string/my_strdup.h"
+#include "string_c/my_strdup.h"
 
 void my_inv_two_str_pt(char **, char **);
 

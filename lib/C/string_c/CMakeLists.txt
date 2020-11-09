@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(string_c C)
 
 set(SRCS
-	revstr.c
+	my_revstr.c
 	my_strcpy.c
 	my_strdup.c
 	my_strlen.c
@@ -11,7 +11,7 @@ set(SRCS
 	)
 	
 set(HEADERS
-	revstr.h
+	my_revstr.h
     my_strcpy.h
 	my_strdup.h
 	my_strlen.h

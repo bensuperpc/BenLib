@@ -1,7 +1,7 @@
 #include <string.h>
-#include "revstr.h"
+#include "my_revstr.h"
 
-void revstr(char *str)
+void my_revstr(char *str)
 {
     if (str) {
         char *end = str + strlen(str) - 1;

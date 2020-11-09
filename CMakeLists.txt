@@ -321,15 +321,16 @@ endif()
 #include_directories("${BASEPATH}")
 
 include_directories("lib/")
+include_directories("lib/C/")
 
 # C libs
-add_subdirectory(lib/C/libhello "lib/libhello")
-add_subdirectory(lib/C/string "lib/string")
+add_subdirectory(lib/C/libhello "lib/C/libhello")
+add_subdirectory(lib/C/string_c "lib/C/string_c")
 
-add_subdirectory(lib/C/string_is "lib/string_is_c")
-add_subdirectory(lib/C/pointer "lib/pointer_c")
-add_subdirectory(lib/C/display "lib/display_c")
-add_subdirectory(lib/C/integer "lib/integer_c")
+add_subdirectory(lib/C/string_is "lib/C/string_is_c")
+add_subdirectory(lib/C/pointer "lib/C/pointer_c")
+add_subdirectory(lib/C/display "lib/C/display_c")
+add_subdirectory(lib/C/integer "lib/C/integer_c")
 
 
 # C++ libs
@@ -573,6 +574,16 @@ if(EXTERNAL_LIB)
 endif()
 target_link_libraries(${TEST_CRYPTO} ${Boost_LIBRARIES} my_crypto)
 add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
+
+
+#Test C string
+set(TEST_REV_STR test_rev_str)
+add_executable(${TEST_REV_STR} src/test/C/string_c/test_string.cpp)
+if(EXTERNAL_LIB)
+    add_dependencies(${TEST_REV_STR} ${EXTERNAL_LIB})
+endif()
+target_link_libraries(${TEST_REV_STR} ${Boost_LIBRARIES} string_c)
+add_test(NAME ${TEST_REV_STR} COMMAND ${TEST_REV_STR})
 
 
 #Test power
