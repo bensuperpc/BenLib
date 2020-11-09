@@ -47,18 +47,16 @@ std::string my::crypto::get_md5hash(const std::string &fname)
 
 std::string my::crypto::get_md5hash_from_string(const std::string &str)
 {
-    unsigned char hash[MD5_DIGEST_LENGTH]; // == 16
-    unsigned char *cstr = new unsigned char[str.length() + 1];
-    std::strcpy((char *)cstr, str.c_str());
-    auto hashed = MD5(cstr, sizeof(*cstr) - 1, hash);
-    std::string s(reinterpret_cast<char const *>(hashed));
-    return s;
-}
+    unsigned char result[MD5_DIGEST_LENGTH];
+    MD5((const unsigned char*)str.c_str(), str.size(), result);
 
-unsigned char *my::crypto::get_md5hash_from_string(const unsigned char *cstr, size_t &size)
-{
-    unsigned char hash[MD5_DIGEST_LENGTH]; // == 16
-    return MD5(cstr, sizeof(*cstr) - 1, hash);
+    std::ostringstream sout;
+    sout<<std::hex<<std::setfill('0');
+    for(long long c: result)
+    {
+        sout<<std::setw(2)<<(long long)c;
+    }
+    return sout.str();
 }
 
 std::string my::crypto::get_sha1hash(const std::string &fname)
@@ -100,18 +98,16 @@ std::string my::crypto::get_sha1hash(const std::string &fname)
 
 std::string my::crypto::get_sha1hash_from_string(const std::string &str)
 {
-    unsigned char hash[SHA_DIGEST_LENGTH]; // == 16
-    unsigned char *cstr = new unsigned char[str.length() + 1];
-    std::strcpy((char *)cstr, str.c_str());
-    auto hashed = SHA1(cstr, sizeof(*cstr) - 1, hash);
-    std::string s(reinterpret_cast<char const *>(hashed));
-    return s;
-}
+    unsigned char result[SHA_DIGEST_LENGTH];
+    SHA1((const unsigned char*)str.c_str(), str.size(), result);
 
-unsigned char *my::crypto::get_sha1hash_from_string(const unsigned char *cstr, size_t &size)
-{
-    unsigned char hash[SHA_DIGEST_LENGTH]; // == 16
-    return SHA1(cstr, sizeof(*cstr) - 1, hash);
+    std::ostringstream sout;
+    sout<<std::hex<<std::setfill('0');
+    for(long long c: result)
+    {
+        sout<<std::setw(2)<<(long long)c;
+    }
+    return sout.str();
 }
 
 std::string my::crypto::get_sha224hash(const std::string &fname)
@@ -153,18 +149,16 @@ std::string my::crypto::get_sha224hash(const std::string &fname)
 
 std::string my::crypto::get_sha224hash_from_string(const std::string &str)
 {
-    unsigned char hash[SHA224_DIGEST_LENGTH]; // == 16
-    unsigned char *cstr = new unsigned char[str.length() + 1];
-    std::strcpy((char *)cstr, str.c_str());
-    auto hashed = SHA224(cstr, sizeof(*cstr) - 1, hash);
-    std::string s(reinterpret_cast<char const *>(hashed));
-    return s;
-}
+    unsigned char result[SHA224_DIGEST_LENGTH];
+    SHA224((const unsigned char*)str.c_str(), str.size(), result);
 
-unsigned char *my::crypto::get_sha224hash_from_string(const unsigned char *cstr, size_t &size)
-{
-    unsigned char hash[SHA224_DIGEST_LENGTH]; // == 16
-    return SHA224(cstr, sizeof(*cstr) - 1, hash);
+    std::ostringstream sout;
+    sout<<std::hex<<std::setfill('0');
+    for(long long c: result)
+    {
+        sout<<std::setw(2)<<(long long)c;
+    }
+    return sout.str();
 }
 
 std::string my::crypto::get_sha256hash(const std::string &fname)
@@ -206,18 +200,16 @@ std::string my::crypto::get_sha256hash(const std::string &fname)
 
 std::string my::crypto::get_sha256hash_from_string(const std::string &str)
 {
-    unsigned char hash[SHA256_DIGEST_LENGTH]; // == 16
-    unsigned char *cstr = new unsigned char[str.length() + 1];
-    std::strcpy((char *)cstr, str.c_str());
-    auto hashed = SHA256(cstr, sizeof(*cstr) - 1, hash);
-    std::string s(reinterpret_cast<char const *>(hashed));
-    return s;
-}
+    unsigned char result[SHA256_DIGEST_LENGTH];
+    SHA256((const unsigned char*)str.c_str(), str.size(), result);
 
-unsigned char *my::crypto::get_sha256hash_from_string(const unsigned char *cstr, size_t &size)
-{
-    unsigned char hash[SHA256_DIGEST_LENGTH]; // == 16
-    return SHA256(cstr, sizeof(*cstr) - 1, hash);
+    std::ostringstream sout;
+    sout<<std::hex<<std::setfill('0');
+    for(long long c: result)
+    {
+        sout<<std::setw(2)<<(long long)c;
+    }
+    return sout.str();
 }
 
 std::string my::crypto::get_sha384hash(const std::string &fname)
@@ -259,20 +251,17 @@ std::string my::crypto::get_sha384hash(const std::string &fname)
 
 std::string my::crypto::get_sha384hash_from_string(const std::string &str)
 {
-    unsigned char hash[SHA384_DIGEST_LENGTH]; // == 16
-    unsigned char *cstr = new unsigned char[str.length() + 1];
-    std::strcpy((char *)cstr, str.c_str());
-    auto hashed = SHA384(cstr, sizeof(*cstr) - 1, hash);
-    std::string s(reinterpret_cast<char const *>(hashed));
-    return s;
-}
+    unsigned char result[SHA384_DIGEST_LENGTH];
+    SHA384((const unsigned char*)str.c_str(), str.size(), result);
 
-unsigned char *my::crypto::get_sha384hash_from_string(const unsigned char *cstr, size_t &size)
-{
-    unsigned char hash[SHA384_DIGEST_LENGTH]; // == 16
-    return SHA384(cstr, sizeof(*cstr) - 1, hash);
+    std::ostringstream sout;
+    sout<<std::hex<<std::setfill('0');
+    for(long long c: result)
+    {
+        sout<<std::setw(2)<<(long long)c;
+    }
+    return sout.str();
 }
-
 
 std::string my::crypto::get_sha512hash(const std::string &fname)
 {
@@ -313,16 +302,28 @@ std::string my::crypto::get_sha512hash(const std::string &fname)
 
 std::string my::crypto::get_sha512hash_from_string(const std::string &str)
 {
-    unsigned char hash[SHA512_DIGEST_LENGTH]; // == 16
-    unsigned char *cstr = new unsigned char[str.length() + 1];
-    std::strcpy((char *)cstr, str.c_str());
-    auto hashed = SHA512(cstr, sizeof(*cstr) - 1, hash);
-    std::string s(reinterpret_cast<char const *>(hashed));
-    return s;
-}
+    unsigned char result[SHA512_DIGEST_LENGTH];
+    SHA512((const unsigned char*)str.c_str(), str.size(), result);
 
-unsigned char *my::crypto::get_sha512hash_from_string(const unsigned char *cstr, size_t &size)
-{
-    unsigned char hash[SHA512_DIGEST_LENGTH]; // == 16
-    return SHA512(cstr, sizeof(*cstr) - 1, hash);
+    std::ostringstream sout;
+    sout<<std::hex<<std::setfill('0');
+    for(long long c: result)
+    {
+        sout<<std::setw(2)<<(long long)c;
+    }
+    return sout.str();
 }
+/*
+void my::crypto::get_sha512hash_from_string(const unsigned char *cstr, unsigned char *out, size_t &size)
+{
+    unsigned char digest[SHA512_DIGEST_LENGTH];
+    MD5Context context;
+    MD5Init(&context);
+    MD5Update(&context, string, strlen(string));
+    MD5Final(digest, &context);
+
+    unsigned char hash[SHA512_DIGEST_LENGTH]; // == 16
+    SHA512(cstr, sizeof(*cstr) - 1, hash);
+    unsigned char * hash_ptr = hash;
+}
+*/

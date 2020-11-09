@@ -27,32 +27,32 @@ namespace crypto
 {
 // MD5
 std::string get_md5hash(const std::string &);
-unsigned char *get_md5hash_from_string(const unsigned char *, size_t &);
+void get_md5hash_from_string(const unsigned char *, size_t &);
 std::string get_md5hash_from_string(const std::string &str);
 
 // SHA1
 std::string get_sha1hash(const std::string &);
-unsigned char *get_sha1hash_from_string(const unsigned char *, size_t &);
+void get_sha1hash_from_string(const unsigned char *, size_t &);
 std::string get_sha1hash_from_string(const std::string &str);
 
 // SHA224
 std::string get_sha224hash(const std::string &);
-unsigned char *get_sha224hash_from_string(const unsigned char *, size_t &);
+void get_sha224hash_from_string(const unsigned char *, size_t &);
 std::string get_sha224hash_from_string(const std::string &str);
 
 // SHA256
 std::string get_sha256hash(const std::string &);
-unsigned char *get_sha256hash_from_string(const unsigned char *, size_t &);
+void get_sha256hash_from_string(const unsigned char *, size_t &);
 std::string get_sha256hash_from_string(const std::string &str);
 
 // SHA384
 std::string get_sha384hash(const std::string &);
-unsigned char *get_sha384hash_from_string(const unsigned char *, size_t &);
+void get_sha384hash_from_string(const unsigned char *, size_t &);
 std::string get_sha384hash_from_string(const std::string &str);
 
 // SHA512
 std::string get_sha512hash(const std::string &);
-unsigned char *get_sha512hash_from_string(const unsigned char *, size_t &);
+void get_sha512hash_from_string(const unsigned char *, size_t &);
 std::string get_sha512hash_from_string(const std::string &str);
 
 } // namespace crypto

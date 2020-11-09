@@ -440,7 +440,7 @@ if (QT_FOUND)
     set(MAIN_LLIBS ${MAIN_LLIBS} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia)
 endif()
 
-set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem)
+set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem my_crypto)
 
 #   ==================================================
 #   ===============    EXEC FILES    =================
@@ -564,6 +564,16 @@ if(EXTERNAL_LIB)
 endif()
 target_link_libraries(${TEST_VECTOR_MAX_SIMD} ${Boost_LIBRARIES} vector)
 add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
+
+#Test crypto
+set(TEST_CRYPTO test_crypto)
+add_executable(${TEST_CRYPTO} src/test/crypto/test_crypto.cpp)
+if(EXTERNAL_LIB)
+    add_dependencies(${TEST_CRYPTO} ${EXTERNAL_LIB})
+endif()
+target_link_libraries(${TEST_CRYPTO} ${Boost_LIBRARIES} my_crypto)
+add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
+
 
 #Test power
 set(TEST_POWER test_power)

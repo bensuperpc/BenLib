@@ -52,3 +52,4 @@ build_docker/*
 !build_docker/fedora/32/.gitkeep
 !build_docker/fedora/33/.gitkeep
 !build_docker/fedora/34/.gitkeep
+.vscode/*
