@@ -1,2 +1,2 @@
 #gource --multi-sampling --output-framerate 60 --seconds-per-day 2.0 --auto-skip-seconds 0.1 ./ -1920x1080 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec hevc_nvenc -preset slow -b:v 64M -maxrate 96M -bufsize 384M gource.mkv
-gource --multi-sampling --output-framerate 60 --seconds-per-day 1.0 --auto-skip-seconds 0.1 ./ -1920x1080 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec hevc_nvenc -rc vbr_hq -cq 10 gource.mkv
+gource --multi-sampling --output-framerate 60 --seconds-per-day 1.0 --auto-skip-seconds 0.1 ./ -1920x1080 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec hevc_nvenc -rc vbr_hq -cq 8 gource.mkv
