@@ -142,7 +142,8 @@ template <typename T> void my::texture::load_texturemap(std::unordered_map<int, 
     myfile.close();
 }
 template void my::texture::load_texturemap<std::string>(std::unordered_map<int, std::string> &texture_map, const std::string &file);
-template void my::texture::load_texturemap<std::string *>(std::unordered_map<int, std::string *> &texture_map, const std::string &file);
+
+// template void my::texture::load_texturemap<std::string *>(std::unordered_map<int, std::string *> &texture_map, const std::string &file);
 
 template <typename T> void my::texture::load_texturemap(std::map<int, T> &texture_map, const std::string &file)
 {
@@ -167,9 +168,9 @@ template <typename T> void my::texture::load_texturemap(std::map<int, T> &textur
     myfile.close();
 }
 template void my::texture::load_texturemap<std::string>(std::map<int, std::string> &texture_map, const std::string &file);
-template void my::texture::load_texturemap<std::string *>(std::map<int, std::string *> &texture_map, const std::string &file);
+// template void my::texture::load_texturemap<std::string *>(std::map<int, std::string *> &texture_map, const std::string &file);
 
-template <typename T> void my::texture::load_texturemap(std::vector<std::pair<const int, T>> &texture_map, const std::string &file)
+template <typename T> void my::texture::load_texturemap(std::vector<std::pair<int, T>> &texture_map, const std::string &file)
 {
     // typedef typename std::conditional<std::is_pointer<T>::value == true, std::string *, std::string>::type Ts;
     std::string index = "";
@@ -193,7 +194,7 @@ template <typename T> void my::texture::load_texturemap(std::vector<std::pair<co
     }
     myfile.close();
 }
-template void my::texture::load_texturemap<std::string>(std::vector<std::pair<const int, std::string>> &texture_map, const std::string &file);
-template void my::texture::load_texturemap<std::string *>(std::vector<std::pair<const int, std::string *>> &texture_map, const std::string &file);
+template void my::texture::load_texturemap<std::string>(std::vector<std::pair<int, std::string>> &texture_map, const std::string &file);
+// template void my::texture::load_texturemap<std::string *>(std::vector<std::pair<const int, std::string *>> &texture_map, const std::string &file);
 #else
 #endif
