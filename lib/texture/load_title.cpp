@@ -141,7 +141,7 @@ void my::title::emplaceTitle(std::vector<std::unique_ptr<sf::RectangleShape>> &_
 #else
 #endif
                 const int &&X = _title_map[x][y];
-                auto it
+                auto &&it
                     = std::find_if(_texturelist.begin(), _texturelist.end(), [&X](const std::pair<int, std::string> &element) { return element.first == X; });
                 if (it != _texturelist.end()) {
                     const std::string Y = it->second;
@@ -165,9 +165,9 @@ void my::title::emplaceTitle(std::vector<std::unique_ptr<sf::RectangleShape>> &_
                         title->setPosition(static_cast<float>(_texture_size * y), static_cast<float>(_texture_size * x));
                         title->setSize(sf::Vector2f(static_cast<float>(_texture_size), static_cast<float>(_texture_size)));
 #if __cplusplus <= 201402L
-                _titleList.emplace_back(title);
+                        _titleList.emplace_back(title);
 #elif __cplusplus >= 201703L
-                _titleList.emplace_back(std::move(title));
+                        _titleList.emplace_back(std::move(title));
 #else
 #endif
                     }

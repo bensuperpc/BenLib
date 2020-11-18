@@ -8,6 +8,7 @@ set(SRCS
 	load_texture.cpp
 	load_texturemap.cpp
 	load_title.cpp
+	texture.cpp
 	)
 	
 set(HEADERS
@@ -16,6 +17,7 @@ set(HEADERS
 	load_texture.hpp
 	load_texturemap.hpp
 	load_title.hpp
+	texture.hpp
 	)
 	
 
