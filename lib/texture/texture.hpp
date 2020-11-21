@@ -31,8 +31,8 @@ namespace my
 {
 namespace texture
 {
-sf::Texture uniform_32(int &, int &, uint8_t, uint8_t, uint8_t, uint8_t); 
+sf::Texture uniform_32(int &, int &, uint8_t, uint8_t, uint8_t, uint8_t);
 sf::Texture uniform_24(int &, int &, uint8_t, uint8_t, uint8_t);
-}
+} // namespace texture
 } // namespace my
 #endif

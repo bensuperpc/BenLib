@@ -31,10 +31,10 @@ template <typename T> typename std::enable_if<std::is_arithmetic<T>::value == fa
 
 template <typename T> typename std::enable_if<std::is_arithmetic<T>::value == true>::type print(const T &t);
 
-template <typename T, typename U, typename... O> void print(const T &t, const U &u, const O &... other);
+template <typename T, typename U, typename... O> void print(const T &t, const U &u, const O &...other);
 } // namespace detail
 
-template <typename T, typename... O> void print(const T &t, const O &... other);
+template <typename T, typename... O> void print(const T &t, const O &...other);
 
 //--
 
@@ -52,14 +52,14 @@ template <typename T> typename std::enable_if<std::is_arithmetic<T>::value == tr
     print(std::to_string(t));
 }
 
-template <typename T, typename U, typename... O> void print(const T &t, const U &u, const O &... other)
+template <typename T, typename U, typename... O> void print(const T &t, const U &u, const O &...other)
 {
     print(t);
     print(u, other...);
 }
 } // namespace detail
 
-template <typename T, typename... O> void print(const T &t, const O &... other)
+template <typename T, typename... O> void print(const T &t, const O &...other)
 {
     std::lock_guard<std::mutex> lockGuard(detail::mutex);
     detail::print(t);

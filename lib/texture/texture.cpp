@@ -24,20 +24,18 @@ sf::Texture my::texture::uniform_32(int &xx, int &yy, uint8_t a, uint8_t r, uint
 {
     sf::Texture texture;
     texture.create((unsigned int)xx, (unsigned int)yy);
-    sf::Uint8  *pixels  = new sf::Uint8[xx * yy * 4];
+    sf::Uint8 *pixels = new sf::Uint8[xx * yy * 4];
 
-    for(int x = 0; x < xx; x++)
-    {
-        for(int y = 0; y < yy; y++)
-        {
-            pixels[(x + y * xx) * 4]     = r; // Red
+    for (int x = 0; x < xx; x++) {
+        for (int y = 0; y < yy; y++) {
+            pixels[(x + y * xx) * 4] = r;     // Red
             pixels[(x + y * xx) * 4 + 1] = g; // Green
             pixels[(x + y * xx) * 4 + 2] = b; // Blue
             pixels[(x + y * xx) * 4 + 3] = a; // Alpha
         }
     }
     texture.update(pixels);
-    delete [] pixels;
+    delete[] pixels;
     return texture;
 }
 
@@ -45,18 +43,16 @@ sf::Texture my::texture::uniform_24(int &xx, int &yy, uint8_t r, uint8_t g, uint
 {
     sf::Texture texture;
     texture.create((unsigned int)xx, (unsigned int)yy);
-    sf::Uint8  *pixels  = new sf::Uint8[xx * yy * 3];
+    sf::Uint8 *pixels = new sf::Uint8[xx * yy * 3];
 
-    for(int x = 0; x < xx; x++)
-    {
-        for(int y = 0; y < yy; y++)
-        {
-            pixels[(x + y * xx) * 4]     = r; // Red
+    for (int x = 0; x < xx; x++) {
+        for (int y = 0; y < yy; y++) {
+            pixels[(x + y * xx) * 4] = r;     // Red
             pixels[(x + y * xx) * 4 + 1] = g; // Green
             pixels[(x + y * xx) * 4 + 2] = b; // Blue
         }
     }
     texture.update(pixels);
-    delete [] pixels;
+    delete[] pixels;
     return texture;
 }
