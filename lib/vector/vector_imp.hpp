@@ -23,7 +23,8 @@ template <typename T> std::vector<std::vector<T>> my::vector::generate_matrix(si
     std::vector<std::vector<T>> matrix(x, std::vector<T>(y, z));
     return matrix;
 }
-
+#if (__cplusplus == 201103L || __cplusplus == 201402L)
+#elif __cplusplus >= 201703L
 template <typename T> void my::vector::rnd_fill(std::vector<T> &V, const T lower, const T upper, const uint64_t seed)
 {
     std::random_device rnd_device = std::random_device(seed);
@@ -94,6 +95,11 @@ template <typename T> void my::vector::rnd_fill(std::vector<T> &V)
         elem = T(distr(e2));
     }*/
 }
+#else
+
+//#    error This library needs at least a C++11 or above compliant compiler
+
+#endif
 
 template <typename T> void my::vector::cache_unfriendly_copy(std::vector<std::vector<T>> &mat1, std::vector<std::vector<T>> &mat2)
 {

@@ -29,9 +29,16 @@ void fill_matrix_2(std::vector<std::vector<int>> &);
 void fill_matrix_2(std::vector<std::vector<int>> &, int, int);
 
 template <typename T> double everage(const T &vec);
+#if (__cplusplus == 201103L || __cplusplus == 201402L)
+#elif __cplusplus >= 201703L
 template <typename T> void rnd_fill(std::vector<T> &, const T, const T, const uint64_t);
 template <typename T> void rnd_fill(std::vector<T> &, const T, const T);
 template <typename T> void rnd_fill(std::vector<T> &);
+#else
+
+//#    error This library needs at least a C++11 or above compliant compiler
+
+#endif
 
 template <typename T> std::vector<std::vector<T>> generate_matrix(size_t x, size_t y, T z);
 template <typename T> std::vector<std::vector<T>> generate_matrix(size_t x, size_t y);
