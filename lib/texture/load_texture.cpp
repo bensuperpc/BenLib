@@ -255,7 +255,7 @@ void my::texture::load_texture(std::map<std::string, std::unique_ptr<sf::Texture
                 std::cout << "Texture not found !" << std::endl;
             }
             texture.reset();
-#    ifndef DNDEBUG
+#    ifdef DNDEBUG
             std::cout << entry.path() << std::endl;
 #    endif
         }
