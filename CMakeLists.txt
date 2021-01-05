@@ -1,5 +1,7 @@
+
+
 cmake_minimum_required (VERSION 3.13)
-project(BenLib VERSION 0.0.2 LANGUAGES CXX C)
+project(RPG VERSION 0.0.4 LANGUAGES CXX C)
 
 #   ==================================================
 #   ================    CMAKE CONF    ================
@@ -17,6 +19,8 @@ else()
     message(STATUS "CMAKE_UNITY_BUILD : 0")
 endif()
 
+set(CMAKE_DEBUG_POSTFIX "_d")
+
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
 #set(Var1 "This is variable 1" PARENT_SCOPE)
 
@@ -33,14 +37,38 @@ if(NOT CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER /usr/bin/g++)
 endif()
 
+#=== C VERSION CHECK ===
+
+if(NOT CMAKE_C_STANDARD)
+    include(CheckCCompilerFlag)
+    CHECK_C_COMPILER_FLAG("-std=c11" COMPILER_SUPPORTS_C11)
+    CHECK_C_COMPILER_FLAG("-std=c99" COMPILER_SUPPORTS_C99)
+    CHECK_C_COMPILER_FLAG("-std=c90" COMPILER_SUPPORTS_C90)
+    
+    if(COMPILER_SUPPORTS_C11)
+        message(STATUS "C11: OK")
+        set(CMAKE_C_STANDARD 11)
+    elseif(COMPILER_SUPPORTS_C99)
+        message(STATUS "C99: OK")
+        set(CMAKE_C_STANDARD 99)
+    elseif(COMPILER_SUPPORTS_C90)
+        message(STATUS "C90: OK")
+        set(CMAKE_C_STANDARD 90)
+    else()
+        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
+    endif()
+endif()
+
 #=== C++ VERSION CHECK ===
 if(NOT CMAKE_CXX_STANDARD)
     include(CheckCXXCompilerFlag)
-
+    CHECK_CXX_COMPILER_FLAG("-std=c++23" COMPILER_SUPPORTS_CXX23)
     CHECK_CXX_COMPILER_FLAG("-std=c++20" COMPILER_SUPPORTS_CXX20)
     CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
     CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
     CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+    CHECK_CXX_COMPILER_FLAG("-std=c++03" COMPILER_SUPPORTS_CXX03)
+    CHECK_CXX_COMPILER_FLAG("-std=c++98" COMPILER_SUPPORTS_CXX98)
 
     if(COMPILER_SUPPORTS_CXX20)
         set(CMAKE_CXX_STANDARD 20)
@@ -50,11 +78,20 @@ if(NOT CMAKE_CXX_STANDARD)
         message(STATUS "C++17: OK")
     elseif(COMPILER_SUPPORTS_CXX14)
         set(CMAKE_CXX_STANDARD 14)
-        message(STATUS "C++14: OK")
-       # message(FATAL_ERROR "C++14 is old, please use newer compiler.")
+        message(WARNING "C++14: Error")
+        message(FATAL_ERROR "C++14 is old, please use newer compiler.")
     elseif(COMPILER_SUPPORTS_CXX11)
         set(CMAKE_CXX_STANDARD 11)
         message(WARNING "C++11: OK")
+        message(FATAL_ERROR "C++11 is old, please use newer compiler.")
+    elseif(COMPILER_SUPPORTS_CXX03)
+        set(CMAKE_CXX_STANDARD 03)
+        message(WARNING "C++03: OK")
+        message(FATAL_ERROR "C++03 is old, please use newer compiler.")
+    elseif(COMPILER_SUPPORTS_CXX98)
+        set(CMAKE_CXX_STANDARD 98)
+        message(WARNING "C++98: OK")
+        message(FATAL_ERROR "C++98 is old, please use newer compiler.")
     else()
         message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
     endif()
@@ -103,7 +140,8 @@ set(SEC_COMPILER_LINK_REL "-fPIC -Wl,-z,now -Wl,-z,relro")
 
 
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
-set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -std=c99 -pipe")
+#-std=c99
+set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v -march=native")
@@ -141,13 +179,19 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 #   ================    COMPILER DEF    ================
 
-
 add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
+add_definitions(-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
+
 add_definitions(-DCMAKE_CXX_EXTENSIONS=${CMAKE_CXX_EXTENSIONS})
+add_definitions(-DCMAKE_C_EXTENSIONS=${CMAKE_C_EXTENSIONS})
 add_definitions(-DCMAKE_CXX_COMPILER_ID="${CMAKE_CXX_COMPILER_ID}")
+add_definitions(-DCMAKE_C_COMPILER_ID="${CMAKE_C_COMPILER_ID}")
 add_definitions(-DCMAKE_CXX_COMPILER_VERSION="${CMAKE_CXX_COMPILER_VERSION}")
+add_definitions(-DCMAKE_C_COMPILER_VERSION="${CMAKE_C_COMPILER_VERSION}")
+
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 2)
     message(STATUS "16 bit mode")
@@ -205,9 +249,15 @@ else()
 endif()
 
 #   ================    BOOST    ================
-#set( Boost_USE_STATIC_LIBS 0 )
-#set( Boost_USE_MULTITHREADED 1 )
-#set( Boost_USE_STATIC_RUNTIME 0 )
+if (WIN32)
+    set(Boost_USE_STATIC_LIBS TRUE)
+    set(Boost_USE_MULTITHREADED TRUE)
+    set(Boost_USE_STATIC_RUNTIME FALSE)
+else ()
+    set(Boost_USE_STATIC_LIBS FALSE)
+    set(Boost_USE_MULTITHREADED TRUE)
+    set(Boost_USE_STATIC_RUNTIME FALSE)
+endif (WIN32)
 
 #find_package( Boost 1.72.0 COMPONENTS thread system fiber context program_options filesystem REQUIRED)
 find_package(Boost 1.67.0 COMPONENTS thread filesystem system unit_test_framework QUIET)
@@ -285,11 +335,11 @@ set(CMAKE_AUTORCC ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
-
-#find_package(Qt5 COMPONENTS Quick Widgets Core Gui Multimedia Network REQUIRED)
-#find_package(Qt5QuickCompiler)
+find_package(Qt${QT_VERSION_MAJOR}QuickCompiler)
 #qtquick_compiler_add_resources(RESOURCES example.qrc)
 #qt5_use_modules(myapp Quick Widgets Core Gui Multimedia Network)
+
+#find_package(Qt5 COMPONENTS Quick Widgets Core Gui Multimedia Network REQUIRED)
 
 if (QT_FOUND)
     message(STATUS "QT: FOUND")
@@ -298,21 +348,29 @@ else()
     message(STATUS "QT: NOT FOUND")
 endif()
 
-#   ================    DOCTEST    ================
-find_package(doctest QUIET)
+#   ================    OGRE3D    ================
+#if(UNIX)
+#    set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake;${CMAKE_MODULE_PATH}")
+#endif(UNIX)
 
-if (DOCTEST_FOUND)
-    include_directories( ${doctest_INCLUDE_DIR})
-    link_directories(${doctest_LIBRARY})
-    message(STATUS "DOCTEST: FOUND")
-else()
-    message(STATUS "DOCTEST: NOT FOUND")
-endif()
+#if(WIN32)
+#	set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
+#	set(OGRE_SAMPLES_INCLUDEPATH
+#		$ENV{OGRE_HOME}/Samples/include
+#	)
+#endif(WIN32)
 
-if(EXTERNAL_LIB)
-    include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
-    link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
-endif()
+#find_package(OGRE QUIET)
+
+#if (OGRE_FOUND)
+#    include_directories( ${ogre_INCLUDE_DIR})
+#    link_directories(${OGRE_LIBRARIES})
+#    message(STATUS "OGRE: FOUND")
+#else()
+#    message(STATUS "OGRE: NOT FOUND")
+#endif()
+
+#   ================    OIS    ================
 
 #   =================================================
 #   =============    INTERNAL LIBS    ===============
@@ -320,45 +378,51 @@ endif()
 #set(BASEPATH "${CMAKE_SOURCE_DIR}")
 #include_directories("${BASEPATH}")
 
-include_directories("lib/")
-include_directories("lib/C/")
+set(lib_path "")
+
+include_directories("${lib_path}lib/")
+include_directories("${lib_path}lib/C/")
+
+
 
 # C libs
-add_subdirectory(lib/C/libhello "lib/C/libhello")
-add_subdirectory(lib/C/string_c "lib/C/string_c")
+add_subdirectory(${lib_path}lib/C/libhello "src/lib/lib/C/libhello")
+add_subdirectory(${lib_path}lib/C/string_c "src/lib/lib/C/string_c")
 
-add_subdirectory(lib/C/string_is "lib/C/string_is_c")
-add_subdirectory(lib/C/pointer "lib/C/pointer_c")
-add_subdirectory(lib/C/display "lib/C/display_c")
-add_subdirectory(lib/C/integer "lib/C/integer_c")
+add_subdirectory(${lib_path}lib/C/string_is "src/lib/lib/C/string_is_c")
+add_subdirectory(${lib_path}lib/C/pointer "src/lib/lib/C/pointer_c")
+add_subdirectory(${lib_path}lib/C/display "src/lib/lib/C/display_c")
+add_subdirectory(${lib_path}lib/C/integer "src/lib/lib/C/integer_c")
 
 
 # C++ libs
-add_subdirectory(lib/convert_utils "lib/convert_utils")
+add_subdirectory(${lib_path}lib/convert_utils "src/lib/lib/convert_utils")
 
-add_subdirectory(lib/texture "lib/texture")
+add_subdirectory(${lib_path}lib/texture "src/lib/lib/texture")
 
-add_subdirectory(lib/math "lib/math")
+add_subdirectory(${lib_path}lib/math "src/lib/lib/math")
 
-add_subdirectory(lib/utils/opencv "lib/utils/opencv")
+add_subdirectory(${lib_path}lib/utils/opencv "src/lib/lib/utils/opencv")
 
-add_subdirectory(lib/utils/opengl "lib/utils/opengl")
+add_subdirectory(${lib_path}lib/utils/opengl "src/lib/lib/utils/opengl")
 
-#add_subdirectory(utils/sfml "lib/utils/sfml")
+#add_subdirectory(src/lib/utils/sfml "src/lib/lib/utils/sfml")
 
-add_subdirectory(lib/time "lib/time")
+add_subdirectory(${lib_path}lib/time "src/lib/lib/time")
 
-add_subdirectory(lib/cpu "lib/cpu")
+add_subdirectory(${lib_path}lib/cpu "src/lib/lib/cpu")
 
-add_subdirectory(lib/vector "lib/vector")
+add_subdirectory(${lib_path}lib/vector "src/lib/lib/vector")
 
-add_subdirectory(lib/thread "lib/thread")
+add_subdirectory(${lib_path}lib/thread "src/lib/lib/thread")
 
-add_subdirectory(lib/filesystem "lib/filesystem")
+add_subdirectory(${lib_path}lib/filesystem "src/lib/lib/filesystem")
 
-add_subdirectory(lib/string_lib "lib/string_lib")
+add_subdirectory(${lib_path}lib/string_lib "src/lib/lib/string_lib")
 
-add_subdirectory(lib/crypto "lib/crypto")
+add_subdirectory(${lib_path}lib/crypto "src/lib/lib/crypto")
+
+add_subdirectory(${lib_path}lib/std "src/lib/lib/std")
 
 if(EXTERNAL_LIB)
     add_dependencies(hello ${EXTERNAL_LIB})
@@ -374,6 +438,7 @@ if(EXTERNAL_LIB)
     add_dependencies(thread ${EXTERNAL_LIB})
     add_dependencies(filesystem ${EXTERNAL_LIB})
     add_dependencies(my_crypto ${EXTERNAL_LIB})
+    add_dependencies(std ${EXTERNAL_LIB})
 endif()
 
 #   =================================================
@@ -381,29 +446,7 @@ endif()
 #   =================================================
 
 #   ================    FILES    ================
-set(MAIN)
-
-set(BENCH_ISPRIME src/bench/bench_isprime.cpp)
-
-set(BENCH_VECTOR_COPY src/bench/bench_vector_copy.cpp)
-
-set(BENCH_VECTOR_SORT src/bench/bench_vector_sort.cpp)
-
-set(BENCH_DIGITS_COUNT src/bench/bench_digits_count.cpp)
-
-set(BENCH_FIND_MAX src/bench/bench_find_max.cpp)
-
-set(BENCH_PC src/bench/benchmark_pc.cpp)
-
-set(LIST_ALL_FILE src/exemple/list_all_file.cpp)
-
-set(LIST_ALL_FILE_HASH src/exemple/list_all_file_hash.cpp)
-
-set(LIST_ALL_FILE_OPENCV src/exemple/list_all_file_opencv.cpp)
-
-set(COUNT_ALL_FILE src/exemple/count_all_file.cpp)
-
-set(IMAGE_DIFF src/exemple/image_diff.cpp)
+set(MAIN src/main.cpp)
 
 set(SRCS
     )
@@ -411,6 +454,33 @@ set(SRCS
 set(HEADERS
     )
 
+set(VIRUS 
+    )
+
+set(BENCH_ISPRIME ${lib_path}src/bench/bench_isprime.cpp)
+
+set(BENCH_VECTOR_COPY ${lib_path}src/bench/bench_vector_copy.cpp)
+
+set(BENCH_VECTOR_SORT ${lib_path}src/bench/bench_vector_sort.cpp)
+
+set(BENCH_DIGITS_COUNT ${lib_path}src/bench/bench_digits_count.cpp)
+
+set(BENCH_FIND_MAX ${lib_path}src/bench/bench_find_max.cpp)
+
+set(BENCH_PC ${lib_path}src/bench/benchmark_pc.cpp)
+
+set(LIST_ALL_FILE ${lib_path}src/exemple/list_all_file.cpp)
+
+if (OPENSSL_FOUND)
+    set(LIST_ALL_FILE_HASH ${lib_path}src/exemple/list_all_file_hash.cpp)
+endif()
+
+set(COUNT_ALL_FILE ${lib_path}src/exemple/count_all_file.cpp)
+
+if (OPENCV_FOUND)
+    set(IMAGE_DIFF ${lib_path}src/exemple/image_diff.cpp)
+    set(LIST_ALL_FILE_OPENCV ${lib_path}src/exemple/list_all_file_opencv.cpp)
+endif()
 
 #   ====================================================
 #   ====================    LIBS    ====================
@@ -441,71 +511,79 @@ if (QT_FOUND)
     set(MAIN_LLIBS ${MAIN_LLIBS} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia)
 endif()
 
-set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem my_crypto)
+set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem my_crypto std)
 
 #   ==================================================
 #   ===============    EXEC FILES    =================
 #   ==================================================
 
-#${MAIN_LLIBS} ${CUSTOM_LIBS}
 
-add_executable(bench_isprime ${BENCH_ISPRIME} ${SRCS} ${HEADERS})
-target_link_libraries(bench_isprime PRIVATE thread vector math time hello stdc++fs)
+#add_executable(game ${MAIN} ${SRCS} ${HEADERS})
+#if(EXTERNAL_LIB)
+#    add_dependencies(game ${EXTERNAL_LIB})
+#endif()
+
+# stdc++fs is needed for Debian
+#target_link_libraries(game PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} stdc++fs)
+
+
+#add_executable(virus ${VIRUS})
+#if(EXTERNAL_LIB)
+#    add_dependencies(virus ${EXTERNAL_LIB})
+#endif()
+
+# stdc++fs is needed for Debian
+#target_link_libraries(virus PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} stdc++fs)
+
+add_executable(bench_isprime ${BENCH_ISPRIME})
+target_link_libraries(bench_isprime PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_isprime ${CUSTOM_LIBS})
 
-add_executable(bench_vector_copy ${BENCH_VECTOR_COPY} ${SRCS} ${HEADERS})
+add_executable(bench_vector_copy ${BENCH_VECTOR_COPY})
 target_link_libraries(bench_vector_copy PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_vector_copy ${CUSTOM_LIBS})
 
-add_executable(bench_vector_sort ${BENCH_VECTOR_SORT} ${SRCS} ${HEADERS})
+add_executable(bench_vector_sort ${BENCH_VECTOR_SORT})
 target_link_libraries(bench_vector_sort PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_vector_sort ${CUSTOM_LIBS})
 
-add_executable(bench_digits_count ${BENCH_DIGITS_COUNT} ${SRCS} ${HEADERS})
+add_executable(bench_digits_count ${BENCH_DIGITS_COUNT})
 target_link_libraries(bench_digits_count PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_digits_count ${CUSTOM_LIBS})
 
-add_executable(bench_find_max ${BENCH_FIND_MAX} ${SRCS} ${HEADERS})
+add_executable(bench_find_max ${BENCH_FIND_MAX})
 target_link_libraries(bench_find_max PRIVATE thread vector math time)
 add_dependencies(bench_find_max ${CUSTOM_LIBS})
 
-add_executable(bench_pc ${BENCH_PC} ${SRCS} ${HEADERS})
+add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc ${CUSTOM_LIBS})
 
-add_executable(list_all_file ${LIST_ALL_FILE} ${SRCS} ${HEADERS})
+add_executable(list_all_file ${LIST_ALL_FILE})
 target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
 add_dependencies(list_all_file ${CUSTOM_LIBS})
 
 if (OPENSSL_FOUND)
-    add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH} ${SRCS} ${HEADERS})
+    add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})
     target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs my_crypto thread time)
     add_dependencies(list_all_file_hash ${CUSTOM_LIBS})
 endif()
 
 if (OPENCV_FOUND)
-    add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV} ${SRCS} ${HEADERS})
+    add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV})
     target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS} stdc++fs)
     add_dependencies(list_all_file_opencv ${CUSTOM_LIBS})
 
-    add_executable(image_diff ${IMAGE_DIFF} ${SRCS} ${HEADERS})
+    add_executable(image_diff ${IMAGE_DIFF})
     target_link_libraries(image_diff PRIVATE filesystem ${OpenCV_LIBS} stdc++fs utils_opencv)
     add_dependencies(image_diff ${CUSTOM_LIBS})
 endif()
-
-add_executable(count_all_file ${COUNT_ALL_FILE} ${SRCS} ${HEADERS})
-target_link_libraries(count_all_file PRIVATE filesystem stdc++fs)
-add_dependencies(count_all_file ${CUSTOM_LIBS})
-
-#   ======================================================
-#   ====================    TESTS    =====================
-#   ======================================================
 
 enable_testing()
 
 #Test getSchwarzschild
 set(TEST_SCHWARZSCHILD test_getSchwarzschild)
-add_executable(${TEST_SCHWARZSCHILD} src/test/math/test_getSchwarzschild.cpp)
+add_executable(${TEST_SCHWARZSCHILD} ${lib_path}src/test/math/test_getSchwarzschild.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_SCHWARZSCHILD} ${EXTERNAL_LIB})
 endif()
@@ -514,7 +592,7 @@ add_test(NAME ${TEST_SCHWARZSCHILD} COMMAND ${CMAKE_COMMAND} --build . --target 
 
 #Test getGravitationalAttraction
 set(TEST_GA test_getGravitationalAttraction)
-add_executable(${TEST_GA} src/test/math/test_getGravitationalAttraction.cpp)
+add_executable(${TEST_GA} ${lib_path}src/test/math/test_getGravitationalAttraction.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_GA} ${EXTERNAL_LIB})
 endif()
@@ -523,7 +601,7 @@ add_test(NAME ${TEST_GA} COMMAND ${TEST_GA})
 
 #Test sphere
 set(TEST_SPHERE test_sphere)
-add_executable(${TEST_SPHERE} src/test/math/test_sphere.cpp)
+add_executable(${TEST_SPHERE} ${lib_path}src/test/math/test_sphere.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_SPHERE} ${EXTERNAL_LIB})
 endif()
@@ -532,7 +610,7 @@ add_test(NAME ${TEST_SPHERE} COMMAND ${TEST_SPHERE})
 
 #Test cylinder
 set(TEST_CYLINDER test_cylinder)
-add_executable(${TEST_CYLINDER} src/test/math/test_cylinder.cpp)
+add_executable(${TEST_CYLINDER} ${lib_path}src/test/math/test_cylinder.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_CYLINDER} ${EXTERNAL_LIB})
 endif()
@@ -541,7 +619,7 @@ add_test(NAME ${TEST_CYLINDER} COMMAND ${TEST_CYLINDER})
 
 #Test vector sort
 set(TEST_VECTOR_SORT test_vector_sort)
-add_executable(${TEST_VECTOR_SORT} src/test/vector/test_vector_sort.cpp)
+add_executable(${TEST_VECTOR_SORT} ${lib_path}src/test/vector/test_vector_sort.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_VECTOR_SORT} ${EXTERNAL_LIB})
 endif()
@@ -550,7 +628,7 @@ add_test(NAME ${TEST_VECTOR_SORT} COMMAND ${TEST_VECTOR_SORT})
 
 #Test vector copy
 set(TEST_VECTOR_COPY test_vector_copy)
-add_executable(${TEST_VECTOR_COPY} src/test/vector/test_vector_copy.cpp)
+add_executable(${TEST_VECTOR_COPY} ${lib_path}src/test/vector/test_vector_copy.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_VECTOR_COPY} ${EXTERNAL_LIB})
 endif()
@@ -559,7 +637,7 @@ add_test(NAME ${TEST_VECTOR_COPY} COMMAND ${TEST_VECTOR_COPY})
 
 #Test vector copy
 set(TEST_VECTOR_MAX_SIMD test_vector_max_simd)
-add_executable(${TEST_VECTOR_MAX_SIMD} src/test/vector/test_vector_max_simd.cpp)
+add_executable(${TEST_VECTOR_MAX_SIMD} ${lib_path}src/test/vector/test_vector_max_simd.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_VECTOR_MAX_SIMD} ${EXTERNAL_LIB})
 endif()
@@ -568,7 +646,7 @@ add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
 
 #Test crypto
 set(TEST_CRYPTO test_crypto)
-add_executable(${TEST_CRYPTO} src/test/crypto/test_crypto.cpp)
+add_executable(${TEST_CRYPTO} ${lib_path}src/test/crypto/test_crypto.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_CRYPTO} ${EXTERNAL_LIB})
 endif()
@@ -578,7 +656,7 @@ add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
 
 #Test C string
 set(TEST_REV_STR test_rev_str)
-add_executable(${TEST_REV_STR} src/test/C/string_c/test_string.cpp)
+add_executable(${TEST_REV_STR} ${lib_path}src/test/C/string_c/test_string.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_REV_STR} ${EXTERNAL_LIB})
 endif()
@@ -588,7 +666,7 @@ add_test(NAME ${TEST_REV_STR} COMMAND ${TEST_REV_STR})
 
 #Test power
 set(TEST_POWER test_power)
-add_executable(${TEST_POWER} src/test/math/test_power.cpp)
+add_executable(${TEST_POWER} ${lib_path}src/test/math/test_power.cpp)
 if(EXTERNAL_LIB)
     add_dependencies(${TEST_POWER} ${EXTERNAL_LIB})
 endif()
@@ -622,6 +700,32 @@ add_test(NAME ${TEST_POWER} COMMAND ${TEST_POWER})
 #    WORKING_DIRECTORY .
 #    COMMAND cp -R -u -p "../texture/PIPOYA FREE RPG Character Sprites 32x32" "texture/PIPOYA FREE RPG Character Sprites 32x32"
 #)
+
+#   ================================================
+#   ===============    UNSET VALUE    ===============
+#   ================================================
+
+
+#unset(CMAKE_BUILD_TYPE CACHE)
+
+#   ================================================
+#   ===============    COPY FILES    ===============
+#   ================================================
+
+#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/screenshot)
+
+#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR})
+#configure_file(font/Almond_Caramel.ttf ${CMAKE_BINARY_DIR}/font/Almond_Caramel.ttf COPYONLY)
+
+
+#add_custom_command(
+#    TARGET game
+#    COMMENT "CP Texture"
+#    POST_BUILD 
+#    WORKING_DIRECTORY .
+#    COMMAND cp -R -u -p "../texture/PIPOYA FREE RPG Character Sprites 32x32" "texture/PIPOYA FREE RPG Character Sprites 32x32"
+#)
+
 
 #   ================================================
 #   ===============    UNSET VALUE    ===============
