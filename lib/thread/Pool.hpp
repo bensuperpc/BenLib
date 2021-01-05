@@ -23,7 +23,7 @@ class Pool {
     // joins all threads
     ~Pool();
 
-    template <class F, class... A> decltype(auto) enqueue(F &&callable, A &&... arguments);
+    template <class F, class... A> decltype(auto) enqueue(F &&callable, A &&...arguments);
 
   private:
     std::vector<std::thread> threads_ = std::vector<std::thread>();
@@ -33,7 +33,7 @@ class Pool {
     bool stopped_;
 };
 
-template <class F, class... A> decltype(auto) Pool::enqueue(F &&callable, A &&... arguments)
+template <class F, class... A> decltype(auto) Pool::enqueue(F &&callable, A &&...arguments)
 {
     // using ReturnType = std::invoke_result_t<F, A...>;
     using ReturnType = decltype(callable(arguments...));

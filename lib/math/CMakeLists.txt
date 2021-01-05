@@ -14,6 +14,7 @@ set(SRCS
 	square_root.cpp
 	prime.cpp
 	float.cpp
+	random.cpp
 	)
 	
 set(HEADERS
@@ -31,6 +32,7 @@ set(HEADERS
 	count_digits_imp.hpp
 	count_digits.hpp
 	float.hpp
+	random.hpp
 	)
 
 #add_library(math_static STATIC ${SRCS} ${HEADERS})

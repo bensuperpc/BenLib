@@ -25,7 +25,7 @@
 class ThreadPool {
   public:
     ThreadPool(size_t);
-    template <class F, class... Args> auto enqueue(F &&f, Args &&... args) -> std::future<decltype(f(args...))>;
+    template <class F, class... Args> auto enqueue(F &&f, Args &&...args) -> std::future<decltype(f(args...))>;
 #pragma GCC diagnostic ignored "-Winline"
     ~ThreadPool();
 
@@ -69,7 +69,7 @@ inline ThreadPool::ThreadPool(size_t threads) : stop(false)
 }
 
 // add new work item to the pool
-template <class F, class... Args> auto ThreadPool::enqueue(F &&f, Args &&... args) -> std::future<decltype(f(args...))>
+template <class F, class... Args> auto ThreadPool::enqueue(F &&f, Args &&...args) -> std::future<decltype(f(args...))>
 {
     using return_type = decltype(f(args...));
 

@@ -48,13 +48,12 @@ std::string my::crypto::get_md5hash(const std::string &fname)
 std::string my::crypto::get_md5hash_from_string(const std::string &str)
 {
     unsigned char result[MD5_DIGEST_LENGTH];
-    MD5((const unsigned char*)str.c_str(), str.size(), result);
+    MD5((const unsigned char *)str.c_str(), str.size(), result);
 
     std::ostringstream sout;
-    sout<<std::hex<<std::setfill('0');
-    for(long long c: result)
-    {
-        sout<<std::setw(2)<<(long long)c;
+    sout << std::hex << std::setfill('0');
+    for (long long c : result) {
+        sout << std::setw(2) << (long long)c;
     }
     return sout.str();
 }
@@ -99,13 +98,12 @@ std::string my::crypto::get_sha1hash(const std::string &fname)
 std::string my::crypto::get_sha1hash_from_string(const std::string &str)
 {
     unsigned char result[SHA_DIGEST_LENGTH];
-    SHA1((const unsigned char*)str.c_str(), str.size(), result);
+    SHA1((const unsigned char *)str.c_str(), str.size(), result);
 
     std::ostringstream sout;
-    sout<<std::hex<<std::setfill('0');
-    for(long long c: result)
-    {
-        sout<<std::setw(2)<<(long long)c;
+    sout << std::hex << std::setfill('0');
+    for (long long c : result) {
+        sout << std::setw(2) << (long long)c;
     }
     return sout.str();
 }
@@ -150,13 +148,12 @@ std::string my::crypto::get_sha224hash(const std::string &fname)
 std::string my::crypto::get_sha224hash_from_string(const std::string &str)
 {
     unsigned char result[SHA224_DIGEST_LENGTH];
-    SHA224((const unsigned char*)str.c_str(), str.size(), result);
+    SHA224((const unsigned char *)str.c_str(), str.size(), result);
 
     std::ostringstream sout;
-    sout<<std::hex<<std::setfill('0');
-    for(long long c: result)
-    {
-        sout<<std::setw(2)<<(long long)c;
+    sout << std::hex << std::setfill('0');
+    for (long long c : result) {
+        sout << std::setw(2) << (long long)c;
     }
     return sout.str();
 }
@@ -201,13 +198,12 @@ std::string my::crypto::get_sha256hash(const std::string &fname)
 std::string my::crypto::get_sha256hash_from_string(const std::string &str)
 {
     unsigned char result[SHA256_DIGEST_LENGTH];
-    SHA256((const unsigned char*)str.c_str(), str.size(), result);
+    SHA256((const unsigned char *)str.c_str(), str.size(), result);
 
     std::ostringstream sout;
-    sout<<std::hex<<std::setfill('0');
-    for(long long c: result)
-    {
-        sout<<std::setw(2)<<(long long)c;
+    sout << std::hex << std::setfill('0');
+    for (long long c : result) {
+        sout << std::setw(2) << (long long)c;
     }
     return sout.str();
 }
@@ -252,13 +248,12 @@ std::string my::crypto::get_sha384hash(const std::string &fname)
 std::string my::crypto::get_sha384hash_from_string(const std::string &str)
 {
     unsigned char result[SHA384_DIGEST_LENGTH];
-    SHA384((const unsigned char*)str.c_str(), str.size(), result);
+    SHA384((const unsigned char *)str.c_str(), str.size(), result);
 
     std::ostringstream sout;
-    sout<<std::hex<<std::setfill('0');
-    for(long long c: result)
-    {
-        sout<<std::setw(2)<<(long long)c;
+    sout << std::hex << std::setfill('0');
+    for (long long c : result) {
+        sout << std::setw(2) << (long long)c;
     }
     return sout.str();
 }
@@ -303,13 +298,12 @@ std::string my::crypto::get_sha512hash(const std::string &fname)
 std::string my::crypto::get_sha512hash_from_string(const std::string &str)
 {
     unsigned char result[SHA512_DIGEST_LENGTH];
-    SHA512((const unsigned char*)str.c_str(), str.size(), result);
+    SHA512((const unsigned char *)str.c_str(), str.size(), result);
 
     std::ostringstream sout;
-    sout<<std::hex<<std::setfill('0');
-    for(long long c: result)
-    {
-        sout<<std::setw(2)<<(long long)c;
+    sout << std::hex << std::setfill('0');
+    for (long long c : result) {
+        sout << std::setw(2) << (long long)c;
     }
     return sout.str();
 }

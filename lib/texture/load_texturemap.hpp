@@ -39,7 +39,7 @@ template <typename T> void load_texturemap(std::unordered_map<int, T> &, const s
 
 template <typename T> void load_texturemap(std::map<int, T> &, const std::string &);
 
-template <typename T> void load_texturemap(std::vector<std::pair<const int, T>> &, const std::string &);
+template <typename T> void load_texturemap(std::vector<std::pair<int, T>> &, const std::string &);
 #else
 #endif
 
