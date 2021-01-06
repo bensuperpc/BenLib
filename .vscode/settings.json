@@ -84,7 +84,9 @@
         "variant": "cpp",
         "tensor": "cpp",
         "*.ipp": "cpp",
-        "revstr.h": "c"
+        "revstr.h": "c",
+        "hash_set": "cpp",
+        "slist": "cpp"
     },
     "C_Cpp.default.configurationProvider": "go2sh.cmake-integration"
 }

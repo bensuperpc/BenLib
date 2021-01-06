@@ -32,8 +32,9 @@
 #include "time/chrono/chrono.hpp"
 #include "vector/vector.hpp"
 
-#define NBRS 10000000
+#define NBRS 20000000
 
+// Optimize devide for interger
 template <typename Type> Type divide(Type a, Type b)
 {
     double da = (double)a;
@@ -44,14 +45,20 @@ template <typename Type> Type divide(Type a, Type b)
 
 template <typename Type> void my_test(const char *name)
 {
-    std::random_device rnd_device;
-    std::mt19937 mersenne_engine {rnd_device()};
+    //Create vector
     std::vector<Type> &&v = std::vector<Type>(NBRS, (Type)5);
     std::vector<Type> &&t = std::vector<Type>(NBRS, (Type)7);
+
+    //Fill vector with random value
     my::vector::rnd_fill<Type>(t);
     my::vector::rnd_fill<Type>(v);
+
+    //random place
+    std::random_device rnd_device;
+    std::mt19937 mersenne_engine {rnd_device()};
     std::shuffle(begin(t), end(t), mersenne_engine);
     std::shuffle(begin(v), end(v), mersenne_engine);
+
     auto &&t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] += t[i];
