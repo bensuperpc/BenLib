@@ -13,6 +13,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
+
 
 namespace my
 {
@@ -22,6 +25,8 @@ std::vector<std::string> split(const std::string &s, const std::string &);
 void split(std::vector<std::string> &, const std::string &, const std::string &);
 std::vector<std::string> split(const std::string &s, const char);
 void split(std::vector<std::string> &, const std::string &, const char);
+
+void csv_parse(std::vector<std::vector<std::string>> &, const std::string &,  const char);
 } // namespace string
 } // namespace my
 #endif

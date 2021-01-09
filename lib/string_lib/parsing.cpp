@@ -56,3 +56,24 @@ void my::string::split(std::vector<std::string> &result, const std::string &s, c
         result.emplace_back(item);
     }
 }
+
+void my::string::csv_parse(std::vector<std::vector<std::string>> & file, const std::string &filename, const char delimiter)
+{
+    std::ifstream input_from_file(filename);
+    std::string line;
+
+    while (getline(input_from_file, line)) {
+
+        line += std::string(1, delimiter);
+
+        std::stringstream ss(line);
+
+        std::string word;
+
+        std::vector<std::string> line;
+
+        while (getline(ss, word, delimiter))
+            line.emplace_back(word);
+        file.emplace_back(line);
+    }
+}
