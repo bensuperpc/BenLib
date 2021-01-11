@@ -60,20 +60,19 @@ void my::string::split(std::vector<std::string> &result, const std::string &s, c
 void my::string::csv_parse(std::vector<std::vector<std::string>> & file, const std::string &filename, const char delimiter)
 {
     std::ifstream input_from_file(filename);
-    std::string line;
+    std::string lines;
+    std::vector<std::string> line;
+    while (getline(input_from_file, lines)) {
 
-    while (getline(input_from_file, line)) {
+        //lines += std::string(1, delimiter);
 
-        line += std::string(1, delimiter);
-
-        std::stringstream ss(line);
+        std::stringstream ss(lines);
 
         std::string word;
-
-        std::vector<std::string> line;
 
         while (getline(ss, word, delimiter))
             line.emplace_back(word);
         file.emplace_back(line);
+        line.clear();
     }
 }
