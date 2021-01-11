@@ -471,6 +471,8 @@ set(BENCH_PC ${lib_path}src/bench/benchmark_pc.cpp)
 
 set(LIST_ALL_FILE ${lib_path}src/exemple/list_all_file.cpp)
 
+set(PARSE_CSV ${lib_path}src/exemple/parse_csv.cpp)
+
 if (OPENSSL_FOUND)
     set(LIST_ALL_FILE_HASH ${lib_path}src/exemple/list_all_file_hash.cpp)
 endif()
@@ -511,7 +513,7 @@ if (QT_FOUND)
     set(MAIN_LLIBS ${MAIN_LLIBS} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia)
 endif()
 
-set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem my_crypto std)
+set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem my_crypto std string_lib)
 
 #   ==================================================
 #   ===============    EXEC FILES    =================
@@ -562,6 +564,10 @@ add_dependencies(bench_pc ${CUSTOM_LIBS})
 add_executable(list_all_file ${LIST_ALL_FILE})
 target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
 add_dependencies(list_all_file ${CUSTOM_LIBS})
+
+add_executable(parse_csv ${PARSE_CSV})
+target_link_libraries(parse_csv PRIVATE string_lib)
+add_dependencies(parse_csv ${CUSTOM_LIBS})
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})

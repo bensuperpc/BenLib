@@ -7,11 +7,11 @@
 //                             |_|             |_|          //
 //////////////////////////////////////////////////////////////
 //                                                          //
-//  BenLib, 2020                                            //
-//  Created: 20, October, 2020                              //
-//  Modified: 20, October, 2020                             //
-//  file: list_all_file.cpp                                 //
-//  List all file                                           //
+//  BenLib, 2021                                            //
+//  Created: 10, January, 2021                              //
+//  Modified: 11, January, 2021                             //
+//  file: parse_csv.cpp                                     //
+//  Parse_csv                                               //
 //  Source: -                                               //
 //  OS: ALL                                                 //
 //  CPU: ALL                                                //
@@ -20,18 +20,19 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "filesystem/filesystem.hpp"
+#include "string_lib/parsing.hpp"
 
-int main()
+int main(int argc, char *argv[], char *envp[])
 {
-    std::vector<std::string> list_files = {};
-    list_files.reserve(1000);
-
-    my::filesystem::list_all_files(list_files, ".");
-
-    std::ios_base::sync_with_stdio(false);
-    for (const auto &elem : list_files) {
-        std::cout << elem << std::endl;
+    std::vector<std::vector<std::string>> file;
+    my::string::csv_parse(file, std::string(argv[1]), ',');
+    for(const auto &line : file) 
+    {
+        for(const auto &element : line)
+        {
+            std::cout << element << ", ";
+        }
+        std::cout << std::endl;
     }
-    std::cout << "There is " << list_files.size() << " Files" << std::endl;
+    return 0;
 }
