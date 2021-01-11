@@ -57,14 +57,14 @@ void my::string::split(std::vector<std::string> &result, const std::string &s, c
     }
 }
 
-void my::string::csv_parse(std::vector<std::vector<std::string>> & file, const std::string &filename, const char delimiter)
+void my::string::csv_parse(std::vector<std::vector<std::string>> &file, const std::string &filename, const char delimiter)
 {
     std::ifstream input_from_file(filename);
     std::string lines;
     std::vector<std::string> line;
     while (getline(input_from_file, lines)) {
 
-        //lines += std::string(1, delimiter);
+        // lines += std::string(1, delimiter);
 
         std::stringstream ss(lines);
 

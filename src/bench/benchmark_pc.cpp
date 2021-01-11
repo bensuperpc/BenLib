@@ -45,15 +45,15 @@ template <typename Type> Type divide(Type a, Type b)
 
 template <typename Type> void my_test(const char *name)
 {
-    //Create vector
+    // Create vector
     std::vector<Type> &&v = std::vector<Type>(NBRS, (Type)5);
     std::vector<Type> &&t = std::vector<Type>(NBRS, (Type)7);
 
-    //Fill vector with random value
+    // Fill vector with random value
     my::vector::rnd_fill<Type>(t);
     my::vector::rnd_fill<Type>(v);
 
-    //random place
+    // random place
     std::random_device rnd_device;
     std::mt19937 mersenne_engine {rnd_device()};
     std::shuffle(begin(t), end(t), mersenne_engine);

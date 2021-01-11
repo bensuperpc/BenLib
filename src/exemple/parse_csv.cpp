@@ -26,10 +26,8 @@ int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::vector<std::string>> file;
     my::string::csv_parse(file, std::string(argv[1]), ',');
-    for(const auto &line : file) 
-    {
-        for(const auto &element : line)
-        {
+    for (const auto &line : file) {
+        for (const auto &element : line) {
             std::cout << element << ", ";
         }
         std::cout << std::endl;
