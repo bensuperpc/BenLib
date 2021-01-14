@@ -31,8 +31,9 @@
 #include <vector>
 #include "time/chrono/chrono.hpp"
 #include "vector/vector.hpp"
+#include <type_traits>
 
-#define NBRS 20000000
+#define NBRS 33554432 //16777216
 
 // Optimize devide for interger
 template <typename Type> Type divide(Type a, Type b)
@@ -43,7 +44,23 @@ template <typename Type> Type divide(Type a, Type b)
     return (Type)q;
 }
 
-template <typename Type> void my_test(const char *name)
+
+template <typename Type> inline void add(Type & t1, const Type & t2)
+{
+    /*
+    if constexpr (std::integral<T>::value) { // is number
+        return value;
+    else
+        return value.length();*/
+    
+    //t1 += t2;
+    for (size_t i = 0; i < NBRS; ++i) {
+
+        t1[i] += t2[i];
+    }
+}
+
+template <typename Type> void /*__attribute__((optimize("O3")))*/ my_test(const char *name)
 {
     // Create vector
     std::vector<Type> &&v = std::vector<Type>(NBRS, (Type)5);
@@ -58,45 +75,43 @@ template <typename Type> void my_test(const char *name)
     std::mt19937 mersenne_engine {rnd_device()};
     std::shuffle(begin(t), end(t), mersenne_engine);
     std::shuffle(begin(v), end(v), mersenne_engine);
-
     auto &&t1 = my::chrono::now();
-    for (size_t i = 0; i < NBRS; ++i) {
-        v[i] += t[i];
-    }
+    add<std::vector<Type>>(v, t);
     auto &&t2 = my::chrono::now();
-    std::cout << name << " add: " << (((double)NBRS / my::chrono::duration(t1, t2).count())) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " add: " << (((double)NBRS / my::chrono::duration(t1, t2).count())) / 1000000000.0f << " GigaOps" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] -= t[i];
     }
     t2 = my::chrono::now();
+
     // typeid(Type).name()
-    std::cout << name << " sub: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " sub: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000000.0f << " GigaOps" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] *= t[i];
     }
     t2 = my::chrono::now();
-    std::cout << name << " mul: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " mul: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000000.0f << " GigaOps" << std::endl;
 
     t1 = my::chrono::now();
     for (size_t i = 0; i < NBRS; ++i) {
         v[i] /= t[i];
     }
     t2 = my::chrono::now();
-    std::cout << name << " div: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
+    std::cout << name << " div: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000000.0f << " GigaOps" << std::endl;
     if constexpr (std::is_integral<Type>::value) {
         t1 = my::chrono::now();
         for (size_t i = 0; i < NBRS; ++i) {
             v[i] %= t[i];
         }
         t2 = my::chrono::now();
-        std::cout << name << " mod: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000.0f << " MIPS" << std::endl;
+        std::cout << name << " mod: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000000.0f << " GigaOps" << std::endl;
     }
+    
 }
-
 int main()
 {
     my_test<int8_t>("     int8_t");

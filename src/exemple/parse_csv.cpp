@@ -24,13 +24,17 @@
 
 int main(int argc, char *argv[], char *envp[])
 {
-    std::vector<std::vector<std::string>> file;
-    my::string::csv_parse(file, std::string(argv[1]), ',');
-    for (const auto &line : file) {
-        for (const auto &element : line) {
-            std::cout << element << ", ";
+    if (argc >= 2) {
+        std::vector<std::vector<std::string>> file;
+        my::string::csv_parse(file, std::string(argv[1]), ',');
+        for (const auto &line : file) {
+            for (const auto &element : line) {
+                std::cout << element << ", ";
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
+    } else {
+        std::cout << "You must provide 1 or more arguments" << std::endl;
     }
     return 0;
 }

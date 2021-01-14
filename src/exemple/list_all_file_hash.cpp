@@ -40,8 +40,10 @@ int main()
     std::vector<std::string> list_files = {};
     list_files.reserve(1000);
 
+    // Get file list in current directory
     my::filesystem::list_all_files(list_files, ".");
 
+    // Improve cout perf by disable sync with Clib.
     std::ios_base::sync_with_stdio(false);
 
     std::vector<std::pair<std::string, std::vector<std::future<std::pair<std::string, std::string>>>>> results {};
