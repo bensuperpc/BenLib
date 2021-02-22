@@ -19,19 +19,19 @@
 //////////////////////////////////////////////////////////////
 
 #include <iostream>
-#include <string.h>
-#include <openssl/rsa.h>
-#include <openssl/pem.h>
 #include <openssl/err.h>
-
+#include <openssl/pem.h>
+#include <openssl/rsa.h>
+#include <string.h>
 #include "crypto/crypto_RSA.hpp"
 
 using namespace std;
 
-int main() {
+int main()
+{
 
     LOG("OpenSSL_RSA has been started.");
-    
+
     RSA *private_key;
     RSA *public_key;
 
@@ -40,23 +40,25 @@ int main() {
     char *decrypt = NULL;
 
     char private_key_pem[12] = "private_key";
-    char public_key_pem[11]  = "public_key";
+    char public_key_pem[11] = "public_key";
 
     LOG(KEY_LENGTH);
     LOG(PUBLIC_EXPONENT);
-    
+
     RSA *keypair = RSA_generate_key(KEY_LENGTH, PUBLIC_EXPONENT, NULL, NULL);
     LOG("Generate key has been created.");
 
     private_key = my::crypto::create_RSA(keypair, PRIVATE_KEY_PEM, private_key_pem);
     LOG("Private key pem file has been created.");
 
-    public_key  = my::crypto::create_RSA(keypair, PUBLIC_KEY_PEM, public_key_pem);
-    LOG("Public key pem file has been created.");;
+    public_key = my::crypto::create_RSA(keypair, PUBLIC_KEY_PEM, public_key_pem);
+    LOG("Public key pem file has been created.");
+    ;
 
-    encrypt = (char*)malloc(RSA_size(public_key));
-    int encrypt_length = my::crypto::public_encrypt(strlen(message) + 1, (unsigned char*)message, (unsigned char*)encrypt, public_key, RSA_PKCS1_OAEP_PADDING);
-    if(encrypt_length == -1) {
+    encrypt = (char *)malloc(RSA_size(public_key));
+    int encrypt_length
+        = my::crypto::public_encrypt(strlen(message) + 1, (unsigned char *)message, (unsigned char *)encrypt, public_key, RSA_PKCS1_OAEP_PADDING);
+    if (encrypt_length == -1) {
         LOG("An error occurred in public_encrypt() method");
     }
     LOG("Data has been encrypted.");
@@ -65,8 +67,8 @@ int main() {
     LOG("Encrypted file has been created.");
 
     decrypt = (char *)malloc(encrypt_length);
-    int decrypt_length = my::crypto::private_decrypt(encrypt_length, (unsigned char*)encrypt, (unsigned char*)decrypt, private_key, RSA_PKCS1_OAEP_PADDING);
-    if(decrypt_length == -1) {
+    int decrypt_length = my::crypto::private_decrypt(encrypt_length, (unsigned char *)encrypt, (unsigned char *)decrypt, private_key, RSA_PKCS1_OAEP_PADDING);
+    if (decrypt_length == -1) {
         LOG("An error occurred in private_decrypt() method");
     }
     LOG("Data has been decrypted.");
@@ -75,7 +77,7 @@ int main() {
     fwrite(decrypt, sizeof(*decrypt), decrypt_length - 1, decrypted_file);
     fclose(decrypted_file);
     LOG("Decrypted file has been created.");
-    
+
     RSA_free(keypair);
     free(private_key);
     free(public_key);

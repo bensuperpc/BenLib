@@ -10,13 +10,6 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #ifndef CRYPTO_AES_HPP_
 #define CRYPTO_AES_HPP_
 
-#include <cstring>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <string>
-
 // For AES
 #include <openssl/aes.h>
 #include <openssl/err.h>

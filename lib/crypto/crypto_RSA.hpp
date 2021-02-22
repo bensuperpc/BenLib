@@ -12,25 +12,16 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 
 #define BUFFSIZE 16384
 
-#include <cstring>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <string>
-
 // For RSA
-#include <openssl/rsa.h>
+#include <openssl/engine.h>
 #include <openssl/pem.h>
-#include<openssl/engine.h>
-#define KEY_LENGTH       4096
-#define PUBLIC_EXPONENT  59     //Public exponent should be a prime number.
-#define PUBLIC_KEY_PEM   1
-#define PRIVATE_KEY_PEM  0
+#include <openssl/rsa.h>
+#define KEY_LENGTH 4096
+#define PUBLIC_EXPONENT 59 // Public exponent should be a prime number.
+#define PUBLIC_KEY_PEM 1
+#define PRIVATE_KEY_PEM 0
 
-#define LOG(x)               \
-        cout << x << endl;   \
-
+#define LOG(x) cout << x << endl;
 
 //#include "openssl_rsa.h"
 
@@ -40,13 +31,13 @@ namespace my
 {
 namespace crypto
 {
-RSA * create_RSA(RSA *keypair, int pem_type, char *file_name);
+RSA *create_RSA(RSA *keypair, int pem_type, char *file_name);
 
-int public_encrypt(int flen, unsigned char* from, unsigned char *to, RSA* key, int padding);
+int public_encrypt(int flen, unsigned char *from, unsigned char *to, RSA *key, int padding);
 
-int private_decrypt(int flen, unsigned char* from, unsigned char *to, RSA* key, int padding);
+int private_decrypt(int flen, unsigned char *from, unsigned char *to, RSA *key, int padding);
 
-void create_encrypted_file(char* encrypted, RSA * key_pair);
+void create_encrypted_file(char *encrypted, RSA *key_pair);
 
 } // namespace crypto
 } // namespace my

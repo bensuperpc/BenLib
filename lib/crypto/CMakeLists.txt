@@ -7,9 +7,9 @@ find_package(OpenSSL QUIET)
 if (OPENSSL_FOUND)
     include_directories( ${OPENSSL_INCLUDE_DIR})
     link_directories(${OPENSSL_LIBRARIES})
-    message(STATUS "OPENSSL: FOUND")
+    message(STATUS "OPENSSL: FOUND on my_crypto")
 else()
-    message(STATUS "OPENSSL: NOT FOUND")
+    message(STATUS "OPENSSL: NOT FOUND on my_crypto")
 endif()
 
 
