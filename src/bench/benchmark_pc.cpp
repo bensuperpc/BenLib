@@ -28,12 +28,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <type_traits>
 #include <vector>
 #include "time/chrono/chrono.hpp"
 #include "vector/vector.hpp"
-#include <type_traits>
 
-#define NBRS 33554432 //16777216
+#define NBRS 33554432 // 16777216
 
 // Optimize devide for interger
 template <typename Type> Type divide(Type a, Type b)
@@ -44,16 +44,15 @@ template <typename Type> Type divide(Type a, Type b)
     return (Type)q;
 }
 
-
-template <typename Type> inline void add(Type & t1, const Type & t2)
+template <typename Type> inline void add(Type &t1, const Type &t2)
 {
     /*
     if constexpr (std::integral<T>::value) { // is number
         return value;
     else
         return value.length();*/
-    
-    //t1 += t2;
+
+    // t1 += t2;
     for (size_t i = 0; i < NBRS; ++i) {
 
         t1[i] += t2[i];
@@ -110,7 +109,6 @@ template <typename Type> void /*__attribute__((optimize("O3")))*/ my_test(const 
         t2 = my::chrono::now();
         std::cout << name << " mod: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000000.0f << " GigaOps" << std::endl;
     }
-    
 }
 int main()
 {

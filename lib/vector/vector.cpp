@@ -19,7 +19,7 @@ void my::vector::fill_rowull(std::vector<uint64_t> &row)
 
 void my::vector::fill_matrix_1(std::vector<std::vector<int>> &mat)
 {
-    std::for_each(mat.begin(), mat.end(), fill_row);
+    std::for_each(mat.begin(), mat.end(), my::vector::fill_row);
 }
 
 void my::vector::fill_matrix_2(std::vector<std::vector<int>> &Matrix)

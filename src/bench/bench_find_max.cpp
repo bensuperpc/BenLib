@@ -43,7 +43,7 @@ struct Processor
 {
     long double operator()(std::function<int(const int32_t *, size_t)> elem_fn, const int *array, const size_t &array_size, const int &nrbs)
     {
-        int result = 0;
+        int result __attribute__((unused)) = 0;
 
         // Prepare CPU
         for (auto k = 0; k < nrbs / 10; k++) {

@@ -6,6 +6,7 @@
 */
 
 // Source https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C
+// https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #include "crypto.hpp"
 
 std::string my::crypto::get_md5hash(const std::string &fname)

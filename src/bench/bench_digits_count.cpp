@@ -44,7 +44,7 @@ struct Processor
 {
     long double __attribute__((optimize("O1"))) operator()(std::function<uint64_t(uint64_t)> elem_fn, uint64_t prime_nbr)
     {
-        auto nbrs = (elem_fn)(prime_nbr);
+        auto nbrs __attribute__((unused)) = (elem_fn)(prime_nbr);
         auto &&t1 = my::chrono::now();
         for (uint64_t i = 0; i < 50000; i++) {
             nbrs = (elem_fn)(prime_nbr);

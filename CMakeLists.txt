@@ -1,7 +1,7 @@
 
 
 cmake_minimum_required (VERSION 3.13)
-project(RPG VERSION 0.0.4 LANGUAGES CXX C)
+project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 
 #   ==================================================
 #   ================    CMAKE CONF    ================
@@ -118,6 +118,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 
+
 set(CMAKE_CXX_STANDARD_REQUIRED 1)
 if(NOT CMAKE_CXX_EXTENSIONS)
     set(CMAKE_CXX_EXTENSIONS 1)
@@ -131,17 +132,18 @@ set(OPTI_COMPILER_REL "-march=native -s -ffunction-sections -fdata-sections -Wl,
 
 set(SEC_COMPILER_REL "-fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
 #For Ubuntu 18.04 and 16.04
-CHECK_CXX_COMPILER_FLAG("-fstack-clash-protection" COMPILER_SUPPORTS_SEC_FLAG)
-if(NOT COMPILER_SUPPORTS_SEC_FLAG)
-    list(APPEND CHECK_CXX_COMPILER_FLAG "/usr/share/SFML/cmake/Modules")
-endif()
+#CHECK_CXX_COMPILER_FLAG("-fstack-clash-protection" COMPILER_SUPPORTS_SEC_FLAG)
+#if(NOT COMPILER_SUPPORTS_SEC_FLAG)
+#    list(APPEND CHECK_CXX_COMPILER_FLAG "/usr/share/SFML/cmake/Modules")
+#endif()
 
-set(SEC_COMPILER_LINK_REL "-fPIC -Wl,-z,now -Wl,-z,relro")
-
+set(SEC_COMPILER_LINK_REL "-fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed -fuse-ld=gold")
+#-flto
 
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
 #-std=c99
-set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe")
+
+set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe -fuse-ld=gold")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v -march=native")
@@ -155,15 +157,16 @@ set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wwrite-strings -Wcast-align
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference")
 
 # Removed : -Wconversion -Wuseless-cast
-#-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -fprofile-arcs -ftest-coverage
+#-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
 #Add -lstdc++fs for old compiler
-set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
+set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=gold -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v -march=native")
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
+set(CMAKE_SHARED_LINKER_FLAGS "-fuse-ld=gold")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${SEC_COMPILER_LINK_REL}")
 set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "${SEC_COMPILER_LINK_REL}")
 set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
@@ -475,6 +478,8 @@ set(PARSE_CSV ${lib_path}src/exemple/parse_csv.cpp)
 
 if (OPENSSL_FOUND)
     set(LIST_ALL_FILE_HASH ${lib_path}src/exemple/list_all_file_hash.cpp)
+    set(CRYPTO_AES ${lib_path}src/exemple/crypto_AES256.cpp)
+    set(CRYPTO_RSA ${lib_path}src/exemple/crypto_RSA.cpp)
 endif()
 
 set(COUNT_ALL_FILE ${lib_path}src/exemple/count_all_file.cpp)
@@ -561,9 +566,11 @@ add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc ${CUSTOM_LIBS})
 
-add_executable(list_all_file ${LIST_ALL_FILE})
-target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
-add_dependencies(list_all_file ${CUSTOM_LIBS})
+if(Boost_FOUND)
+    add_executable(list_all_file ${LIST_ALL_FILE})
+    target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
+    add_dependencies(list_all_file ${CUSTOM_LIBS})
+endif()
 
 add_executable(parse_csv ${PARSE_CSV})
 target_link_libraries(parse_csv PRIVATE string_lib)
@@ -571,8 +578,16 @@ add_dependencies(parse_csv ${CUSTOM_LIBS})
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})
-    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs my_crypto thread time)
+    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
     add_dependencies(list_all_file_hash ${CUSTOM_LIBS})
+
+    add_executable(crypto_AES ${CRYPTO_AES})
+    target_link_libraries(crypto_AES PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
+    add_dependencies(crypto_AES ${CUSTOM_LIBS})
+
+    add_executable(crypto_RSA ${CRYPTO_RSA})
+    target_link_libraries(crypto_RSA PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
+    add_dependencies(crypto_RSA ${CUSTOM_LIBS})
 endif()
 
 if (OPENCV_FOUND)

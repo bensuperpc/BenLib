@@ -15,12 +15,16 @@ endif()
 
 set(SRCS
     crypto.cpp
+    crypto_AES.cpp
+    crypto_RSA.cpp
 	)
 	
 set(HEADERS
     crypto.hpp
+    crypto_AES.hpp
+    crypto_RSA.hpp
     )
 
-#add_library(math_static STATIC ${SRCS} ${HEADERS})
+#add_library(my_crypto_static STATIC ${SRCS} ${HEADERS})
 add_library(my_crypto SHARED ${SRCS} ${HEADERS})
 target_link_libraries(my_crypto PRIVATE ssl crypto)

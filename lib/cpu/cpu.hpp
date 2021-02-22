@@ -23,7 +23,6 @@ namespace my
 {
 namespace cpu
 {
-#pragma GCC diagnostic ignored "-Wundef"
 #if (__i386__ || _M_IX86 || __x86_64__ || _M_AMD64)
 
 uint64_t rdtsc();
