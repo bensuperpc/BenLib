@@ -85,7 +85,7 @@ License
 [MIT] License
 
 
-**Open source Software forever !**
+**Free Software forever !**
 
    [OpenCV]: <https://opencv.org>
    [SFML]: <https://www.sfml-dev.org>
