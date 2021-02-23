@@ -18,11 +18,12 @@ BenLib uses a number of open source projects to work properly:
 * [OpenCV] - Load and image processing !
 * [Boost] - Make units tests and others things :)
 * [OpenGL] - OpenGL lib.
+* [Qt] - Qt lib.
 
 You can see my [public repository][ben_github] on GitHub, and can see my [public repository][ben_gitlab] on GitLab.
 
 #### Building for source
-You need to install SFML, OpenCV, BoostLib, OpenGL lib, GCC and G++ (With C++17 support), before build.
+You need to install SFML, OpenCV, BoostLib, OpenGL lib, Qt 5.12 or newer, GCC and G++ (With C++17 support), before build.
 
 ```sh
 git clone https://github.com/Bensuperpc/BenLib.git
@@ -88,6 +89,7 @@ MIT
    [SFML]: <https://www.sfml-dev.org>
    [Boost]: <https://www.boost.org>
    [OpenGL]: <https://www.opengl.org>
+   [Qt]: <https://www.qt.io/>
    
    [ben_github]: <https://github.com/Bensuperpc>
    [ben_gitlab]: <https://gitlab.com/Bensuperpc>
