@@ -4,9 +4,11 @@
 
 [![N|Solid](https://forthebadge.com/images/badges/made-with-c-plus-plus.svg)](https://isocpp.org/) [![N|Solid](https://forthebadge.com/images/badges/made-with-c.svg)](https://isocpp.org/) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![N|Solid](https://forthebadge.com/images/badges/powered-by-qt.svg)](https://www.qt.io/) 
 
-# New Features!
+# New Features !
 
   - AES and RSA encryption functions
+  - New linker (Gold linker Instead default linker)
+  - New Readme
 
 ### Tech
 
