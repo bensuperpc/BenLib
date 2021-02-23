@@ -130,7 +130,7 @@ set(OPTI_COMPILER_REL "-march=native -s -ffunction-sections -fdata-sections -Wl,
 
 #=== SECURITY RELEASE FLAGS ===
 
-set(SEC_COMPILER_REL "-fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
+set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
 #For Ubuntu 18.04 and 16.04
 #CHECK_CXX_COMPILER_FLAG("-fstack-clash-protection" COMPILER_SUPPORTS_SEC_FLAG)
 #if(NOT COMPILER_SUPPORTS_SEC_FLAG)
@@ -665,15 +665,25 @@ endif()
 target_link_libraries(${TEST_VECTOR_MAX_SIMD} ${Boost_LIBRARIES} vector)
 add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
 
-#Test crypto
-set(TEST_CRYPTO test_crypto)
-add_executable(${TEST_CRYPTO} ${lib_path}src/test/crypto/test_crypto.cpp)
-if(EXTERNAL_LIB)
-    add_dependencies(${TEST_CRYPTO} ${EXTERNAL_LIB})
-endif()
-target_link_libraries(${TEST_CRYPTO} ${Boost_LIBRARIES} my_crypto)
-add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
+if (OPENSSL_FOUND)
+    #Test crypto
+    set(TEST_CRYPTO test_crypto)
+    add_executable(${TEST_CRYPTO} ${lib_path}src/test/crypto/test_crypto.cpp)
+    if(EXTERNAL_LIB)
+        add_dependencies(${TEST_CRYPTO} ${EXTERNAL_LIB})
+    endif()
+    target_link_libraries(${TEST_CRYPTO} ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
 
+    #Test crypto AES
+    set(TEST_CRYPTO_AES test_crypto_aes)
+    add_executable(${TEST_CRYPTO_AES} ${lib_path}src/test/crypto/test_crypto_AES.cpp)
+    if(EXTERNAL_LIB)
+        add_dependencies(${TEST_CRYPTO_AES} ${EXTERNAL_LIB})
+    endif()
+    target_link_libraries(${TEST_CRYPTO_AES} ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    add_test(NAME ${TEST_CRYPTO_AES} COMMAND ${TEST_CRYPTO_AES})
+endif()
 
 #Test C string
 set(TEST_REV_STR test_rev_str)

@@ -1,5 +1,5 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE vector_max_simd
+#define BOOST_TEST_MODULE crypto
 
 #include <algorithm>
 #include <boost/predef.h>

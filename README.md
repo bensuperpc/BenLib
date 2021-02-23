@@ -15,7 +15,7 @@
 BenLib uses a number of open source projects to work properly:
 
 * [SFML] - Graphic lib
-* [OpenCV] - Load and image processing !
+* [OpenCV] - Load and image processing
 * [Boost] - Make units tests and others things :)
 * [OpenGL] - OpenGL lib.
 * [Qt] - Qt lib.

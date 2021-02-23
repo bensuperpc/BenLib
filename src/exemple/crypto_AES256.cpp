@@ -24,6 +24,9 @@
 #include <string.h>
 #include "crypto/crypto_AES.hpp"
 
+#include <iomanip>
+#include <iostream>
+
 int main(int arc, char *argv[])
 {
     OpenSSL_add_all_algorithms();
@@ -80,7 +83,16 @@ int main(int arc, char *argv[])
     /* Encrypt the plaintext */
     ciphertext_len
         = my::crypto::Encrypt_AES(plaintext, strlen(reinterpret_cast<char *>(plaintext)), aad, strlen(reinterpret_cast<char *>(aad)), key, iv, ciphertext, tag);
-
+    
+    /*
+    for (const unsigned char* p = ciphertext; *p; ++p)
+    {
+        printf("0x%02x, ", *p);
+    }*/
+    printf("\n");
+    
+    
+    
     /* Do something useful with the ciphertext here */
     printf("Ciphertext is:\n");
     BIO_dump_fp(stdout, reinterpret_cast<const char *>(ciphertext), ciphertext_len);
