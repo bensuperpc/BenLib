@@ -1,5 +1,95 @@
 # BenLib
 
-My personal C/C++ library (WIP)
-You need compiler with C++11 support, C++17 is recommended.
+It's my personal C/C++ library.
 
+# New Features!
+
+  - AES and RSA encryption functions
+
+
+You can also:
+  - build ansd test :D !
+
+### Tech
+
+BenLib uses a number of open source projects to work properly:
+
+* [SFML] - Graphic lib
+* [OpenCV] - Load and image processing !
+* [Boost] - Make units tests and others things :)
+* [OpenGL] - OpenGL lib.
+
+You can see my [public repository][ben_github] on GitHub, and can see my [public repository][ben_gitlab] on GitLab.
+
+#### Building for source
+You need to install SFML, OpenCV, BoostLib, OpenGL lib, GCC and G++ (With C++17 support), before build.
+
+```sh
+git clone https://github.com/Bensuperpc/BenLib.git
+```
+
+```sh
+cd BenLib
+```
+
+For production release:
+```sh
+./make.sh -DCMAKE_BUILD_TYPE=Release
+```
+
+For minisize release:
+```sh
+./make.sh -DCMAKE_BUILD_TYPE=MinSizeRel
+```
+
+For debug release:
+```sh
+./make.sh -DCMAKE_BUILD_TYPE=Release
+```
+
+For converage release:
+```sh
+./make.sh -DCMAKE_BUILD_TYPE=Coverage
+```
+```sh
+./coverage.sh
+```
+
+### Docker
+You must install docker (and docker-compose maybe in later update)
+
+To run docker builder_test :
+```sh
+./build.sh
+```
+
+To export images from docker builder_test (Without builds):
+
+```sh
+./export.sh
+```
+
+You can see builds on **build_docker/**
+
+### Todos
+
+ - Write MORE Tests
+ - Continue dev. :D
+
+License
+----
+
+MIT
+
+
+**Open source Software forever !**
+
+   [OpenCV]: <https://opencv.org>
+   [SFML]: <https://www.sfml-dev.org>
+   [Boost]: <https://www.boost.org>
+   [OpenGL]: <https://www.opengl.org>
+   
+   [ben_github]: <https://github.com/Bensuperpc>
+   [ben_gitlab]: <https://gitlab.com/Bensuperpc>
+   
+ 
