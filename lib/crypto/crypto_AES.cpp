@@ -143,3 +143,22 @@ void my::crypto::handleErrors()
     }
     abort();
 }
+
+int my::crypto::Rand_Key_AES(unsigned char *key)
+{
+    if (!RAND_bytes(key, 32)) {
+        /* OpenSSL reports a failure, act accordingly */
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int my::crypto::Rand_IV_AES(unsigned char *iv)
+{
+    if (!RAND_bytes(iv, 16)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}

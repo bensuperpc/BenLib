@@ -3,6 +3,7 @@
 ** Crypto
 ** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
 https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
+https://stackoverflow.com/a/5580881/10152334
 
 ** crypto.cpp
 */
@@ -14,6 +15,7 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #include <openssl/aes.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
+#include <openssl/rand.h>
 #include <string.h>
 
 #define BUFFSIZE 16384
@@ -27,6 +29,9 @@ int Decrypt_AES(unsigned char *ciphertext, int ciphertext_len, unsigned char *aa
 
 int Encrypt_AES(unsigned char *plaintext, int plaintext_len, unsigned char *aad, int aad_len, unsigned char *key, unsigned char *iv, unsigned char *ciphertext,
     unsigned char *tag);
+
+int Rand_Key_AES(unsigned char *key);
+int Rand_IV_AES(unsigned char *iv);
 
 __attribute__((__noreturn__)) void handleErrors();
 
