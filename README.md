@@ -84,7 +84,7 @@ You can see builds on **build_docker/**
 License
 ----
 
-MIT
+[MIT] License
 
 
 **Open source Software forever !**
@@ -99,5 +99,6 @@ MIT
    
    [ben_github]: <https://github.com/Bensuperpc>
    [ben_gitlab]: <https://gitlab.com/Bensuperpc>
+   [MIT]: LICENSE
    
  
