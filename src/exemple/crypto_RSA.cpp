@@ -34,7 +34,9 @@ int main()
 
     RSA *private_key;
     RSA *public_key;
-
+    RSA *keypair = NULL;
+    BIGNUM *bne = NULL;
+    int ret = 0;
     char message[KEY_LENGTH / 8] = "Batuhan AVLAYAN - OpenSSL_RSA demo";
     char *encrypt = NULL;
     char *decrypt = NULL;
@@ -45,7 +47,22 @@ int main()
     LOG(KEY_LENGTH);
     LOG(PUBLIC_EXPONENT);
 
-    RSA *keypair = RSA_generate_key(KEY_LENGTH, PUBLIC_EXPONENT, NULL, NULL);
+    // RSA *keypair = RSA_generate_key(KEY_LENGTH, PUBLIC_EXPONENT, NULL, NULL); //Old
+
+    bne = BN_new();
+    LOG(bne);
+    ret = BN_set_word(bne, PUBLIC_EXPONENT);
+    if (ret != 1) {
+        // goto free_stuff;
+        LOG("An error occurred in BN_set_word() method");
+    }
+    keypair = RSA_new();
+    ret = RSA_generate_key_ex(keypair, KEY_LENGTH, bne, NULL);
+    if (ret != 1) {
+        // goto free_stuff;
+        LOG("An error occurred in RSA_generate_key_ex() method");
+    }
+
     LOG("Generate key has been created.");
 
     private_key = my::crypto::create_RSA(keypair, PRIVATE_KEY_PEM, private_key_pem);
@@ -55,7 +72,7 @@ int main()
     LOG("Public key pem file has been created.");
     ;
 
-    encrypt = (char *)malloc(RSA_size(public_key));
+    encrypt = (char *)malloc((size_t)RSA_size(public_key));
     int encrypt_length
         = my::crypto::public_encrypt(strlen(message) + 1, (unsigned char *)message, (unsigned char *)encrypt, public_key, RSA_PKCS1_OAEP_PADDING);
     if (encrypt_length == -1) {
@@ -63,10 +80,11 @@ int main()
     }
     LOG("Data has been encrypted.");
 
-    my::crypto::create_encrypted_file(encrypt, public_key);
+    char filename[] = "encrypted_file.bin";
+    my::crypto::create_encrypted_file(encrypt, public_key, filename);
     LOG("Encrypted file has been created.");
 
-    decrypt = (char *)malloc(encrypt_length);
+    decrypt = (char *)malloc((size_t)encrypt_length);
     int decrypt_length = my::crypto::private_decrypt(encrypt_length, (unsigned char *)encrypt, (unsigned char *)decrypt, private_key, RSA_PKCS1_OAEP_PADDING);
     if (decrypt_length == -1) {
         LOG("An error occurred in private_decrypt() method");
@@ -74,15 +92,17 @@ int main()
     LOG("Data has been decrypted.");
 
     FILE *decrypted_file = fopen("decrypted_file.txt", "w");
-    fwrite(decrypt, sizeof(*decrypt), decrypt_length - 1, decrypted_file);
+    fwrite(decrypt, sizeof(*decrypt), (size_t)decrypt_length - 1, decrypted_file);
     fclose(decrypted_file);
     LOG("Decrypted file has been created.");
 
+    // free_stuff:
     RSA_free(keypair);
     free(private_key);
     free(public_key);
     free(encrypt);
     free(decrypt);
+    BN_free(bne);
     LOG("OpenSSL_RSA has been finished.");
 
     return 0;

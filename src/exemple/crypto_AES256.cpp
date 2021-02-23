@@ -32,27 +32,27 @@ int main(int arc, char *argv[])
     /* Set up the key and iv. Do I need to say to not hard code these in a real application? :-) */
 
     /* A 256 bit key */
-    //unsigned char key[] = "01234567890123456789012345678901";
-    
+    // unsigned char key[] = "01234567890123456789012345678901";
+
     unsigned char key[32];
 
-    if(my::crypto::Rand_Key_AES(key)) {
+    if (my::crypto::Rand_Key_AES(key)) {
         printf("Error\n");
         return 0;
     } else {
-        //printf("Key is:%s\n", key);
+        // printf("Key is:%s\n", key);
         printf("Key is:\n");
         BIO_dump_fp(stdout, reinterpret_cast<const char *>(key), 32);
     }
-    
+
     /* A 128 bit IV */
-    //unsigned char iv[] = "0123456789012345";
+    // unsigned char iv[] = "0123456789012345";
     unsigned char iv[16];
-    if(my::crypto::Rand_IV_AES(iv)) {
+    if (my::crypto::Rand_IV_AES(iv)) {
         printf("Error\n");
         return 0;
     } else {
-        //printf("Key is:%s\n", key);
+        // printf("Key is:%s\n", key);
         printf("IV is:\n");
         BIO_dump_fp(stdout, reinterpret_cast<const char *>(key), 16);
     }

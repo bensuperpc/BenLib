@@ -53,10 +53,9 @@ int my::crypto::private_decrypt(int flen, unsigned char *from, unsigned char *to
     return result;
 }
 
-void my::crypto::create_encrypted_file(char *encrypted, RSA *key_pair)
+void my::crypto::create_encrypted_file(char *encrypted, RSA *key_pair, char *filename)
 {
-
-    FILE *encrypted_file = fopen("encrypted_file.bin", "w");
-    fwrite(encrypted, sizeof(*encrypted), RSA_size(key_pair), encrypted_file);
+    FILE *encrypted_file = fopen(filename, "w");
+    fwrite(encrypted, sizeof(*encrypted), (size_t)RSA_size(key_pair), encrypted_file);
     fclose(encrypted_file);
 }

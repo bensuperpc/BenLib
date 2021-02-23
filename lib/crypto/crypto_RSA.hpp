@@ -17,7 +17,7 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
 #define KEY_LENGTH 4096
-#define PUBLIC_EXPONENT 59 // Public exponent should be a prime number.
+#define PUBLIC_EXPONENT 65537 // 59 // Public exponent should be a prime number.
 #define PUBLIC_KEY_PEM 1
 #define PRIVATE_KEY_PEM 0
 
@@ -37,7 +37,7 @@ int public_encrypt(int flen, unsigned char *from, unsigned char *to, RSA *key, i
 
 int private_decrypt(int flen, unsigned char *from, unsigned char *to, RSA *key, int padding);
 
-void create_encrypted_file(char *encrypted, RSA *key_pair);
+void create_encrypted_file(char *encrypted, RSA *key_pair, char *filename);
 
 } // namespace crypto
 } // namespace my
