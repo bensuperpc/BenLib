@@ -21,6 +21,8 @@ BenLib uses a number of open source projects to work properly:
 * [Boost] - Make units tests and others things :)
 * [OpenGL] - OpenGL lib.
 * [Qt] - Qt lib.
+* [CMake] - Build system.
+* [Docker] - Container system.
 
 You can see my [public repository][ben_github] on GitHub, and can see my [public repository][ben_gitlab] on GitLab.
 
@@ -92,6 +94,8 @@ MIT
    [Boost]: <https://www.boost.org>
    [OpenGL]: <https://www.opengl.org>
    [Qt]: <https://www.qt.io/>
+   [CMake]: <https://cmake.org/>
+   [Docker]: <https://www.docker.com/>
    
    [ben_github]: <https://github.com/Bensuperpc>
    [ben_gitlab]: <https://gitlab.com/Bensuperpc>
