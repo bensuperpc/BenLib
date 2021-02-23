@@ -1,14 +1,16 @@
 # BenLib
 
-It's my personal C/C++ library.
+### _It's my personal C/C++ library_
+
+[![N|Solid](https://forthebadge.com/images/badges/made-with-c-plus-plus.svg)](https://isocpp.org/) [![N|Solid](https://forthebadge.com/images/badges/made-with-c.svg)](https://isocpp.org/) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![N|Solid](https://forthebadge.com/images/badges/powered-by-qt.svg)](https://www.qt.io/) 
 
 # New Features!
 
   - AES and RSA encryption functions
 
 
-You can also:
-  - build ansd test :D !
+You can:
+  - build, test and contribute :D !
 
 ### Tech
 
