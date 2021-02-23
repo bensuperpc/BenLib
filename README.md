@@ -22,9 +22,6 @@ BenLib uses a number of open source projects to work properly:
 
 You can see my [public repository][ben_github] on GitHub, and can see my [public repository][ben_gitlab] on GitLab.
 
-You can:
-  - build, test and contribute :D !
-
 #### Building for source
 You need to install SFML, OpenCV, BoostLib, OpenGL lib, Qt 5.12 or newer, GCC and G++ (With C++17 support), before build.
 
