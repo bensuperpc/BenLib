@@ -20,6 +20,6 @@ cmake $@ -G Ninja ..
 
 ninja
 #make -j 12
-ctest --output-on-failure #--extra-verbose
+ctest --output-on-failure -j$(nproc) #--extra-verbose
 
 #make install 
