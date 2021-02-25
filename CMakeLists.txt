@@ -694,6 +694,14 @@ endif()
 target_link_libraries(${TEST_REV_STR} ${Boost_LIBRARIES} string_c)
 add_test(NAME ${TEST_REV_STR} COMMAND ${TEST_REV_STR})
 
+set(TEST_IS_NUM test_my_isnum)
+add_executable(${TEST_IS_NUM} ${lib_path}src/test/C/string_is/test_my_isnum.cpp)
+if(EXTERNAL_LIB)
+    add_dependencies(${TEST_IS_NUM} ${EXTERNAL_LIB})
+endif()
+target_link_libraries(${TEST_IS_NUM} ${Boost_LIBRARIES} string_is_c)
+add_test(NAME ${TEST_IS_NUM} COMMAND ${TEST_IS_NUM})
+
 
 #Test power
 set(TEST_POWER test_power)
