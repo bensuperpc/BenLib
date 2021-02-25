@@ -130,3 +130,19 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_7)
     BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
 #endif
 }
+
+BOOST_AUTO_TEST_CASE(test_vector_max_simd_8)
+{
+    const size_t i = 100000;
+    int *n = new int[i];
+    for (size_t x = 0; x < i; ++x) {
+        n[x] = rand() % 100000;
+    }
+#if (__AVX2__ || __AVX__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_normal != find_max_avx");
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_sse(n, i) == my::vector_avx::find_max_avx(n, i), "find_max_sse != find_max_avx");
+#endif
+#if (__SSE3__ || __SSE2__)
+    BOOST_REQUIRE_MESSAGE(my::vector_avx::find_max_normal(n, i) == my::vector_avx::find_max_sse(n, i), "find_max_normal != find_max_sse");
+#endif
+}

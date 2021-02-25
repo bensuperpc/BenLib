@@ -83,3 +83,19 @@ BOOST_AUTO_TEST_CASE(test_vector_cache_friendly_copy_2d_2)
                                             << " instead: "
                                             << "mat1 == mat2");
 }
+/*
+BOOST_AUTO_TEST_CASE(test_vector_std_copy_2d_1)
+{
+    auto &&mat1 = my::vector::generate_matrix<uint64_t>(50, 50, 0);
+    auto &&mat2 = my::vector::generate_matrix<uint64_t>(50, 50, 42);
+
+    // BOOST_FAIL( "Test is not ready yet" );
+    BOOST_REQUIRE_MESSAGE(mat1 != mat2, "mat1 == mat2"
+                                            << " instead: "
+                                            << "mat1 != mat2");
+    my::vector::std_copy<uint64_t>(mat1, mat2);
+    BOOST_REQUIRE_MESSAGE(mat1 == mat2, "mat1 != mat2"
+                                            << " instead: "
+                                            << "mat1 == mat2");
+}
+*/
