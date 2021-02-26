@@ -78,11 +78,30 @@ unsigned int GetCrc32(const std::string& my_string) {
 
 int main(int arc, char *argv[])
 {
+    std::ios_base::sync_with_stdio(false);
+    const size_t N = 7;
+    for (size_t i = 0; i < pow(26, N); i++) {
+        size_t value = i;
+        std::string tmp(N, 'A');
+        for (size_t j = 0; j < N; j++) {
+            tmp[N - 1 - j] = 'A' + value % 26;
+            value = value / 26;
+        }
+        std::string copy(tmp);
+        std::reverse(copy.begin(), copy.end());
+        auto crc = ~(GetCrc32(copy));
+        //std::cout << crc << std::endl;
+        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            std::cout << tmp << ":0x" << std::hex << crc << std::endl;
+        }
+    }
+
     /*
     auto vec = generateSequenceBySize(5);
     std::ios_base::sync_with_stdio(false);
     for(const auto v : vec)
         std::cout << v << std::endl;*/
+    /*
     const std::string str = "HESOYAM";
     std::cout << str << std::endl;
     std::string copy(str);
@@ -93,6 +112,6 @@ int main(int arc, char *argv[])
     crc = ~crc; // CRC32 to CRC32 jamcrc
     std::cout << std::hex << "0x" << crc << std::endl;
     bool exists = std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list);
-    exists ? std::cout << "Existe" << std::endl : std::cout << "N'existe pas" << std::endl;
+    exists ? std::cout << "Existe" << std::endl : std::cout << "N'existe pas" << std::endl;*/
     return 0;
 }
