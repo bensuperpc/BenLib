@@ -90,7 +90,7 @@ int main(int arc, char *argv[])
     std::cout << copy << std::endl;
     auto crc = GetCrc32(copy);
     std::cout << std::hex << "0x" << crc << std::endl;
-    crc = ~crc;
+    crc = ~crc; // CRC32 to CRC32 jamcrc
     std::cout << std::hex << "0x" << crc << std::endl;
     bool exists = std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list);
     exists ? std::cout << "Existe" << std::endl : std::cout << "N'existe pas" << std::endl;
