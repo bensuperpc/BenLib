@@ -476,6 +476,9 @@ set(LIST_ALL_FILE ${lib_path}src/exemple/list_all_file.cpp)
 
 set(PARSE_CSV ${lib_path}src/exemple/parse_csv.cpp)
 
+set(GTA_SA_CHEAT ${lib_path}src/exemple/GTA_SA_cheat.cpp)
+
+
 if (OPENSSL_FOUND)
     set(LIST_ALL_FILE_HASH ${lib_path}src/exemple/list_all_file_hash.cpp)
     set(CRYPTO_AES ${lib_path}src/exemple/crypto_AES256.cpp)
@@ -565,6 +568,11 @@ add_dependencies(bench_find_max ${CUSTOM_LIBS})
 add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc ${CUSTOM_LIBS})
+
+add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
+target_link_libraries(gta_sa_cheat PRIVATE thread)
+add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
+
 
 if(Boost_FOUND)
     add_executable(list_all_file ${LIST_ALL_FILE})

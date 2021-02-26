@@ -21,10 +21,8 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_1)
     BOOST_REQUIRE(my::crypto::Rand_Key_AES(key2) == 0);
     BOOST_REQUIRE(strcmp((char *)key, (char *)key2) != 0);
 
-
     unsigned char iv[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv) == 0);
-
 
     unsigned char iv2[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv2) == 0);
@@ -53,7 +51,6 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_1)
     ERR_free_strings();
 }
 
-
 BOOST_AUTO_TEST_CASE(test_crypto_aes_2)
 {
     OpenSSL_add_all_algorithms();
@@ -66,10 +63,8 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_2)
     BOOST_REQUIRE(my::crypto::Rand_Key_AES(key2) == 0);
     BOOST_REQUIRE(strcmp((char *)key, (char *)key2) != 0);
 
-
     unsigned char iv[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv) == 0);
-
 
     unsigned char iv2[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv2) == 0);
@@ -98,7 +93,6 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_2)
     ERR_free_strings();
 }
 
-
 BOOST_AUTO_TEST_CASE(test_crypto_aes_3)
 {
     OpenSSL_add_all_algorithms();
@@ -111,10 +105,8 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_3)
     BOOST_REQUIRE(my::crypto::Rand_Key_AES(key2) == 0);
     BOOST_REQUIRE(strcmp((char *)key, (char *)key2) != 0);
 
-
     unsigned char iv[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv) == 0);
-
 
     unsigned char iv2[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv2) == 0);
@@ -155,10 +147,8 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_4)
     BOOST_REQUIRE(my::crypto::Rand_Key_AES(key2) == 0);
     BOOST_REQUIRE(strcmp((char *)key, (char *)key2) != 0);
 
-
     unsigned char iv[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv) == 0);
-
 
     unsigned char iv2[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv2) == 0);
@@ -187,7 +177,6 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_4)
     ERR_free_strings();
 }
 
-
 BOOST_AUTO_TEST_CASE(test_crypto_aes_5)
 {
     OpenSSL_add_all_algorithms();
@@ -200,10 +189,8 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_5)
     BOOST_REQUIRE(my::crypto::Rand_Key_AES(key2) == 0);
     BOOST_REQUIRE(strcmp((char *)key, (char *)key2) != 0);
 
-
     unsigned char iv[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv) == 0);
-
 
     unsigned char iv2[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv2) == 0);
@@ -244,10 +231,8 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_6)
     BOOST_REQUIRE(my::crypto::Rand_Key_AES(key2) == 0);
     BOOST_REQUIRE(strcmp((char *)key, (char *)key2) != 0);
 
-
     unsigned char iv[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv) == 0);
-
 
     unsigned char iv2[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv2) == 0);
@@ -288,10 +273,8 @@ BOOST_AUTO_TEST_CASE(test_crypto_aes_7)
     BOOST_REQUIRE(my::crypto::Rand_Key_AES(key2) == 0);
     BOOST_REQUIRE(strcmp((char *)key, (char *)key2) != 0);
 
-
     unsigned char iv[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv) == 0);
-
 
     unsigned char iv2[16];
     BOOST_REQUIRE(my::crypto::Rand_IV_AES(iv2) == 0);
