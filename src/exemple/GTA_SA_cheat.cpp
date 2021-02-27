@@ -21,7 +21,8 @@
 //          https://web.archive.org/web/20090204140550/http://www.maxbot.com/gta/3wordcheatsdumpsorted.txt                                                //
 //          https://www.codeproject.com/Articles/663443/Cplusplus-is-Fun-Optimal-Alphabetical-Order                                                //
 //          https://cppsecrets.com/users/960210997110103971089710711510497116484964103109971051084699111109/Given-integer-n-find-the-nth-string-in-this-sequence-A-B-C-Z-AA-AB-AC-ZZ-AAA-AAB-AAZ-ABA-.php
-//          // https://www.careercup.com/question?id=14276663                                                //
+//          https://www.careercup.com/question?id=14276663                                                //
+//          https://stackoverflow.com/a/55074804/10152334                                                //
 //  OS: ALL                                                 //
 //  CPU: ALL                                                //
 //                                                          //
@@ -31,13 +32,12 @@
 #include <boost/crc.hpp>
 #include <iostream> // cout
 #include <iterator> // for std::begin, std::end
-#include <math.h> // pow
-#include <string>
-#include <vector>
-
-#include <string_view> // string_view
-
+#include <math.h>   // pow
+#include <stdlib.h> // malloc
 #include <string.h> // strlen
+#include <string>
+#include <string_view> // string_view
+#include <vector>
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -130,16 +130,67 @@ template <class T> std::string findStringInv(T n)
     return ans;
 }
 
+template <class T> void findStringInv(T n, char *array);
+
+template <class T> void findStringInv(T n, char *array)
+{
+    const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (n <= 26) {
+        array[0] = alpha[n - 1];
+        return;
+    }
+    size_t i = 0;
+    while (n > 0) {
+        array[i] = alpha[(--n) % 26];
+        n = n / 26;
+        i++;
+    }
+}
+
 int main(int arc, char *argv[])
 {
     std::ios_base::sync_with_stdio(false);
-    for (size_t i = 1; i < 308915776; i++) {//208827064576
-        std::string tmp = findStringInv<size_t>(i);
+    /*
+    char *tmp = NULL;
+    std::string tmps = "";
+    for (size_t i = 1; i < 308915776; i++) {
+        tmp = (char *)malloc((size_t)(i / 26 + 1) * sizeof(char));
+        assert(tmp != NULL);
+        memset(tmp, 0, (size_t)(i / 26 + 1));
+        findStringInv<size_t>(i, tmp);
+        tmps = findStringInv<size_t>(i);
+        // if(*tmp != *tmps.c_str())
+        if (GetCrc32(tmp) == GetCrc32(tmps)) {
+            std::cout << tmps << ":" << tmp << std::endl;
+            std::cout << GetCrc32(tmps) << ":" << GetCrc32(tmp) << std::endl;
+            std::cout << i << ":" << (size_t)(i / 26) << std::endl;
+        }
+        free(tmp);
+    }
+    */
+    
+    char *tmp = NULL;
+    tmp = (char *)malloc((size_t)(308915776 / 26 + 1) * sizeof(char));
+    for (size_t i = 1; i < 308915776; i++) {
+        tmp[(size_t)(i / 26 + 1)] = '\0';
+        findStringInv<size_t>(i, tmp);
         auto crc = ~(GetCrc32(tmp));
         if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-            std::reverse(tmp.begin(), tmp.end());
+            std::reverse(tmp, tmp + strlen(tmp));
             std::cout << tmp << ":0x" << std::hex << crc << std::endl;
         }
     }
+    free(tmp);
+    
+    /*
+    std::string tmps = "";
+    for (size_t i = 1; i < 308915776; i++) {//208827064576
+        tmps = findStringInv<size_t>(i);
+        auto crc = ~(GetCrc32(tmps));
+        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            std::reverse(tmps.begin(), tmps.end());
+            std::cout << tmps << ":0x" << std::hex << crc << std::endl;
+        }
+    }*/
     return 0;
 }
