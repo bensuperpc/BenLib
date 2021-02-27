@@ -29,11 +29,15 @@
 
 #include <algorithm> // for std::find
 #include <boost/crc.hpp>
-#include <iostream>
+#include <iostream> // cout
 #include <iterator> // for std::begin, std::end
-#include <math.h>
+#include <math.h> // pow
 #include <string>
 #include <vector>
+
+#include <string_view> // string_view
+
+#include <string.h> // strlen
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -50,9 +54,9 @@ const unsigned int cheat_list[] /*__attribute__((aligned(16)))*/ = {0xDE4B237D, 
     0x31F0C3CC, 0xB3B3E72A, 0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC,
     0x86988DAE, 0x2BDD2FA1};
 
-unsigned int GetCrc32(const std::string &my_string);
+unsigned int GetCrc32(std::string_view my_string);
 
-unsigned int GetCrc32(const std::string &my_string)
+unsigned int GetCrc32(std::string_view my_string)
 {
     boost::crc_32_type result;
     result.process_bytes(my_string.data(), my_string.length());
@@ -60,13 +64,13 @@ unsigned int GetCrc32(const std::string &my_string)
 }
 
 unsigned int GetCrc32(char *my_string);
-/*
+
 unsigned int GetCrc32(char *my_string)
 {
     boost::crc_32_type result;
-    result.process_bytes(my_string, my_string->length());
+    result.process_bytes(my_string, strlen(my_string));
     return result.checksum();
-}*/
+}
 
 std::vector<std::string> generateSequenceBySize(const size_t N);
 
@@ -129,7 +133,6 @@ template <class T> std::string findStringInv(T n)
 int main(int arc, char *argv[])
 {
     std::ios_base::sync_with_stdio(false);
-    
     for (size_t i = 1; i < 308915776; i++) {//208827064576
         std::string tmp = findStringInv<size_t>(i);
         auto crc = ~(GetCrc32(tmp));
