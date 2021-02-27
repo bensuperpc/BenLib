@@ -60,13 +60,13 @@ unsigned int GetCrc32(const std::string &my_string)
 }
 
 unsigned int GetCrc32(char *my_string);
-
+/*
 unsigned int GetCrc32(char *my_string)
 {
     boost::crc_32_type result;
     result.process_bytes(my_string, my_string->length());
     return result.checksum();
-}
+}*/
 
 std::vector<std::string> generateSequenceBySize(const size_t N);
 
