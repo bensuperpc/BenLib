@@ -171,6 +171,7 @@ int main(int arc, char *argv[])
     
     char *tmp = NULL;
     tmp = (char *)malloc((size_t)(308915776 / 26 + 1) * sizeof(char));
+    assert(tmp != NULL);
     for (size_t i = 1; i < 308915776; i++) {
         tmp[(size_t)(i / 26 + 1)] = '\0';
         findStringInv<size_t>(i, tmp);
