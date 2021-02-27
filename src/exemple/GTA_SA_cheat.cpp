@@ -59,6 +59,15 @@ unsigned int GetCrc32(const std::string &my_string)
     return result.checksum();
 }
 
+unsigned int GetCrc32(char *my_string);
+
+unsigned int GetCrc32(char *my_string)
+{
+    boost::crc_32_type result;
+    result.process_bytes(my_string, my_string->length());
+    return result.checksum();
+}
+
 std::vector<std::string> generateSequenceBySize(const size_t N);
 
 std::vector<std::string> generateSequenceBySize(const size_t N)
@@ -100,62 +109,34 @@ template <class T> std::string findString(T n)
     return ans;
 }
 
-template <class T> std::string Translate(T input); // Slower than findString()
+template <class T> std::string findStringInv(T n);
 
-template <class T> std::string Translate(T input) // Slower than findString()
+template <class T> std::string findStringInv(T n)
 {
-    const char kLookUp[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-    std::string res = "";
-
-    if (input <= 26) {
-        res = kLookUp[input - 1];
-        return res;
+    const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    std::string ans;
+    if (n <= 26) {
+        ans = alpha[n - 1];
+        return ans;
     }
-
-    while (input > 0) {
-        T idx = (input - 1) % 26;
-        res = kLookUp[idx] + res;
-        input = (input - 1) / 26;
+    while (n > 0) {
+        ans += alpha[(--n) % 26];
+        n = n / 26;
     }
-    return res;
+    return ans;
 }
 
 int main(int arc, char *argv[])
 {
-    /*
     std::ios_base::sync_with_stdio(false);
-    for (size_t i = 0; i < 11881376; i++) {
-        if (findString<size_t>(i) != Translate<size_t>(i)) {
-            std::cout << i << findString<size_t>(i) << Translate<size_t>(i) << std::endl;
-        }
-    }
-    */
     
-    for (size_t i = 0; i < 208827064576; i++) {
-        std::string tmp = findString<size_t>(i);
-        std::string copy(tmp);
-        std::reverse(copy.begin(), copy.end());
-        auto crc = ~(GetCrc32(copy));
+    for (size_t i = 1; i < 308915776; i++) {//208827064576
+        std::string tmp = findStringInv<size_t>(i);
+        auto crc = ~(GetCrc32(tmp));
         if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            std::reverse(tmp.begin(), tmp.end());
             std::cout << tmp << ":0x" << std::hex << crc << std::endl;
         }
     }
-    /*
-    const size_t N = 4;
-    for (size_t i = 0; i < pow(26, N); i++) {
-        size_t value = i;
-        std::string tmp(N, 'A');
-        for (size_t j = 0; j < N; j++) {
-            tmp[N - 1 - j] = 'A' + value % 26;
-            value = value / 26;
-        }
-        std::string copy(tmp);
-        std::reverse(copy.begin(), copy.end());
-        auto crc = ~(GetCrc32(copy));
-        //std::cout << crc << std::endl;
-        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-            std::cout << tmp << ":0x" << std::hex << crc << std::endl;
-        }
-    }*/
     return 0;
 }
