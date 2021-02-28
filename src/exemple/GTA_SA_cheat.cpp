@@ -55,6 +55,8 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0x040CF761, 0xE1B33EB9, 0xFEDA77F7, 0x8CA870DD, 0x9A629401, 0xF53EF5A5, 0xF2AA0C1D, 0xF36345A8, 0x8990D5E1, 0xB7013B1B, 0xCAEC94EE, 0x31F0C3CC, 0xB3B3E72A,
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
+std::mutex couter;
+
 unsigned int GetCrc32(const std::string_view my_string);
 
 unsigned int GetCrc32(const std::string_view my_string)
@@ -199,8 +201,6 @@ template <class T> void findStringInv(T n, char *array)
     }
 }
 
-std::mutex couter;
-
 struct Processor
 {
     size_t operator()(size_t x, size_t y)
@@ -209,11 +209,13 @@ struct Processor
         for (size_t i = x; i < y + x; i++) {
             findStringInv<size_t>(i, tmp);
             auto crc = ~(GetCrc32(tmp));
-            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {         
                 std::reverse(tmp, tmp + strlen(tmp));
+//#    ifdef DNDEBUG
                 couter.lock();
                 std::cout << tmp << ":0x" << std::hex << crc << std::endl;
                 couter.unlock();
+//#endif
             }
         }
         return 0;
@@ -222,24 +224,29 @@ struct Processor
 
 int main()
 {
-    
     std::ios_base::sync_with_stdio(false);
     std::vector<std::future<std::size_t>> results {};
     auto threads = std::thread::hardware_concurrency();
     thread::Pool thread_pool(threads);
-    size_t number = 6000;
-    size_t chuck_mult = 100000;
 
-    for (std::size_t i = 1; i < number; i++) {
-        results.emplace_back(thread_pool.enqueue(Processor(), i * chuck_mult, chuck_mult));
+    const size_t nbrcal = 308915776; // Nombre calcule à faire
+    const size_t threadmult = 12; // Nombre de thread créé par thread CPU
+    const size_t nbrthread = std::thread::hardware_concurrency() * threadmult; // Nombre de thread créé au total sur le threadpool
+
+    const size_t nbrcalperthread = nbrcal/nbrthread; // Nombre de calcule par thread (1K mini à 1M max recommandé)
+    
+    results.reserve(nbrthread); //Réservation
+
+    for (std::size_t i = 1; i < nbrthread; i++) {
+        results.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread));
     }
+
     for (auto &&result : results) {
         auto t = result.get();
         if (t == 1){
             std::cout << t << std::endl;
         }
     }
-
     /*
     std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
     for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
