@@ -38,6 +38,7 @@
 #include <string>
 #include <string_view> // string_view
 #include <vector>
+#include "thread/Pool.hpp"
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -113,6 +114,24 @@ template <class T> std::string findString(T n)
     return ans;
 }
 
+template <class T> void findString(T n, char *array);
+
+template <class T> void findString(T n, char *array)
+{
+    const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (n <= 26) {
+        array[0] = alpha[n - 1];
+        return;
+    }
+    size_t i = 0;
+    while (n > 0) {
+        array[i] = alpha[(--n) % 26];
+        n = n / 26;
+        i++;
+    }
+    std::reverse(array, array + strlen(array));
+}
+
 template <class T> std::string findStringInv(T n);
 
 template <class T> std::string findStringInv(T n)
@@ -147,33 +166,56 @@ template <class T> void findStringInv(T n, char *array)
     }
 }
 
+struct Processor
+{
+    // long double operator()(bool(*elem_fn)(const long long int &), long long int prime_nbr)
+    // long double operator()(std::function<bool(const long long int &)> elem_fn, long long int prime_nbr)
+    size_t operator()(size_t i)
+    {
+        /*
+        if ((elem_fn)(prime_nbr) != true) {
+            std::cout << "ERROR, is prime NBR: " << prime_nbr << std::endl;
+        }*/
+        return i;
+    }
+};
+
 int main(int arc, char *argv[])
 {
     std::ios_base::sync_with_stdio(false);
+
+    std::vector<std::future<size_t>> results {};
+
+    auto threads = std::thread::hardware_concurrency();
+
+    thread::Pool thread_pool(threads);
     /*
-    char *tmp = NULL;
-    std::string tmps = "";
-    for (size_t i = 1; i < 308915776; i++) {
-        tmp = (char *)malloc((size_t)(i / 26 + 1) * sizeof(char));
-        assert(tmp != NULL);
-        memset(tmp, 0, (size_t)(i / 26 + 1));
-        findStringInv<size_t>(i, tmp);
-        tmps = findStringInv<size_t>(i);
-        // if(*tmp != *tmps.c_str())
-        if (GetCrc32(tmp) == GetCrc32(tmps)) {
-            std::cout << tmps << ":" << tmp << std::endl;
-            std::cout << GetCrc32(tmps) << ":" << GetCrc32(tmp) << std::endl;
-            std::cout << i << ":" << (size_t)(i / 26) << std::endl;
-        }
-        free(tmp);
+    results.emplace_back(thread_pool.enqueue(Processor(), 10));
+    auto s = results[0].get();
+    std::cout << s << std::endl;
+
+    results.emplace_back(thread_pool.enqueue(Processor(), 11));
+    auto t = results[1].get();
+    std::cout << t << std::endl;
+    */
+    /*
+    char **tmp = NULL;
+    tmp = (char **)malloc(threads * sizeof(char *));
+    for (size_t i = 0; i < threads; i++)
+        tmp[i] = (char *)malloc((size_t)(308915776 / 26 + 1) * sizeof(char));
+    results.reserve(308915);
+    
+    for (size_t i = 1; i < 308915; i++) {
+        results.emplace_back(thread_pool.enqueue(Processor(), i));
     }
     */
     
     char *tmp = NULL;
-    tmp = (char *)malloc((size_t)(308915776 / 26 + 1) * sizeof(char));
+    tmp = (char *)malloc((size_t)(29 + 1) * sizeof(char));
     assert(tmp != NULL);
     for (size_t i = 1; i < 308915776; i++) {
-        tmp[(size_t)(i / 26 + 1)] = '\0';
+        //tmp[(size_t)(i / 26 + 1)] = '\0';
+        tmp[(size_t)(29)] = '\0';
         findStringInv<size_t>(i, tmp);
         auto crc = ~(GetCrc32(tmp));
         if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
@@ -182,7 +224,7 @@ int main(int arc, char *argv[])
         }
     }
     free(tmp);
-    
+
     /*
     std::string tmps = "";
     for (size_t i = 1; i < 308915776; i++) {//208827064576
@@ -192,6 +234,7 @@ int main(int arc, char *argv[])
             std::reverse(tmps.begin(), tmps.end());
             std::cout << tmps << ":0x" << std::hex << crc << std::endl;
         }
-    }*/
+    }
+    */
     return 0;
 }

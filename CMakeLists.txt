@@ -570,7 +570,7 @@ target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc ${CUSTOM_LIBS})
 
 add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
-target_link_libraries(gta_sa_cheat PRIVATE thread)
+target_link_libraries(gta_sa_cheat PRIVATE thread thread)
 add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
 
 
