@@ -35,7 +35,8 @@
 #include <string>
 #include <string_view> // string_view
 #include <vector>
-#include "thread/Pool.hpp"
+#include "thread/Pool.hpp" // Threadpool
+#include <mutex> // Mutex
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -158,22 +159,38 @@ template <class T> void findStringInv(T n, std::string &array)
     }
 }
 
+std::mutex couter;
+
 struct Processor
 {
-    // long double operator()(bool(*elem_fn)(const long long int &), long long int prime_nbr)
-    // long double operator()(std::function<bool(const long long int &)> elem_fn, long long int prime_nbr)
-    std::size_t operator()(std::size_t i)
+    size_t operator()(size_t i)
+
     {
-        /*
-        if ((elem_fn)(prime_nbr) != true) {
-            std::cout << "ERROR, is prime NBR: " << prime_nbr << std::endl;
-        }*/
-        return i;
+        char tmp[29];
+        //
+        //
+        findStringInv<size_t>(i, tmp);
+        auto crc = ~(GetCrc32(tmp));
+
+        
+        couter.lock();
+        std::cout << tmp << ":" << std::hex << crc << std::endl;
+        couter.unlock();
+
+        
+        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            std::reverse(tmp, tmp + strlen(tmp));
+            //std::cout << tmp << ":" << i << std::endl;
+            return 1;
+        }
+        
+        return 0;
     }
 };
 
 int main()
 {
+    /*
     std::ios_base::sync_with_stdio(false);
 
     std::vector<std::future<std::size_t>> results {};
@@ -181,6 +198,7 @@ int main()
     auto threads = std::thread::hardware_concurrency();
 
     thread::Pool thread_pool(threads);
+    */
     /*
     results.emplace_back(thread_pool.enqueue(Processor(), 10));
     auto s = results[0].get();
@@ -199,13 +217,29 @@ int main()
 
     for (std::size_t i = 1; i < 308915; i++) {
         results.emplace_back(thread_pool.enqueue(Processor(), i));
+        //std::cout << i << std::endl;
     }
+    for (auto &&result : results) {
+        auto t = result.get();
+        if (t == 1){
+            std::cout << t << std::endl;
+        }
+    }
+    //:a7fcdce2
+    std::string str = "MXNQ";
+    char str_c[29] = "MXNQ";
+    auto crc_str = ~(GetCrc32(str));
+    auto crc_c = ~(GetCrc32(str_c));
+    std::cout << std::hex << crc_str  << ":" << "MXNQ" << std::endl;
+    std::cout << std::hex << crc_c  << ":" << "MXNQ" << std::endl;
     */
+
 
     // En C++ JAMAIS NULL, toujours nullptr. Comme malloc et free : ça n'existe plus en C++, faut pas manger :c
     //    char *tmp = nullptr;
     //    tmp = (char *)malloc((std::size_t)(29 + 1) * sizeof(char));
     //    assert(tmp != nullptr);                       // assert valable en debug uniquement.
+  /*
     std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
     for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
         // tmp[(std::size_t)(i / 26 + 1)] = '\0';
@@ -215,13 +249,32 @@ int main()
         if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
             std::reverse(tmp.begin(), tmp.end());
             std::cout << tmp << ":0x" << std::hex << crc << '\n';
-        }
+        }*/
         /*if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
             std::reverse(tmp, tmp + strlen(tmp));
             std::cout << tmp << ":0x" << std::hex << crc << '\n'; // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
         }*/
-    }
+    /*}*/
     //    free(tmp);
+
+    /*
+    char *tmp = NULL;
+    tmp = (char *)malloc((size_t)(29 + 1) * sizeof(char));
+    assert(tmp != NULL);
+    */
+    char tmp[29];
+    for (size_t i = 1; i < 308915776; i++) {
+        //tmp[(size_t)(i / 26 + 1)] = '\0';
+        //tmp[(size_t)(29)] = '\0';
+        findStringInv<size_t>(i, tmp);
+        auto crc = ~(GetCrc32(tmp));
+        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            std::reverse(tmp, tmp + strlen(tmp));
+            std::cout << tmp << ":0x" << std::hex << crc << std::endl;
+        }
+        tmp[0] = '\0';
+    }
+    //free(tmp);
 
     /*
     std::string tmps = "";
