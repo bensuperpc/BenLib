@@ -38,7 +38,8 @@
 #include <string>
 #include <string_view> // string_view
 #include <vector>
-#include "thread/Pool.hpp"
+#include "thread/Pool.hpp" // Threadpool
+#include <mutex> // Mutex
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -166,22 +167,37 @@ template <class T> void findStringInv(T n, char *array)
     }
 }
 
+std::mutex couter;
+
 struct Processor
 {
-    // long double operator()(bool(*elem_fn)(const long long int &), long long int prime_nbr)
-    // long double operator()(std::function<bool(const long long int &)> elem_fn, long long int prime_nbr)
     size_t operator()(size_t i)
     {
-        /*
-        if ((elem_fn)(prime_nbr) != true) {
-            std::cout << "ERROR, is prime NBR: " << prime_nbr << std::endl;
-        }*/
-        return i;
+        char tmp[29];
+        //
+        //
+        findStringInv<size_t>(i, tmp);
+        auto crc = ~(GetCrc32(tmp));
+
+        
+        couter.lock();
+        std::cout << tmp << ":" << std::hex << crc << std::endl;
+        couter.unlock();
+
+        
+        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            std::reverse(tmp, tmp + strlen(tmp));
+            //std::cout << tmp << ":" << i << std::endl;
+            return 1;
+        }
+        
+        return 0;
     }
 };
 
 int main(int arc, char *argv[])
 {
+    /*
     std::ios_base::sync_with_stdio(false);
 
     std::vector<std::future<size_t>> results {};
@@ -189,6 +205,7 @@ int main(int arc, char *argv[])
     auto threads = std::thread::hardware_concurrency();
 
     thread::Pool thread_pool(threads);
+    */
     /*
     results.emplace_back(thread_pool.enqueue(Processor(), 10));
     auto s = results[0].get();
@@ -202,28 +219,48 @@ int main(int arc, char *argv[])
     char **tmp = NULL;
     tmp = (char **)malloc(threads * sizeof(char *));
     for (size_t i = 0; i < threads; i++)
-        tmp[i] = (char *)malloc((size_t)(308915776 / 26 + 1) * sizeof(char));
+        tmp[i] = (char *)malloc((size_t)(29 + 1) * sizeof(char));
     results.reserve(308915);
     
+    */
+    /*
+    results.reserve(308915);
     for (size_t i = 1; i < 308915; i++) {
         results.emplace_back(thread_pool.enqueue(Processor(), i));
+        //std::cout << i << std::endl;
     }
+    for (auto &&result : results) {
+        auto t = result.get();
+        if (t == 1){
+            std::cout << t << std::endl;
+        }
+    }
+    //:a7fcdce2
+    std::string str = "MXNQ";
+    char str_c[29] = "MXNQ";
+    auto crc_str = ~(GetCrc32(str));
+    auto crc_c = ~(GetCrc32(str_c));
+    std::cout << std::hex << crc_str  << ":" << "MXNQ" << std::endl;
+    std::cout << std::hex << crc_c  << ":" << "MXNQ" << std::endl;
     */
-    
+    /*
     char *tmp = NULL;
     tmp = (char *)malloc((size_t)(29 + 1) * sizeof(char));
     assert(tmp != NULL);
+    */
+    char tmp[29];
     for (size_t i = 1; i < 308915776; i++) {
         //tmp[(size_t)(i / 26 + 1)] = '\0';
-        tmp[(size_t)(29)] = '\0';
+        //tmp[(size_t)(29)] = '\0';
         findStringInv<size_t>(i, tmp);
         auto crc = ~(GetCrc32(tmp));
         if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
             std::reverse(tmp, tmp + strlen(tmp));
             std::cout << tmp << ":0x" << std::hex << crc << std::endl;
         }
+        tmp[0] = '\0';
     }
-    free(tmp);
+    //free(tmp);
 
     /*
     std::string tmps = "";
