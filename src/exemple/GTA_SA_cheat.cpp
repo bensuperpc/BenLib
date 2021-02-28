@@ -30,11 +30,8 @@
 
 #include <algorithm> // for std::find
 #include <boost/crc.hpp>
+#include <cmath>    // pow
 #include <iostream> // cout
-#include <iterator> // for std::begin, std::end
-#include <math.h>   // pow
-#include <stdlib.h> // malloc
-#include <string.h> // strlen
 #include <string>
 #include <string_view> // string_view
 #include <vector>
@@ -47,47 +44,43 @@
 #    define CACHE_ALIGNED __declspec(align(64)) // MSVC
 #endif
 
-const unsigned int cheat_list[] /*__attribute__((aligned(16)))*/ = {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345,
-    0xE1EF01EA, 0x771B83FC, 0x5BF12848, 0x44453A17, 0xFCFF1D08, 0xB69E8532, 0x8B828076, 0xDD6ED9E9, 0xA290FD8C, 0x3484B5A7, 0x43DB914E, 0xDBC0DD65, 0xD08A30FE,
-    0x37BF1B4E, 0xB5D40866, 0xE63B0D99, 0x675B8945, 0x4987D5EE, 0x2E8F84E8, 0x1A9AA3D6, 0xE842F3BC, 0x0D5C6A4E, 0x74D4FCB1, 0xB01D13B8, 0x66516EBC, 0x4B137E45,
-    0x78520E33, 0x3A577325, 0xD4966D59, 0x5FD1B49D, 0xA7613F99, 0x1792D871, 0xCBC579DF, 0x4FEDCCFF, 0x44B34866, 0x2EF877DB, 0x2781E797, 0x2BC1A045, 0xB2AFE368,
-    0xFA8DD45B, 0x8DED75BD, 0x1A5526BC, 0xA48A770B, 0xB07D3B32, 0x80C1E54B, 0x5DAD0087, 0x7F80B950, 0x6C0FA650, 0xF46F2FA4, 0x70164385, 0x885D0B50, 0x151BDCB3,
-    0xADFA640A, 0xE57F96CE, 0x040CF761, 0xE1B33EB9, 0xFEDA77F7, 0x8CA870DD, 0x9A629401, 0xF53EF5A5, 0xF2AA0C1D, 0xF36345A8, 0x8990D5E1, 0xB7013B1B, 0xCAEC94EE,
-    0x31F0C3CC, 0xB3B3E72A, 0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC,
-    0x86988DAE, 0x2BDD2FA1};
+constexpr std::uint32_t alphabetSize {26};
 
-unsigned int GetCrc32(std::string_view my_string);
+const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345, 0xE1EF01EA, 0x771B83FC,
+    0x5BF12848, 0x44453A17, 0xFCFF1D08, 0xB69E8532, 0x8B828076, 0xDD6ED9E9, 0xA290FD8C, 0x3484B5A7, 0x43DB914E, 0xDBC0DD65, 0xD08A30FE, 0x37BF1B4E, 0xB5D40866,
+    0xE63B0D99, 0x675B8945, 0x4987D5EE, 0x2E8F84E8, 0x1A9AA3D6, 0xE842F3BC, 0x0D5C6A4E, 0x74D4FCB1, 0xB01D13B8, 0x66516EBC, 0x4B137E45, 0x78520E33, 0x3A577325,
+    0xD4966D59, 0x5FD1B49D, 0xA7613F99, 0x1792D871, 0xCBC579DF, 0x4FEDCCFF, 0x44B34866, 0x2EF877DB, 0x2781E797, 0x2BC1A045, 0xB2AFE368, 0xFA8DD45B, 0x8DED75BD,
+    0x1A5526BC, 0xA48A770B, 0xB07D3B32, 0x80C1E54B, 0x5DAD0087, 0x7F80B950, 0x6C0FA650, 0xF46F2FA4, 0x70164385, 0x885D0B50, 0x151BDCB3, 0xADFA640A, 0xE57F96CE,
+    0x040CF761, 0xE1B33EB9, 0xFEDA77F7, 0x8CA870DD, 0x9A629401, 0xF53EF5A5, 0xF2AA0C1D, 0xF36345A8, 0x8990D5E1, 0xB7013B1B, 0xCAEC94EE, 0x31F0C3CC, 0xB3B3E72A,
+    0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
-unsigned int GetCrc32(std::string_view my_string)
+unsigned int GetCrc32(const std::string_view my_string)
 {
     boost::crc_32_type result;
+    // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le nombre d'élément, donc si tu as plusieurs éléments qui sont à '\0' forcément…
     result.process_bytes(my_string.data(), my_string.length());
     return result.checksum();
 }
 
-unsigned int GetCrc32(char *my_string);
-
-unsigned int GetCrc32(char *my_string)
+/*unsigned int GetCrc32(const char *const my_string)
 {
     boost::crc_32_type result;
     result.process_bytes(my_string, strlen(my_string));
     return result.checksum();
-}
+}*/
 
-std::vector<std::string> generateSequenceBySize(const size_t N);
-
-std::vector<std::string> generateSequenceBySize(const size_t N)
+std::vector<std::string> generateSequenceBySize(const std::size_t N)
 {
     if (N == 1)
         return std::vector<std::string>();
 
-    const size_t base = 26;
+    constexpr std::size_t base = alphabetSize;
     std::vector<std::string> seqs;
-    seqs.reserve(pow(base, N));
-    for (size_t i = 0; i < pow(base, N); i++) {
-        size_t value = i;
+    //    seqs.reserve(pow(base, N)); // Ne jamais utiliser pow pour une puissance entière : ça utilise une décomposition numérique de e^ln(). C'est ultra lourd
+    for (std::size_t i = 0; i < pow(base, N); i++) {
+        std::size_t value = i;
         std::string tmp(N, 'A');
-        for (size_t j = 0; j < N; j++) {
+        for (std::size_t j = 0; j < N; j++) {
             tmp[N - 1 - j] = 'A' + value % base;
             value = value / base;
         }
@@ -96,74 +89,73 @@ std::vector<std::string> generateSequenceBySize(const size_t N)
     return seqs;
 }
 
-template <class T> std::string findString(T n);
-
 template <class T> std::string findString(T n)
 {
     const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     std::string ans;
 
-    if (n <= 26) {
+    if (n <= alphabetSize) {
         ans = alpha[n - 1];
         return ans;
     }
     while (n > 0) {
-        ans += alpha[(--n) % 26];
-        n = n / 26;
+        ans += alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
     }
     std::reverse(ans.begin(), ans.end());
     return ans;
 }
 
-template <class T> void findString(T n, char *array);
-
-template <class T> void findString(T n, char *array)
+/*template <class T> void findString(T n, char *array)
 {
     const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if (n <= 26) {
+    if (n <= alphabetSize) {
         array[0] = alpha[n - 1];
         return;
     }
-    size_t i = 0;
+    std::size_t i = 0;
     while (n > 0) {
-        array[i] = alpha[(--n) % 26];
-        n = n / 26;
-        i++;
+        array[i] = alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
+        ++i;
     }
     std::reverse(array, array + strlen(array));
-}
-
-template <class T> std::string findStringInv(T n);
+}*/
 
 template <class T> std::string findStringInv(T n)
 {
     const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     std::string ans;
-    if (n <= 26) {
+    if (n <= alphabetSize) {
         ans = alpha[n - 1];
         return ans;
     }
     while (n > 0) {
-        ans += alpha[(--n) % 26];
-        n = n / 26;
+        ans += alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
     }
     return ans;
 }
 
-template <class T> void findStringInv(T n, char *array);
-
-template <class T> void findStringInv(T n, char *array)
+/**
+ * \brief Que fait cette fonction ? oskour aled
+ * \tparam T
+ * \param n
+ * \param array
+ */
+template <class T> void findStringInv(T n, std::string &array)
 {
-    const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if (n <= 26) {
+    constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
+    constexpr std::array<char, stringSizeAlphabet> alpha {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+    if (n < stringSizeAlphabet) {
         array[0] = alpha[n - 1];
         return;
     }
-    size_t i = 0;
+    std::size_t i = 0;
     while (n > 0) {
-        array[i] = alpha[(--n) % 26];
-        n = n / 26;
-        i++;
+        array[i] = alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
+        ++i;
     }
 }
 
@@ -172,6 +164,7 @@ std::mutex couter;
 struct Processor
 {
     size_t operator()(size_t i)
+
     {
         char tmp[29];
         //
@@ -195,12 +188,12 @@ struct Processor
     }
 };
 
-int main(int arc, char *argv[])
+int main()
 {
     /*
     std::ios_base::sync_with_stdio(false);
 
-    std::vector<std::future<size_t>> results {};
+    std::vector<std::future<std::size_t>> results {};
 
     auto threads = std::thread::hardware_concurrency();
 
@@ -218,14 +211,11 @@ int main(int arc, char *argv[])
     /*
     char **tmp = NULL;
     tmp = (char **)malloc(threads * sizeof(char *));
-    for (size_t i = 0; i < threads; i++)
-        tmp[i] = (char *)malloc((size_t)(29 + 1) * sizeof(char));
+    for (std::size_t i = 0; i < threads; i++)
+        tmp[i] = (char *)malloc((std::size_t)(308915776 / 26 + 1) * sizeof(char));
     results.reserve(308915);
-    
-    */
-    /*
-    results.reserve(308915);
-    for (size_t i = 1; i < 308915; i++) {
+
+    for (std::size_t i = 1; i < 308915; i++) {
         results.emplace_back(thread_pool.enqueue(Processor(), i));
         //std::cout << i << std::endl;
     }
@@ -243,6 +233,30 @@ int main(int arc, char *argv[])
     std::cout << std::hex << crc_str  << ":" << "MXNQ" << std::endl;
     std::cout << std::hex << crc_c  << ":" << "MXNQ" << std::endl;
     */
+
+
+    // En C++ JAMAIS NULL, toujours nullptr. Comme malloc et free : ça n'existe plus en C++, faut pas manger :c
+    //    char *tmp = nullptr;
+    //    tmp = (char *)malloc((std::size_t)(29 + 1) * sizeof(char));
+    //    assert(tmp != nullptr);                       // assert valable en debug uniquement.
+  /*
+    std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
+    for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
+        // tmp[(std::size_t)(i / 26 + 1)] = '\0';
+        //        tmp[29UL] = '\0';
+        findStringInv<std::size_t>(i, tmp);
+        const auto crc = ~(GetCrc32(tmp));
+        if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
+            std::reverse(tmp.begin(), tmp.end());
+            std::cout << tmp << ":0x" << std::hex << crc << '\n';
+        }*/
+        /*if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+            std::reverse(tmp, tmp + strlen(tmp));
+            std::cout << tmp << ":0x" << std::hex << crc << '\n'; // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
+        }*/
+    /*}*/
+    //    free(tmp);
+
     /*
     char *tmp = NULL;
     tmp = (char *)malloc((size_t)(29 + 1) * sizeof(char));
@@ -264,8 +278,8 @@ int main(int arc, char *argv[])
 
     /*
     std::string tmps = "";
-    for (size_t i = 1; i < 308915776; i++) {//208827064576
-        tmps = findStringInv<size_t>(i);
+    for (std::size_t i = 1; i < 308915776; i++) {//208827064576
+        tmps = findStringInv<std::size_t>(i);
         auto crc = ~(GetCrc32(tmps));
         if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
             std::reverse(tmps.begin(), tmps.end());
@@ -273,5 +287,5 @@ int main(int arc, char *argv[])
         }
     }
     */
-    return 0;
+    return EXIT_SUCCESS;
 }
