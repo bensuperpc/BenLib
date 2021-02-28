@@ -30,14 +30,14 @@
 
 #include <algorithm> // for std::find
 #include <boost/crc.hpp>
-#include <cmath>    // pow
+#include <cmath> // pow
+#include <cstring>
 #include <iostream> // cout
+#include <mutex>    // Mutex
 #include <string>
 #include <string_view> // string_view
-#include <cstring>
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
-#include <mutex> // Mutex
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -148,6 +148,25 @@ template <class T> std::string findStringInv(T n)
  * \param n
  * \param array
  */
+/*
+template <class T> void findStringInv(T n, std::string &array)
+{
+    constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
+    constexpr std::array<char, stringSizeAlphabet> alpha {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+    if (n < stringSizeAlphabet) {
+        array[0] = alpha[n - 1];
+        return;
+    }
+    std::size_t i = 0;
+    while (n > 0) {
+        array[i] = alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
+        ++i;
+    }
+}
+
+*/
+
 template <class T> void findStringInv(T n, std::string &array)
 {
     constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
@@ -187,7 +206,7 @@ struct Processor
     size_t operator()(size_t x, size_t y)
     {
         char tmp[29];
-        for (size_t i = x; i < y + x; i++) { 
+        for (size_t i = x; i < y + x; i++) {
             findStringInv<size_t>(i, tmp);
             auto crc = ~(GetCrc32(tmp));
             if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
@@ -205,89 +224,95 @@ int main()
 {
     
     std::ios_base::sync_with_stdio(false);
-
     std::vector<std::future<std::size_t>> results {};
-
     auto threads = std::thread::hardware_concurrency();
-
     thread::Pool thread_pool(threads);
-    
-    /*
-    char **tmp = NULL;
-    tmp = (char **)malloc(threads * sizeof(char *));
-    for (std::size_t i = 0; i < threads; i++)
-        tmp[i] = (char *)malloc((std::size_t)(308915776 / 26 + 1) * sizeof(char));
-    results.reserve(308915);
-    */
-    size_t number = 12000;
-    size_t chuck_mult = 50000;
+    size_t number = 6000;
+    size_t chuck_mult = 100000;
 
     for (std::size_t i = 1; i < number; i++) {
         results.emplace_back(thread_pool.enqueue(Processor(), i * chuck_mult, chuck_mult));
     }
-
-
     for (auto &&result : results) {
         auto t = result.get();
         if (t == 1){
             std::cout << t << std::endl;
         }
     }
-    return EXIT_SUCCESS;
-}
 
-
-
-    // En C++ JAMAIS NULL, toujours nullptr. Comme malloc et free : ça n'existe plus en C++, faut pas manger :c
-    //    char *tmp = nullptr;
-    //    tmp = (char *)malloc((std::size_t)(29 + 1) * sizeof(char));
-    //    assert(tmp != nullptr);                       // assert valable en debug uniquement.
-  /*
+    /*
     std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
     for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
-        // tmp[(std::size_t)(i / 26 + 1)] = '\0';
-        //        tmp[29UL] = '\0';
         findStringInv<std::size_t>(i, tmp);
         const auto crc = ~(GetCrc32(tmp));
         if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
             std::reverse(tmp.begin(), tmp.end());
-            std::cout << tmp << ":0x" << std::hex << crc << '\n';
-        }*/
-        /*if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-            std::reverse(tmp, tmp + strlen(tmp));
-            std::cout << tmp << ":0x" << std::hex << crc << '\n'; // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
-        }*/
-    /*}*/
-    //    free(tmp);
-
-    /*
-    char *tmp = NULL;
-    tmp = (char *)malloc((size_t)(29 + 1) * sizeof(char));
-    assert(tmp != NULL);
-    */
-    /*
-    char tmp[29];
-    for (size_t i = 1; i < 308915776; i++) {
-        //tmp[(size_t)(i / 26 + 1)] = '\0';
-        //tmp[(size_t)(29)] = '\0';
-        findStringInv<size_t>(i, tmp);
-        auto crc = ~(GetCrc32(tmp));
-        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-            std::reverse(tmp, tmp + strlen(tmp));
-            std::cout << tmp << ":0x" << std::hex << crc << std::endl;
+            std::cout << tmp << ":0x" << std::hex << crc << '\n';  // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
         }
-        tmp[0] = '\0';
     }*/
-    //free(tmp);
-
     /*
-    std::string tmps = "";
-    for (std::size_t i = 1; i < 308915776; i++) {//208827064576
-        tmps = findStringInv<std::size_t>(i);
-        auto crc = ~(GetCrc32(tmps));
-        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-            std::reverse(tmps.begin(), tmps.end());
-            std::cout << tmps << ":0x" << std::hex << crc << std::endl;
-        }
+        for (size_t i = 1; i < 308915776; i++) { // 208827064576
+            // std::string tmp = findStringInv<size_t>(i);
+            findStringInv<std::size_t>(i, tmp);
+            auto crc = ~(GetCrc32(tmp));
+            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+                std::reverse(tmp.begin(), tmp.end());
+                std::cout << tmp << ":0x" << std::hex << crc << std::endl;
+            }
+        }*/
+    return EXIT_SUCCESS;
+}
+
+// En C++ JAMAIS NULL, toujours nullptr. Comme malloc et free : ça n'existe plus en C++, faut pas manger :c
+//    char *tmp = nullptr;
+//    tmp = (char *)malloc((std::size_t)(29 + 1) * sizeof(char));
+//    assert(tmp != nullptr);                       // assert valable en debug uniquement.
+/*
+  std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
+  for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
+      // tmp[(std::size_t)(i / 26 + 1)] = '\0';
+      //        tmp[29UL] = '\0';
+      findStringInv<std::size_t>(i, tmp);
+      const auto crc = ~(GetCrc32(tmp));
+      if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
+          std::reverse(tmp.begin(), tmp.end());
+          std::cout << tmp << ":0x" << std::hex << crc << '\n';
+      }*/
+/*if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+    std::reverse(tmp, tmp + strlen(tmp));
+    std::cout << tmp << ":0x" << std::hex << crc << '\n'; // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
+}*/
+/*}*/
+//    free(tmp);
+
+/*
+char *tmp = NULL;
+tmp = (char *)malloc((size_t)(29 + 1) * sizeof(char));
+assert(tmp != NULL);
+*/
+/*
+char tmp[29];
+for (size_t i = 1; i < 308915776; i++) {
+    //tmp[(size_t)(i / 26 + 1)] = '\0';
+    //tmp[(size_t)(29)] = '\0';
+    findStringInv<size_t>(i, tmp);
+    auto crc = ~(GetCrc32(tmp));
+    if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+        std::reverse(tmp, tmp + strlen(tmp));
+        std::cout << tmp << ":0x" << std::hex << crc << std::endl;
     }
-    */
+    tmp[0] = '\0';
+}*/
+// free(tmp);
+
+/*
+std::string tmps = "";
+for (std::size_t i = 1; i < 308915776; i++) {//208827064576
+    tmps = findStringInv<std::size_t>(i);
+    auto crc = ~(GetCrc32(tmps));
+    if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+        std::reverse(tmps.begin(), tmps.end());
+        std::cout << tmps << ":0x" << std::hex << crc << std::endl;
+    }
+}
+*/
