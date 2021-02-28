@@ -42,7 +42,7 @@
 // https://stackoverflow.com/questions/2219829/how-to-prevent-gcc-optimizing-some-statements-in-c
 struct Processor
 {
-    long double __attribute__((optimize("O1"))) operator()(std::function<uint64_t(uint64_t)> elem_fn, uint64_t prime_nbr)
+    long double __attribute__((optimize("O2"))) operator()(std::function<uint64_t(uint64_t)> elem_fn, uint64_t prime_nbr)
     {
         auto nbrs __attribute__((unused)) = (elem_fn)(prime_nbr);
         auto &&t1 = my::chrono::now();

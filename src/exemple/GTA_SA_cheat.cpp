@@ -209,13 +209,13 @@ struct Processor
         for (size_t i = x; i < y + x; i++) {
             findStringInv<size_t>(i, tmp);
             auto crc = ~(GetCrc32(tmp));
-            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {         
+            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
                 std::reverse(tmp, tmp + strlen(tmp));
-//#    ifdef DNDEBUG
+                //#    ifdef DNDEBUG
                 couter.lock();
                 std::cout << tmp << ":0x" << std::hex << crc << std::endl;
                 couter.unlock();
-//#endif
+                //#endif
             }
         }
         return 0;
@@ -226,16 +226,18 @@ int main()
 {
     std::ios_base::sync_with_stdio(false);
     std::vector<std::future<std::size_t>> results {};
-    auto threads = std::thread::hardware_concurrency();
-    thread::Pool thread_pool(threads);
 
-    const size_t nbrcal = 308915776; // Nombre calcule à faire
-    const size_t threadmult = 12; // Nombre de thread créé par thread CPU
-    const size_t nbrthread = std::thread::hardware_concurrency() * threadmult; // Nombre de thread créé au total sur le threadpool
+    const size_t nbrcal = 308915776;                                    // Nombre calcule à faire
+    const std::size_t hardthread = std::thread::hardware_concurrency(); // Nombre de thread au threadpool
+    const std::size_t threadmult = 12;                                  // Multiplicateur de thread (Pour que chaque pool ait plusieurs operations disponibles)
 
-    const size_t nbrcalperthread = nbrcal/nbrthread; // Nombre de calcule par thread (1K mini à 1M max recommandé)
-    
-    results.reserve(nbrthread); //Réservation
+    thread::Pool thread_pool(hardthread);
+
+    const size_t nbrthread = hardthread * threadmult; // Nombre de thread créé au total sur le threadpool
+
+    const size_t nbrcalperthread = nbrcal / nbrthread; // Nombre de calcule par thread (1K mini à 1M max recommandé)
+
+    results.reserve(nbrthread); // Réservation
 
     for (std::size_t i = 1; i < nbrthread; i++) {
         results.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread));
@@ -243,7 +245,7 @@ int main()
 
     for (auto &&result : results) {
         auto t = result.get();
-        if (t == 1){
+        if (t == 1) {
             std::cout << t << std::endl;
         }
     }
