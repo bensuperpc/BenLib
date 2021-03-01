@@ -32,6 +32,7 @@
 #include <boost/crc.hpp>
 #include <cmath> // pow
 #include <cstring>
+#include <iomanip>  // setw
 #include <iostream> // cout
 #include <mutex>    // Mutex
 #include <string>
@@ -40,7 +41,6 @@
 #include <utility> // std::make_pair
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
-#include <iomanip> // setw
 
 constexpr std::uint32_t alphabetSize {26};
 
@@ -52,10 +52,9 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0x040CF761, 0xE1B33EB9, 0xFEDA77F7, 0x8CA870DD, 0x9A629401, 0xF53EF5A5, 0xF2AA0C1D, 0xF36345A8, 0x8990D5E1, 0xB7013B1B, 0xCAEC94EE, 0x31F0C3CC, 0xB3B3E72A,
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
-const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3","Health, Armor, $250k, Repairs car", "Increase Wanted Level +2", 
-"Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather", "Faster Clock", " Always Midnight",
-"Orange Sky", "Thunderstorm", "Sandstorm"};
-
+const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3", "Health, Armor, $250k, Repairs car",
+    "Increase Wanted Level +2", "Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather",
+    "Faster Clock", " Always Midnight", "Orange Sky", "Thunderstorm", "Sandstorm"};
 
 std::mutex mutex;
 
@@ -126,10 +125,8 @@ template <class T> std::string findString(T n)
     std::reverse(array, array + strlen(array));
 }*/
 
-
-
 /**
- * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29 
+ * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
  * \tparam T
  * \param n
  * \param array
@@ -158,16 +155,15 @@ struct Processor
         uint32_t crc; // CRC value
         for (size_t i = x; i < y + x; i++) {
             findStringInv<size_t>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
-            crc = ~(GetCrc32(tmp)); // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
+            crc = ~(GetCrc32(tmp));        // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
             if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
-                std::reverse(tmp, tmp + strlen(tmp)); // Invert char array
+                std::reverse(tmp, tmp + strlen(tmp));                                                   // Invert char array
                 mutex.lock();
-                #    ifdef DNDEBUG
+#ifdef DNDEBUG
                 std::cout << std::dec << i << ":" << std::string(tmp) << ":0x" << std::hex << crc << std::endl;
-                #endif
+#endif
                 results.emplace_back(std::make_tuple(i, std::string(tmp), crc)); // Save result: calculation position, Alphabetic sequence, CRC
                 mutex.unlock();
-
             }
         }
         return 0;
@@ -188,16 +184,17 @@ int main()
 
     const size_t nbrthread = hardthread * threadmult; // Total number of tasks created on the threadpool
 
-    const size_t nbrcalperthread = nbrcal / nbrthread; // Number of calculations per thread (1K mini to 1M max recommended)
+    const size_t nbrcalperthread = nbrcal / nbrthread; // Number of calculations per task (1K mini to 1M max recommended)
 
     std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
-    std::cout << "Thread multiplier: x" << threadmult << std::endl;
+    std::cout << "Thread multiplier: x" << threadmult << " (Nbr tasks per thread)" << std::endl;
     std::cout << "Threadpool with: " << nbrthread << " tasks" << std::endl;
-
-
     std::cout << "Number of calculations: " << nbrcal << std::endl;
-    std::cout << "Number of calculations per thread: " << nbrcalperthread << std::endl;
+    std::cout << "Number of calculations per tasks: " << nbrcalperthread << std::endl;
+    std::cout << "" << std::endl;
 
+    std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code"
+              << "CRC32/JAMCRC" << std::endl;
 
     results_pool.reserve(nbrthread); // Vectors reservation
 
@@ -208,11 +205,12 @@ int main()
     size_t t __attribute__((unused));
     for (auto &&result_pool : results_pool) {
         t = result_pool.get(); // Get result from threadpool
-        //if(results.length() >= 10000){}
+        // if(results.length() >= 10000){}
     }
 
     for (auto &&result : results) {
-        std::cout << std::left << std::setw(13) << std::dec << std::get<0>(result) << std::left << std::setw(11) << std::get<1>(result) << "0x" << std::hex << std::get<2>(result) << std::endl;
+        std::cout << std::left << std::setw(13) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
+                  << std::get<2>(result) << std::endl;
     }
     return EXIT_SUCCESS;
 }
