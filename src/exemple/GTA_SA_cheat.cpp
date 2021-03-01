@@ -40,6 +40,7 @@
 #include <utility> // std::make_pair
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
+//#include <shared_mutex> // shared_mutex
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -57,7 +58,8 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0x040CF761, 0xE1B33EB9, 0xFEDA77F7, 0x8CA870DD, 0x9A629401, 0xF53EF5A5, 0xF2AA0C1D, 0xF36345A8, 0x8990D5E1, 0xB7013B1B, 0xCAEC94EE, 0x31F0C3CC, 0xB3B3E72A,
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
-std::mutex couter;
+std::mutex mutex;
+// std::shared_mutex shared_mutex; // .lock_shared(); .unlock_shared();
 
 std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {};
 
@@ -217,16 +219,15 @@ struct Processor
             if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
                 std::reverse(tmp, tmp + strlen(tmp));
                 //#    ifdef DNDEBUG
-                couter.lock();
+                mutex.lock();
                 results.emplace_back(std::make_tuple(i, std::string(tmp), crc));
-                couter.unlock();
+                mutex.unlock();
                 //#endif
             }
         }
         return 0;
     }
 };
-
 
 int main()
 {
@@ -259,8 +260,6 @@ int main()
     }
     return EXIT_SUCCESS;
 }
-
-
 
 // En C++ JAMAIS NULL, toujours nullptr. Comme malloc et free : ça n'existe plus en C++, faut pas manger :c
 //    char *tmp = nullptr;
@@ -316,23 +315,23 @@ for (std::size_t i = 1; i < 308915776; i++) {//208827064576
 }
 */
 
-    /*
-    std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
-    for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
+/*
+std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
+for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
+    findStringInv<std::size_t>(i, tmp);
+    const auto crc = ~(GetCrc32(tmp));
+    if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
+        std::reverse(tmp.begin(), tmp.end());
+        std::cout << tmp << ":0x" << std::hex << crc << '\n';  // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
+    }
+}*/
+/*
+    for (size_t i = 1; i < 308915776; i++) { // 208827064576
+        // std::string tmp = findStringInv<size_t>(i);
         findStringInv<std::size_t>(i, tmp);
-        const auto crc = ~(GetCrc32(tmp));
-        if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
+        auto crc = ~(GetCrc32(tmp));
+        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
             std::reverse(tmp.begin(), tmp.end());
-            std::cout << tmp << ":0x" << std::hex << crc << '\n';  // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
+            std::cout << tmp << ":0x" << std::hex << crc << std::endl;
         }
     }*/
-    /*
-        for (size_t i = 1; i < 308915776; i++) { // 208827064576
-            // std::string tmp = findStringInv<size_t>(i);
-            findStringInv<std::size_t>(i, tmp);
-            auto crc = ~(GetCrc32(tmp));
-            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-                std::reverse(tmp.begin(), tmp.end());
-                std::cout << tmp << ":0x" << std::hex << crc << std::endl;
-            }
-        }*/
