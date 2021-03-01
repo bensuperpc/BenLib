@@ -123,7 +123,7 @@ template <class T> std::string findString(T n)
 
 
 /**
- * \brief Que fait cette fonction ? oskour aled
+ * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29 
  * \tparam T
  * \param n
  * \param array
@@ -151,7 +151,7 @@ struct Processor
         char tmp[29]; // Temp array
         uint32_t crc; // CRC value
         for (size_t i = x; i < y + x; i++) {
-            findStringInv<size_t>(i, tmp); // Generate Alphabetic sequence
+            findStringInv<size_t>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
             crc = ~(GetCrc32(tmp)); // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
             if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
                 std::reverse(tmp, tmp + strlen(tmp)); // Invert char array
