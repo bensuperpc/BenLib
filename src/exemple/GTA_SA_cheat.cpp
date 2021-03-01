@@ -40,7 +40,6 @@
 #include <utility> // std::make_pair
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
-//#include <shared_mutex> // shared_mutex
 
 #if defined(__GNUC__)
 #    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
@@ -59,7 +58,6 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
 std::mutex mutex;
-// std::shared_mutex shared_mutex; // .lock_shared(); .unlock_shared();
 
 std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {};
 
@@ -72,13 +70,6 @@ unsigned int GetCrc32(const std::string_view my_string)
     result.process_bytes(my_string.data(), my_string.length());
     return result.checksum();
 }
-
-/*unsigned int GetCrc32(const char *const my_string)
-{
-    boost::crc_32_type result;
-    result.process_bytes(my_string, strlen(my_string));
-    return result.checksum();
-}*/
 
 std::vector<std::string> generateSequenceBySize(const std::size_t N);
 
@@ -135,20 +126,7 @@ template <class T> std::string findString(T n)
     std::reverse(array, array + strlen(array));
 }*/
 
-template <class T> std::string findStringInv(T n)
-{
-    const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    std::string ans;
-    if (n <= alphabetSize) {
-        ans = alpha[n - 1];
-        return ans;
-    }
-    while (n > 0) {
-        ans += alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-    }
-    return ans;
-}
+
 
 /**
  * \brief Que fait cette fonction ? oskour aled
@@ -156,41 +134,6 @@ template <class T> std::string findStringInv(T n)
  * \param n
  * \param array
  */
-/*
-template <class T> void findStringInv(T n, std::string &array)
-{
-    constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
-    constexpr std::array<char, stringSizeAlphabet> alpha {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
-    if (n < stringSizeAlphabet) {
-        array[0] = alpha[n - 1];
-        return;
-    }
-    std::size_t i = 0;
-    while (n > 0) {
-        array[i] = alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-        ++i;
-    }
-}
-
-*/
-
-template <class T> void findStringInv(T n, std::string &array)
-{
-    constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
-    constexpr std::array<char, stringSizeAlphabet> alpha {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
-    if (n < stringSizeAlphabet) {
-        array[0] = alpha[n - 1];
-        return;
-    }
-    std::size_t i = 0;
-    while (n > 0) {
-        array[i] = alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-        ++i;
-    }
-}
-
 template <class T> void findStringInv(T n, char *array)
 {
     constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
@@ -261,77 +204,19 @@ int main()
     return EXIT_SUCCESS;
 }
 
-// En C++ JAMAIS NULL, toujours nullptr. Comme malloc et free : ça n'existe plus en C++, faut pas manger :c
-//    char *tmp = nullptr;
-//    tmp = (char *)malloc((std::size_t)(29 + 1) * sizeof(char));
-//    assert(tmp != nullptr);                       // assert valable en debug uniquement.
 /*
-  std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
-  for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
-      // tmp[(std::size_t)(i / 26 + 1)] = '\0';
-      //        tmp[29UL] = '\0';
-      findStringInv<std::size_t>(i, tmp);
-      const auto crc = ~(GetCrc32(tmp));
-      if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
-          std::reverse(tmp.begin(), tmp.end());
-          std::cout << tmp << ":0x" << std::hex << crc << '\n';
-      }*/
-/*if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-    std::reverse(tmp, tmp + strlen(tmp));
-    std::cout << tmp << ":0x" << std::hex << crc << '\n'; // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
-}*/
-/*}*/
-//    free(tmp);
-
-/*
-char *tmp = NULL;
-tmp = (char *)malloc((size_t)(29 + 1) * sizeof(char));
-assert(tmp != NULL);
-*/
-/*
-char tmp[29];
-for (size_t i = 1; i < 308915776; i++) {
-    //tmp[(size_t)(i / 26 + 1)] = '\0';
-    //tmp[(size_t)(29)] = '\0';
-    findStringInv<size_t>(i, tmp);
-    auto crc = ~(GetCrc32(tmp));
-    if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-        std::reverse(tmp, tmp + strlen(tmp));
-        std::cout << tmp << ":0x" << std::hex << crc << std::endl;
+template <class T> std::string findStringInv(T n)
+{
+    const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    std::string ans;
+    if (n <= alphabetSize) {
+        ans = alpha[n - 1];
+        return ans;
     }
-    tmp[0] = '\0';
-}*/
-// free(tmp);
-
-/*
-std::string tmps = "";
-for (std::size_t i = 1; i < 308915776; i++) {//208827064576
-    tmps = findStringInv<std::size_t>(i);
-    auto crc = ~(GetCrc32(tmps));
-    if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-        std::reverse(tmps.begin(), tmps.end());
-        std::cout << tmps << ":0x" << std::hex << crc << std::endl;
+    while (n > 0) {
+        ans += alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
     }
+    return ans;
 }
 */
-
-/*
-std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
-for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
-    findStringInv<std::size_t>(i, tmp);
-    const auto crc = ~(GetCrc32(tmp));
-    if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
-        std::reverse(tmp.begin(), tmp.end());
-        std::cout << tmp << ":0x" << std::hex << crc << '\n';  // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
-    }
-}*/
-/*
-    for (size_t i = 1; i < 308915776; i++) { // 208827064576
-        // std::string tmp = findStringInv<size_t>(i);
-        findStringInv<std::size_t>(i, tmp);
-        auto crc = ~(GetCrc32(tmp));
-        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-            std::reverse(tmp.begin(), tmp.end());
-            std::cout << tmp << ":0x" << std::hex << crc << std::endl;
-        }
-    }*/
