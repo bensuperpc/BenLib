@@ -40,6 +40,7 @@
 #include <utility> // std::make_pair
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
+#include <iomanip> // setw
 
 constexpr std::uint32_t alphabetSize {26};
 
@@ -50,6 +51,11 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0x1A5526BC, 0xA48A770B, 0xB07D3B32, 0x80C1E54B, 0x5DAD0087, 0x7F80B950, 0x6C0FA650, 0xF46F2FA4, 0x70164385, 0x885D0B50, 0x151BDCB3, 0xADFA640A, 0xE57F96CE,
     0x040CF761, 0xE1B33EB9, 0xFEDA77F7, 0x8CA870DD, 0x9A629401, 0xF53EF5A5, 0xF2AA0C1D, 0xF36345A8, 0x8990D5E1, 0xB7013B1B, 0xCAEC94EE, 0x31F0C3CC, 0xB3B3E72A,
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
+
+const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3","Health, Armor, $250k, Repairs car", "Increase Wanted Level +2", 
+"Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather", "Faster Clock", " Always Midnight",
+"Orange Sky", "Thunderstorm", "Sandstorm"};
+
 
 std::mutex mutex;
 
@@ -180,9 +186,18 @@ int main()
 
     thread::Pool thread_pool(hardthread);
 
-    const size_t nbrthread = hardthread * threadmult; // Total number of threads created on the threadpool
+    const size_t nbrthread = hardthread * threadmult; // Total number of tasks created on the threadpool
 
     const size_t nbrcalperthread = nbrcal / nbrthread; // Number of calculations per thread (1K mini to 1M max recommended)
+
+    std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
+    std::cout << "Thread multiplier: x" << threadmult << std::endl;
+    std::cout << "Threadpool with: " << nbrthread << " tasks" << std::endl;
+
+
+    std::cout << "Number of calculations: " << nbrcal << std::endl;
+    std::cout << "Number of calculations per thread: " << nbrcalperthread << std::endl;
+
 
     results_pool.reserve(nbrthread); // Vectors reservation
 
@@ -193,10 +208,11 @@ int main()
     size_t t __attribute__((unused));
     for (auto &&result_pool : results_pool) {
         t = result_pool.get(); // Get result from threadpool
+        //if(results.length() >= 10000){}
     }
 
     for (auto &&result : results) {
-        std::cout << std::dec << std::get<0>(result) << ":" << std::get<1>(result) << ":0x" << std::hex << std::get<2>(result) << std::endl;
+        std::cout << std::left << std::setw(13) << std::dec << std::get<0>(result) << std::left << std::setw(11) << std::get<1>(result) << "0x" << std::hex << std::get<2>(result) << std::endl;
     }
     return EXIT_SUCCESS;
 }
