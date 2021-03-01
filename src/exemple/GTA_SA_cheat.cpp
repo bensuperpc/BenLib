@@ -36,6 +36,8 @@
 #include <mutex>    // Mutex
 #include <string>
 #include <string_view> // string_view
+#include <tuple>
+#include <utility> // std::make_pair
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
 
@@ -56,6 +58,8 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
 std::mutex couter;
+
+std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {};
 
 unsigned int GetCrc32(const std::string_view my_string);
 
@@ -206,14 +210,15 @@ struct Processor
     size_t operator()(size_t x, size_t y)
     {
         char tmp[29];
+        uint32_t crc;
         for (size_t i = x; i < y + x; i++) {
             findStringInv<size_t>(i, tmp);
-            auto crc = ~(GetCrc32(tmp));
+            crc = ~(GetCrc32(tmp));
             if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
                 std::reverse(tmp, tmp + strlen(tmp));
                 //#    ifdef DNDEBUG
                 couter.lock();
-                std::cout << tmp << ":0x" << std::hex << crc << std::endl;
+                results.emplace_back(std::make_tuple(i, std::string(tmp), crc));
                 couter.unlock();
                 //#endif
             }
@@ -222,10 +227,11 @@ struct Processor
     }
 };
 
+
 int main()
 {
     std::ios_base::sync_with_stdio(false);
-    std::vector<std::future<std::size_t>> results {};
+    std::vector<std::future<std::size_t>> results_pool {};
 
     const size_t nbrcal = 308915776;                                    // Nombre calcule à faire
     const std::size_t hardthread = std::thread::hardware_concurrency(); // Nombre de thread au threadpool
@@ -237,40 +243,24 @@ int main()
 
     const size_t nbrcalperthread = nbrcal / nbrthread; // Nombre de calcule par thread (1K mini à 1M max recommandé)
 
-    results.reserve(nbrthread); // Réservation
+    results_pool.reserve(nbrthread); // Réservation
 
     for (std::size_t i = 1; i < nbrthread; i++) {
-        results.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread));
+        results_pool.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread));
+    }
+
+    size_t t __attribute__((unused));
+    for (auto &&result_pool : results_pool) {
+        t = result_pool.get();
     }
 
     for (auto &&result : results) {
-        auto t = result.get();
-        if (t == 1) {
-            std::cout << t << std::endl;
-        }
+        std::cout << std::dec << std::get<0>(result) << ":" << std::get<1>(result) << ":0x" << std::hex << std::get<2>(result) << std::endl;
     }
-    /*
-    std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
-    for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
-        findStringInv<std::size_t>(i, tmp);
-        const auto crc = ~(GetCrc32(tmp));
-        if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
-            std::reverse(tmp.begin(), tmp.end());
-            std::cout << tmp << ":0x" << std::hex << crc << '\n';  // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
-        }
-    }*/
-    /*
-        for (size_t i = 1; i < 308915776; i++) { // 208827064576
-            // std::string tmp = findStringInv<size_t>(i);
-            findStringInv<std::size_t>(i, tmp);
-            auto crc = ~(GetCrc32(tmp));
-            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-                std::reverse(tmp.begin(), tmp.end());
-                std::cout << tmp << ":0x" << std::hex << crc << std::endl;
-            }
-        }*/
     return EXIT_SUCCESS;
 }
+
+
 
 // En C++ JAMAIS NULL, toujours nullptr. Comme malloc et free : ça n'existe plus en C++, faut pas manger :c
 //    char *tmp = nullptr;
@@ -325,3 +315,24 @@ for (std::size_t i = 1; i < 308915776; i++) {//208827064576
     }
 }
 */
+
+    /*
+    std::string tmp(30, '\0');                    // déjà entièrement rempli de '\0'
+    for (std::size_t i = 1; i < 308915776; i++) { // Quel est ce nombre énorme ? D'où il sort ?
+        findStringInv<std::size_t>(i, tmp);
+        const auto crc = ~(GetCrc32(tmp));
+        if (std::find(cheat_list.cbegin(), cheat_list.cend(), crc) != cheat_list.cend()) {
+            std::reverse(tmp.begin(), tmp.end());
+            std::cout << tmp << ":0x" << std::hex << crc << '\n';  // std::endl flush le buffer, donc syscall à chaque tour de boucle : c'est plus lent.
+        }
+    }*/
+    /*
+        for (size_t i = 1; i < 308915776; i++) { // 208827064576
+            // std::string tmp = findStringInv<size_t>(i);
+            findStringInv<std::size_t>(i, tmp);
+            auto crc = ~(GetCrc32(tmp));
+            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
+                std::reverse(tmp.begin(), tmp.end());
+                std::cout << tmp << ":0x" << std::hex << crc << std::endl;
+            }
+        }*/
