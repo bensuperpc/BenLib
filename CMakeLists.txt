@@ -381,8 +381,8 @@ endif()
 
 set(lib_path "")
 
-include_directories("${lib_path}lib/")
-include_directories("${lib_path}lib/C/")
+include_directories("${lib_path}lib/") #To avoid to use full path in headers
+include_directories("${lib_path}lib/C/") #To avoid to use full path in headers
 
 
 

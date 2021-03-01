@@ -41,12 +41,6 @@
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
 
-#if defined(__GNUC__)
-#    define CACHE_ALIGNED __attribute__((aligned(64))) // clang and GCC
-#elif defined(_MSC_VER)
-#    define CACHE_ALIGNED __declspec(align(64)) // MSVC
-#endif
-
 constexpr std::uint32_t alphabetSize {26};
 
 const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345, 0xE1EF01EA, 0x771B83FC,
@@ -154,18 +148,20 @@ struct Processor
 {
     size_t operator()(size_t x, size_t y)
     {
-        char tmp[29];
-        uint32_t crc;
+        char tmp[29]; // Temp array
+        uint32_t crc; // CRC value
         for (size_t i = x; i < y + x; i++) {
-            findStringInv<size_t>(i, tmp);
-            crc = ~(GetCrc32(tmp));
-            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) {
-                std::reverse(tmp, tmp + strlen(tmp));
-                //#    ifdef DNDEBUG
+            findStringInv<size_t>(i, tmp); // Generate Alphabetic sequence
+            crc = ~(GetCrc32(tmp)); // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
+            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
+                std::reverse(tmp, tmp + strlen(tmp)); // Invert char array
                 mutex.lock();
-                results.emplace_back(std::make_tuple(i, std::string(tmp), crc));
+                #    ifdef DNDEBUG
+                std::cout << std::dec << i << ":" << std::string(tmp) << ":0x" << std::hex << crc << std::endl;
+                #endif
+                results.emplace_back(std::make_tuple(i, std::string(tmp), crc)); // Save result: calculation position, Alphabetic sequence, CRC
                 mutex.unlock();
-                //#endif
+
             }
         }
         return 0;
@@ -174,28 +170,29 @@ struct Processor
 
 int main()
 {
-    std::ios_base::sync_with_stdio(false);
+    std::ios_base::sync_with_stdio(false); // Improve std::cout and std::cin speed
+
     std::vector<std::future<std::size_t>> results_pool {};
 
-    const size_t nbrcal = 308915776;                                    // Nombre calcule à faire
-    const std::size_t hardthread = std::thread::hardware_concurrency(); // Nombre de thread au threadpool
-    const std::size_t threadmult = 12;                                  // Multiplicateur de thread (Pour que chaque pool ait plusieurs operations disponibles)
+    const size_t nbrcal = 308915776;                                    // Number of calculations to do
+    const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
+    const std::size_t threadmult = 12;                                  // Thread Multiplier (So that each pool has multiple operations available)
 
     thread::Pool thread_pool(hardthread);
 
-    const size_t nbrthread = hardthread * threadmult; // Nombre de thread créé au total sur le threadpool
+    const size_t nbrthread = hardthread * threadmult; // Total number of threads created on the threadpool
 
-    const size_t nbrcalperthread = nbrcal / nbrthread; // Nombre de calcule par thread (1K mini à 1M max recommandé)
+    const size_t nbrcalperthread = nbrcal / nbrthread; // Number of calculations per thread (1K mini to 1M max recommended)
 
-    results_pool.reserve(nbrthread); // Réservation
+    results_pool.reserve(nbrthread); // Vectors reservation
 
     for (std::size_t i = 1; i < nbrthread; i++) {
-        results_pool.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread));
+        results_pool.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
     }
 
     size_t t __attribute__((unused));
     for (auto &&result_pool : results_pool) {
-        t = result_pool.get();
+        t = result_pool.get(); // Get result from threadpool
     }
 
     for (auto &&result : results) {
