@@ -55,14 +55,14 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
 
 const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3", "Health, Armor, $250k, Repairs car",
     "Increase Wanted Level +2", "Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather",
-    "Faster Clock", "People attack each other with golf clubs", "Have a bounty on your head", "Everyone is armed", "Spawn Rhino", "Spawn Bloodring Banger",
-    "Spawn Rancher", "Spawn Racecar", "Spawn Racecar", "Spawn Romero", "Spawn Stretch", "Spawn Trashmaster", "Spawn Caddy", "Blow Up All Cars", "Invisible car",
-    "All green lights", "Aggressive Drivers", "Pink CArs", "Black Cars", "Fat Body", "Muscular Body", "Skinny Body", "People attack with Rocket Launchers",
-    "N°41", "N°42", "Gangs Control the Streets", "N°44", "Slut Magnet", "N°46", "N°47", "Cars Fly", "N°49", "N°50", "Spawn Vortex Hovercraft", "Smash n' Boom",
-    "N°53", "N°54", "N°55", "Orange Sky", "Thunderstorm", "Sandstorm", "N°59", "N°60", "Infinite Health", "Infinite Oxygen", "Have Parachute", "N°64",
-    "Never Wanted", "N°66", "Mega Punch", "Never Get Hungry", "N°69", "N°70", "N°71", "N°72", "Full Weapon Aiming While Driving", "N°74",
-    "Traffic is Country Vehicles", "Recruit Anyone (9mm)", "Get Born 2 Truck Outfit", "N°78", "N°79", "N°80", "L3 Bunny Hop", "N°82", "N°83", "N°84",
-    "Spawn Quad", "Spawn Tanker Truck", "Spawn Dozer", "pawn Stunt Plane", "Spawn Monster"};
+    "Faster Clock", "N°12", "N°13", "People attack each other with golf clubs", "Have a bounty on your head", "Everyone is armed", "Spawn Rhino",
+    "Spawn Bloodring Banger", "Spawn Rancher", "Spawn Racecar", "Spawn Racecar", "Spawn Romero", "Spawn Stretch", "Spawn Trashmaster", "Spawn Caddy",
+    "Blow Up All Cars", "Invisible car", "All green lights", "Aggressive Drivers", "Pink CArs", "Black Cars", "Fat Body", "Muscular Body", "Skinny Body",
+    "People attack with Rocket Launchers", "N°41", "N°42", "Gangs Control the Streets", "N°44", "Slut Magnet", "N°46", "N°47", "Cars Fly", "N°49", "N°50",
+    "Spawn Vortex Hovercraft", "Smash n' Boom", "N°53", "N°54", "N°55", "Orange Sky", "Thunderstorm", "Sandstorm", "N°59", "N°60", "Infinite Health",
+    "Infinite Oxygen", "Have Parachute", "N°64", "Never Wanted", "N°66", "Mega Punch", "Never Get Hungry", "N°69", "N°70", "N°71", "N°72",
+    "Full Weapon Aiming While Driving", "N°74", "Traffic is Country Vehicles", "Recruit Anyone (9mm)", "Get Born 2 Truck Outfit", "N°78", "N°79", "N°80",
+    "L3 Bunny Hop", "N°82", "N°83", "N°84", "Spawn Quad", "Spawn Tanker Truck", "Spawn Dozer", "pawn Stunt Plane", "Spawn Monster"};
 
 std::mutex mutex;
 
@@ -131,23 +131,23 @@ int main()
 
     std::vector<std::future<std::size_t>> results_pool {};
 
-    const size_t from_range = 1;       // Alphabetic sequence range min
-    const size_t to_range = 308915777; // Alphabetic sequence range max
+    const size_t from_range = 1;        // Alphabetic sequence range min
+    const size_t to_range = 8031810176; // Alphabetic sequence range max
 
 #ifdef DNDEBUG
     assert(from_range < to_range);
     assert(from_range > 0);
 #endif
 
-    const size_t nbrcal = to_range - from_range;                        // Number of calculations to do
+    const size_t nbrcal = to_range - from_range + 1;                    // Number of calculations to do
     const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
-    const std::size_t threadmult = 16;                                  // Thread Multiplier (So that each pool has multiple operations available)
+    const std::size_t threadmult = 128;                                 // Thread Multiplier (So that each pool has multiple operations available)
 
     thread::Pool thread_pool(hardthread);
 
     const size_t nbrtask = hardthread * threadmult; // Total number of tasks created on the threadpool
 
-    const size_t nbrcalperthread = nbrcal / nbrtask; // Number of calculations per task (1K mini to 1M max recommended)
+    const size_t nbrcalperthread = nbrcal / nbrtask; // Number of calculations per task (100K mini to 100M max recommended)
 
     std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
     std::cout << "Thread multiplier: x" << threadmult << " (Nbr tasks per thread)" << std::endl;
@@ -155,7 +155,6 @@ int main()
     std::cout << "Number of calculations: " << nbrcal << std::endl;
     std::cout << "Number of calculations per tasks: " << nbrcalperthread << std::endl;
     std::cout << "" << std::endl;
-
     // Display Alphabetic sequence range
     char tmp1[29] = {0};
     char tmp2[29] = {0};
@@ -177,10 +176,10 @@ int main()
         t = result_pool.get(); // Get result from threadpool
 
         // Calculate work %
-        count++;
-        if (count % (std::size_t)(nbrtask / 7) == 0) {
+        if (count % (std::size_t)(nbrtask / 50) == 0) {
             std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl;
         }
+        count++;
 
         // Free results if is "full"
         /*
