@@ -43,6 +43,9 @@
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
 
+// If you display less informations, comment it
+#define MORE_INFO
+
 constexpr std::uint32_t alphabetSize {26};
 
 const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345, 0xE1EF01EA, 0x771B83FC,
@@ -53,6 +56,7 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0x040CF761, 0xE1B33EB9, 0xFEDA77F7, 0x8CA870DD, 0x9A629401, 0xF53EF5A5, 0xF2AA0C1D, 0xF36345A8, 0x8990D5E1, 0xB7013B1B, 0xCAEC94EE, 0x31F0C3CC, 0xB3B3E72A,
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
+#ifdef MORE_INFO
 const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3", "Health, Armor, $250k, Repairs car",
     "Increase Wanted Level +2", "Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather",
     "Faster Clock", "N°12", "N°13", "People attack each other with golf clubs", "Have a bounty on your head", "Everyone is armed", "Spawn Rhino",
@@ -63,6 +67,7 @@ const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon
     "Infinite Oxygen", "Have Parachute", "N°64", "Never Wanted", "N°66", "Mega Punch", "Never Get Hungry", "N°69", "N°70", "N°71", "N°72",
     "Full Weapon Aiming While Driving", "N°74", "Traffic is Country Vehicles", "Recruit Anyone (9mm)", "Get Born 2 Truck Outfit", "N°78", "N°79", "N°80",
     "L3 Bunny Hop", "N°82", "N°83", "N°84", "Spawn Quad", "Spawn Tanker Truck", "Spawn Dozer", "pawn Stunt Plane", "Spawn Monster"};
+#endif
 
 std::mutex mutex;
 
@@ -104,10 +109,8 @@ struct Processor
 {
     template <class T = std::size_t> T operator()(T x, T y)
     {
-        char tmp[29] = {0};
-        ; // Temp array
-        uint32_t crc = 0;
-        ; // CRC value
+        char tmp[29] = {0}; // Temp array
+        uint32_t crc = 0; // CRC value
         for (T i = x; i < y + x; i++) {
             findStringInv<T>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
             crc = ~(GetCrc32(tmp));   // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
@@ -149,6 +152,7 @@ int main()
 
     const size_t nbrcalperthread = nbrcal / nbrtask; // Number of calculations per task (100K mini to 100M max recommended)
 
+#ifdef MORE_INFO
     std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
     std::cout << "Thread multiplier: x" << threadmult << " (Nbr tasks per thread)" << std::endl;
     std::cout << "Threadpool with: " << nbrtask << " tasks" << std::endl;
@@ -162,6 +166,7 @@ int main()
     findStringInv<size_t>(to_range, tmp2);
     std::cout << "From: " << tmp1 << " to: " << tmp2 << " Alphabetic sequence" << std::endl;
     std::cout << "" << std::endl;
+#endif
 
     results_pool.reserve(nbrtask); // Vectors reservation
 
@@ -169,18 +174,20 @@ int main()
         results_pool.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
     }
 
+#ifdef MORE_INFO
     std::size_t count = 0;
+#endif
     std::size_t t __attribute__((unused));
 
     for (auto &&result_pool : results_pool) {
         t = result_pool.get(); // Get result from threadpool
-
+#ifdef MORE_INFO
         // Calculate work %
         if (count % (std::size_t)(nbrtask / 50) == 0) {
             std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl;
         }
         count++;
-
+#endif
         // Free results if is "full"
         /*
         if(results.length() >= 10000){
@@ -188,18 +195,20 @@ int main()
             mutex.unlock();
         }*/
     }
-
+#ifdef MORE_INFO
     std::cout << "" << std::endl;
     std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code" << std::left << std::setw(16) << "CRC32/JAMCRC"
               << "Cheat code name" << std::endl;
-
+#endif
     for (auto &&result : results) {
         std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
                   << std::left << std::setw(12) << std::get<2>(result);
+#ifdef MORE_INFO
         auto it = std::find(cheat_list.begin(), cheat_list.end(), std::get<2>(result));
         if (it != cheat_list.end()) {
             std::cout << cheat_list_name[it - cheat_list.begin()] << std::endl;
         }
+#endif
     }
     return EXIT_SUCCESS;
 }
