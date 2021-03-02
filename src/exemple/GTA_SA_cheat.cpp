@@ -23,6 +23,7 @@
 //          https://cppsecrets.com/users/960210997110103971089710711510497116484964103109971051084699111109/Given-integer-n-find-the-nth-string-in-this-sequence-A-B-C-Z-AA-AB-AC-ZZ-AAA-AAB-AAZ-ABA-.php
 //          https://www.careercup.com/question?id=14276663                                                //
 //          https://stackoverflow.com/a/55074804/10152334                                                //
+//          https://web.archive.org/web/20090204140550/http://www.maxbot.com/gta/3wordcheatsdumpsorted.txt                                                //
 //  OS: ALL                                                 //
 //  CPU: ALL                                                //
 //                                                          //
@@ -54,7 +55,14 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
 
 const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3", "Health, Armor, $250k, Repairs car",
     "Increase Wanted Level +2", "Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather",
-    "Faster Clock", " Always Midnight", "Orange Sky", "Thunderstorm", "Sandstorm"};
+    "Faster Clock", "People attack each other with golf clubs", "Have a bounty on your head", "Everyone is armed", "Spawn Rhino", "Spawn Bloodring Banger",
+    "Spawn Rancher", "Spawn Racecar", "Spawn Racecar", "Spawn Romero", "Spawn Stretch", "Spawn Trashmaster", "Spawn Caddy", "Blow Up All Cars", "Invisible car",
+    "All green lights", "Aggressive Drivers", "Pink CArs", "Black Cars", "Fat Body", "Muscular Body", "Skinny Body", "People attack with Rocket Launchers",
+    "N°41", "N°42", "Gangs Control the Streets", "N°44", "Slut Magnet", "N°46", "N°47", "Cars Fly", "N°49", "N°50", "Spawn Vortex Hovercraft", "Smash n' Boom",
+    "N°53", "N°54", "N°55", "Orange Sky", "Thunderstorm", "Sandstorm", "N°59", "N°60", "Infinite Health", "Infinite Oxygen", "Have Parachute", "N°64",
+    "Never Wanted", "N°66", "Mega Punch", "Never Get Hungry", "N°69", "N°70", "N°71", "N°72", "Full Weapon Aiming While Driving", "N°74",
+    "Traffic is Country Vehicles", "Recruit Anyone (9mm)", "Get Born 2 Truck Outfit", "N°78", "N°79", "N°80", "L3 Bunny Hop", "N°82", "N°83", "N°84",
+    "Spawn Quad", "Spawn Tanker Truck", "Spawn Dozer", "pawn Stunt Plane", "Spawn Monster"};
 
 std::mutex mutex;
 
@@ -108,22 +116,6 @@ template <class T> std::string findString(T n)
     std::reverse(ans.begin(), ans.end());
     return ans;
 }
-
-/*template <class T> void findString(T n, char *array)
-{
-    const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if (n <= alphabetSize) {
-        array[0] = alpha[n - 1];
-        return;
-    }
-    std::size_t i = 0;
-    while (n > 0) {
-        array[i] = alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-        ++i;
-    }
-    std::reverse(array, array + strlen(array));
-}*/
 
 /**
  * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
@@ -225,7 +217,7 @@ int main()
 
         // Calculate work %
         count++;
-        if (count % (std::size_t)(nbrtask / 33) == 0) {
+        if (count % (std::size_t)(nbrtask / 7) == 0) {
             std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl;
         }
 
@@ -237,12 +229,17 @@ int main()
         }*/
     }
 
+    std::cout << "" << std::endl;
     std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code"
               << "CRC32/JAMCRC" << std::endl;
 
     for (auto &&result : results) {
-        std::cout << std::left << std::setw(13) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
-                  << std::get<2>(result) << std::endl;
+        std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
+                  << std::left << std::setw(12) << std::get<2>(result);
+        auto it = std::find(cheat_list.begin(), cheat_list.end(), std::get<2>(result));
+        if (it != cheat_list.end()) {
+            std::cout << cheat_list_name[it - cheat_list.begin()] << std::endl;
+        }
     }
     return EXIT_SUCCESS;
 }
@@ -263,3 +260,19 @@ template <class T> std::string findStringInv(T n)
     return ans;
 }
 */
+
+/*template <class T> void findString(T n, char *array)
+{
+    const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (n <= alphabetSize) {
+        array[0] = alpha[n - 1];
+        return;
+    }
+    std::size_t i = 0;
+    while (n > 0) {
+        array[i] = alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
+        ++i;
+    }
+    std::reverse(array, array + strlen(array));
+}*/
