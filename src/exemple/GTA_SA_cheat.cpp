@@ -151,8 +151,10 @@ struct Processor
 {
     size_t operator()(size_t x, size_t y)
     {
-        char tmp[29]; // Temp array
-        uint32_t crc; // CRC value
+        char tmp[29] = {0};
+        ; // Temp array
+        uint32_t crc = 0;
+        ; // CRC value
         for (size_t i = x; i < y + x; i++) {
             findStringInv<size_t>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
             crc = ~(GetCrc32(tmp));        // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
@@ -176,37 +178,67 @@ int main()
 
     std::vector<std::future<std::size_t>> results_pool {};
 
-    const size_t nbrcal = 308915776;                                    // Number of calculations to do
+    const size_t from_range = 1;       // Alphabetic sequence range min
+    const size_t to_range = 308915777; // Alphabetic sequence range max
+
+#ifdef DNDEBUG
+    assert(from_range < to_range);
+    assert(from_range > 0);
+#endif
+
+    const size_t nbrcal = to_range - from_range;                        // Number of calculations to do
     const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
-    const std::size_t threadmult = 12;                                  // Thread Multiplier (So that each pool has multiple operations available)
+    const std::size_t threadmult = 16;                                  // Thread Multiplier (So that each pool has multiple operations available)
 
     thread::Pool thread_pool(hardthread);
 
-    const size_t nbrthread = hardthread * threadmult; // Total number of tasks created on the threadpool
+    const size_t nbrtask = hardthread * threadmult; // Total number of tasks created on the threadpool
 
-    const size_t nbrcalperthread = nbrcal / nbrthread; // Number of calculations per task (1K mini to 1M max recommended)
+    const size_t nbrcalperthread = nbrcal / nbrtask; // Number of calculations per task (1K mini to 1M max recommended)
 
     std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
     std::cout << "Thread multiplier: x" << threadmult << " (Nbr tasks per thread)" << std::endl;
-    std::cout << "Threadpool with: " << nbrthread << " tasks" << std::endl;
+    std::cout << "Threadpool with: " << nbrtask << " tasks" << std::endl;
     std::cout << "Number of calculations: " << nbrcal << std::endl;
     std::cout << "Number of calculations per tasks: " << nbrcalperthread << std::endl;
     std::cout << "" << std::endl;
 
-    std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code"
-              << "CRC32/JAMCRC" << std::endl;
+    // Display Alphabetic sequence range
+    char tmp1[29] = {0};
+    char tmp2[29] = {0};
+    findStringInv<size_t>(from_range, tmp1);
+    findStringInv<size_t>(to_range, tmp2);
+    std::cout << "From: " << tmp1 << " to: " << tmp2 << " Alphabetic sequence" << std::endl;
+    std::cout << "" << std::endl;
 
-    results_pool.reserve(nbrthread); // Vectors reservation
+    results_pool.reserve(nbrtask); // Vectors reservation
 
-    for (std::size_t i = 1; i < nbrthread; i++) {
+    for (std::size_t i = from_range; i < nbrtask; i++) {
         results_pool.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
     }
 
-    size_t t __attribute__((unused));
+    std::size_t count = 0;
+    std::size_t t __attribute__((unused));
+
     for (auto &&result_pool : results_pool) {
         t = result_pool.get(); // Get result from threadpool
-        // if(results.length() >= 10000){}
+
+        // Calculate work %
+        count++;
+        if (count % (std::size_t)(nbrtask / 33) == 0) {
+            std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl;
+        }
+
+        // Free results if is "full"
+        /*
+        if(results.length() >= 10000){
+            mutex.lock();
+            mutex.unlock();
+        }*/
     }
+
+    std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code"
+              << "CRC32/JAMCRC" << std::endl;
 
     for (auto &&result : results) {
         std::cout << std::left << std::setw(13) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
