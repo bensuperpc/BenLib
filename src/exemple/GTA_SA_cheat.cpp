@@ -102,15 +102,15 @@ template <class T> void findStringInv(T n, char *array)
 
 struct Processor
 {
-    size_t operator()(size_t x, size_t y)
+    template <class T = std::size_t> T operator()(T x, T y)
     {
         char tmp[29] = {0};
         ; // Temp array
         uint32_t crc = 0;
         ; // CRC value
-        for (size_t i = x; i < y + x; i++) {
-            findStringInv<size_t>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
-            crc = ~(GetCrc32(tmp));        // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
+        for (T i = x; i < y + x; i++) {
+            findStringInv<T>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
+            crc = ~(GetCrc32(tmp));   // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
             if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
                 std::reverse(tmp, tmp + strlen(tmp));                                                   // Invert char array
                 mutex.lock();
