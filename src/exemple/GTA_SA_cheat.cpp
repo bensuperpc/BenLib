@@ -231,7 +231,7 @@ int main()
 
     std::cout << "" << std::endl;
     std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code"
-              << "CRC32/JAMCRC" << std::endl;
+              << std::left << std::setw(16) << "CRC32/JAMCRC" << "Cheat code name" << std::endl;
 
     for (auto &&result : results) {
         std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
