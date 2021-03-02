@@ -28,4 +28,5 @@
 int main()
 {
     std::cout << "There is " << my::filesystem::count_files(".") << " Files" << std::endl;
+    return EXIT_SUCCESS;
 }

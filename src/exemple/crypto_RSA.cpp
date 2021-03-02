@@ -105,5 +105,5 @@ int main()
     BN_free(bne);
     LOG("OpenSSL_RSA has been finished.");
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -4,10 +4,12 @@ project(string_lib)
 
 set(SRCS
 	parsing.cpp
+	string_lib.cpp
 	)
 	
 set(HEADERS
-parsing.hpp
+	parsing.hpp
+	string_lib.hpp
 	)
 	
 

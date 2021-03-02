@@ -90,4 +90,5 @@ int main()
             std::cout << x.first << " : " << y.first << " : " << y.second << std::endl;
         }
     }
+    return EXIT_SUCCESS;
 }

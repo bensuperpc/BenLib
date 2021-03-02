@@ -36,5 +36,5 @@ int main(int argc, char *argv[], char *envp[])
     } else {
         std::cout << "You must provide 1 or more arguments" << std::endl;
     }
-    return 0;
+    return EXIT_SUCCESS;
 }

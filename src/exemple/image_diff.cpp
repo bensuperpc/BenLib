@@ -34,5 +34,5 @@ int main(int argc, char *argv[], char *envp[])
     opencv_utils::imgdiff_prev(img1, img2, imgdiff, th);
 
     cv::imwrite("diff.png", imgdiff);
-    return 0;
+    return EXIT_SUCCESS;
 }

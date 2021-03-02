@@ -34,4 +34,5 @@ int main()
         std::cout << elem << std::endl;
     }
     std::cout << "There is " << list_files.size() << " Files" << std::endl;
+    return EXIT_SUCCESS;
 }

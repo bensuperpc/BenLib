@@ -119,5 +119,5 @@ int main()
     my_test<float>("      float");
     my_test<double>("     double");
     my_test<long double>("long double");
-    return 0;
+    return EXIT_SUCCESS;
 }

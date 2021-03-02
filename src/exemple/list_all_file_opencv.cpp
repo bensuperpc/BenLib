@@ -39,4 +39,5 @@ int main()
         if ((image.cols == 1280 && image.rows == 768) || (image.cols == 1280 && image.rows == 1024)) {
         }
     }
+    return EXIT_SUCCESS;
 }

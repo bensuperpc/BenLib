@@ -133,4 +133,5 @@ int main()
 
     std::cin.rdbuf(cinbuf);
     std::cout.rdbuf(coutbuf);
+    return EXIT_SUCCESS;
 }

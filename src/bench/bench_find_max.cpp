@@ -179,4 +179,5 @@ int main()
         delete nx[i];
     }
     delete nx;
+    return EXIT_SUCCESS;
 }

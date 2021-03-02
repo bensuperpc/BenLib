@@ -20,8 +20,10 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #include <string>
 
 // For MD5 and SHA
+#include <boost/crc.hpp> //CRC32
 #include <openssl/md5.h>
 #include <openssl/sha.h>
+#include <string_view>
 
 //#include "openssl_rsa.h"
 
@@ -60,6 +62,8 @@ std::string get_sha384hash_from_string(const std::string &str);
 std::string get_sha512hash(const std::string &);
 // void get_sha512hash_from_string(const unsigned char *, size_t &);
 std::string get_sha512hash_from_string(const std::string &str);
+
+unsigned int GetCrc32(std::string_view my_string);
 
 } // namespace crypto
 } // namespace my

@@ -78,45 +78,6 @@ unsigned int GetCrc32(const std::string_view my_string)
     return result.checksum();
 }
 
-std::vector<std::string> generateSequenceBySize(const std::size_t N);
-
-std::vector<std::string> generateSequenceBySize(const std::size_t N)
-{
-    if (N == 1)
-        return std::vector<std::string>();
-
-    constexpr std::size_t base = alphabetSize;
-    std::vector<std::string> seqs;
-    //    seqs.reserve(pow(base, N)); // Ne jamais utiliser pow pour une puissance entière : ça utilise une décomposition numérique de e^ln(). C'est ultra lourd
-    for (std::size_t i = 0; i < pow(base, N); i++) {
-        std::size_t value = i;
-        std::string tmp(N, 'A');
-        for (std::size_t j = 0; j < N; j++) {
-            tmp[N - 1 - j] = 'A' + value % base;
-            value = value / base;
-        }
-        seqs.emplace_back(tmp);
-    }
-    return seqs;
-}
-
-template <class T> std::string findString(T n)
-{
-    const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    std::string ans;
-
-    if (n <= alphabetSize) {
-        ans = alpha[n - 1];
-        return ans;
-    }
-    while (n > 0) {
-        ans += alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-    }
-    std::reverse(ans.begin(), ans.end());
-    return ans;
-}
-
 /**
  * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
  * \tparam T
@@ -230,8 +191,8 @@ int main()
     }
 
     std::cout << "" << std::endl;
-    std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code"
-              << std::left << std::setw(16) << "CRC32/JAMCRC" << "Cheat code name" << std::endl;
+    std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code" << std::left << std::setw(16) << "CRC32/JAMCRC"
+              << "Cheat code name" << std::endl;
 
     for (auto &&result : results) {
         std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
@@ -243,36 +204,3 @@ int main()
     }
     return EXIT_SUCCESS;
 }
-
-/*
-template <class T> std::string findStringInv(T n)
-{
-    const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    std::string ans;
-    if (n <= alphabetSize) {
-        ans = alpha[n - 1];
-        return ans;
-    }
-    while (n > 0) {
-        ans += alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-    }
-    return ans;
-}
-*/
-
-/*template <class T> void findString(T n, char *array)
-{
-    const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if (n <= alphabetSize) {
-        array[0] = alpha[n - 1];
-        return;
-    }
-    std::size_t i = 0;
-    while (n > 0) {
-        array[i] = alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-        ++i;
-    }
-    std::reverse(array, array + strlen(array));
-}*/
