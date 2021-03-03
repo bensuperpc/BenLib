@@ -49,10 +49,11 @@ struct Processor
 int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::pair<std::string, std::vector<std::future<long double>>>> results2 {};
+
 #if __cplusplus >= 201703L
-    thread::Pool thread_pool2(1);
+    thread::Pool thread_pool2(1); // Use 1 thread to improve results stability (avoid some spikes on graph)
 #else
-    ThreadPool thread_pool2(1);
+    ThreadPool thread_pool2(1); // Use 1 thread to improve results stability (avoid some spikes on graph)
 #endif
 
     std::vector<uint64_t> nbrs_nbrs(6000);

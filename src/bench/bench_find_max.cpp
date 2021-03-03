@@ -64,9 +64,9 @@ int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::pair<std::string, std::vector<std::future<long double>>>> results2 {};
 #if __cplusplus >= 201703L
-    thread::Pool thread_pool(1);
+    thread::Pool thread_pool(1); // Use 1 thread to improve results stability (avoid some spikes on graph)
 #else
-    ThreadPool thread_pool(1);
+    ThreadPool thread_pool(1); // Use 1 thread to improve results stability (avoid some spikes on graph)
 #endif
     const size_t N = 20;
     const size_t S = 0;

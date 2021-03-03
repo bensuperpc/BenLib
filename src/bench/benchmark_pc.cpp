@@ -33,6 +33,7 @@
 #include "time/chrono/chrono.hpp"
 #include "vector/vector.hpp"
 
+// Define nbr calculations
 #define NBRS 33554432 // 16777216
 
 // Optimize devide for interger
@@ -72,8 +73,11 @@ template <typename Type> void /*__attribute__((optimize("O3")))*/ my_test(const 
     // random place
     std::random_device rnd_device;
     std::mt19937 mersenne_engine {rnd_device()};
+
+    // Change values index in vector
     std::shuffle(begin(t), end(t), mersenne_engine);
     std::shuffle(begin(v), end(v), mersenne_engine);
+
     auto &&t1 = my::chrono::now();
     add<std::vector<Type>>(v, t);
     auto &&t2 = my::chrono::now();
@@ -113,10 +117,13 @@ template <typename Type> void /*__attribute__((optimize("O3")))*/ my_test(const 
 
 int main(int argc, char *argv[], char *envp[])
 {
+    // Integer variables
     my_test<int8_t>("     int8_t");
     my_test<int16_t>("    int16_t");
     my_test<int32_t>("    int32_t");
     my_test<int64_t>("    int64_t");
+    // my_test<__int128>("    int128_t"); // Test with 128 value OK on GCC
+    // Floats variables
     my_test<float>("      float");
     my_test<double>("     double");
     my_test<long double>("long double");
