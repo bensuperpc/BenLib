@@ -26,7 +26,9 @@ int main(int argc, char *argv[], char *envp[])
 {
     if (argc >= 2) {
         std::vector<std::vector<std::string>> file;
+        // Open CSV file and parse it
         my::string::csv_parse(file, std::string(argv[1]), ',');
+
         for (const auto &line : file) {
             for (const auto &element : line) {
                 std::cout << element << ", ";
@@ -35,6 +37,7 @@ int main(int argc, char *argv[], char *envp[])
         }
     } else {
         std::cout << "You must provide 1 or more arguments" << std::endl;
+        return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
 }

@@ -46,7 +46,7 @@ struct Processor
 // https://bigprimes.org/
 // https://stackoverflow.com/questions/41749792/can-i-have-a-stdvector-of-template-function-pointers
 
-int main()
+int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::pair<std::string, std::vector<std::future<long double>>>> results2 {};
 #if __cplusplus >= 201703L

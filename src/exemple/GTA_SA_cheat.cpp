@@ -46,8 +46,10 @@
 // If you display less informations, comment it
 #define MORE_INFO
 
+// Size of alphabet
 constexpr std::uint32_t alphabetSize {26};
 
+// List of CRC32/JAMCRC hash of cheats codes
 const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345, 0xE1EF01EA, 0x771B83FC,
     0x5BF12848, 0x44453A17, 0xFCFF1D08, 0xB69E8532, 0x8B828076, 0xDD6ED9E9, 0xA290FD8C, 0x3484B5A7, 0x43DB914E, 0xDBC0DD65, 0xD08A30FE, 0x37BF1B4E, 0xB5D40866,
     0xE63B0D99, 0x675B8945, 0x4987D5EE, 0x2E8F84E8, 0x1A9AA3D6, 0xE842F3BC, 0x0D5C6A4E, 0x74D4FCB1, 0xB01D13B8, 0x66516EBC, 0x4B137E45, 0x78520E33, 0x3A577325,
@@ -57,6 +59,7 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
 #ifdef MORE_INFO
+// List of cheats codes names
 const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3", "Health, Armor, $250k, Repairs car",
     "Increase Wanted Level +2", "Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather",
     "Faster Clock", "N°12", "N°13", "People attack each other with golf clubs", "Have a bounty on your head", "Everyone is armed", "Spawn Rhino",
@@ -69,12 +72,16 @@ const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon
     "L3 Bunny Hop", "N°82", "N°83", "N°84", "Spawn Quad", "Spawn Tanker Truck", "Spawn Dozer", "pawn Stunt Plane", "Spawn Monster"};
 #endif
 
-std::mutex mutex;
+std::mutex mutex; // To avoid data race on results
 
-std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {};
+std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {}; // Stock results after calculations
 
+/**
+ * \brief To get CRC32 with boost libs
+ * \tparam T
+ * \param my_string
+ */
 unsigned int GetCrc32(const std::string_view my_string);
-
 unsigned int GetCrc32(const std::string_view my_string)
 {
     boost::crc_32_type result;
@@ -86,9 +93,10 @@ unsigned int GetCrc32(const std::string_view my_string)
 /**
  * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
  * \tparam T
- * \param n
- * \param array
+ * \param n index in base 26
+ * \param array return array
  */
+template <class T> void findStringInv(T n, char *array);
 template <class T> void findStringInv(T n, char *array)
 {
     constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
@@ -105,12 +113,18 @@ template <class T> void findStringInv(T n, char *array)
     }
 }
 
-struct Processor
+/**
+ * \brief Task structure
+ * \tparam T
+ * \param x Range from
+ * \param y Range to
+ */
+struct Task
 {
     template <class T = std::size_t> T operator()(T x, T y)
     {
         char tmp[29] = {0}; // Temp array
-        uint32_t crc = 0; // CRC value
+        uint32_t crc = 0;   // CRC value
         for (T i = x; i < y + x; i++) {
             findStringInv<T>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
             crc = ~(GetCrc32(tmp));   // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
@@ -132,21 +146,21 @@ int main()
 {
     std::ios_base::sync_with_stdio(false); // Improve std::cout and std::cin speed
 
-    std::vector<std::future<std::size_t>> results_pool {};
+    std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
 
     const size_t from_range = 1;        // Alphabetic sequence range min
     const size_t to_range = 8031810176; // Alphabetic sequence range max
 
 #ifdef DNDEBUG
-    assert(from_range < to_range);
-    assert(from_range > 0);
+    assert(from_range < to_range); // Test
+    assert(from_range > 0);        // Test forbiden value
 #endif
 
     const size_t nbrcal = to_range - from_range + 1;                    // Number of calculations to do
     const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
     const std::size_t threadmult = 128;                                 // Thread Multiplier (So that each pool has multiple operations available)
 
-    thread::Pool thread_pool(hardthread);
+    thread::Pool thread_pool(hardthread); // Config threadpool with hardthread threads
 
     const size_t nbrtask = hardthread * threadmult; // Total number of tasks created on the threadpool
 
@@ -171,20 +185,20 @@ int main()
     results_pool.reserve(nbrtask); // Vectors reservation
 
     for (std::size_t i = from_range; i < nbrtask; i++) {
-        results_pool.emplace_back(thread_pool.enqueue(Processor(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
+        results_pool.emplace_back(thread_pool.enqueue(Task(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
     }
 
 #ifdef MORE_INFO
-    std::size_t count = 0;
+    std::size_t count = 0; // Count tasks done
 #endif
-    std::size_t t __attribute__((unused));
+    std::size_t t __attribute__((unused)); // Unused value
 
     for (auto &&result_pool : results_pool) {
         t = result_pool.get(); // Get result from threadpool
 #ifdef MORE_INFO
         // Calculate work %
         if (count % (std::size_t)(nbrtask / 50) == 0) {
-            std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl;
+            std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl; // Display % of work
         }
         count++;
 #endif

@@ -35,7 +35,7 @@ struct Processor
     }
 };
 
-int main()
+int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::string> list_files = {};
     list_files.reserve(1000);

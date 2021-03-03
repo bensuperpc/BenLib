@@ -60,7 +60,7 @@ struct Processor
     }
 };
 
-int main()
+int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::pair<std::string, std::vector<std::future<long double>>>> results2 {};
 #if __cplusplus >= 201703L

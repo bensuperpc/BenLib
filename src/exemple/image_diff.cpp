@@ -25,14 +25,21 @@
 
 int main(int argc, char *argv[], char *envp[])
 {
+    if (argc < 2) {
+        std::cout << "You need enter more arguments: './image_diff img3.png img2.png' for exemple" << std::endl;
+        return EXIT_FAILURE;
+    }
+    // Open image 1
     cv::Mat &&img1 = cv::imread(argv[1], 1);
+    // Open image 2
     cv::Mat &&img2 = cv::imread(argv[2], 1);
 
     // cv::Mat imgdiff(img1.rows, img1.cols, CV_8UC3, cv::Scalar(0, 0, 0));
     cv::Mat &&imgdiff = cv::Mat();
+    // If RGB values diff is > 10
     int th = 10;
     opencv_utils::imgdiff_prev(img1, img2, imgdiff, th);
-
+    // Write image
     cv::imwrite("diff.png", imgdiff);
     return EXIT_SUCCESS;
 }

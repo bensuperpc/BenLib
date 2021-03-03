@@ -110,7 +110,8 @@ template <typename Type> void /*__attribute__((optimize("O3")))*/ my_test(const 
         std::cout << name << " mod: " << ((double)NBRS / my::chrono::duration(t1, t2).count()) / 1000000000.0f << " GigaOps" << std::endl;
     }
 }
-int main()
+
+int main(int argc, char *argv[], char *envp[])
 {
     my_test<int8_t>("     int8_t");
     my_test<int16_t>("    int16_t");

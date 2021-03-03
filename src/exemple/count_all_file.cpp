@@ -25,8 +25,13 @@
 
 // https://bastian.rieck.me/blog/posts/2017/simple_unit_tests/
 
-int main()
+int main(int argc, char *argv[], char *envp[])
 {
-    std::cout << "There is " << my::filesystem::count_files(".") << " Files" << std::endl;
+    // Return files count
+    if (argc == 2) {
+        std::cout << "There is " << my::filesystem::count_files(".") << " Files" << std::endl;
+    } else {
+        std::cout << "There is " << my::filesystem::count_files(argv[1]) << " Files" << std::endl;
+    }
     return EXIT_SUCCESS;
 }

@@ -58,7 +58,7 @@ struct Processor
 // https://bigprimes.org/
 // https://stackoverflow.com/questions/41749792/can-i-have-a-stdvector-of-template-function-pointers
 
-int main()
+int main(int argc, char *argv[], char *envp[])
 {
     // std::vector<std::vector<std::future<std::pair<std::string, long double>>>> results {};
     std::vector<std::pair<std::string, std::vector<std::future<long double>>>> results {};
