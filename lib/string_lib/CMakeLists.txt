@@ -10,6 +10,7 @@ set(SRCS
 set(HEADERS
 	parsing.hpp
 	string_lib.hpp
+	string_lib_impl.hpp
 	)
 	
 

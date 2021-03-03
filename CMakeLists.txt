@@ -1,3 +1,23 @@
+##############################################################
+#   ____                                                     #
+#  | __ )  ___ _ __  ___ _   _ _ __   ___ _ __ _ __   ___    #
+#  |  _ \ / _ \ '_ \/ __| | | | '_ \ / _ \ '__| '_ \ / __|   #
+#  | |_) |  __/ | | \__ \ |_| | |_) |  __/ |  | |_) | (__    #
+#  |____/ \___|_| |_|___/\__,_| .__/ \___|_|  | .__/ \___|   #
+#                             |_|             |_|            #
+##############################################################
+#                                                            #
+#  BenLib, 2020                                              #
+#  Created: 19, March, 2020                                  #
+#  Modified: 03, March, 2021                                 #
+#  file: crypto.cpp                                          #
+#  Crypto                                                    #
+#  Source:                                                   #
+#  OS: ALL                                                   #
+#  CPU: ALL                                                  #
+#                                                            #
+##############################################################
+
 cmake_minimum_required (VERSION 3.13)
 project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 
@@ -216,7 +236,7 @@ include(ExternalProject)
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
 #ExternalProject_Add(opencv_lib
-#    GIT_REPOSITORY https://github.com/boostorg/boost
+#    GIT_REPOSITORY https:#github.com/boostorg/boost
 #    GIT_TAG 4.4.0
 #    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
     #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -241,7 +261,7 @@ else()
     endif()
     string(APPEND EXTERNAL_LIB "sfml_lib")
     ExternalProject_Add(sfml_lib
-        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_REPOSITORY https:#github.com/SFML/SFML.git
         GIT_TAG 2.5.1
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
         #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -284,7 +304,7 @@ else()
     endif()
     string(APPEND EXTERNAL_LIB "opencv_lib")
     ExternalProject_Add(opencv_lib
-        GIT_REPOSITORY https://github.com/opencv/opencv.git
+        GIT_REPOSITORY https:#github.com/opencv/opencv.git
         GIT_TAG 4.4.0
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
         #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -567,12 +587,12 @@ add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc ${CUSTOM_LIBS})
 
-add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
-target_link_libraries(gta_sa_cheat PRIVATE thread thread)
-add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
-
 
 if(Boost_FOUND)
+    add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
+    target_link_libraries(gta_sa_cheat PRIVATE thread thread string_lib)
+    add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
+
     add_executable(list_all_file ${LIST_ALL_FILE})
     target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
     add_dependencies(list_all_file ${CUSTOM_LIBS})
@@ -670,6 +690,14 @@ if(Boost_FOUND)
     endif()
     target_link_libraries(${TEST_VECTOR_MAX_SIMD} ${Boost_LIBRARIES} vector)
     add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
+
+    set(TEST_STRING_SEQ test_string_seq)
+    add_executable(${TEST_STRING_SEQ} ${lib_path}src/test/string/test_string_seq.cpp)
+    if(EXTERNAL_LIB)
+        add_dependencies(${TEST_STRING_SEQ} ${EXTERNAL_LIB})
+    endif()
+    target_link_libraries(${TEST_STRING_SEQ} ${Boost_LIBRARIES} string_lib)
+    add_test(NAME ${TEST_STRING_SEQ} COMMAND ${TEST_STRING_SEQ})
 endif()
 
 if (OPENSSL_FOUND AND Boost_FOUND)
@@ -690,11 +718,19 @@ if (OPENSSL_FOUND AND Boost_FOUND)
     endif()
     target_link_libraries(${TEST_CRYPTO_AES} ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
     add_test(NAME ${TEST_CRYPTO_AES} COMMAND ${TEST_CRYPTO_AES})
+
+    set(TEST_CRYPTO_CRC test_crypto_CRC)
+    add_executable(${TEST_CRYPTO_CRC} ${lib_path}src/test/crypto/test_crypto_CRC.cpp)
+    if(EXTERNAL_LIB)
+        add_dependencies(${TEST_CRYPTO_CRC} ${EXTERNAL_LIB})
+    endif()
+    target_link_libraries(${TEST_CRYPTO_CRC} ${Boost_LIBRARIES} my_crypto)
+    add_test(NAME ${TEST_CRYPTO_CRC} COMMAND ${TEST_CRYPTO_CRC})
 endif()
 
-
+#Test C string
 if(Boost_FOUND)
-    #Test C string
+    
     set(TEST_REV_STR test_rev_str)
     add_executable(${TEST_REV_STR} ${lib_path}src/test/C/string_c/test_string.cpp)
     if(EXTERNAL_LIB)

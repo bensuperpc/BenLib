@@ -65,6 +65,8 @@ std::string get_sha512hash_from_string(const std::string &str);
 
 unsigned int GetCrc32(std::string_view my_string);
 
+unsigned int GetJAMCRC32(std::string_view my_string);
+
 } // namespace crypto
 } // namespace my
 // https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C

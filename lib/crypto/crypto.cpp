@@ -323,7 +323,15 @@ void my::crypto::get_sha512hash_from_string(const unsigned char *cstr, unsigned 
 }
 */
 
-unsigned int GetCrc32(std::string_view my_string)
+unsigned int my::crypto::GetJAMCRC32(std::string_view my_string)
+{
+    boost::crc_32_type result;
+    // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le nombre d'élément, donc si tu as plusieurs éléments qui sont à '\0' forcément…
+    result.process_bytes(my_string.data(), my_string.length());
+    return ~result.checksum();
+}
+
+unsigned int my::crypto::GetCrc32(std::string_view my_string)
 {
     boost::crc_32_type result;
     // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le nombre d'élément, donc si tu as plusieurs éléments qui sont à '\0' forcément…
