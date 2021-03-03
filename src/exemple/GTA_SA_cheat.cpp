@@ -44,8 +44,11 @@
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
 
-// If you display less informations, comment it
+// If you want display less informations, comment it
 #define MORE_INFO
+
+// Define alphabetic seq with upercase
+#define alphabetUp "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 // Size of alphabet
 constexpr std::uint32_t alphabetSize {26};
@@ -100,11 +103,14 @@ template <class T> void findStringInv(T n, char *array);
 template <class T> void findStringInv(T n, char *array)
 {
     constexpr std::uint32_t stringSizeAlphabet {alphabetSize + 1};
-    constexpr std::array<char, stringSizeAlphabet> alpha {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+    constexpr std::array<char, stringSizeAlphabet> alpha {alphabetUp};
+    // If n < 27
     if (n < stringSizeAlphabet) {
         array[0] = alpha[n - 1];
         return;
     }
+
+    // If n > 27
     std::size_t i = 0;
     while (n > 0) {
         array[i] = alpha[(--n) % alphabetSize];
@@ -114,7 +120,7 @@ template <class T> void findStringInv(T n, char *array)
 }
 
 /**
- * \brief Task structure
+ * \brief Task structure for threadpool
  * \tparam T
  * \param x Range from
  * \param y Range to
@@ -130,12 +136,12 @@ struct Task
             crc = ~(GetCrc32(tmp));   // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
             if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
                 std::reverse(tmp, tmp + strlen(tmp));                                                   // Invert char array
-                mutex.lock();
+                mutex.lock();                                                                           // Block threads
 #ifdef DNDEBUG
                 std::cout << std::dec << i << ":" << std::string(tmp) << ":0x" << std::hex << crc << std::endl;
 #endif
                 results.emplace_back(std::make_tuple(i, std::string(tmp), crc)); // Save result: calculation position, Alphabetic sequence, CRC
-                mutex.unlock();
+                mutex.unlock();                                                  // UnBlock threads
             }
         }
         return 0;
@@ -148,8 +154,13 @@ int main()
 
     std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
 
-    const size_t from_range = 1;        // Alphabetic sequence range min
-    const size_t to_range = 8031810176; // Alphabetic sequence range max
+    const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range
+
+    // 5429503678976 = ~14h on I7 9750H
+    // 208827064576 = ~28 min on I7 9750H
+    // 8031810176 = ~1 min on I7 9750H
+    // 308915776 = 2 sec on I7 9750H
+    const size_t to_range = 8031810176; // Alphabetic sequence range max, must be > from_range !
 
 #ifdef DNDEBUG
     assert(from_range < to_range); // Test
@@ -160,7 +171,7 @@ int main()
     const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
     const std::size_t threadmult = 128;                                 // Thread Multiplier (So that each pool has multiple operations available)
 
-    thread::Pool thread_pool(hardthread); // Config threadpool with hardthread threads
+    thread::Pool thread_pool(hardthread); // Config threadpool with nbr threads
 
     const size_t nbrtask = hardthread * threadmult; // Total number of tasks created on the threadpool
 
