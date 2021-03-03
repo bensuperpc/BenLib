@@ -163,13 +163,13 @@ int main()
     const size_t to_range = 8031810176; // Alphabetic sequence range max, must be > from_range !
 
 #ifdef DNDEBUG
-    assert(from_range < to_range); // Test
+    assert(from_range < to_range); // Test if begining value is highter than end value
     assert(from_range > 0);        // Test forbiden value
 #endif
 
     const size_t nbrcal = to_range - from_range + 1;                    // Number of calculations to do
     const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
-    const std::size_t threadmult = 128;                                 // Thread Multiplier (So that each pool has multiple operations available)
+    const std::size_t threadmult = 16;                                  // Thread Multiplier (So that each pool has multiple operations available)
 
     thread::Pool thread_pool(hardthread); // Config threadpool with nbr threads
 
