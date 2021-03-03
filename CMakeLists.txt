@@ -626,6 +626,10 @@ if (OPENCV_FOUND)
     add_dependencies(image_diff ${CUSTOM_LIBS})
 endif()
 
+#   ================================================
+#   ================    TESTING     ================
+#   ================================================
+
 if(Boost_FOUND)
     enable_testing()
     #Test getSchwarzschild

@@ -13,6 +13,7 @@
 //  file: crypto.cpp                                        //
 //  Crypto                                                  //
 //  Source: http://stackoverflow.com/questions/8710719/generating-an-alphabetic-sequence-in-java                                                //
+//          https://github.com/theo546/stuff                                                //
 //          https://stackoverflow.com/a/19299611/10152334                                                //
 //          https://gms.tf/stdfind-and-memchr-optimizations.html                                                //
 //          https://medium.com/applied/applied-c-align-array-elements-32af40a768ee                                                //
