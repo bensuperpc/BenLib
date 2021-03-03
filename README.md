@@ -9,7 +9,7 @@
   - AES and RSA encryption functions
   - New linker (Gold linker Instead default linker)
   - GTA SA alternate cheats codes finder, via Brute 
-  force: JAMCRC collision generator (WIP)
+    force: JAMCRC collisions generator (WIP)
   - New Readme
 
 ### Tech
