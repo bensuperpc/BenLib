@@ -25,6 +25,7 @@
 //          https://www.careercup.com/question?id=14276663                                                //
 //          https://stackoverflow.com/a/55074804/10152334                                                //
 //          https://web.archive.org/web/20090204140550/http://www.maxbot.com/gta/3wordcheatsdumpsorted.txt                                                //
+//          https://stackoverflow.com/questions/26429360/crc32-vs-crc32c                                                //
 //  OS: ALL                                                 //
 //  CPU: ALL                                                //
 //                                                          //
@@ -150,12 +151,11 @@ struct Task
 
 int main()
 {
-    std::ios_base::sync_with_stdio(false); // Improve std::cout and std::cin speed
-
+    std::ios_base::sync_with_stdio(false);                 // Improve std::cout and std::cin speed
     std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
 
     const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range
-
+    // 141167095653376 = ~17 days on I7 9750H
     // 5429503678976 = ~14h on I7 9750H
     // 208827064576 = ~28 min on I7 9750H
     // 8031810176 = ~1 min on I7 9750H

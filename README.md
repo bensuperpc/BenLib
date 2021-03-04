@@ -8,6 +8,7 @@
 
   - AES and RSA encryption functions
   - New linker (Gold linker Instead default linker)
+  - New CRC32 and JAMCRC algo
   - GTA SA alternate cheats codes finder, via Brute 
     force: JAMCRC collisions generator (WIP)
   - New Readme

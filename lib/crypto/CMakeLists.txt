@@ -17,12 +17,14 @@ set(SRCS
     crypto.cpp
     crypto_AES.cpp
     crypto_RSA.cpp
+    crypto_CRC32.cpp
 	)
 	
 set(HEADERS
     crypto.hpp
     crypto_AES.hpp
     crypto_RSA.hpp
+    crypto_CRC32.hpp
     )
 
 #add_library(my_crypto_static STATIC ${SRCS} ${HEADERS})
