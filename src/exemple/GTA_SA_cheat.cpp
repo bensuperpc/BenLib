@@ -48,6 +48,9 @@
 // If you want display less informations, comment it
 #define MORE_INFO
 
+// For debug mode
+//#define DNDEBUG
+
 // Define alphabetic seq with upercase
 #define alphabetUp "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -154,7 +157,7 @@ int main()
     std::ios_base::sync_with_stdio(false);                 // Improve std::cout and std::cin speed
     std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
 
-    const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range
+    const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range, 1 = A
     // 141167095653376 = ~17 days on I7 9750H
     // 5429503678976 = ~14h on I7 9750H
     // 208827064576 = ~28 min on I7 9750H
@@ -195,8 +198,11 @@ int main()
 
     results_pool.reserve(nbrtask); // Vectors reservation
 
-    for (std::size_t i = from_range; i < nbrtask; i++) {
+    for (std::size_t i = from_range - 1; i < nbrtask; i++) {
         results_pool.emplace_back(thread_pool.enqueue(Task(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
+#ifdef DNDEBUG
+        std::cout << "From: " << i * nbrcalperthread << " To: " << i * nbrcalperthread + nbrcalperthread << std::endl;
+#endif
     }
 
 #ifdef MORE_INFO
@@ -220,6 +226,7 @@ int main()
             mutex.unlock();
         }*/
     }
+    sort(results.begin(), results.end());
 #ifdef MORE_INFO
     std::cout << "" << std::endl;
     std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code" << std::left << std::setw(16) << "CRC32/JAMCRC"
