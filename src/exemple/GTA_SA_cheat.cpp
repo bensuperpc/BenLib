@@ -226,7 +226,10 @@ int main()
             mutex.unlock();
         }*/
     }
+
+    // Sort result, due multi-threading, sometimes results can be differents every exec.
     sort(results.begin(), results.end());
+
 #ifdef MORE_INFO
     std::cout << "" << std::endl;
     std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code" << std::left << std::setw(16) << "CRC32/JAMCRC"
