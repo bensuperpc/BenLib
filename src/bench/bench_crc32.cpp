@@ -12,7 +12,8 @@
 //  Modified: 4, March, 2021                                //
 //  file: bench_isprime.cpp                                 //
 //  Benchmark CPU with Optimization                         //
-//  Source: -                                               //
+//  Source: https://create.stephan-brumme.com/crc32/                                               //
+//          https://stackoverflow.com/a/27950866/10152334                                               //
 //  OS: ALL                                                 //
 //  CPU: ALL                                                //
 //                                                          //
