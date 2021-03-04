@@ -48,11 +48,14 @@ namespace my
 namespace crypto
 {
 
-unsigned int CRC32_Boost(std::string_view my_string);
-unsigned int JAMCRC_Boost(std::string_view my_string);
+uint32_t CRC32_Boost(std::string_view my_string);
+uint32_t JAMCRC_Boost(std::string_view my_string);
 
-uint32_t CRC32_StackOverflow(const unsigned char *buf, size_t len, uint32_t crc);
-uint32_t JAMCRC_StackOverflow(const unsigned char *buf, size_t len, uint32_t crc);
+uint32_t CRC32_Boost(const void *buf, size_t len, uint32_t crc);
+uint32_t JAMCRC_Boost(const void *buf, size_t len, uint32_t crc);
+
+uint32_t CRC32_StackOverflow(const void *buf, size_t len, uint32_t crc);
+uint32_t JAMCRC_StackOverflow(const void *buf, size_t len, uint32_t crc);
 
 uint32_t CRC32_1byte_tableless(const void *data, size_t length, uint32_t previousCrc32);
 uint32_t JAMCRC_1byte_tableless(const void *data, size_t length, uint32_t previousCrc32);

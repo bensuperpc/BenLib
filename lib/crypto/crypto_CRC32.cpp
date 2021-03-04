@@ -105,7 +105,7 @@ const size_t MaxSlice = 1;
 extern const uint32_t Crc32Lookup[MaxSlice][256]; // extern is needed to keep compiler happy
 #endif
 
-unsigned int my::crypto::JAMCRC_Boost(std::string_view my_string)
+uint32_t my::crypto::JAMCRC_Boost(std::string_view my_string)
 {
     boost::crc_32_type result;
     // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le nombre d'élément, donc si tu as plusieurs éléments qui sont à '\0' forcément…
@@ -113,7 +113,7 @@ unsigned int my::crypto::JAMCRC_Boost(std::string_view my_string)
     return ~result.checksum();
 }
 
-unsigned int my::crypto::CRC32_Boost(std::string_view my_string)
+uint32_t my::crypto::CRC32_Boost(std::string_view my_string)
 {
     boost::crc_32_type result;
     // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le nombre d'élément, donc si tu as plusieurs éléments qui sont à '\0' forcément…
@@ -121,13 +121,21 @@ unsigned int my::crypto::CRC32_Boost(std::string_view my_string)
     return result.checksum();
 }
 
-uint32_t my::crypto::CRC32_StackOverflow(const unsigned char *buf, size_t len, uint32_t crc)
+uint32_t my::crypto::CRC32_Boost(const void *buf, size_t len, uint32_t crc)
+{
+    boost::crc_32_type result;
+    // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le nombre d'élément, donc si tu as plusieurs éléments qui sont à '\0' forcément…
+    result.process_bytes((unsigned char *)buf, len);
+    return result.checksum();
+}
+
+uint32_t my::crypto::CRC32_StackOverflow(const void *buf, size_t len, uint32_t crc)
 {
     short k; // change int to short
-
+    const uint8_t *data = (const uint8_t *)buf;
     crc = ~crc;
     while (len--) {
-        crc ^= *buf++;
+        crc ^= *data++;
         for (k = 0; k < 8; k++)
             crc = crc & 1 ? (crc >> 1) ^ POLY : crc >> 1;
         // crc = (crc >> 1) ^ (POLY & (0 - (crc & 1))); // Slower
@@ -135,13 +143,13 @@ uint32_t my::crypto::CRC32_StackOverflow(const unsigned char *buf, size_t len, u
     return ~crc;
 }
 
-uint32_t my::crypto::JAMCRC_StackOverflow(const unsigned char *buf, size_t len, uint32_t crc)
+uint32_t my::crypto::JAMCRC_StackOverflow(const void *buf, size_t len, uint32_t crc)
 {
     short k; // change int to short
-
+    const uint8_t *data = (const uint8_t *)buf;
     crc = ~crc;
     while (len--) {
-        crc ^= *buf++;
+        crc ^= *data++;
         for (k = 0; k < 8; k++)
             crc = crc & 1 ? (crc >> 1) ^ POLY : crc >> 1;
         // crc = (crc >> 1) ^ (POLY & (0 - (crc & 1))); // Slower
