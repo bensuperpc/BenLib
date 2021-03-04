@@ -164,7 +164,7 @@ set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-
 set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe -fuse-ld=gold")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v -march=native")
+set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v ${OPTI_COMPILER_REL}")
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
 #-Wold-style-cast -Wdouble-promotion -fstack-usage
@@ -181,7 +181,7 @@ set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wdupl
 set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=gold -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v -march=native")
+set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v ${OPTI_COMPILER_REL}")
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
 set(CMAKE_SHARED_LINKER_FLAGS "-fuse-ld=gold")
@@ -242,6 +242,23 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
     #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
 #)
+
+#   ================    OpenMP    ================
+# https://stackoverflow.com/a/12404666/10152334
+
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    message(STATUS "OPENMP: FOUND")
+    #set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    #set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+else()
+    message(STATUS "OPENMP: NOT FOUND")
+endif()
+
+#if(OpenMP_CXX_FOUND)
+#    target_link_libraries(openmp_para_test PUBLIC OpenMP::OpenMP_CXX)
+#endif()
 
 #   ================    SFML    ================
 #set(SFML_USE_STATIC_STD_LIBS 0)
@@ -490,6 +507,8 @@ set(BENCH_FIND_MAX ${lib_path}src/bench/bench_find_max.cpp)
 
 set(BENCH_PC ${lib_path}src/bench/benchmark_pc.cpp)
 
+set(BENCH_CRC32 ${lib_path}src/bench/bench_crc32.cpp)
+
 set(LIST_ALL_FILE ${lib_path}src/exemple/list_all_file.cpp)
 
 set(PARSE_CSV ${lib_path}src/exemple/parse_csv.cpp)
@@ -586,6 +605,14 @@ add_dependencies(bench_find_max ${CUSTOM_LIBS})
 add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc ${CUSTOM_LIBS})
+
+add_executable(bench_crc32 ${BENCH_CRC32})
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(bench_crc32 PRIVATE thread vector my_crypto math time stdc++fs OpenMP::OpenMP_CXX)
+else()
+    target_link_libraries(bench_crc32 PRIVATE thread vector my_crypto math time stdc++fs)
+endif()
+add_dependencies(bench_crc32 ${CUSTOM_LIBS})
 
 
 if(Boost_FOUND)
