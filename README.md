@@ -23,7 +23,8 @@ BenLib uses a number of open source projects to work properly:
 * [OpenGL] - OpenGL lib.
 * [Qt] - Qt lib.
 * [CMake] - Build system.
-* [Docker] - Container system.
+* [OpenMP] - Multi-threading lib. (Not mandatory but really recommended !)
+* [Docker] - Container system (if you use it).
 
 You can see my [public repository][ben_github] on GitHub, and can see my [public repository][ben_gitlab] on GitLab.
 
@@ -95,6 +96,7 @@ License
    [Boost]: <https://www.boost.org>
    [OpenGL]: <https://www.opengl.org>
    [Qt]: <https://www.qt.io/>
+   [OpenMP]: <https://www.openmp.org/>
    [CMake]: <https://cmake.org/>
    [Docker]: <https://www.docker.com/>
    
