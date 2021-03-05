@@ -24,6 +24,7 @@ BenLib uses a number of open source projects to work properly:
 * [Qt] - Qt lib.
 * [CMake] - Build system.
 * [OpenMP] - Multi-threading lib. (Not mandatory but really recommended !)
+* [OpenCL] - 
 * [Docker] - Container system (if you use it).
 
 You can see my [public repository][ben_github] on GitHub, and can see my [public repository][ben_gitlab] on GitLab.
@@ -98,8 +99,8 @@ License
    [Qt]: <https://www.qt.io/>
    [OpenMP]: <https://www.openmp.org/>
    [CMake]: <https://cmake.org/>
+   [OpenCL]: <https://www.khronos.org/opencl/>
    [Docker]: <https://www.docker.com/>
-   
    [ben_github]: <https://github.com/Bensuperpc>
    [ben_gitlab]: <https://gitlab.com/Bensuperpc>
    [MIT]: LICENSE

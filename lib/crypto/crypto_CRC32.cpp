@@ -124,7 +124,13 @@ uint32_t my::crypto::CRC32_Boost(std::string_view my_string)
 uint32_t my::crypto::CRC32_Boost(const void *buf, size_t len, uint32_t crc)
 {
     boost::crc_32_type result;
-    // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le nombre d'élément, donc si tu as plusieurs éléments qui sont à '\0' forcément…
+    result.process_bytes((unsigned char *)buf, len);
+    return ~result.checksum();
+}
+
+uint32_t my::crypto::JAMCRC_Boost(const void *buf, size_t len, uint32_t crc)
+{
+    boost::crc_32_type result;
     result.process_bytes((unsigned char *)buf, len);
     return result.checksum();
 }

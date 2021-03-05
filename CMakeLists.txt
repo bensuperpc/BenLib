@@ -335,12 +335,43 @@ find_package(OpenGL REQUIRED QUIET)
 find_package(GLUT REQUIRED QUIET)
 
 if (OPENGL_FOUND)
-    include_directories( ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} )
+    include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+    #link_directories(/opt/cuda/targets/x86_64-linux/lib/)
+
     link_directories(${OPENGL_LIBRARIES})
+    message(STATUS "OPENGL: FOUND")
+else()
+    message(STATUS "OPENGL: NOT FOUND")
+endif()
+
+#   ================    OPENCL    ================
+
+find_package(OpenCL REQUIRED QUIET)
+
+if (OpenCL_FOUND)
+    include_directories(${OpenCL_INCLUDE_DIRS})
+    include_directories(/opt/cuda/targets/x86_64-linux/include/)
+    #link_directories(/opt/cuda/targets/x86_64-linux/lib/)
+    link_directories(${OpenCL_LIBRARIES})
     message(STATUS "OPENCL: FOUND")
+    message(STATUS ${OpenCL_INCLUDE_DIRS})
+    
 else()
     message(STATUS "OPENCL: NOT FOUND")
 endif()
+
+#   ================    CUDA    ================
+#find_package(CUDA QUIET)
+#set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
+#if (CUDA_FOUND)
+#    include_directories(${CUDA_INCLUDE_DIRS})
+#    link_directories(${CUDA_LIBRARIES})
+#    set(CMAKE_CUDA_STANDARD 14)
+#    message(STATUS "CUDA: FOUND")
+#else()
+#    message(STATUS "CUDA: NOT FOUND")
+#endif()
+
 
 #   ================    VULKAN    ================
 find_package(Vulkan QUIET)
@@ -515,6 +546,7 @@ set(PARSE_CSV ${lib_path}src/exemple/parse_csv.cpp)
 
 set(GTA_SA_CHEAT ${lib_path}src/exemple/GTA_SA_cheat.cpp)
 
+set(OPENCL_TEST ${lib_path}src/exemple/OpenCL_test.cpp)
 
 if (OPENSSL_FOUND)
     set(LIST_ALL_FILE_HASH ${lib_path}src/exemple/list_all_file_hash.cpp)
@@ -551,7 +583,7 @@ if (OPENCV_FOUND)
 endif()
 
 if (OPENGL_FOUND)
-    set(MAIN_LLIBS ${MAIN_LLIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+    set(MAIN_LLIBS ${MAIN_LLIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${CUDA_LIBRARY})
 endif()
 
 if (QT_FOUND)
@@ -617,12 +649,18 @@ add_dependencies(bench_crc32 ${CUSTOM_LIBS})
 
 if(Boost_FOUND)
     add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
-    target_link_libraries(gta_sa_cheat PRIVATE thread thread string_lib)
+    target_link_libraries(gta_sa_cheat PRIVATE thread string_lib)
     add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
 
     add_executable(list_all_file ${LIST_ALL_FILE})
     target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
     add_dependencies(list_all_file ${CUSTOM_LIBS})
+endif()
+
+if(OpenCL_FOUND)
+    add_executable(opencl_test ${OPENCL_TEST})
+    target_link_libraries(opencl_test PRIVATE ${OpenCL_LIBRARY})
+    add_dependencies(opencl_test ${CUSTOM_LIBS})
 endif()
 
 add_executable(parse_csv ${PARSE_CSV})

@@ -111,12 +111,12 @@ int main(int argc, char *argv[], char *envp[])
     //#pragma omp parallel for num_threads(12) schedule(dynamic, 100)
 
     // https://stackoverflow.com/a/10625090/10152334
-    unsigned seed;
+    unsigned int seed;
 #if defined(_OPENMP)
 #    pragma omp parallel private(seed)
     {
 
-        seed = 25234 + 17 * omp_get_thread_num();
+        seed = 25234U + 17U * (unsigned int)omp_get_thread_num();
         for (size_t x = 0; x < N; ++x) {
 #    pragma omp for
             for (size_t y = 0; y < (size_t)std::pow(P, x); ++y) {
