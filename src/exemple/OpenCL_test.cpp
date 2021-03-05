@@ -63,7 +63,7 @@ int main() {
     cl::Program::Sources sources;
 
     // calculates for each element; C = A + B
-    std::string kernel_code =
+    std::string kernel_code=
         "   void kernel simple_add(global const int* A, global const int* B, global int* C, "
         "                          global const int* N) {"
         "       int ID, Nthreads, n, ratio, start, stop;"
@@ -123,7 +123,7 @@ int main() {
     int C[n];
     // read result from GPU to here
     queue.enqueueReadBuffer(buffer_C, CL_TRUE, 0, sizeof(int)*n, C);
-    queue.finished();
+    queue.finish();
     std::cout << "result: {";
     for (int i=0; i<n; i++) {
         std::cout << C[i] << " ";
