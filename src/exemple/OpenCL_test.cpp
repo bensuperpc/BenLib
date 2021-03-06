@@ -31,6 +31,7 @@
 #include <CL/cl.hpp>
 #endif
 #include <stdio.h>
+#include <fstream>
 
 int main() {
 
@@ -70,6 +71,7 @@ int main() {
     // create the program that we want to execute on the device
     cl::Program::Sources sources;
 
+    /*
     // calculates for each element; C = A + B
     std::string kernel_code=
         "   void kernel simple_add(global const int* A, global const int* B, global int* C, "
@@ -87,9 +89,14 @@ int main() {
         "       for (int i=start; i<stop; i++)"
         "           C[i] = A[i] + B[i];"
         "   }";
-    sources.push_back({kernel_code.c_str(), kernel_code.length()});
+    sources.push_back({kernel_code.c_str(), kernel_code.length()});*/
 
-    cl::Program program(context, sources);
+        // Read the program source
+    std::ifstream sourceFile("../kernels/simple_add.cl");
+    std::string sourceCode( std::istreambuf_iterator<char>(sourceFile), (std::istreambuf_iterator<char>()));
+    cl::Program::Sources source(1, std::make_pair(sourceCode.c_str(), sourceCode.length()));
+
+    cl::Program program(context, source);
     if (program.build({default_device}) != CL_SUCCESS) {
         std::cout << "Error building: " << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(default_device) << std::endl;
         exit(1);
@@ -97,6 +104,7 @@ int main() {
     
     // apparently OpenCL only likes arrays ...
     // N holds the number of elements in the vectors we want to add
+    
     int N[1] = {100};
     int n = N[0];
 
@@ -126,8 +134,9 @@ int main() {
     simple_add.setArg(1, buffer_B);
     simple_add.setArg(2, buffer_C);
     simple_add.setArg(3, buffer_N);
-    queue.enqueueNDRangeKernel(simple_add, cl::NullRange, cl::NDRange(10), cl::NullRange);
-
+    //queue.enqueueNDRangeKernel(simple_add, cl::NullRange, cl::NDRange(10), cl::NullRange);
+    queue.enqueueNDRangeKernel(simple_add, cl::NullRange, cl::NDRange(100), cl::NullRange);
+    // N_ELEMENTS * sizeof(int)
     int C[n];
     // read result from GPU to here
     queue.enqueueReadBuffer(buffer_C, CL_TRUE, 0, sizeof(int)*n, C);

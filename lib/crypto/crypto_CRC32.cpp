@@ -29,8 +29,6 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-// Source https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C
-// https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #include "crypto_CRC32.hpp"
 
 #ifndef __LITTLE_ENDIAN
@@ -124,21 +122,21 @@ uint32_t my::crypto::CRC32_Boost(std::string_view my_string)
 uint32_t my::crypto::CRC32_Boost(const void *buf, size_t len, uint32_t crc)
 {
     boost::crc_32_type result;
-    result.process_bytes((unsigned char *)buf, len);
+    result.process_bytes(reinterpret_cast<unsigned char*>(const_cast<void*>(buf)), len);
     return ~result.checksum();
 }
 
 uint32_t my::crypto::JAMCRC_Boost(const void *buf, size_t len, uint32_t crc)
 {
     boost::crc_32_type result;
-    result.process_bytes((unsigned char *)buf, len);
+    result.process_bytes(reinterpret_cast<unsigned char*>(const_cast<void*>(buf)), len);
     return result.checksum();
 }
 
 uint32_t my::crypto::CRC32_StackOverflow(const void *buf, size_t len, uint32_t crc)
 {
     short k; // change int to short
-    const uint8_t *data = (const uint8_t *)buf;
+    const uint8_t *data = reinterpret_cast<uint8_t*>(const_cast<void*>(buf));
     crc = ~crc;
     while (len--) {
         crc ^= *data++;
@@ -152,7 +150,7 @@ uint32_t my::crypto::CRC32_StackOverflow(const void *buf, size_t len, uint32_t c
 uint32_t my::crypto::JAMCRC_StackOverflow(const void *buf, size_t len, uint32_t crc)
 {
     short k; // change int to short
-    const uint8_t *data = (const uint8_t *)buf;
+    const uint8_t *data = reinterpret_cast<uint8_t*>(const_cast<void*>(buf));
     crc = ~crc;
     while (len--) {
         crc ^= *data++;
@@ -237,44 +235,46 @@ uint32_t my::crypto::JAMCRC_1byte_tableless(const void *data, size_t length, uin
 
 uint32_t my::crypto::CRC32_1byte_tableless2(const void *data, size_t length, uint32_t previousCrc32)
 {
-    int32_t crc = ~previousCrc32; // note: signed integer, right shift distributes sign bit into lower bits
-    const uint8_t *current = (const uint8_t *)data;
+    int32_t crc = static_cast<int32_t>(~previousCrc32); // note: signed integer, right shift distributes sign bit into lower bits
+    const uint8_t *current = reinterpret_cast<uint8_t*>(const_cast<void*>(data));
 
     while (length-- != 0) {
         crc = crc ^ *current++;
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
         uint32_t c = (((crc << 31) >> 31) & ((POLY >> 7) ^ (POLY >> 1))) ^ (((crc << 30) >> 31) & ((POLY >> 6) ^ POLY)) ^ (((crc << 29) >> 31) & (POLY >> 5))
                      ^ (((crc << 28) >> 31) & (POLY >> 4)) ^ (((crc << 27) >> 31) & (POLY >> 3)) ^ (((crc << 26) >> 31) & (POLY >> 2))
                      ^ (((crc << 25) >> 31) & (POLY >> 1)) ^ (((crc << 24) >> 31) & POLY);
-
-        crc = ((uint32_t)crc >> 8) ^ c; // convert to unsigned integer before right shift
+#pragma GCC diagnostic pop
+        crc = (crc >> 8) ^ static_cast<int32_t>(c); // convert to unsigned integer before right shift
     }
 
-    return ~crc; // same as crc ^ 0xFFFFFFFF
+    return static_cast<uint32_t>(~crc); // same as crc ^ 0xFFFFFFFF
 }
 
 uint32_t my::crypto::JAMCRC_1byte_tableless2(const void *data, size_t length, uint32_t previousCrc32)
 {
-    int32_t crc = ~previousCrc32; // note: signed integer, right shift distributes sign bit into lower bits
-    const uint8_t *current = (const uint8_t *)data;
+    int32_t crc = static_cast<int32_t>(~previousCrc32); // note: signed integer, right shift distributes sign bit into lower bits
+    const uint8_t *current = reinterpret_cast<uint8_t*>(const_cast<void*>(data));//(const uint8_t *)data;
 
     while (length-- != 0) {
         crc = crc ^ *current++;
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
         uint32_t c = (((crc << 31) >> 31) & ((POLY >> 7) ^ (POLY >> 1))) ^ (((crc << 30) >> 31) & ((POLY >> 6) ^ POLY)) ^ (((crc << 29) >> 31) & (POLY >> 5))
                      ^ (((crc << 28) >> 31) & (POLY >> 4)) ^ (((crc << 27) >> 31) & (POLY >> 3)) ^ (((crc << 26) >> 31) & (POLY >> 2))
                      ^ (((crc << 25) >> 31) & (POLY >> 1)) ^ (((crc << 24) >> 31) & POLY);
-
-        crc = ((uint32_t)crc >> 8) ^ c; // convert to unsigned integer before right shift
+#pragma GCC diagnostic pop
+        crc = ((uint32_t)crc >> 8) ^ static_cast<int32_t>(c); // convert to unsigned integer before right shift
     }
 
-    return crc;
+    return static_cast<uint32_t>(crc);
 }
 
 uint32_t my::crypto::CRC32_bitwise(const void *data, size_t length, uint32_t previousCrc32)
 {
     uint32_t crc = ~previousCrc32;
-    unsigned char *current = (unsigned char *)data;
+    unsigned char *current = reinterpret_cast<unsigned char*>(const_cast<void*>(data)); //reinterpret_cast<unsigned char *>(data);
     while (length--) {
         crc ^= *current++;
         for (unsigned int j = 0; j < 8; j++)
@@ -286,7 +286,7 @@ uint32_t my::crypto::CRC32_bitwise(const void *data, size_t length, uint32_t pre
 uint32_t my::crypto::JAMCRC_bitwise(const void *data, size_t length, uint32_t previousCrc32)
 {
     uint32_t crc = ~previousCrc32;
-    unsigned char *current = (unsigned char *)data;
+    unsigned char *current = reinterpret_cast<unsigned char*>(const_cast<void*>(data));
     while (length--) {
         crc ^= *current++;
         for (unsigned int j = 0; j < 8; j++)
