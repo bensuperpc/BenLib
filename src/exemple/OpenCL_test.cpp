@@ -33,9 +33,8 @@
 #include <fstream>
 #include <stdio.h>
 
-int main()
+int main(int argc, char **argv)
 {
-
     std::string platform_ver;
     // get all platforms (drivers), e.g. NVIDIA
     std::vector<cl::Platform> all_platforms;
@@ -115,11 +114,18 @@ int main()
     cl::Buffer buffer_N(context, CL_MEM_READ_ONLY, sizeof(int));
 
     // create things on here (CPU)
+    /*
     int A[n], B[n];
     for (int i = 0; i < n; i++) {
         A[i] = i;
         B[i] = n - i - 1;
+    }*/
+    int A[n], B[n];
+    for (int i = 0; i < n; i++) {
+        A[i] = 1;
+        B[i] = i - 1;
     }
+
     // create a queue (a queue of commands that the GPU will execute)
     cl::CommandQueue queue(context, default_device);
 
