@@ -44,11 +44,12 @@
 #    include <omp.h>
 #endif
 
-#define ToFile //Redirect cout/cin to file
+#define ToFile // Redirect cout/cin to file
 
 struct Task
 {
-    long double operator()(std::function<uint32_t(const void *data, size_t length, uint32_t previousCrc32)> elem_fn, const unsigned char * data, const size_t length)
+    long double operator()(
+        std::function<uint32_t(const void *data, size_t length, uint32_t previousCrc32)> elem_fn, const unsigned char *data, const size_t length)
     {
         auto &&t1 = my::chrono::now();
         auto &&a __attribute__((unused)) = (elem_fn)(data, length, 0);
@@ -68,8 +69,8 @@ int main(int argc, char *argv[], char *envp[])
     ThreadPool thread_pool(std::thread::hardware_concurrency() / 2);
 #endif
 
-    const size_t N = 30; // Nbrs tests
-    const size_t P = 2;  // Power
+    const size_t N = 30;           // Nbrs tests
+    const size_t P = 2;            // Power
     const unsigned char Min = 32;  // ACSII = Space
     const unsigned char Max = 126; // ACSII = ~
 
@@ -77,27 +78,27 @@ int main(int argc, char *argv[], char *envp[])
 #if defined(_OPENMP)
 #    pragma omp parallel for num_threads(12)
     for (size_t x = 0; x < N; ++x) {
-        nx[x] = new unsigned char[(std::size_t)std::pow(P, x )];
+        nx[x] = new unsigned char[(std::size_t)std::pow(P, x)];
 // printf("Element %ld traité par le thread %d \n",x,omp_get_thread_num());
-#ifdef DNDEBUG
-#    pragma omp critical
+#    ifdef DNDEBUG
+#        pragma omp critical
         std::cout << (size_t)std::pow(P, x) << " Elements" << std::endl;
-#    pragma omp critical
-        std::cout << ((std::pow(P, x ) * 8) / (8 * 1024)) << " Ko"
+#        pragma omp critical
+        std::cout << ((std::pow(P, x) * 8) / (8 * 1024)) << " Ko"
                   << "\n"
                   << std::endl;
-#endif
+#    endif
     }
 #else
     for (size_t x = 0; x < N; ++x) {
-        nx[x] = new unsigned char[(std::size_t)std::pow(P, x )];
+        nx[x] = new unsigned char[(std::size_t)std::pow(P, x)];
         // printf("Element %ld traité par le thread %d \n",x,omp_get_thread_num());
-#ifdef DNDEBUG
+#    ifdef DNDEBUG
         std::cout << (size_t)std::pow(P, x) << " Elements" << std::endl;
-        std::cout << ((std::pow(P, x ) * 8) / (8 * 1024)) << " Ko"
+        std::cout << ((std::pow(P, x) * 8) / (8 * 1024)) << " Ko"
                   << "\n"
                   << std::endl;
-#endif
+#    endif
     }
 #endif
     //#pragma omp parallel for collapse(2)
@@ -135,10 +136,12 @@ int main(int argc, char *argv[], char *envp[])
     }
 #endif
 
-    const std::vector<std::pair<const std::string, uint32_t (*)(const void *data, size_t length, uint32_t previousCrc32)>> pointer_map {{"CRC32_StackOverflow", &my::crypto::CRC32_StackOverflow},
-        {"CRC32_1byte_tableless", &my::crypto::CRC32_1byte_tableless}, {"CRC32_1byte_tableless2", &my::crypto::CRC32_1byte_tableless2}, {"CRC32_bitwise", &my::crypto::CRC32_bitwise},
-        {"CRC32_halfbyte", &my::crypto::CRC32_halfbyte}, {"CRC32_1byte", &my::crypto::CRC32_1byte}, {"CRC32_4bytes", &my::crypto::CRC32_4bytes}, {"CRC32_8bytes", &my::crypto::CRC32_8bytes},
-        {"CRC32_4x8bytes", &my::crypto::CRC32_4x8bytes}, {"CRC32_16bytes", &my::crypto::CRC32_16bytes}, {"CRC32_Boost", &my::crypto::CRC32_Boost}};   
+    const std::vector<std::pair<const std::string, uint32_t (*)(const void *data, size_t length, uint32_t previousCrc32)>> pointer_map {
+        {"CRC32_StackOverflow", &my::crypto::CRC32_StackOverflow}, {"CRC32_1byte_tableless", &my::crypto::CRC32_1byte_tableless},
+        {"CRC32_1byte_tableless2", &my::crypto::CRC32_1byte_tableless2}, {"CRC32_bitwise", &my::crypto::CRC32_bitwise},
+        {"CRC32_halfbyte", &my::crypto::CRC32_halfbyte}, {"CRC32_1byte", &my::crypto::CRC32_1byte}, {"CRC32_4bytes", &my::crypto::CRC32_4bytes},
+        {"CRC32_8bytes", &my::crypto::CRC32_8bytes}, {"CRC32_4x8bytes", &my::crypto::CRC32_4x8bytes}, {"CRC32_16bytes", &my::crypto::CRC32_16bytes},
+        {"CRC32_Boost", &my::crypto::CRC32_Boost}};
 
     // Generate poolthreading
     results.reserve(pointer_map.size());
@@ -162,7 +165,7 @@ int main(int argc, char *argv[], char *envp[])
             time.back().second.emplace_back(x.get());
         }
     }
-    
+
 #ifdef ToFile
     std::ifstream in("in.txt");
     std::cin.tie(0);
