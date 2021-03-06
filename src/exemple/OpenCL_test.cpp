@@ -30,9 +30,12 @@
 #else
 #include <CL/cl.hpp>
 #endif
-
+#include <stdio.h>
 
 int main() {
+
+
+     std::string platform_ver;
     // get all platforms (drivers), e.g. NVIDIA
     std::vector<cl::Platform> all_platforms;
     cl::Platform::get(&all_platforms);
@@ -42,7 +45,12 @@ int main() {
         exit(1);
     }
     cl::Platform default_platform=all_platforms[0];
+
+    // Get Platform version
+    all_platforms[0].getInfo(CL_PLATFORM_VERSION, &platform_ver);
+
     std::cout << "Using platform: "<<default_platform.getInfo<CL_PLATFORM_NAME>()<<"\n";
+    std::cout << "Platform version: "<<platform_ver<<"\n";
 
     // get default device (CPUs, GPUs) of the default platform
     std::vector<cl::Device> all_devices;
@@ -130,5 +138,5 @@ int main() {
     }
     std::cout << "}" << std::endl;
 
-    return 0;
+    return(EXIT_SUCCESS);
 }

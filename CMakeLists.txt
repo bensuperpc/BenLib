@@ -19,6 +19,7 @@
 ##############################################################
 
 cmake_minimum_required (VERSION 3.13)
+#project(BENLIB VERSION 0.0.5 LANGUAGES CXX C CUDA)
 project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 
 #   ==================================================
@@ -141,6 +142,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED 1)
 if(NOT CMAKE_CXX_EXTENSIONS)
     set(CMAKE_CXX_EXTENSIONS 1)
 endif()
+
 
 #=== OPTIMIZATION FLAGS ===
 #-mavx2 -flto
@@ -350,17 +352,23 @@ find_package(OpenCL REQUIRED QUIET)
 
 if (OpenCL_FOUND)
     include_directories(${OpenCL_INCLUDE_DIRS})
-    include_directories(/opt/cuda/targets/x86_64-linux/include/)
+    if (UNIX)
+        include_directories(/opt/cuda/targets/x86_64-linux/include/)
+    endif()
     #link_directories(/opt/cuda/targets/x86_64-linux/lib/)
     link_directories(${OpenCL_LIBRARIES})
     message(STATUS "OPENCL: FOUND")
-    message(STATUS ${OpenCL_INCLUDE_DIRS})
     
 else()
     message(STATUS "OPENCL: NOT FOUND")
 endif()
 
 #   ================    CUDA    ================
+#https://bugs.archlinux.org/task/62258
+#export PATH=/opt/cuda/bin:$PATH
+#export LD_LIBRARY_PATH=/opt/cuda/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
+
+#set(CUTLASS_NATIVE_CUDA_INIT ON)
 #find_package(CUDA QUIET)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 #if (CUDA_FOUND)
@@ -371,6 +379,9 @@ endif()
 #else()
 #    message(STATUS "CUDA: NOT FOUND")
 #endif()
+
+#set_target_properties(BENLIB PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
 
 
 #   ================    VULKAN    ================
@@ -546,7 +557,10 @@ set(PARSE_CSV ${lib_path}src/exemple/parse_csv.cpp)
 
 set(GTA_SA_CHEAT ${lib_path}src/exemple/GTA_SA_cheat.cpp)
 
-set(OPENCL_TEST ${lib_path}src/exemple/OpenCL_test.cpp)
+if (OpenCL_FOUND)
+    set(OPENCL_TEST ${lib_path}src/exemple/OpenCL_test.cpp)
+    set(OPENCL_TEST2 ${lib_path}src/exemple/OpenCL_test2.cpp)
+endif()
 
 if (OPENSSL_FOUND)
     set(LIST_ALL_FILE_HASH ${lib_path}src/exemple/list_all_file_hash.cpp)
@@ -661,6 +675,10 @@ if(OpenCL_FOUND)
     add_executable(opencl_test ${OPENCL_TEST})
     target_link_libraries(opencl_test PRIVATE ${OpenCL_LIBRARY})
     add_dependencies(opencl_test ${CUSTOM_LIBS})
+
+    add_executable(opencl_test2 ${OPENCL_TEST2})
+    target_link_libraries(opencl_test2 PRIVATE ${OpenCL_LIBRARY})
+    add_dependencies(opencl_test2 ${CUSTOM_LIBS})
 endif()
 
 add_executable(parse_csv ${PARSE_CSV})
@@ -851,9 +869,8 @@ endif()
 #file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/screenshot)
 
 #file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR})
-#configure_file(font/Almond_Caramel.ttf ${CMAKE_BINARY_DIR}/font/Almond_Caramel.ttf COPYONLY)
-
-
+configure_file(${lib_path}lib/opencl/kernels/vector_add_kernel.cl ${CMAKE_BINARY_DIR}/kernels/vector_add_kernel.cl COPYONLY)
+configure_file(${lib_path}lib/opencl/kernels/simple_add.cl ${CMAKE_BINARY_DIR}/kernels/simple_add.cl COPYONLY)
 
 #add_custom_command(
 #    TARGET game
