@@ -113,7 +113,6 @@ template <class T> void findStringInv(T n, char *array)
         array[0] = alpha[n - 1];
         return;
     }
-
     // If n > 27
     std::size_t i = 0;
     while (n > 0) {

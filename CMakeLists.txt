@@ -249,7 +249,8 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 # https://stackoverflow.com/a/12404666/10152334
 
 find_package(OpenMP)
-if (OPENMP_FOUND)
+
+if (OPENMP_FOUND OR OpenMP_CXX_FOUND)
     message(STATUS "OPENMP: FOUND")
     #set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -257,10 +258,6 @@ if (OPENMP_FOUND)
 else()
     message(STATUS "OPENMP: NOT FOUND")
 endif()
-
-#if(OpenMP_CXX_FOUND)
-#    target_link_libraries(openmp_para_test PUBLIC OpenMP::OpenMP_CXX)
-#endif()
 
 #   ================    SFML    ================
 #set(SFML_USE_STATIC_STD_LIBS 0)
@@ -338,8 +335,6 @@ find_package(GLUT REQUIRED QUIET)
 
 if (OPENGL_FOUND)
     include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
-    #link_directories(/opt/cuda/targets/x86_64-linux/lib/)
-
     link_directories(${OPENGL_LIBRARIES})
     message(STATUS "OPENGL: FOUND")
 else()
@@ -427,28 +422,6 @@ if (QT_FOUND)
 else()
     message(STATUS "QT: NOT FOUND")
 endif()
-
-#   ================    OGRE3D    ================
-#if(UNIX)
-#    set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake;${CMAKE_MODULE_PATH}")
-#endif(UNIX)
-
-#if(WIN32)
-#	set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-#	set(OGRE_SAMPLES_INCLUDEPATH
-#		$ENV{OGRE_HOME}/Samples/include
-#	)
-#endif(WIN32)
-
-#find_package(OGRE QUIET)
-
-#if (OGRE_FOUND)
-#    include_directories( ${ogre_INCLUDE_DIR})
-#    link_directories(${OGRE_LIBRARIES})
-#    message(STATUS "OGRE: FOUND")
-#else()
-#    message(STATUS "OGRE: NOT FOUND")
-#endif()
 
 #   ================    OIS    ================
 
@@ -609,24 +582,6 @@ set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu ve
 #   ==================================================
 #   ===============    EXEC FILES    =================
 #   ==================================================
-
-
-#add_executable(game ${MAIN} ${SRCS} ${HEADERS})
-#if(EXTERNAL_LIB)
-#    add_dependencies(game ${EXTERNAL_LIB})
-#endif()
-
-# stdc++fs is needed for Debian
-#target_link_libraries(game PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} stdc++fs)
-
-
-#add_executable(virus ${VIRUS})
-#if(EXTERNAL_LIB)
-#    add_dependencies(virus ${EXTERNAL_LIB})
-#endif()
-
-# stdc++fs is needed for Debian
-#target_link_libraries(virus PRIVATE ${MAIN_LLIBS} ${CUSTOM_LIBS} stdc++fs)
 
 add_executable(bench_isprime ${BENCH_ISPRIME})
 target_link_libraries(bench_isprime PRIVATE thread vector math time stdc++fs)
@@ -868,33 +823,11 @@ endif()
 
 #file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/screenshot)
 
-#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR})
 configure_file(${lib_path}lib/opencl/kernels/vector_add_kernel.cl ${CMAKE_BINARY_DIR}/kernels/vector_add_kernel.cl COPYONLY)
+# For OpenCL_test.cpp
 configure_file(${lib_path}lib/opencl/kernels/simple_add.cl ${CMAKE_BINARY_DIR}/kernels/simple_add.cl COPYONLY)
-
-#add_custom_command(
-#    TARGET game
-#    COMMENT "CP Texture"
-#    POST_BUILD 
-#    WORKING_DIRECTORY .
-#    COMMAND cp -R -u -p "../texture/PIPOYA FREE RPG Character Sprites 32x32" "texture/PIPOYA FREE RPG Character Sprites 32x32"
-#)
-
-#   ================================================
-#   ===============    UNSET VALUE    ===============
-#   ================================================
-
-
-#unset(CMAKE_BUILD_TYPE CACHE)
-
-#   ================================================
-#   ===============    COPY FILES    ===============
-#   ================================================
-
-#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/screenshot)
-
-#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR})
-#configure_file(font/Almond_Caramel.ttf ${CMAKE_BINARY_DIR}/font/Almond_Caramel.ttf COPYONLY)
+# For OpenCL_test2.cpp
+configure_file(${lib_path}lib/opencl/kernels/crc_kernel.cl ${CMAKE_BINARY_DIR}/kernels/crc_kernel.cl COPYONLY)
 
 
 #add_custom_command(
@@ -904,7 +837,6 @@ configure_file(${lib_path}lib/opencl/kernels/simple_add.cl ${CMAKE_BINARY_DIR}/k
 #    WORKING_DIRECTORY .
 #    COMMAND cp -R -u -p "../texture/PIPOYA FREE RPG Character Sprites 32x32" "texture/PIPOYA FREE RPG Character Sprites 32x32"
 #)
-
 
 #   ================================================
 #   ===============    UNSET VALUE    ===============

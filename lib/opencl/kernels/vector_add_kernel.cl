@@ -21,4 +21,13 @@
 kernel void vecadd( global int* A, global int* B, global int* C ) {
     const int idx = get_global_id(0);
     C[idx] = A[idx] + B[idx];
-} 
+}
+/*
+kernel void vecadd_v2( global int* A, global int* B, global int* C ) {
+    const size_t gid = get_global_id(0);
+    const size_t groupSize = get_global_size(0);
+    for(int i = gid; i< maxSize; i+= groupSize){
+        result[i] = a[i] + b[i];
+    }
+}
+*/
