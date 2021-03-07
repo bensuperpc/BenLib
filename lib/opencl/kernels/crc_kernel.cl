@@ -49,29 +49,3 @@ __kernel void CRC32_bitwise(__global const uchar *data, ulong length, uint previ
 		}
     }
 }
-
-
-/*
-uint32_t my::crypto::CRC32_bitwise(const void *data, size_t length, uint32_t previousCrc32)
-{
-    uint32_t crc = ~previousCrc32;
-    unsigned char *current = reinterpret_cast<unsigned char*>(const_cast<void*>(data)); //reinterpret_cast<unsigned char *>(data);
-    while (length--) {
-        crc ^= *current++;
-        for (unsigned int j = 0; j < 8; j++)
-            crc = (crc >> 1) ^ (-int(crc & 1) & POLY);
-    }
-    return ~crc; // same as crc ^ 0xFFFFFFFF
-}
-*/
-/*
-__kernel void CRC32_bitwise(__global const void *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
-{
-	__private uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
-	__private const uchar *current = (const uchar *)&data;
-	while (length--) {
-        crc ^= *current++;
-        for (uint j = 0; j < 8; j++)
-            crc = (crc >> 1) ^ (-int(crc & 1) & POLY);
-    }
-}*/
