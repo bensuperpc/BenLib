@@ -46,7 +46,7 @@
 #include "crypto/crypto_CRC32.hpp"
 
 #define KERNEL_FILE "../kernels/crc_kernel.cl"
-#define FUNCTION_NAME "CRC32_1byte_tableless"
+#define FUNCTION_NAME "CRC32_8bytes"
 //__kernel void CRC32_1byte_tableless(__global const void *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 
 int main(int argc, char **argv)
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, 1 * sizeof(uint), C.get());
         
-        std::cout << std::hex << "CRC CPU   : 0x" << my::crypto::CRC32_1byte_tableless(A.get(), N_ELEMENTS, 0) << std::endl;
+        std::cout << std::hex << "CRC CPU   : 0x" << my::crypto::CRC32_8bytes(A.get(), N_ELEMENTS, 0) << std::endl;
         std::cout << std::hex << "CRC OpenCL: 0x" << *C << std::endl;
     }
     catch (cl::Error err) {
