@@ -150,3 +150,45 @@ __kernel void JAMCRC_bitwise(__global const uchar *data, ulong length, uint prev
     }
 	*resultCrc32 = crc;
 }
+
+/**
+ * \brief To get CRC32 hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
+__kernel void CRC32_StackOverflow(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32;
+	while (length--) {
+        crc ^= *data++;
+        for (uint k = 0; k < 8; k++) {
+            crc = crc & 1 ? (crc >> 1) ^ POLY : crc >> 1;
+        	// crc = (crc >> 1) ^ (POLY & (0 - (crc & 1))); // Slower
+		}
+    }
+	*resultCrc32 = ~crc;
+}
+
+/**
+ * \brief To get JAMCRC hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
+__kernel void JAMCRC_StackOverflow(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32;
+	while (length--) {
+        crc ^= *data++;
+        for (uint k = 0; k < 8; k++) {
+            crc = crc & 1 ? (crc >> 1) ^ POLY : crc >> 1;
+        	// crc = (crc >> 1) ^ (POLY & (0 - (crc & 1))); // Slower
+		}
+    }
+	*resultCrc32 = crc;
+}
