@@ -23,6 +23,14 @@
 
 #define POLY 0xEDB88320
 
+/**
+ * \brief To get CRC32 hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
 __kernel void CRC32_1byte_tableless(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 {
 	__private uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
@@ -37,9 +45,80 @@ __kernel void CRC32_1byte_tableless(__global const uchar *data, ulong length, ui
 	*resultCrc32 = ~crc;
 }
 
+/**
+ * \brief To get JAMCRC hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
+__kernel void JAMCRC_1byte_tableless(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
+
+	while (length-- != 0) {
+		uchar s = (uchar)crc  ^ *data++;
+        uint low = (s ^ (s << 6)) & 0xFF;
+		uint a = (low * ((1 << 23) + (1 << 14) + (1 << 2)));
+		crc = (crc >> 8) ^ (low * ((1 << 24) + (1 << 16) + (1 << 8))) ^ a ^ (a >> 1) ^ (low * ((1 << 20) + (1 << 12))) ^ (low << 19) ^ (low << 17) ^ (low >> 2);
+	}
+
+	*resultCrc32 = crc;
+}
+
+/**
+ * \brief To get CRC32 hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
+__kernel void CRC32_1byte_tableless2(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32;
+
+	while (length-- != 0) {
+		crc = crc ^ *data++;
+		uint c = (((crc << 31) >> 31) & ((POLY >> 7) ^ (POLY >> 1))) ^ (((crc << 30) >> 31) & ((POLY >> 6) ^ POLY)) ^ (((crc << 29) >> 31) & (POLY >> 5))
+						^ (((crc << 28) >> 31) & (POLY >> 4)) ^ (((crc << 27) >> 31) & (POLY >> 3)) ^ (((crc << 26) >> 31) & (POLY >> 2))
+						^ (((crc << 25) >> 31) & (POLY >> 1)) ^ (((crc << 24) >> 31) & POLY);
+	}
+	*resultCrc32 = ~crc;
+}
+
+/**
+ * \brief To get JAMCRC hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
+__kernel void JAMCRC_1byte_tableless2(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32;
+
+	while (length-- != 0) {
+		crc = crc ^ *data++;
+		uint c = (((crc << 31) >> 31) & ((POLY >> 7) ^ (POLY >> 1))) ^ (((crc << 30) >> 31) & ((POLY >> 6) ^ POLY)) ^ (((crc << 29) >> 31) & (POLY >> 5))
+						^ (((crc << 28) >> 31) & (POLY >> 4)) ^ (((crc << 27) >> 31) & (POLY >> 3)) ^ (((crc << 26) >> 31) & (POLY >> 2))
+						^ (((crc << 25) >> 31) & (POLY >> 1)) ^ (((crc << 24) >> 31) & POLY);
+	}
+	*resultCrc32 = crc;
+}
+
+/**
+ * \brief To get CRC32 hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
 __kernel void CRC32_bitwise(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 {
-	
 	__private uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
 	
 	while (length--) {
@@ -48,4 +127,26 @@ __kernel void CRC32_bitwise(__global const uchar *data, ulong length, uint previ
             crc = (crc >> 1) ^ (-(int)(crc & 1) & POLY);
 		}
     }
+	*resultCrc32 = ~crc;
+}
+
+/**
+ * \brief To get JAMCRC hash
+ * \param __global const uchar *data : data
+ * \param ulong length : Size of data
+ * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
+ * \param __global uint *resultCrc32 : Return result
+ */
+
+__kernel void JAMCRC_bitwise(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
+	
+	while (length--) {
+        crc ^= *data++;
+        for (uint j = 0; j < 8; j++) {
+            crc = (crc >> 1) ^ (-(int)(crc & 1) & POLY);
+		}
+    }
+	*resultCrc32 = crc;
 }
