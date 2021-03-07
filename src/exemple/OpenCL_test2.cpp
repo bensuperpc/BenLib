@@ -26,11 +26,21 @@
 #include <string>
 
 #define __CL_ENABLE_EXCEPTIONS
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstack-protector"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wpadded"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+#pragma GCC diagnostic ignored "-Wundef"
 #if defined(__APPLE__) || defined(__MACOSX)
 #    include <OpenCL/cl.cpp>
 #else
 #    include <CL/cl.hpp>
 #endif
+#pragma GCC diagnostic pop
 
 int main(int argc, char **argv)
 {

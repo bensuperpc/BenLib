@@ -533,6 +533,7 @@ set(GTA_SA_CHEAT ${lib_path}src/exemple/GTA_SA_cheat.cpp)
 if (OpenCL_FOUND)
     set(OPENCL_TEST ${lib_path}src/exemple/OpenCL_test.cpp)
     set(OPENCL_TEST2 ${lib_path}src/exemple/OpenCL_test2.cpp)
+    set(OPENCL_CRC32 ${lib_path}src/exemple/OpenCL_crc32.cpp)
 endif()
 
 if (OPENSSL_FOUND)
@@ -634,6 +635,10 @@ if(OpenCL_FOUND)
     add_executable(opencl_test2 ${OPENCL_TEST2})
     target_link_libraries(opencl_test2 PRIVATE ${OpenCL_LIBRARY})
     add_dependencies(opencl_test2 ${CUSTOM_LIBS})
+
+    add_executable(opencl_crc32 ${OPENCL_CRC32})
+    target_link_libraries(opencl_crc32 PRIVATE ${OpenCL_LIBRARY})
+    add_dependencies(opencl_crc32 ${CUSTOM_LIBS})
 endif()
 
 add_executable(parse_csv ${PARSE_CSV})

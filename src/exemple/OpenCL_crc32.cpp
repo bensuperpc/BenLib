@@ -26,27 +26,44 @@
 #include <string>
 
 #define __CL_ENABLE_EXCEPTIONS
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstack-protector"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wpadded"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+#pragma GCC diagnostic ignored "-Wundef"
 #if defined(__APPLE__) || defined(__MACOSX)
 #    include <OpenCL/cl.cpp>
 #else
 #    include <CL/cl.hpp>
 #endif
+#pragma GCC diagnostic pop
+
+#include "lib/opencl/kernels/eth_crc32_lut.h"
+
+#define KERNEL_FILE "../kernels/crc_kernel.cl"
+#define FUNCTION_NAME "CRC32_slice8"
 
 int main(int argc, char **argv)
 {
-
-    const int N_ELEMENTS = 1024 * 1024;
+    // std::cout << crc32Lookup[0][1] << std::endl;
+    const int N_ELEMENTS = 5;
     unsigned int platform_id = 0, device_id = 0;
 
     try {
-        std::unique_ptr<int[]> A(new int[N_ELEMENTS]); // Or you can use simple dynamic arrays like: int* A = new int[N_ELEMENTS];
-        std::unique_ptr<int[]> B(new int[N_ELEMENTS]);
-        std::unique_ptr<int[]> C(new int[N_ELEMENTS]);
+        //std::unique_ptr<uint[]> A(new uint[N_ELEMENTS]);
 
-        for (int i = 0; i < N_ELEMENTS; ++i) {
-            A[i] = i;
-            B[i] = i;
-        }
+        auto A = std::make_unique<std::array<uint, 5>>(std::array<uint, 5>{72,72,72,72,72});
+
+        std::unique_ptr<uint> B(new uint);
+        B = std::make_unique<uint>(5);
+        std::unique_ptr<uint> D(new uint);
+
+        std::unique_ptr<uint> C(new uint);
+        C = std::make_unique<uint>(1);
 
         // Query for platforms
         std::vector<cl::Platform> platforms;
@@ -63,16 +80,19 @@ int main(int argc, char **argv)
         cl::CommandQueue queue = cl::CommandQueue(context, devices[device_id]); // Select the device.
 
         // Create the memory buffers
-        cl::Buffer bufferA = cl::Buffer(context, CL_MEM_READ_ONLY, N_ELEMENTS * sizeof(int));
-        cl::Buffer bufferB = cl::Buffer(context, CL_MEM_READ_ONLY, N_ELEMENTS * sizeof(int));
-        cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(int));
+        cl::Buffer bufferA = cl::Buffer(context, CL_MEM_READ_ONLY, N_ELEMENTS * sizeof(uint));
+        //cl::Buffer bufferB = cl::Buffer(context, CL_MEM_READ_ONLY, 1 * sizeof(uint));
+        //cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, 1 * sizeof(uint));
+        cl::Buffer bufferD = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(uint));
 
         // Copy the input data to the input buffers using the command queue.
-        queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, N_ELEMENTS * sizeof(int), A.get());
-        queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, N_ELEMENTS * sizeof(int), B.get());
+        queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, 1 * sizeof(uint), A.get());
+        //queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, 1 * sizeof(uint), B.get());
+        //queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, 1 * sizeof(uint), C.get());
+        queue.enqueueWriteBuffer(bufferD, CL_FALSE, 0, 1 * sizeof(uint), D.get());
 
         // Read the program source
-        std::ifstream sourceFile("../kernels/vector_add_kernel.cl");
+        std::ifstream sourceFile(KERNEL_FILE);
         std::string sourceCode(std::istreambuf_iterator<char>(sourceFile), (std::istreambuf_iterator<char>()));
         cl::Program::Sources source(1, std::make_pair(sourceCode.c_str(), sourceCode.length()));
 
@@ -81,34 +101,26 @@ int main(int argc, char **argv)
 
         // Build the program for the devices
         program.build(devices);
-
+       
         // Make kernel
-        cl::Kernel vecadd_kernel(program, "vecadd");
-
+        cl::Kernel vecadd_kernel(program, FUNCTION_NAME);
+        
         // Set the kernel arguments
-        vecadd_kernel.setArg(0, bufferA);
-        vecadd_kernel.setArg(1, bufferB);
-        vecadd_kernel.setArg(2, bufferC);
-
+        vecadd_kernel.setArg(0, bufferA); // Data
+        vecadd_kernel.setArg(1, N_ELEMENTS); // lenght
+        vecadd_kernel.setArg(2, 5); // 
+        vecadd_kernel.setArg(3, bufferD); // Result
+        
         // Execute the kernel
         cl::NDRange global(N_ELEMENTS);
         cl::NDRange local(256);
-        queue.enqueueNDRangeKernel(vecadd_kernel, cl::NullRange, global, local);
-
+        
+        queue.enqueueNDRangeKernel(vecadd_kernel, cl::NullRange, global, cl::NullRange);
+        
         // Copy the output data back to the host
-        queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, N_ELEMENTS * sizeof(int), C.get());
+        queue.enqueueReadBuffer(bufferD, CL_TRUE, 0, 1 * sizeof(uint), D.get());
 
-        // Verify the result
-        bool result = true;
-        for (int i = 0; i < N_ELEMENTS; i++)
-            if (C[i] != A[i] + B[i]) {
-                result = false;
-                break;
-            }
-        if (result)
-            std::cout << "Success!\n";
-        else
-            std::cout << "Failed!\n";
+        std::cout << std::hex << D << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
