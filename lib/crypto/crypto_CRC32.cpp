@@ -167,32 +167,9 @@ uint32_t my::crypto::CRC32_1byte_tableless(const void *data, size_t length, uint
     const uint8_t *current = (const uint8_t *)data;
     while (length-- != 0) {
         uint8_t s = uint8_t(crc) ^ *current++;
-        // Hagai Gold made me aware of this table-less algorithm and send me code
-        // polynomial 0xEDB88320 can be written in binary as 11101101101110001000001100100000b
-        // reverse the bits (or just assume bit 0 is the first one)
-        // and we have bits set at position 0, 1, 2, 4, 5, 7, 8, 10, 11, 12, 16, 22, 23, 26
-        // => those are the shift offsets:
-        // crc = (crc >> 8) ^
-        //       t ^
-        //      (t >>  1) ^ (t >>  2) ^ (t >>  4) ^ (t >>  5) ^  // == y
-        //      (t >>  7) ^ (t >>  8) ^ (t >> 10) ^ (t >> 11) ^  // == y >> 6
-        //      (t >> 12) ^ (t >> 16) ^                          // == z
-        //      (t >> 22) ^ (t >> 26) ^                          // == z >> 10
-        //      (t >> 23);
-        // the fastest I can come up with:
         uint32_t low = (s ^ (s << 6)) & 0xFF;
         uint32_t a = (low * ((1 << 23) + (1 << 14) + (1 << 2)));
         crc = (crc >> 8) ^ (low * ((1 << 24) + (1 << 16) + (1 << 8))) ^ a ^ (a >> 1) ^ (low * ((1 << 20) + (1 << 12))) ^ (low << 19) ^ (low << 17) ^ (low >> 2);
-        // Hagai's code:
-        /*uint32_t t = (s ^ (s << 6)) << 24;
-        // some temporaries to optimize XOR
-        uint32_t x = (t >> 1) ^ (t >> 2);
-        uint32_t y = x ^ (x >> 3);
-        uint32_t z = (t >> 12) ^ (t >> 16);
-        crc = (crc >> 8) ^
-               t ^ (t >> 23) ^
-               y ^ (y >>  6) ^
-               z ^ (z >> 10);*/
     }
     return ~crc; // same as crc ^ 0xFFFFFFFF
 }

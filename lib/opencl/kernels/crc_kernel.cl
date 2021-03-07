@@ -6,7 +6,6 @@
  */
 
 
-//#include "eth_crc32_lut.h"
 __constant unsigned int crc32Lookup[8][256] =
 {
   { 0x00000000,0x77073096,0xEE0E612C,0x990951BA,0x076DC419,0x706AF48F,0xE963A535,0x9E6495A3,
@@ -268,6 +267,46 @@ __constant unsigned int crc32Lookup[8][256] =
     0xFF6B144A,0x33C114D4,0xBD4E1337,0x71E413A9,0x7B211AB0,0xB78B1A2E,0x39041DCD,0xF5AE1D53,
     0x2C8E0FFF,0xE0240F61,0x6EAB0882,0xA201081C,0xA8C40105,0x646E019B,0xEAE10678,0x264B06E6 }
 };
+
+/*
+uint32_t my::crypto::CRC32_bitwise(const void *data, size_t length, uint32_t previousCrc32)
+{
+    uint32_t crc = ~previousCrc32;
+    unsigned char *current = reinterpret_cast<unsigned char*>(const_cast<void*>(data)); //reinterpret_cast<unsigned char *>(data);
+    while (length--) {
+        crc ^= *current++;
+        for (unsigned int j = 0; j < 8; j++)
+            crc = (crc >> 1) ^ (-int(crc & 1) & POLY);
+    }
+    return ~crc; // same as crc ^ 0xFFFFFFFF
+}
+*/
+/*
+__kernel void CRC32_bitwise(__global const void *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
+	__private const uchar *current = (const uchar *)&data;
+	while (length--) {
+        crc ^= *current++;
+        for (uint j = 0; j < 8; j++)
+            crc = (crc >> 1) ^ (-int(crc & 1) & POLY);
+    }
+}*/
+
+__kernel void CRC32_1byte_tableless(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
+
+	while (length-- != 0) {
+		uchar s = (uchar)crc  ^ *data++;
+        uint low = (s ^ (s << 6)) & 0xFF;
+		uint a = (low * ((1 << 23) + (1 << 14) + (1 << 2)));
+		crc = (crc >> 8) ^ (low * ((1 << 24) + (1 << 16) + (1 << 8))) ^ a ^ (a >> 1) ^ (low * ((1 << 20) + (1 << 12))) ^ (low << 19) ^ (low << 17) ^ (low >> 2);
+	}
+
+	*resultCrc32 = ~crc;
+}
+
 
 
 __kernel void CRC32_slice8(	__global const uint* restrict data,
