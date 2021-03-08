@@ -28,17 +28,9 @@
  */
 
 
-__kernel void findStringInv(__global ulong *length, __global const uchar *data, __global uint *resultCrc32)
+__kernel void findStringInv(__global ulong *length, __global const uchar *data, __global char *resultCrc32)
 {
-	__private uint crc = 0xFFFFFFFF; // same as previousCrc32 ^ 0xFFFFFFFF
-	while ((*length)-- != 0) {
-		uchar s = (uchar)crc  ^ *data++;
-        uint low = (s ^ (s << 6)) & 0xFF;
-		uint a = (low * ((1 << 23) + (1 << 14) + (1 << 2)));
-		crc = (crc >> 8) ^ (low * ((1 << 24) + (1 << 16) + (1 << 8))) ^ a ^ (a >> 1) ^ (low * ((1 << 20) + (1 << 12))) ^ (low << 19) ^ (low << 17) ^ (low >> 2);
-	}
-
-	*resultCrc32 = ~crc;
+    *resultCrc32 = 0x73;
 }
 
 

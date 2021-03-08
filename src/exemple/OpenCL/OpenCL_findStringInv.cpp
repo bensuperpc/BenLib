@@ -61,8 +61,8 @@ int main(int argc, char **argv)
         //B = std::make_unique<uint64_t>(N_ELEMENTS);
         uint64_t B[1] = {N_ELEMENTS};
         //std::unique_ptr<int[]> C(new int[N_ELEMENTS]);
-        std::unique_ptr<uint> C(new uint);
-        C = std::make_unique<uint>(0);
+        std::unique_ptr<char> C(new char);
+        C = std::make_unique<char>(0);
 
         // Query for platforms
         std::vector<cl::Platform> platforms;
@@ -81,12 +81,12 @@ int main(int argc, char **argv)
         // Create the memory buffers
         cl::Buffer bufferA = cl::Buffer(context, CL_MEM_READ_ONLY, N_ELEMENTS * sizeof(unsigned char));
         cl::Buffer bufferB = cl::Buffer(context, CL_MEM_READ_WRITE, sizeof(uint64_t));
-        cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(uint));
+        cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(char));
 
         // Copy the input data to the input buffers using the command queue.
         queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, N_ELEMENTS * sizeof(unsigned char), A.get());
         queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(uint64_t), B);
-        queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, N_ELEMENTS * sizeof(uint), C.get());
+        queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, N_ELEMENTS * sizeof(char), C.get());
 
         // Read the program source
         std::ifstream sourceFile(KERNEL_FILE);
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
         
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, 1 * sizeof(uint), C.get());
-        std::cout << std::hex << "CRC OpenCL: 0x" << *C << std::endl;
+        std::cout << *C << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
