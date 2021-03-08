@@ -46,7 +46,7 @@
 #pragma GCC diagnostic pop
 
 #define KERNEL_FILE "../kernels/findStringInv.cl"
-#define FUNCTION_NAME "findStringInv_MT" // findStringInv_MT
+#define FUNCTION_NAME "findStringInv" // findStringInv_MT
 
 int main(int argc, char **argv)
 {
