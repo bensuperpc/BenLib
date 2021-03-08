@@ -47,27 +47,14 @@ kernel void findStringInv(__global ulong* A, __global char* B)
     }
 }
 
-/*
-template <class T> void findStringInv(T n, char *array);
-template <class T> void findStringInv(T n, char *array)
-{
-    // If n < 27
-    if (n < 27) {
-        array[0] = alpha[n - 1];
-        return;
-    }
-    // If n > 27
-    std::size_t i = 0;
-    while (n > 0) {
-        array[i] = alpha[(--n) % alphabetSize];
-        n /= alphabetSize;
-        ++i;
-    }
-}
+/**
+ * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29... With multi-threading (WIP)
+ * \param A Alphabetic sequence index
+ * \param B return array (char*)
+ */
 
 
-
-kernel void findStringInv_v2(__global ulong* A, __global char* B)
+kernel void findStringInv_MT(__global ulong* A, __global char* B)
 {
     __private char alpha[26] = {ALPHABET};
     // If *A < 27
@@ -85,4 +72,4 @@ kernel void findStringInv_v2(__global ulong* A, __global char* B)
         i++;
     }
     B[i] = 0;
-}*/
+}

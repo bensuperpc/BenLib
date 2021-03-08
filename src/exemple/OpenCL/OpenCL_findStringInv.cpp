@@ -43,7 +43,7 @@
 #pragma GCC diagnostic pop
 
 #define KERNEL_FILE "../kernels/findStringInv.cl"
-#define FUNCTION_NAME "findStringInv"
+#define FUNCTION_NAME "findStringInv" // findStringInv_MT
 //__kernel void CRC32_1byte_tableless(__global const void *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 
 int main(int argc, char **argv)
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
         cl::CommandQueue queue = cl::CommandQueue(context, devices[device_id]); // Select the device.
 
         // Create the memory buffers
-        cl::Buffer bufferB = cl::Buffer(context, CL_MEM_READ_WRITE, sizeof(uint64_t));
+        cl::Buffer bufferB = cl::Buffer(context, CL_MEM_READ_ONLY, sizeof(uint64_t));
         cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(char));
 
         // Copy the input data to the input buffers using the command queue.
