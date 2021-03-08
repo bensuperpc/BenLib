@@ -59,12 +59,13 @@ int main(int argc, char **argv)
         //std::unique_ptr<char[]> C(new char[N_ELEMENTS]);
         //auto C = std::make_unique<std::array<char, N_ELEMENTS>>();
         std::unique_ptr<char[]> C = std::unique_ptr<char[]>(new char[N_ELEMENTS]);
+        /*
         for(size_t i = 0; i < N_ELEMENTS; i++)
         {
-            C[i] = 0;
+            C[i] = '.';
         }
         std::cout << N_ELEMENTS << std::endl;
-        std::cout << *B.get() << std::endl;
+        std::cout << *B.get() << std::endl;*/
 
         //std::unique_ptr<char> C(new char);
         //C = std::make_unique<char>(0);
@@ -115,7 +116,7 @@ int main(int argc, char **argv)
         queue.enqueueNDRangeKernel(vecadd_kernel, cl::NullRange, global, cl::NullRange);
         
         // Copy the output data back to the host
-        queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, 1 * sizeof(uint), C.get());
+        queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, N_ELEMENTS * sizeof(char), C.get());
 
         std::cout << "Result:";
         for(size_t i = 0; i < N_ELEMENTS; i++)
