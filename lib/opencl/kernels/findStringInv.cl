@@ -19,6 +19,7 @@
 //////////////////////////////////////////////////////////////
 
 #define ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define alphabetSize 26
 
 /**
  * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
@@ -26,21 +27,26 @@
  * \param B return array (char*)
  */
 
-kernel void findStringInv( global ulong* A, global char* B) {
-    char alpha[26] = {ALPHABET};
+kernel void findStringInv( __global ulong* A, __global char* B)
+{
+   
+    __private char alpha[26] = {ALPHABET};
     // If *A < 27
     if (*A < 27) {
         B[0] = alpha[*A - 1];
         return;
     }
+    
     // If *A > 27
-    ulong i = 0;
-    //barrier(CLK_LOCAL_MEM_FENCE); /* Wait for others in the work-group */
+    __private ulong i = 0;
+    
+    //barrier(CLK_LOCAL_MEM_FENCE); // Wait for others in the work-group
     while (*A > 0) {
+        
         B[i] = alpha[(--*A) % alphabetSize];
         *A /= alphabetSize;
         ++i;
     }
     //const int idx = get_global_id(0);
     //C[idx] = A[idx] + B[idx];
-}  
+}

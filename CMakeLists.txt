@@ -531,9 +531,10 @@ set(PARSE_CSV ${lib_path}src/exemple/parse_csv.cpp)
 set(GTA_SA_CHEAT ${lib_path}src/exemple/GTA_SA_cheat.cpp)
 
 if (OpenCL_FOUND)
-    set(OPENCL_TEST ${lib_path}src/exemple/OpenCL_test.cpp)
-    set(OPENCL_TEST2 ${lib_path}src/exemple/OpenCL_test2.cpp)
-    set(OPENCL_CRC32 ${lib_path}src/exemple/OpenCL_crc32.cpp)
+    set(OPENCL_TEST ${lib_path}src/exemple/OpenCL/OpenCL_test.cpp)
+    set(OPENCL_TEST2 ${lib_path}src/exemple/OpenCL/OpenCL_test2.cpp)
+    set(OPENCL_CRC32 ${lib_path}src/exemple/OpenCL/OpenCL_crc32.cpp)
+    set(OPENCL_FINDSTRINGINV ${lib_path}src/exemple/OpenCL/OpenCL_findStringInv.cpp)
 endif()
 
 if (OPENSSL_FOUND)
@@ -635,6 +636,11 @@ if(OpenCL_FOUND)
     add_executable(opencl_test2 ${OPENCL_TEST2})
     target_link_libraries(opencl_test2 PRIVATE ${OpenCL_LIBRARY})
     add_dependencies(opencl_test2 ${CUSTOM_LIBS})
+
+    add_executable(opencl_findstringinv ${OPENCL_FINDSTRINGINV})
+    target_link_libraries(opencl_findstringinv PRIVATE ${OpenCL_LIBRARY})
+    add_dependencies(opencl_findstringinv ${CUSTOM_LIBS})
+
     if (OPENSSL_FOUND)
         add_executable(opencl_crc32 ${OPENCL_CRC32})
         target_link_libraries(opencl_crc32 PRIVATE ${OpenCL_LIBRARY} my_crypto time)
@@ -829,11 +835,15 @@ endif()
 
 #file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/screenshot)
 
-configure_file(${lib_path}lib/opencl/kernels/vector_add_kernel.cl ${CMAKE_BINARY_DIR}/kernels/vector_add_kernel.cl COPYONLY)
 # For OpenCL_test.cpp
-configure_file(${lib_path}lib/opencl/kernels/simple_add.cl ${CMAKE_BINARY_DIR}/kernels/simple_add.cl COPYONLY)
+configure_file(${lib_path}lib/opencl/kernels/vector_add_kernel.cl ${CMAKE_BINARY_DIR}/kernels/vector_add_kernel.cl COPYONLY)
 # For OpenCL_test2.cpp
+configure_file(${lib_path}lib/opencl/kernels/simple_add.cl ${CMAKE_BINARY_DIR}/kernels/simple_add.cl COPYONLY)
+# For OpenCL_crc32.cpp
 configure_file(${lib_path}lib/opencl/kernels/crc_kernel.cl ${CMAKE_BINARY_DIR}/kernels/crc_kernel.cl COPYONLY)
+# For OpenCL_findStringInv.cpp
+configure_file(${lib_path}lib/opencl/kernels/findStringInv.cl ${CMAKE_BINARY_DIR}/kernels/findStringInv.cl COPYONLY)
+
 
 
 #add_custom_command(

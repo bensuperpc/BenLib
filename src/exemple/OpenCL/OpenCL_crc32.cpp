@@ -42,7 +42,6 @@
 #endif
 #pragma GCC diagnostic pop
 
-#include "lib/opencl/kernels/eth_crc32_lut.h"
 #include "crypto/crypto_CRC32.hpp"
 #include "time/chrono/chrono.hpp"
 
