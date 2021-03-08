@@ -99,3 +99,13 @@ BOOST_AUTO_TEST_CASE(test_string_seq_7)
     my::string::findStringInv<std::size_t>(475254, tmp1); // 26^1 + 26^2 + 26^3 + 26^4
     BOOST_REQUIRE(strcmp(tmp1, tmp2) == 0);
 }
+
+BOOST_AUTO_TEST_CASE(test_string_seq_8)
+{
+    char tmp1[6] = {0};
+    const char tmp2[6] = {'A', 'A', 'A', 'A', 'A','\0'};
+
+    my::string::findStringInv<std::size_t>(475255, tmp1); // 26^1 + 26^2 + 26^3 + 26^4
+    BOOST_REQUIRE(strcmp(tmp1, tmp2) == 0);
+}
+

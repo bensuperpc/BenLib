@@ -32,18 +32,57 @@ kernel void findStringInv(__global ulong* A, __global char* B)
 {
     __private char alpha[26] = {ALPHABET};
     // If *A < 27
-    if (*A < 27) {
-        B[0] = alpha[*A - 1];
+    if ((*A) < 27) {
+        B[0] = alpha[(*A) - 1];
         return;
     }
     
     // If *A > 27
     __private ulong i = 0;
     
-    while (*A > 0) {
-        
-        B[i] = alpha[(--*A) % alphabetSize];
-        *A /= alphabetSize;
+    while ((*A) > 0) {
+        B[i] = alpha[(--(*A)) % alphabetSize];
+        (*A) /= alphabetSize;
+        i++;
+    }
+}
+
+/*
+template <class T> void findStringInv(T n, char *array);
+template <class T> void findStringInv(T n, char *array)
+{
+    // If n < 27
+    if (n < 27) {
+        array[0] = alpha[n - 1];
+        return;
+    }
+    // If n > 27
+    std::size_t i = 0;
+    while (n > 0) {
+        array[i] = alpha[(--n) % alphabetSize];
+        n /= alphabetSize;
         ++i;
     }
 }
+
+
+
+kernel void findStringInv_v2(__global ulong* A, __global char* B)
+{
+    __private char alpha[26] = {ALPHABET};
+    // If *A < 27
+    if (*A < 27) {
+        B[0] = alpha[*A - 1];
+        return;
+    }
+    
+    // If *A > 27
+    __private ulong i = get_global_id(0);
+    
+    while (*A > 0) {
+        B[i] = alpha[(--*A) % alphabetSize];
+        *A /= alphabetSize;
+        i++;
+    }
+    B[i] = 0;
+}*/

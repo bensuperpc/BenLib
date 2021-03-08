@@ -53,8 +53,9 @@ int main(int argc, char **argv)
     unsigned int platform_id = 0, device_id = 0;
 
     try {
-        uint64_t B[1] = {675};
-
+        //uint64_t B[1] = {8031810176};
+        std::unique_ptr<uint64_t> B(new uint64_t);
+        B = std::make_unique<uint64_t>(475255);
         //std::unique_ptr<char[]> C(new char[N_ELEMENTS]);
         //auto C = std::make_unique<std::array<char, N_ELEMENTS>>();
         std::unique_ptr<char[]> C = std::unique_ptr<char[]>(new char[N_ELEMENTS]);
@@ -62,7 +63,8 @@ int main(int argc, char **argv)
         {
             C[i] = 0;
         }
-
+        std::cout << N_ELEMENTS << std::endl;
+        std::cout << *B.get() << std::endl;
 
         //std::unique_ptr<char> C(new char);
         //C = std::make_unique<char>(0);
@@ -86,7 +88,7 @@ int main(int argc, char **argv)
         cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(char));
 
         // Copy the input data to the input buffers using the command queue.
-        queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(uint64_t), B);
+        queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(uint64_t), B.get());
         queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, N_ELEMENTS * sizeof(char), C.get());
 
         // Read the program source
@@ -114,7 +116,13 @@ int main(int argc, char **argv)
         
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, 1 * sizeof(uint), C.get());
-        std::cout << C[0] << C[1] << C[2] << std::endl;
+
+        std::cout << "Result:";
+        for(size_t i = 0; i < N_ELEMENTS; i++)
+        {
+            std::cout << C[i];
+        }
+        std::cout << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
