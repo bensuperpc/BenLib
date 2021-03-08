@@ -44,9 +44,10 @@
 
 #include "lib/opencl/kernels/eth_crc32_lut.h"
 #include "crypto/crypto_CRC32.hpp"
+#include "time/chrono/chrono.hpp"
 
 #define KERNEL_FILE "../kernels/crc_kernel.cl"
-#define FUNCTION_NAME "CRC32_8bytes"
+#define FUNCTION_NAME "CRC32_16bytes"
 //__kernel void CRC32_1byte_tableless(__global const void *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 
 int main(int argc, char **argv)
@@ -82,14 +83,10 @@ int main(int argc, char **argv)
 
         // Create the memory buffers
         cl::Buffer bufferA = cl::Buffer(context, CL_MEM_READ_ONLY, N_ELEMENTS * sizeof(unsigned char));
-        //cl::Buffer bufferB = cl::Buffer(context, CL_MEM_READ_ONLY, 1 * sizeof(uint));
-        //cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, 1 * sizeof(uint));
         cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(uint));
 
         // Copy the input data to the input buffers using the command queue.
         queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, N_ELEMENTS * sizeof(unsigned char), A.get());
-        //queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, 1 * sizeof(uint), B.get());
-        //queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, 1 * sizeof(uint), C.get());
         queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, N_ELEMENTS * sizeof(uint), C.get());
 
         // Read the program source
@@ -111,7 +108,7 @@ int main(int argc, char **argv)
         vecadd_kernel.setArg(1, (uint64_t)N_ELEMENTS); // lenght
         vecadd_kernel.setArg(2, 0); // Previous CRC
         vecadd_kernel.setArg(3, bufferC);
-
+        auto &&t1 = my::chrono::now();
         // Execute the kernel
         cl::NDRange global(N_ELEMENTS);
         cl::NDRange local(256);
@@ -120,9 +117,11 @@ int main(int argc, char **argv)
         
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, 1 * sizeof(uint), C.get());
+        auto &&t2 = my::chrono::now();
         
         std::cout << std::hex << "CRC CPU   : 0x" << my::crypto::CRC32_8bytes(A.get(), N_ELEMENTS, 0) << std::endl;
         std::cout << std::hex << "CRC OpenCL: 0x" << *C << std::endl;
+        std::cout << "Time:       " << my::chrono::duration(t1, t2).count() << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
