@@ -18,8 +18,8 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-//#define ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-//#define alphabetSize 26
+#define ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define alphabetSize 26
 
 /**
  * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
@@ -28,13 +28,6 @@
  */
 
 
-__kernel void findStringInv(__global ulong *length, __global const uchar *data, __global char *resultCrc32)
-{
-    *resultCrc32 = 0x73;
-}
-
-
-/*
 kernel void findStringInv(__global ulong* A, __global char* B)
 {
     __private char alpha[26] = {ALPHABET};
@@ -47,15 +40,10 @@ kernel void findStringInv(__global ulong* A, __global char* B)
     // If *A > 27
     __private ulong i = 0;
     
-    //barrier(CLK_LOCAL_MEM_FENCE); // Wait for others in the work-group
     while (*A > 0) {
         
         B[i] = alpha[(--*A) % alphabetSize];
         *A /= alphabetSize;
         ++i;
     }
-    //const int idx = get_global_id(0);
-    //C[idx] = A[idx] + B[idx];
-   
 }
- */

@@ -49,20 +49,23 @@
 int main(int argc, char **argv)
 {
     // std::cout << crc32Lookup[0][1] << std::endl;
-    const int N_ELEMENTS = 11;
+    const int N_ELEMENTS = 29;
     unsigned int platform_id = 0, device_id = 0;
 
     try {
-        //std::unique_ptr<uint[]> A(new uint[N_ELEMENTS]);
+        uint64_t B[1] = {675};
 
-        auto A = std::make_unique<std::array<unsigned char, N_ELEMENTS>>(std::array<unsigned char, N_ELEMENTS>{'H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'});
+        //std::unique_ptr<char[]> C(new char[N_ELEMENTS]);
+        //auto C = std::make_unique<std::array<char, N_ELEMENTS>>();
+        std::unique_ptr<char[]> C = std::unique_ptr<char[]>(new char[N_ELEMENTS]);
+        for(size_t i = 0; i < N_ELEMENTS; i++)
+        {
+            C[i] = 0;
+        }
 
-        //std::unique_ptr<uint64_t> B(new uint64_t);
-        //B = std::make_unique<uint64_t>(N_ELEMENTS);
-        uint64_t B[1] = {N_ELEMENTS};
-        //std::unique_ptr<int[]> C(new int[N_ELEMENTS]);
-        std::unique_ptr<char> C(new char);
-        C = std::make_unique<char>(0);
+
+        //std::unique_ptr<char> C(new char);
+        //C = std::make_unique<char>(0);
 
         // Query for platforms
         std::vector<cl::Platform> platforms;
@@ -79,12 +82,10 @@ int main(int argc, char **argv)
         cl::CommandQueue queue = cl::CommandQueue(context, devices[device_id]); // Select the device.
 
         // Create the memory buffers
-        cl::Buffer bufferA = cl::Buffer(context, CL_MEM_READ_ONLY, N_ELEMENTS * sizeof(unsigned char));
         cl::Buffer bufferB = cl::Buffer(context, CL_MEM_READ_WRITE, sizeof(uint64_t));
         cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(char));
 
         // Copy the input data to the input buffers using the command queue.
-        queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, N_ELEMENTS * sizeof(unsigned char), A.get());
         queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(uint64_t), B);
         queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, N_ELEMENTS * sizeof(char), C.get());
 
@@ -103,9 +104,8 @@ int main(int argc, char **argv)
         cl::Kernel vecadd_kernel(program, FUNCTION_NAME);
         
         // Set the kernel arguments
-        vecadd_kernel.setArg(1, bufferA); // Data
         vecadd_kernel.setArg(0, bufferB); // lenght
-        vecadd_kernel.setArg(2, bufferC);
+        vecadd_kernel.setArg(1, bufferC);
         // Execute the kernel
         cl::NDRange global(N_ELEMENTS);
         cl::NDRange local(256);
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
         
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, 1 * sizeof(uint), C.get());
-        std::cout << *C << std::endl;
+        std::cout << C[0] << C[1] << C[2] << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
