@@ -56,13 +56,14 @@ int main(int argc, char **argv)
     unsigned int platform_id = 0, device_id = 0;
 
     try {
-        //std::unique_ptr<uint[]> A(new uint[N_ELEMENTS]);
+        // std::unique_ptr<uint[]> A(new uint[N_ELEMENTS]);
 
-        auto A = std::make_unique<std::array<unsigned char, N_ELEMENTS>>(std::array<unsigned char, N_ELEMENTS>{'H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'});
+        auto A = std::make_unique<std::array<unsigned char, N_ELEMENTS>>(
+            std::array<unsigned char, N_ELEMENTS> {'H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'});
 
         std::unique_ptr<uint> B(new uint);
         B = std::make_unique<uint>(N_ELEMENTS);
-        //std::unique_ptr<int[]> C(new int[N_ELEMENTS]);
+        // std::unique_ptr<int[]> C(new int[N_ELEMENTS]);
         std::unique_ptr<uint> C(new uint);
         C = std::make_unique<uint>(0);
 
@@ -73,7 +74,7 @@ int main(int argc, char **argv)
         // Get a list of devices on this platform
         std::vector<cl::Device> devices;
         platforms[platform_id].getDevices(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_CPU, &devices); // Select the platform.
-        
+
         // Create a context
         cl::Context context(devices);
 
@@ -98,26 +99,26 @@ int main(int argc, char **argv)
 
         // Build the program for the devices
         program.build(devices);
-       
+
         // Make kernel
         cl::Kernel vecadd_kernel(program, FUNCTION_NAME);
-        
+
         // Set the kernel arguments
-        vecadd_kernel.setArg(0, bufferA); // Data
+        vecadd_kernel.setArg(0, bufferA);              // Data
         vecadd_kernel.setArg(1, (uint64_t)N_ELEMENTS); // lenght
-        vecadd_kernel.setArg(2, 0); // Previous CRC
+        vecadd_kernel.setArg(2, 0);                    // Previous CRC
         vecadd_kernel.setArg(3, bufferC);
         auto &&t1 = my::chrono::now();
         // Execute the kernel
         cl::NDRange global(N_ELEMENTS);
         cl::NDRange local(256);
-        
+
         queue.enqueueNDRangeKernel(vecadd_kernel, cl::NullRange, global, cl::NullRange);
-        
+
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, 1 * sizeof(uint), C.get());
         auto &&t2 = my::chrono::now();
-        
+
         std::cout << std::hex << "CRC CPU   : 0x" << my::crypto::CRC32_8bytes(A.get(), N_ELEMENTS, 0) << std::endl;
         std::cout << std::hex << "CRC OpenCL: 0x" << *C << std::endl;
         std::cout << "Time:       " << my::chrono::duration(t1, t2).count() << std::endl;
@@ -186,22 +187,22 @@ int main(int argc, char **argv)
 
         // Build the program for the devices
         program.build(devices);
-       
+
         // Make kernel
         cl::Kernel vecadd_kernel(program, FUNCTION_NAME);
-        
+
         // Set the kernel arguments
         vecadd_kernel.setArg(0, bufferA); // Data
         vecadd_kernel.setArg(1, N_ELEMENTS); // lenght
-        vecadd_kernel.setArg(2, 1); // 
+        vecadd_kernel.setArg(2, 1); //
         vecadd_kernel.setArg(3, bufferD); // Result
-        
+
         // Execute the kernel
         cl::NDRange global(N_ELEMENTS);
         cl::NDRange local(256);
-        
+
         queue.enqueueNDRangeKernel(vecadd_kernel, cl::NullRange, global, cl::NullRange);
-        
+
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferD, CL_TRUE, 0, 1 * sizeof(uint), D.get());
 

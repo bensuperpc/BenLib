@@ -9,9 +9,9 @@
 #                                                            #
 #  BenLib, 2020                                              #
 #  Created: 19, March, 2020                                  #
-#  Modified: 03, March, 2021                                 #
-#  file: crypto.cpp                                          #
-#  Crypto                                                    #
+#  Modified: 08, March, 2021                                 #
+#  file: CMakeLists.txt                                      #
+#  CMake                                                     #
 #  Source:                                                   #
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
@@ -30,6 +30,7 @@ project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 set(CMAKE_INCLUDE_CURRENT_DIR 1)
 set(CMAKE_VERBOSE_MAKEFILE 1)
 
+# If support unity build, improve speed on headers
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set(CMAKE_UNITY_BUILD 1)
     message(STATUS "CMAKE_UNITY_BUILD : 1")
@@ -38,6 +39,7 @@ else()
     message(STATUS "CMAKE_UNITY_BUILD : 0")
 endif()
 
+# Add Postfix for debug conf
 set(CMAKE_DEBUG_POSTFIX "_d")
 
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
@@ -57,6 +59,7 @@ if(NOT CMAKE_CXX_COMPILER)
 endif()
 
 #=== C VERSION CHECK ===
+# Set the highest C standard supported by the compiler
 
 if(NOT CMAKE_C_STANDARD)
     include(CheckCCompilerFlag)
@@ -79,6 +82,8 @@ if(NOT CMAKE_C_STANDARD)
 endif()
 
 #=== C++ VERSION CHECK ===
+#Set the highest C++ standard supported by the compiler
+
 if(NOT CMAKE_CXX_STANDARD)
     include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG("-std=c++23" COMPILER_SUPPORTS_CXX23)
@@ -207,9 +212,9 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 add_definitions(-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
+add_definitions(-DCMAKE_C_FLAGS="${CMAKE_C_FLAGS}")
+add_definitions(-DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}")
 
-add_definitions(-DCMAKE_CXX_EXTENSIONS=${CMAKE_CXX_EXTENSIONS})
-add_definitions(-DCMAKE_C_EXTENSIONS=${CMAKE_C_EXTENSIONS})
 add_definitions(-DCMAKE_CXX_COMPILER_ID="${CMAKE_CXX_COMPILER_ID}")
 add_definitions(-DCMAKE_C_COMPILER_ID="${CMAKE_C_COMPILER_ID}")
 add_definitions(-DCMAKE_CXX_COMPILER_VERSION="${CMAKE_CXX_COMPILER_VERSION}")
@@ -224,7 +229,7 @@ elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
     message(STATUS "64 bit mode")
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 16)
     message(STATUS "128 bit mode")
-    elseif(CMAKE_SIZEOF_VOID_P EQUAL 32)
+elseif(CMAKE_SIZEOF_VOID_P EQUAL 32)
     message(STATUS "256 bit mode")
 else()
     message(STATUS "unknow size")
@@ -247,7 +252,8 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
 #   ================    OpenMP    ================
 # https://stackoverflow.com/a/12404666/10152334
-
+# https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html
+# OpenMP::OpenMP_CXX
 find_package(OpenMP)
 
 if (OPENMP_FOUND OR OpenMP_CXX_FOUND)
@@ -378,8 +384,19 @@ endif()
 #set_target_properties(BENLIB PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
 
+#   ================    OpenACC    ===============
+# Unsupported by intel and AMD GPU
+#find_package(OpenACC QUIET)
+
+#if (OpenACC_CXX_FOUND)
+#    message(STATUS "OpenACC: FOUND")
+#else()
+#    message(STATUS "OpenACC: NOT FOUND")
+#endif()
+#${OpenACC_CXX_FLAGS}
 
 #   ================    VULKAN    ================
+# Unnecessary for now
 find_package(Vulkan QUIET)
 
 if (VULKAN_FOUND)

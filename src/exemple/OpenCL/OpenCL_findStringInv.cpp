@@ -14,6 +14,8 @@
 //  Crypto                                                  //
 //  Source: https://stackoverflow.com/a/26518143/10152334                                                 //
 //          https://stackoverflow.com/questions/48096034/a-simple-example-with-opencl                                                 //
+//          https://sciencing.com/determine-unknown-exponent-8348632.html                                                 //
+//          http://www.cplusplus.com/reference/cmath/log/                                                 //
 //  OS: ALL                                                 //
 //  CPU: ALL                                                //
 //                                                          //
@@ -21,7 +23,8 @@
 
 #include <fstream>
 #include <iostream>
-#include <memory>
+#include <math.h> // ceil and log
+#include <memory> // unique_ptr make_unique
 #include <stdlib.h>
 #include <string>
 
@@ -43,32 +46,33 @@
 #pragma GCC diagnostic pop
 
 #define KERNEL_FILE "../kernels/findStringInv.cl"
-#define FUNCTION_NAME "findStringInv" // findStringInv_MT
-//__kernel void CRC32_1byte_tableless(__global const void *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
+#define FUNCTION_NAME "findStringInv_MT" // findStringInv_MT
 
 int main(int argc, char **argv)
 {
-    // std::cout << crc32Lookup[0][1] << std::endl;
-    const int N_ELEMENTS = 29;
+    const int NBRS = 475255;
+
+    // https://sciencing.com/determine-unknown-exponent-8348632.html
+    const int N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
     unsigned int platform_id = 0, device_id = 0;
 
     try {
-        //uint64_t B[1] = {8031810176};
+        // uint64_t B[1] = {8031810176};
         std::unique_ptr<uint64_t> B(new uint64_t);
-        B = std::make_unique<uint64_t>(475255);
-        //std::unique_ptr<char[]> C(new char[N_ELEMENTS]);
-        //auto C = std::make_unique<std::array<char, N_ELEMENTS>>();
+        B = std::make_unique<uint64_t>(NBRS);
+        // std::unique_ptr<char[]> C(new char[N_ELEMENTS]);
+        // auto C = std::make_unique<std::array<char, N_ELEMENTS>>();
         std::unique_ptr<char[]> C = std::unique_ptr<char[]>(new char[N_ELEMENTS]);
         /*
         for(size_t i = 0; i < N_ELEMENTS; i++)
         {
             C[i] = '.';
         }
-        std::cout << N_ELEMENTS << std::endl;
-        std::cout << *B.get() << std::endl;*/
+        std::cout << N_ELEMENTS << std::endl;*/
+        std::cout << "Nomber: " << *B.get() << std::endl;
 
-        //std::unique_ptr<char> C(new char);
-        //C = std::make_unique<char>(0);
+        // std::unique_ptr<char> C(new char);
+        // C = std::make_unique<char>(0);
 
         // Query for platforms
         std::vector<cl::Platform> platforms;
@@ -77,7 +81,7 @@ int main(int argc, char **argv)
         // Get a list of devices on this platform
         std::vector<cl::Device> devices;
         platforms[platform_id].getDevices(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_CPU, &devices); // Select the platform.
-        
+
         // Create a context
         cl::Context context(devices);
 
@@ -102,25 +106,24 @@ int main(int argc, char **argv)
 
         // Build the program for the devices
         program.build(devices);
-       
+
         // Make kernel
         cl::Kernel vecadd_kernel(program, FUNCTION_NAME);
-        
+
         // Set the kernel arguments
         vecadd_kernel.setArg(0, bufferB); // lenght
         vecadd_kernel.setArg(1, bufferC);
         // Execute the kernel
         cl::NDRange global(N_ELEMENTS);
         cl::NDRange local(256);
-        
+
         queue.enqueueNDRangeKernel(vecadd_kernel, cl::NullRange, global, cl::NullRange);
-        
+
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, N_ELEMENTS * sizeof(char), C.get());
 
-        std::cout << "Result:";
-        for(size_t i = 0; i < N_ELEMENTS; i++)
-        {
+        std::cout << "Result: ";
+        for (size_t i = 0; i < N_ELEMENTS; i++) {
             std::cout << C[i];
         }
         std::cout << std::endl;
