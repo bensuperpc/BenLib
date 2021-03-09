@@ -28,6 +28,8 @@
 #include <stdlib.h>
 #include <string>
 
+#include "string_lib/string_lib_impl.hpp"
+
 #define __CL_ENABLE_EXCEPTIONS
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstack-protector"
@@ -50,10 +52,16 @@
 
 int main(int argc, char **argv)
 {
-    const int NBRS = 475255;
+    const uint64_t NBRS = 27;
 
     // https://sciencing.com/determine-unknown-exponent-8348632.html
-    const int N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
+    uint64_t N_ELEMENTS = 0;
+    if constexpr (NBRS > 1 ) {
+        N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
+    } else {
+        N_ELEMENTS = 1;
+    }
+    
     unsigned int platform_id = 0, device_id = 0;
 
     try {
@@ -67,8 +75,8 @@ int main(int argc, char **argv)
         for(size_t i = 0; i < N_ELEMENTS; i++)
         {
             C[i] = '.';
-        }
-        std::cout << N_ELEMENTS << std::endl;*/
+        }*/
+        std::cout << "N_ELEMENTS: " << N_ELEMENTS << std::endl;
         std::cout << "Nomber: " << *B.get() << std::endl;
 
         // std::unique_ptr<char> C(new char);
@@ -122,11 +130,14 @@ int main(int argc, char **argv)
         // Copy the output data back to the host
         queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, N_ELEMENTS * sizeof(char), C.get());
 
-        std::cout << "Result: ";
+        std::cout << "Result GPU: ";
         for (size_t i = 0; i < N_ELEMENTS; i++) {
             std::cout << C[i];
         }
         std::cout << std::endl;
+        char res[N_ELEMENTS + 1] = {0};
+        my::string::findStringInv(NBRS, res);
+        std::cout << "Result CPU: " << res << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;

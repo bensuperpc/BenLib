@@ -655,7 +655,7 @@ if(OpenCL_FOUND)
     add_dependencies(opencl_test2 ${CUSTOM_LIBS})
 
     add_executable(opencl_findstringinv ${OPENCL_FINDSTRINGINV})
-    target_link_libraries(opencl_findstringinv PRIVATE ${OpenCL_LIBRARY})
+    target_link_libraries(opencl_findstringinv PRIVATE ${OpenCL_LIBRARY} string_lib)
     add_dependencies(opencl_findstringinv ${CUSTOM_LIBS})
 
     if (OPENSSL_FOUND)
