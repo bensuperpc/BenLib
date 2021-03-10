@@ -87,12 +87,14 @@ inline void my::vector_avx::multiply_and_add(__m256 &a, __m256 &b, __m256 &c, __
 }
 #    endif
 
+/* //Disable due Clang error
 inline float my::vector_avx::extract_float(const __m128 &v, const int i)
 {
     float x = 0.0;
     _MM_EXTRACT_FLOAT(x, v, i);
     return x;
 }
+*/
 
 inline float *my::vector_avx::__m128_to_float(const __m128 &v)
 {

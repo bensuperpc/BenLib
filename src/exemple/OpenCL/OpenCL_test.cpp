@@ -115,7 +115,7 @@ int main(int argc, char **argv)
     // N holds the number of elements in the vectors we want to add
 
     int N[1] = {100};
-    int n = N[0];
+    unsigned int n = N[0];
 
     // create buffers on device (allocate space on GPU)
     cl::Buffer buffer_A(context, CL_MEM_READ_WRITE, sizeof(int) * n);

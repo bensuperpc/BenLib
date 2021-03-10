@@ -26,6 +26,12 @@ project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 #   ================    CMAKE CONF    ================
 #   ==================================================
 
+if (NOT CMAKE_BUILD_TYPE)
+    message(STATUS "No build type selected, default to Release")
+    set(CMAKE_BUILD_TYPE "Release")
+else()
+    message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR 1)
 set(CMAKE_VERBOSE_MAKEFILE 1)
@@ -41,6 +47,9 @@ endif()
 
 # Add Postfix for debug conf
 set(CMAKE_DEBUG_POSTFIX "_d")
+
+# Have cmake create a compile database
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
 #set(Var1 "This is variable 1" PARENT_SCOPE)
@@ -171,7 +180,7 @@ set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-
 set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe -fuse-ld=gold")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v ${OPTI_COMPILER_REL}")
+set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL}") # Remove -v
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
 #-Wold-style-cast -Wdouble-promotion -fstack-usage
@@ -188,7 +197,7 @@ set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wdupl
 set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=gold -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -v ${OPTI_COMPILER_REL}")
+set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL}") # Remove -v
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
 set(CMAKE_SHARED_LINKER_FLAGS "-fuse-ld=gold")
@@ -205,8 +214,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #set(PROJECT_BINARY_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 #   ================    COMPILER DEF    ================
 
@@ -440,7 +447,35 @@ else()
     message(STATUS "QT: NOT FOUND")
 endif()
 
-#   ================    OIS    ================
+
+#   ================    cppcheck    ================
+
+# https://stackoverflow.com/a/63840110/10152334
+
+option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
+message(STATUS "ENABLE_CODE_ANALYSIS       ${ENABLE_CODE_ANALYSIS}")
+
+if(ENABLE_CODE_ANALYSIS)
+    find_program(cppcheck cppcheck)
+    message(STATUS "cppcheck                   ${cppcheck}")
+    if(NOT (cppcheck MATCHES "NOTFOUND"))
+        # Notes:
+        # - unmatchedSuppression needed since not all source files are
+        #   analyzed simultaneously
+        # - unusedFunction needed since not all source files are
+        #   analyzed simultaneously
+        # - template needed to force "warning" into output string, and
+        #   to make the 'id' available for suppression
+        set(CMAKE_CXX_CPPCHECK "${cppcheck}"
+            "--enable=all"
+            "--inconclusive"
+            "--inline-suppr"
+            "--quiet"
+            "--suppress=unmatchedSuppression"
+            "--suppress=unusedFunction"
+            "--template='{file}:{line}: warning: {id} ({severity}): {message}'")
+    endif()
+endif(ENABLE_CODE_ANALYSIS)
 
 #   =================================================
 #   =============    INTERNAL LIBS    ===============
@@ -877,3 +912,10 @@ configure_file(${lib_path}lib/opencl/kernels/findStringInv.cl ${CMAKE_BINARY_DIR
 
 
 #unset(CMAKE_BUILD_TYPE CACHE)
+
+
+# Section CPack
+include (CPack)
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "CMake main lib")
+SET(CPACK_PACKAGE_VENDOR "Ben")
+SET(CPACK_PACKAGE_EXECUTABLES "benlib" "benlib")

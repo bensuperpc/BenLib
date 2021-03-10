@@ -24,10 +24,8 @@ namespace sphere
 template <typename T> T sphereSurface(const T &r);
 template <typename T> T sphereVolume(const T &r);
 
-#if CMAKE_CXX_EXTENSIONS == 1
 template <typename T> T sphereSurface_Q(const T &r);
 template <typename T> T sphereVolume_Q(const T &r);
-#endif
 
 } // namespace sphere
 } // namespace math

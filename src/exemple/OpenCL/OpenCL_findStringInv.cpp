@@ -52,14 +52,14 @@
 
 int main(int argc, char **argv)
 {
-    const uint64_t NBRS = 27;
+    const uint64_t NBRS = 26;
 
     // https://sciencing.com/determine-unknown-exponent-8348632.html
     uint64_t N_ELEMENTS = 0;
-    if constexpr (NBRS > 1 ) {
+    if constexpr (NBRS > 26 ) { // Need to be more than 26
         N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
     } else {
-        N_ELEMENTS = 1;
+        N_ELEMENTS = 1; 
     }
     
     unsigned int platform_id = 0, device_id = 0;
@@ -135,9 +135,10 @@ int main(int argc, char **argv)
             std::cout << C[i];
         }
         std::cout << std::endl;
-        char res[N_ELEMENTS + 1] = {0};
-        my::string::findStringInv(NBRS, res);
-        std::cout << "Result CPU: " << res << std::endl;
+
+        std::unique_ptr<char[]> res = std::unique_ptr<char[]>(new char[N_ELEMENTS + 1]);
+        my::string::findStringInv(NBRS, res.get());
+        std::cout << "Result CPU: " << *res.get() << std::endl;
     }
     catch (cl::Error err) {
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;

@@ -32,7 +32,7 @@ double invsqrt(double x);
 
 float sqrt(float x);
 double sqrt(double x);
-template <typename T, char iterations = 2> inline T math::square_root::invsqrt(T);
+template <typename T, char iterations = 2> inline T invsqrt(T);
 } // namespace square_root
 } // namespace math
 #endif

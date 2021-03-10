@@ -26,7 +26,7 @@ template <typename T> std::vector<std::vector<T>> my::vector::generate_matrix(si
 
 template <typename T> void my::vector::rnd_fill(std::vector<T> &V, const T lower, const T upper, const uint64_t seed)
 {
-    std::random_device rnd_device = std::random_device(seed);
+    std::random_device rnd_device;
     std::mt19937 mersenne_engine {rnd_device()};
     if constexpr (std::is_integral<T>::value) {
         std::uniform_int_distribution<T> dist {lower, upper};
