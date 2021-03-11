@@ -208,12 +208,11 @@ int main()
     std::size_t count = 0; // Count tasks done
 #endif
     std::size_t t __attribute__((unused)); // Unused value
-
     for (auto &&result_pool : results_pool) {
         t = result_pool.get(); // Get result from threadpool
 #ifdef MORE_INFO
         // Calculate work %
-        if (count % (std::size_t)(nbrtask / 50) == 0) {
+        if (count % (std::size_t)((nbrtask / 50) + 1) == 0) {
             std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl; // Display % of work
         }
         count++;
@@ -242,6 +241,8 @@ int main()
         if (it != cheat_list.end()) {
             std::cout << cheat_list_name[it - cheat_list.begin()] << std::endl;
         }
+#else
+        std::cout << std::endl;
 #endif
     }
     return EXIT_SUCCESS;
