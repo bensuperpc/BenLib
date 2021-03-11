@@ -44,9 +44,10 @@
 #include <utility> // std::make_pair
 #include <vector>
 #include "thread/Pool.hpp" // Threadpool
+#include "time/chrono/chrono.hpp" // Chrono
 
 // If you want display less informations, comment it
-#define MORE_INFO
+//#define MORE_INFO
 
 // For debug mode
 //#define DNDEBUG
@@ -153,6 +154,7 @@ struct Task
 
 int main()
 {
+    auto &&t1 = my::chrono::now();
     std::ios_base::sync_with_stdio(false);                 // Improve std::cout and std::cin speed
     std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
 
@@ -162,7 +164,7 @@ int main()
     // 208827064576 = ~28 min on I7 9750H
     // 8031810176 = ~1 min on I7 9750H
     // 308915776 = 2 sec on I7 9750H
-    const size_t to_range = 8031810176; // Alphabetic sequence range max, must be > from_range !
+    const size_t to_range = 308915776; // Alphabetic sequence range max, must be > from_range !
 
 #ifdef DNDEBUG
     assert(from_range < to_range); // Test if begining value is highter than end value
@@ -194,7 +196,6 @@ int main()
     std::cout << "From: " << tmp1 << " to: " << tmp2 << " Alphabetic sequence" << std::endl;
     std::cout << "" << std::endl;
 #endif
-
     results_pool.reserve(nbrtask); // Vectors reservation
 
     for (std::size_t i = from_range - 1; i < nbrtask; i++) {
@@ -245,5 +246,8 @@ int main()
         std::cout << std::endl;
 #endif
     }
+    auto &&t2 = my::chrono::now();
+    std::cout << "Time: " << my::chrono::duration(t1, t2).count() << " sec" << std::endl;
+    std::cout << "This program execute: " << std::fixed << (nbrcal / my::chrono::duration(t1, t2).count()) / 1000000 << " MOps/sec" << std::endl;
     return EXIT_SUCCESS;
 }

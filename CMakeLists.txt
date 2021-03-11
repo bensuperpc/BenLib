@@ -50,7 +50,7 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 
 # Have cmake create a compile database
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
+set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
 #set(Var1 "This is variable 1" PARENT_SCOPE)
 
@@ -453,7 +453,7 @@ endif()
 # https://stackoverflow.com/a/63840110/10152334
 
 option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
-message(STATUS "ENABLE_CODE_ANALYSIS       ${ENABLE_CODE_ANALYSIS}")
+message(STATUS "ENABLE_CODE_ANALYSIS: ${ENABLE_CODE_ANALYSIS}")
 
 if(ENABLE_CODE_ANALYSIS)
     find_program(cppcheck cppcheck)
@@ -672,7 +672,7 @@ add_dependencies(bench_crc32 ${CUSTOM_LIBS})
 
 if(Boost_FOUND)
     add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
-    target_link_libraries(gta_sa_cheat PRIVATE thread string_lib)
+    target_link_libraries(gta_sa_cheat PRIVATE thread string_lib time)
     add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
 
     add_executable(list_all_file ${LIST_ALL_FILE})

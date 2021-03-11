@@ -1,10 +1,9 @@
 ARG IMAGE=manjarolinux/base
 
 FROM $IMAGE
-#ADD config_docker/pacman.conf /etc/pacman.conf
-RUN pacman -Syyu --noconfirm 
-RUN pacman -S sfml boost opencv-samples opencv gcc freeglut \ 
- cmake ninja qt5 hdf5 vtk opencl-icd-loader vulkan-icd-loader --noconfirm && pacman -Scc --noconfirm
+ADD config_docker/pacman.conf /etc/pacman.conf
+RUN pacman -Syyu --noconfirm && pacman -S sfml boost opencv-samples opencv gcc freeglut \ 
+ cmake ninja qt5 hdf5 vtk opencl-icd-loader vulkan-icd-loader openmp cppcheck --noconfirm && pacman -Scc --noconfirm
 
 ARG UNAME=testuser
 ARG UID=1000
