@@ -13,14 +13,13 @@
 # ==============================================================================
 
 cd build
-#cmake .. && make -j 12
+#cmake .. && make -j$(nproc)
 #Release/Debug/Coverage/MinSizeRel
 #-DCMAKE_BUILD_TYPE=Release
 #-DENABLE_CODE_ANALYSIS=O
 cmake $@ -G Ninja ..
 
 ninja
-#make -j 12
 ctest --output-on-failure -j$(nproc) #--extra-verbose
 
 #make install 

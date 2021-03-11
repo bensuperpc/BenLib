@@ -8,7 +8,7 @@
 #include "square_root.hpp"
 
 // THANK https://stackoverflow.com/a/59248244/10152334
-template <typename T, char iterations = 2> T math::square_root::invsqrt(T x)
+template <typename T, char iterations> T math::square_root::invsqrt(T x)
 {
     static_assert(std::is_floating_point<T>::value, "T must be floating point");
     static_assert(iterations == 1 or iterations == 2, "itarations must equal 1 or 2");

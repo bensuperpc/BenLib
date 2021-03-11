@@ -27,7 +27,6 @@
 #include <memory> // unique_ptr make_unique
 #include <stdlib.h>
 #include <string>
-
 #include "string_lib/string_lib_impl.hpp"
 
 #define __CL_ENABLE_EXCEPTIONS
@@ -56,26 +55,27 @@ int main(int argc, char **argv)
 
     // https://sciencing.com/determine-unknown-exponent-8348632.html
     uint64_t N_ELEMENTS = 0;
-    if constexpr (NBRS > 26 ) { // Need to be more than 26
-        N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
-    } else {
-        N_ELEMENTS = 1; 
-    }
-    
-    unsigned int platform_id = 0, device_id = 0;
+
+    const unsigned int platform_id = 0, device_id = 0;
 
     try {
-        // uint64_t B[1] = {8031810176};
+
+        if constexpr (NBRS > 26) { // Need to be more than 26
+            N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
+        } else {
+            N_ELEMENTS = 1;
+        }
+        if constexpr (NBRS > 26) { // Need to be more than 26
+            N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
+        } else {
+            N_ELEMENTS = 1;
+        }
+
         std::unique_ptr<uint64_t> B(new uint64_t);
         B = std::make_unique<uint64_t>(NBRS);
-        // std::unique_ptr<char[]> C(new char[N_ELEMENTS]);
-        // auto C = std::make_unique<std::array<char, N_ELEMENTS>>();
+
         std::unique_ptr<char[]> C = std::unique_ptr<char[]>(new char[N_ELEMENTS]);
-        /*
-        for(size_t i = 0; i < N_ELEMENTS; i++)
-        {
-            C[i] = '.';
-        }*/
+
         std::cout << "N_ELEMENTS: " << N_ELEMENTS << std::endl;
         std::cout << "Nomber: " << *B.get() << std::endl;
 
