@@ -43,7 +43,7 @@
 #include <tuple>
 #include <utility> // std::make_pair
 #include <vector>
-#include "thread/Pool.hpp" // Threadpool
+#include "thread/Pool.hpp"        // Threadpool
 #include "time/chrono/chrono.hpp" // Chrono
 
 // If you want display less informations, comment it
@@ -218,12 +218,6 @@ int main()
         }
         count++;
 #endif
-        // Free results if is "full"
-        /*
-        if(results.length() >= 10000){
-            mutex.lock();
-            mutex.unlock();
-        }*/
     }
 
     // Sort result, due multi-threading, sometimes results can be differents every exec.
