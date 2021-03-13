@@ -587,6 +587,7 @@ if (OpenCL_FOUND)
     set(OPENCL_TEST2 ${lib_path}src/exemple/OpenCL/OpenCL_test2.cpp)
     set(OPENCL_CRC32 ${lib_path}src/exemple/OpenCL/OpenCL_crc32.cpp)
     set(OPENCL_FINDSTRINGINV ${lib_path}src/exemple/OpenCL/OpenCL_findStringInv.cpp)
+    set(OPENCL_GTA_SA_GPU ${lib_path}src/exemple/OpenCL/OpenCL_GTA_SA_cheat_GPU.cpp)
 endif()
 
 if (OPENSSL_FOUND)
@@ -692,6 +693,10 @@ if(OpenCL_FOUND)
     add_executable(opencl_findstringinv ${OPENCL_FINDSTRINGINV})
     target_link_libraries(opencl_findstringinv PRIVATE ${OpenCL_LIBRARY} string_lib)
     add_dependencies(opencl_findstringinv ${CUSTOM_LIBS})
+
+    add_executable(opencl_gta_sa_gpu ${OPENCL_GTA_SA_GPU})
+    target_link_libraries(opencl_gta_sa_gpu PRIVATE ${OpenCL_LIBRARY} string_lib)
+    add_dependencies(opencl_gta_sa_gpu ${CUSTOM_LIBS})
 
     if (OPENSSL_FOUND)
         add_executable(opencl_crc32 ${OPENCL_CRC32})

@@ -60,7 +60,7 @@ template <class T> void my::string::findStringInv(T n, char *array)
         array[0] = alpha[n - 1];
         return;
     }
-    std::size_t i = 0;
+    T i = 0;
     while (n > 0) {
         array[i] = alpha[(--n) % alphabetSize];
         n /= alphabetSize;
@@ -79,7 +79,7 @@ template <class T> void my::string::findString(T n, char *array)
         array[0] = alpha[n - 1];
         return;
     }
-    std::size_t i = 0;
+    T i = 0;
     while (n > 0) {
         array[i] = alpha[(--n) % alphabetSize];
         n /= alphabetSize;
