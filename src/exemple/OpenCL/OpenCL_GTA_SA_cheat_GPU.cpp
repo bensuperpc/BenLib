@@ -46,8 +46,8 @@
 #endif
 #pragma GCC diagnostic pop
 
-#define KERNEL_FILE "../kernels/findStringInv.cl"
-#define FUNCTION_NAME "findStringInv" // findStringInv_MT
+#define KERNEL_FILE "../kernels/gta_sa.cl"
+#define FUNCTION_NAME "findStringInv_T" // findStringInv_MT
 
 int main(int argc, char **argv)
 {
@@ -57,6 +57,9 @@ int main(int argc, char **argv)
     uint64_t N_ELEMENTS = 0;
 
     const unsigned int platform_id = 0, device_id = 0;
+
+    cl::Program program;
+    std::vector<cl::Device> devices;
 
     try {
 
@@ -87,7 +90,7 @@ int main(int argc, char **argv)
         cl::Platform::get(&platforms);
 
         // Get a list of devices on this platform
-        std::vector<cl::Device> devices;
+        //std::vector<cl::Device> devices;
         platforms[platform_id].getDevices(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_CPU, &devices); // Select the platform.
 
         // Create a context
@@ -110,7 +113,8 @@ int main(int argc, char **argv)
         cl::Program::Sources source(1, std::make_pair(sourceCode.c_str(), sourceCode.length()));
 
         // Make program from the source code
-        cl::Program program = cl::Program(context, source);
+        //cl::Program program;
+        program = cl::Program(context, source);
 
         // Build the program for the devices
         program.build(devices);
@@ -147,6 +151,16 @@ int main(int argc, char **argv)
         std::cout << std::endl;
     }
     catch (cl::Error err) {
+        if (err.err() == CL_BUILD_PROGRAM_FAILURE)
+        {
+            // Check the build status
+            cl_build_status status = program.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(devices[device_id]);
+
+            // Get the build log
+            std::string name     = devices[device_id].getInfo<CL_DEVICE_NAME>();
+            std::string buildlog = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(devices[device_id]);
+            std::cerr << "Build log for " << name << ":" << std::endl << buildlog << std::endl;
+        }
         std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
         return (EXIT_FAILURE);
     }

@@ -900,8 +900,8 @@ configure_file(${lib_path}lib/opencl/kernels/simple_add.cl ${CMAKE_BINARY_DIR}/k
 configure_file(${lib_path}lib/opencl/kernels/crc_kernel.cl ${CMAKE_BINARY_DIR}/kernels/crc_kernel.cl COPYONLY)
 # For OpenCL_findStringInv.cpp
 configure_file(${lib_path}lib/opencl/kernels/findStringInv.cl ${CMAKE_BINARY_DIR}/kernels/findStringInv.cl COPYONLY)
-
-
+# For GTA SA Alternative cheats
+configure_file(${lib_path}lib/opencl/kernels/gta_sa.cl ${CMAKE_BINARY_DIR}/kernels/gta_sa.cl COPYONLY)
 
 #add_custom_command(
 #    TARGET game
