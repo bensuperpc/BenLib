@@ -18,7 +18,7 @@ long int my_chrono::elapsed_ns()
 
 long int my_chrono::elapsed_ms()
 {
-    return elapsed_ns() / 1000;
+    return this->elapsed_ns() / 1000;
 }
 
 void my_chrono::reset()

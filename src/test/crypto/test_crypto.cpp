@@ -2,7 +2,9 @@
 #define BOOST_TEST_MODULE crypto
 
 #include <algorithm>
+extern "C" {
 #include <boost/predef.h>
+}
 #include <random>
 
 #if BOOST_COMP_GNUC

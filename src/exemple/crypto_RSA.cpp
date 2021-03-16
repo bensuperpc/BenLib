@@ -19,10 +19,12 @@
 //////////////////////////////////////////////////////////////
 
 #include <iostream>
+extern "C" {
 #include <openssl/err.h>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
 #include <string.h>
+}
 #include "crypto/crypto_RSA.hpp"
 
 using namespace std;

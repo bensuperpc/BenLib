@@ -12,11 +12,13 @@ https://stackoverflow.com/a/5580881/10152334
 #define CRYPTO_AES_HPP_
 
 // For AES
+extern "C" {
 #include <openssl/aes.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 #include <string.h>
+}
 
 #define BUFFSIZE 16384
 

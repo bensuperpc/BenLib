@@ -9,7 +9,9 @@
 #define QT_UTILS_HPP
 
 #include <QImage>
+extern "C" {
 #include <boost/predef.h>
+}
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

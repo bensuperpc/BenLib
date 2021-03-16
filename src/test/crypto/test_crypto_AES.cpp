@@ -2,11 +2,13 @@
 #define BOOST_TEST_MODULE crypto_AES
 
 #include <algorithm>
-#include <boost/predef.h>
 #include <boost/test/unit_test.hpp>
+extern "C" {
+#include <boost/predef.h>
 #include <openssl/aes.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
+}
 #include "crypto/crypto_AES.hpp"
 
 BOOST_AUTO_TEST_CASE(test_crypto_aes_1)

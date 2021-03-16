@@ -27,10 +27,11 @@
 #    include <algorithm>
 
 #    if (__AVX2__ || __AVX__ || __SSE3__)
+extern "C" {
 #        include <emmintrin.h>
 #        include <immintrin.h>
 #        include <mmintrin.h>
-
+}
 #        define _MM_SHUFFLE8(fp7, fp6, fp5, fp4, fp3, fp2, fp1, fp0)                                                                                           \
             (((fp7) << 21) | ((fp6) << 18) | ((fp5) << 15) | ((fp4) << 12)) | (((fp3) << 9) | ((fp2) << 6) | ((fp1) << 3) | ((fp0)))
 

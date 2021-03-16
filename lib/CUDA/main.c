@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
 #include <cuda_runtime_api.h>
 #include <cuda.h>
 
@@ -36,9 +35,9 @@ int main( int argc, char* argv[] )
     h_c = (double*)malloc(bytes);
  
     // Allocate memory for each vector on GPU
-    cudaMalloc(&d_a, bytes);
-    cudaMalloc(&d_b, bytes);
-    cudaMalloc(&d_c, bytes);
+    cudaMalloc((void *)&d_a, bytes);
+    cudaMalloc((void *)&d_b, bytes);
+    cudaMalloc((void *)&d_c, bytes);
  
     int i;
     // Initialize vectors on host

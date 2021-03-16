@@ -13,9 +13,11 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #define BUFFSIZE 16384
 
 // For RSA
+extern "C" {
 #include <openssl/engine.h>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
+}
 #define KEY_LENGTH 4096
 #define PUBLIC_EXPONENT 65537 // 59 // Public exponent should be a prime number.
 #define PUBLIC_KEY_PEM 1

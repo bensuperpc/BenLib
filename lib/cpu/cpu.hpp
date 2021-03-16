@@ -10,12 +10,15 @@
 
 #include <iostream>
 #include <string>
-
+extern "C" {
+#if defined(__x86_64__) || defined(__i386__)
 #ifdef _WIN32
 #    include <intrin.h>
 #else
 #    include <x86intrin.h>
 #endif
+#endif
+}
 
 using namespace std;
 

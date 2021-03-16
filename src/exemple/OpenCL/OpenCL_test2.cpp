@@ -22,7 +22,9 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+extern "C" {
 #include <stdlib.h>
+}
 #include <string>
 
 #define __CL_ENABLE_EXCEPTIONS

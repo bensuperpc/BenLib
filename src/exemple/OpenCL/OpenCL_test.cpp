@@ -41,7 +41,11 @@
 #pragma GCC diagnostic pop
 #include <fstream>
 #include <iostream>
+extern "C" {
 #include <stdio.h>
+}
+
+
 int main(int argc, char **argv)
 {
     std::string platform_ver;
