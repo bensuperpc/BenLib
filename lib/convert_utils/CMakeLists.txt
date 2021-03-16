@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.11)
 # THANK https://stackoverflow.com/questions/43260990/cmake-linking-against-a-library-linked-to-qt5
 # THANK https://scm.gforge.inria.fr/anonscm/svn/gratin/trunk/cmake/FindQt5.cmake
 
-project(convert_utils CXX C)
+project(convert_utils VERSION 0.0.2 LANGUAGES CXX C)
 
 #set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 

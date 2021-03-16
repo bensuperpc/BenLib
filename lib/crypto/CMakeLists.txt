@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(my_crypto C CXX)
+project(my_crypto VERSION 0.0.2 LANGUAGES CXX C)
 
 find_package(OpenSSL QUIET)
 

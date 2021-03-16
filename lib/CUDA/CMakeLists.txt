@@ -90,8 +90,6 @@ target_link_libraries(vecAdd my_cuda)
 set_property(TARGET vecAdd PROPERTY CUDA_ARCHITECTURES 75)
 
 
-
-
 #cuda_add_executable(main main.cpp)
 #target_link_libraries(main ${CUDA_LIBRARIES})
 #target_link_libraries(main kernel_obj)
