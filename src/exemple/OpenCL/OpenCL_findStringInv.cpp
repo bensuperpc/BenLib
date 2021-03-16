@@ -137,7 +137,7 @@ int main(int argc, char **argv)
         std::cout << std::endl;
 
         std::unique_ptr<char[]> res = std::unique_ptr<char[]>(new char[N_ELEMENTS + 1]);
-        //char * res = new char[N_ELEMENTS + 1];
+        // char * res = new char[N_ELEMENTS + 1];
         my::string::findStringInv(NBRS, res.get());
 
         std::cout << "Result CPU: ";

@@ -9,7 +9,7 @@
 #                                                            #
 #  BenLib, 2020                                              #
 #  Created: 19, March, 2020                                  #
-#  Modified: 08, March, 2021                                 #
+#  Modified: 16, March, 2021                                 #
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:                                                   #
@@ -19,7 +19,7 @@
 ##############################################################
 
 cmake_minimum_required (VERSION 3.13)
-#project(BENLIB VERSION 0.0.5 LANGUAGES CXX C CUDA)
+#project(BENLIB VERSION 0.0.5 LANGUAGES CUDA CXX C)
 project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 
 #   ==================================================
@@ -53,6 +53,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
 #set(Var1 "This is variable 1" PARENT_SCOPE)
+
+include(CheckLanguage)
+check_language(CUDA)
+if(CMAKE_CUDA_COMPILER)
+	enable_language(CUDA)
+    message(STATUS "CMAKE_CUDA_COMPILER: True")
+endif()
 
 #   ================================================
 #   ================    COMPILER    ================
@@ -377,16 +384,23 @@ endif()
 #export LD_LIBRARY_PATH=/opt/cuda/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
 
 #set(CUTLASS_NATIVE_CUDA_INIT ON)
-#find_package(CUDA QUIET)
+find_package(CUDA QUIET)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
-#if (CUDA_FOUND)
-#    include_directories(${CUDA_INCLUDE_DIRS})
-#    link_directories(${CUDA_LIBRARIES})
-#    set(CMAKE_CUDA_STANDARD 14)
-#    message(STATUS "CUDA: FOUND")
-#else()
-#    message(STATUS "CUDA: NOT FOUND")
-#endif()
+if (CUDA_FOUND)
+    include_directories(${CUDA_INCLUDE_DIRS})
+    link_directories(${CUDA_LIBRARIES})
+    set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS} -Xcompiler=-Wall")
+    set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
+    set(CMAKE_CUDA_STANDARD 14)
+    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
+        -O3 -Wall -gencode arch=compute_75,code=sm_75;
+        --std=c++11
+    )
+
+    message(STATUS "CUDA: FOUND")
+else()
+    message(STATUS "CUDA: NOT FOUND")
+endif()
 
 #set_target_properties(BENLIB PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
@@ -524,10 +538,14 @@ add_subdirectory(${lib_path}lib/thread "src/lib/lib/thread")
 add_subdirectory(${lib_path}lib/filesystem "src/lib/lib/filesystem")
 
 add_subdirectory(${lib_path}lib/string_lib "src/lib/lib/string_lib")
-
-add_subdirectory(${lib_path}lib/crypto "src/lib/lib/crypto")
-
+if (OPENSSL_FOUND)
+    add_subdirectory(${lib_path}lib/crypto "src/lib/lib/crypto")
+endif()
 add_subdirectory(${lib_path}lib/std "src/lib/lib/std")
+
+if (CUDA_FOUND)
+    add_subdirectory(${lib_path}lib/CUDA "src/lib/lib/CUDA")
+endif()
 
 if(EXTERNAL_LIB)
     add_dependencies(hello ${EXTERNAL_LIB})
@@ -545,6 +563,11 @@ if(EXTERNAL_LIB)
     add_dependencies(my_crypto ${EXTERNAL_LIB})
     add_dependencies(std ${EXTERNAL_LIB})
 endif()
+
+if(EXTERNAL_LIB AND CUDA_FOUND)
+    add_dependencies(my_cuda ${EXTERNAL_LIB})
+endif()
+
 
 #   =================================================
 #   =============    SOURCES FILES    ===============

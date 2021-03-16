@@ -13,10 +13,14 @@
 //  file: findStringInv.cl                                  //
 //  Crypto                                                  //
 //  Source: https://www.khronos.org/registry/OpenCL/sdk/1.0/docs/man/xhtml/scalarDataTypes.html                                                //
+//          https://stackoverflow.com/a/34662623/10152334                                                //
+//          https://github.com/shc261392/OpenCL-Basic-Example/blob/master/kernels/float_vector_add.cl                                                //
 //  OS: ALL                                                 //
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
+
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
 #define ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define alphabetSize 26
@@ -27,8 +31,9 @@
 
 long find(const uint *value, const uint *data);
 void __attribute__((overloadable)) copy(__private const uint* in, __private uint*  out);
-void __attribute__((overloadable)) copy(__global char* s1, char* s2);
+void __attribute__((overloadable)) copy(__global char* s1, __private char* s2);
 void findStringInv(ulong A, __private char*  B);
+void JAMCRC_1byte_tableless2(__private uchar *data, ulong length, uint previousCrc32, __private uint *resultCrc32);
 
 
 __constant const uint cheat_list[CHEATNBR] = {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345, 0xE1EF01EA, 0x771B83FC,
@@ -58,11 +63,25 @@ void __attribute__((overloadable)) copy(__private const uint* in, __private uint
   out[i] = in[i];
 }
 
-void __attribute__((overloadable)) copy(__global char* s1, char* s2)
+void __attribute__((overloadable)) copy(__global char* s1, __private char* s2)
 {
   //barrier(CLK_LOCAL_MEM_FENCE);
   size_t i = get_global_id(0);
   s1[i] = s2[i];
+}
+
+void JAMCRC_1byte_tableless2(__private uchar *data, ulong length, uint previousCrc32, __private uint *resultCrc32)
+{
+	__private uint crc = ~previousCrc32;
+	while (length-- != 0) {
+    
+		crc = crc ^ *data++;
+		uint c = (((crc << 31) >> 31) & ((POLY >> 7) ^ (POLY >> 1))) ^ (((crc << 30) >> 31) & ((POLY >> 6) ^ POLY)) ^ (((crc << 29) >> 31) & (POLY >> 5))
+						^ (((crc << 28) >> 31) & (POLY >> 4)) ^ (((crc << 27) >> 31) & (POLY >> 3)) ^ (((crc << 26) >> 31) & (POLY >> 2))
+						^ (((crc << 25) >> 31) & (POLY >> 1)) ^ (((crc << 24) >> 31) & POLY);
+	}
+  //barrier(CLK_LOCAL_MEM_FENCE);
+	*resultCrc32 = crc;
 }
 
 
@@ -89,23 +108,15 @@ void findStringInv(ulong A, __private char* B)
 kernel void findStringInv_T(__global ulong* A, __global char* B)
 {
   ulong nbrs = *A;
-  char str[6];
+  char str[29];
   findStringInv(nbrs, str);
 
   copy(B, str);
+  uint jamcrc32[1] = {0};
+  JAMCRC_1byte_tableless2(str, 6, 0, jamcrc32);
 
-  /*
-  long index = 0;
-  uint value[1] = {0x5A783FAE};
-  uint cheat_list_[87];
-
-  uint cheat_list1[2] = {1, 2};
-  uint cheat_list2[2] = {0, 0};
-
-  copy(cheat_list1, cheat_list2);
-
-  long i = find(value, cheat_list_);
-  B[0] = '0' + cheat_list2[0];
-  B[1] = '0' + cheat_list2[1];
-  */
+  if(jamcrc32[0] == 0xE326BC09)
+  {
+    B[0] = 'S';
+  }
 }

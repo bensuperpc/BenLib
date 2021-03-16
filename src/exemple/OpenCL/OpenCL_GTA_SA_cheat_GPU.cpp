@@ -90,7 +90,7 @@ int main(int argc, char **argv)
         cl::Platform::get(&platforms);
 
         // Get a list of devices on this platform
-        //std::vector<cl::Device> devices;
+        // std::vector<cl::Device> devices;
         platforms[platform_id].getDevices(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_CPU, &devices); // Select the platform.
 
         // Create a context
@@ -104,8 +104,8 @@ int main(int argc, char **argv)
         cl::Buffer bufferC = cl::Buffer(context, CL_MEM_WRITE_ONLY, N_ELEMENTS * sizeof(char));
 
         // Copy the input data to the input buffers using the command queue.
-        queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(uint64_t), B.get());
-        queue.enqueueWriteBuffer(bufferC, CL_FALSE, 0, N_ELEMENTS * sizeof(char), C.get());
+        queue.enqueueWriteBuffer(bufferB, CL_TRUE, 0, sizeof(uint64_t), B.get());
+        queue.enqueueWriteBuffer(bufferC, CL_TRUE, 0, N_ELEMENTS * sizeof(char), C.get());
 
         // Read the program source
         std::ifstream sourceFile(KERNEL_FILE);
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
         cl::Program::Sources source(1, std::make_pair(sourceCode.c_str(), sourceCode.length()));
 
         // Make program from the source code
-        //cl::Program program;
+        // cl::Program program;
         program = cl::Program(context, source);
 
         // Build the program for the devices
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
         std::cout << std::endl;
 
         std::unique_ptr<char[]> res = std::unique_ptr<char[]>(new char[N_ELEMENTS + 1]);
-        //char * res = new char[N_ELEMENTS + 1];
+        // char * res = new char[N_ELEMENTS + 1];
         my::string::findStringInv(NBRS, res.get());
 
         std::cout << "Result CPU: ";
@@ -151,13 +151,12 @@ int main(int argc, char **argv)
         std::cout << std::endl;
     }
     catch (cl::Error err) {
-        if (err.err() == CL_BUILD_PROGRAM_FAILURE)
-        {
+        if (err.err() == CL_BUILD_PROGRAM_FAILURE) {
             // Check the build status
             cl_build_status status = program.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(devices[device_id]);
 
             // Get the build log
-            std::string name     = devices[device_id].getInfo<CL_DEVICE_NAME>();
+            std::string name = devices[device_id].getInfo<CL_DEVICE_NAME>();
             std::string buildlog = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(devices[device_id]);
             std::cerr << "Build log for " << name << ":" << std::endl << buildlog << std::endl;
         }
