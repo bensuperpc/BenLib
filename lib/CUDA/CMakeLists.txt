@@ -63,6 +63,7 @@ set(HEADERS
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda STATIC ${SRCS} ${HEADERS})
+include_directories("kernel/")
 target_compile_features(my_cuda PUBLIC cxx_std_11)
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -76,6 +77,20 @@ if(APPLE)
                PROPERTY
                BUILD_RPATH ${CMAKE_CUDA_IMPLICIT_LINK_DIRECTORIES})
 endif()
+
+if(UNIX)
+  # Help the shared cuda runtime find libcudart as it is not located
+  # in a default system searched location
+  set_property(TARGET my_cuda PROPERTY BUILD_RPATH ${CMAKE_CUDA_IMPLICIT_LINK_DIRECTORIES})
+endif()
+
+cuda_add_executable(vecAdd main.c)
+target_link_libraries(vecAdd ${CUDA_LIBRARIES})
+target_link_libraries(vecAdd my_cuda)
+set_property(TARGET vecAdd PROPERTY CUDA_ARCHITECTURES 75)
+
+
+
 
 #cuda_add_executable(main main.cpp)
 #target_link_libraries(main ${CUDA_LIBRARIES})
