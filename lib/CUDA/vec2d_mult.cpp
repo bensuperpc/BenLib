@@ -34,7 +34,6 @@ extern "C"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 }
 
 /*
@@ -51,7 +50,6 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
     outFile << std::setprecision(2);
 
     for (int i = 0; i < x_dim; i++) {
-
         for (int j = 0; j < y_dim; j++) {
             outFile << matrix[i * dim + j] << " ";
         }
@@ -64,7 +62,7 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 // it multiplies square matrices
 /*__host__*/ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 {
-    //#pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2)
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < m; ++j) {
             float tmp = 0.0;
@@ -177,18 +175,22 @@ int main(void)
     cudaEventSynchronize(stop);
     float et;
     cudaEventElapsedTime(&et, start, stop);
-    cudaEventDestroy(start);
-    cudaEventDestroy(stop);
 
     // Retrieve result from device and store it in host array
     cudaMemcpy(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost);
 
-    clock_t begin = clock();
+    cudaEventRecord(start, 0);
 
     cpu_matrix_mult(Left_Vector_h, Right_Vector_h, CPU, dim); // matrix multiplication on cpu
 
-    clock_t end = clock();
-    double time_spent = (double)1000 * (end - begin) / CLOCKS_PER_SEC;
+    cudaEventRecord(stop, 0);
+    cudaEventSynchronize(stop);
+
+    float time_spent;
+    cudaEventElapsedTime(&time_spent, start, stop);
+
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
 
     // commented out the functions which helps to calculate time
     printf("GPU time= %f ms\n", et);
@@ -223,188 +225,3 @@ int main(void)
     cudaFree(Right_Vector_d);
     cudaFree(Res_d);
 }
-
-/*
-const int TILE_WIDTH = 16;
-#define THREADS_PER_BLOCK 1024
-
-void matrixMultiplyCPU(float *a, float *b, float *c, int width)
-{
-    float result;
-
-    for (size_t row = 0; row < width; row++) {
-        for (size_t col = 0; col < width; col++) {
-            result = 0;
-            for (size_t k = 0; k < width; k++) {
-                result += a[row * width + k] * b[k * width + col];
-            }
-            c[row * width + col] = result;
-        }
-    }
-}
-
-void matrixMultiplyCPU_MP(float *a, float *b, float *c, int width)
-{
-    float result = 0.0;
-//#pragma omp parallel
-#pragma omp parallel for collapse(2) private(result)
-    for (size_t row = 0; row < width; row++) {
-        for (size_t col = 0; col < width; col++) {
-            result = 0;
-            for (size_t k = 0; k < width; k++) {
-                result += a[row * width + k] * b[k * width + col];
-            }
-            c[row * width + col] = result;
-        }
-    }
-}
-
-
-int main()
-{
-    int width = 16; // Define width of square matrix
-    // Initialise grid and block variables
-    int sqrtThreads = sqrt(THREADS_PER_BLOCK);
-    int nBlocks = width / sqrtThreads;
-    if (width % sqrtThreads != 0) { // Add an extra block if necessary
-        nBlocks++;
-    }
-    int i_mult = 1;
-    // dim3 grid(nBlocks, nBlocks, i_mult);
-    dim3 grid = {nBlocks, nBlocks, i_mult};
-    // dim3 block(sqrtThreads, sqrtThreads, i_mult); // Max number of threads per block
-    dim3 block = {sqrtThreads, sqrtThreads, i_mult};
-    // Initialise host pointers (dynamically allocated memory) and device pointers
-    float *a_h;
-    float *b_h;
-    float *c_h; // GPU results
-    float *d_h; // CPU results
-    float *a_d;
-    float *b_d;
-    float *c_d;
-
-    int size; // Number of bytes required by arrays
-
-    // Create timer
-    cudaEvent_t start;
-    cudaEvent_t stop;
-    float elapsed1, elapsed2, elapsed3;
-
-    // Print out information about blocks and threads
-    printf("Number of threads: %i (%ix%i)\n", block.x * block.y, block.x, block.y);
-    printf("Number of blocks: %i (%ix%i)\n", grid.x * grid.y, grid.x, grid.y);
-
-    // Dynamically allocate host memory
-    size = width * width * sizeof(float);
-
-    a_h = (float *)malloc(size);
-    b_h = (float *)malloc(size);
-    c_h = (float *)malloc(size);
-    d_h = (float *)malloc(size);
-
-    // Load host arrays with data
-    for (size_t i = 0; i < width; i++) {
-        for (size_t j = 0; j < width; j++) {
-            a_h[i * width + j] = i;
-            b_h[i * width + j] = i;
-        }
-    }
-
-    // Allocate device memory
-    cudaMalloc((void **)&a_d, size);
-    cudaMalloc((void **)&b_d, size);
-    cudaMalloc((void **)&c_d, size);
-
-    // Copy host memory to device memory
-    cudaMemcpy(a_d, a_h, size, cudaMemcpyHostToDevice);
-    cudaMemcpy(b_d, b_h, size, cudaMemcpyHostToDevice);
-    cudaMemcpy(c_d, c_h, size, cudaMemcpyHostToDevice);
-
-    // Start timer for GPU
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start, 0);
-
-    // Launch kernel
-    // matrixMultiplySimple<<<grid, block>>>(a_d, b_d, c_d, width);
-
-    dim3 Block_dim = {TILE_WIDTH, TILE_WIDTH};
-    dim3 Grid_dim = {width / TILE_WIDTH, width / TILE_WIDTH};
-
-    matrixMultiplyOptimised(Block_dim, , a_d, b_d, c_d, width);
-    // Stop timer
-    cudaEventRecord(stop, 0);
-    cudaEventSynchronize(stop);
-    cudaEventElapsedTime(&elapsed1, start, stop);
-
-    // Print execution time
-    printf("Time to calculate results on GPU: %f ms\n", elapsed1);
-
-    // Copy results to host
-    cudaMemcpy(c_h, c_d, size, cudaMemcpyDeviceToHost);
-
-    // Start timer for CPU
-    cudaEventRecord(start, 0);
-
-    // Launch CPU code
-    matrixMultiplyCPU_MP(a_h, b_h, d_h, width);
-
-    // Stop timer
-    cudaEventRecord(stop, 0);
-    cudaEventSynchronize(stop);
-    cudaEventElapsedTime(&elapsed2, start, stop);
-
-    // Print execution time
-    printf("Time to calculate results on CPU: %f ms\n", elapsed2);
-
-    // Compare results
-    for (size_t i = 0; i < width * width; i++) {
-        if (c_h[i] != d_h[i]) {
-            if(i > 0)
-                printf("c_h: %f, d_h: %f, i: %li\n", c_h[i - 1], d_h[i - 1], i - 1);
-            printf("Error: CPU and GPU results do not match\n");
-            printf("c_h: %f, d_h: %f, i: %li\n", c_h[i], d_h[i], i);
-        }
-    }
-
-    // Start timer for GPU (optimised)
-    cudaEventRecord(start, 0);
-
-    // Launch kernel (optimised)
-    // matrixMultiplyOptimised<<<grid, block>>>(a_h, b_h, c_h, width);
-    matrixMultiplySimple(grid, block, a_d, b_d, c_d, width);
-
-    // Stop timer
-    cudaEventRecord(stop, 0);
-    cudaEventSynchronize(stop);
-    cudaEventElapsedTime(&elapsed3, start, stop);
-
-    // Print execution time
-    printf("Time to calculate results on GPU (optimised): %f ms\n", elapsed3);
-
-    // Copy results to host
-    cudaMemcpy(c_h, c_d, size, cudaMemcpyDeviceToHost);
-
-    // Compare results
-    for (size_t i = 0; i < width * width; i++) {
-        if (c_h[i] != d_h[i]) {
-            printf("Error: CPU and GPU (optimised) results do not match\n");
-            break;
-        }
-    }
-
-    // Free memory
-    free(a_h);
-    free(b_h);
-    free(c_h);
-    free(d_h);
-    cudaFree(a_d);
-    cudaFree(b_d);
-    cudaFree(c_d);
-
-    cudaEventDestroy(start);
-    cudaEventDestroy(stop);
-
-    return 0;
-}
-*/
