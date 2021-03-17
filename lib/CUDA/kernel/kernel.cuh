@@ -35,7 +35,7 @@ __global__ void vecDiv_kernel(double *a, double *b, double *c, size_t n);
 __global__ void matrixMultiplySimple_kernel(float *a, float *b, float *c, size_t width);
 __global__ void matrixMultiplyOptimised_kernel(float *a, float *b, float *c, size_t width);
 
-__global__ void multiply_kernel(float *left, float *right, float *res, int dim);
+__global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim);
 
 __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N);
 

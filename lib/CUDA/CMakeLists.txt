@@ -9,7 +9,7 @@
 #                                                            #
 #  BenLib, 2021                                              #
 #  Created: 16, March, 2021                                  #
-#  Modified: 16, March, 2021                                 #
+#  Modified: 17, March, 2021                                 #
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:  https://developer.nvidia.com/blog/building-cuda-applications-cmake/                                                   #

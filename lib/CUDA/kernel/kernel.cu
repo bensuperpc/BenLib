@@ -204,9 +204,7 @@ extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, i
     cudaDeviceSynchronize();
 }
 
-#define BLOCK_SIZE 16
-
-__global__ void multiply_kernel(float *left, float *right, float *res, int dim)
+__global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)
 {
 
     int i, j;
@@ -245,12 +243,12 @@ __global__ void multiply_kernel(float *left, float *right, float *res, int dim)
     res[row * dim + col] = temp;
 }
 
-void my::cuda::multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
-    multiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-extern "C" void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
-    multiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }

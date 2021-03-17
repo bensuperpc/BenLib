@@ -26,6 +26,10 @@
 #include <cuda_runtime.h>
 #include "stdio.h"
 
+#ifndef BLOCK_SIZE
+#    define BLOCK_SIZE 16
+#endif
+
 namespace my
 {
 namespace cuda
@@ -40,9 +44,8 @@ void vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, 
 // 2D vector
 void matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n);
 void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n);
-
 void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
-void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
+void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
 } // namespace cuda
 } // namespace my
 

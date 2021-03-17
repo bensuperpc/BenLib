@@ -25,16 +25,17 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+#include "kernel.hpp"
+extern "C"
+{
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
-#include "kernel.hpp"
-#include "time.h"
-
-#define BLOCK_SIZE 16
+#include <time.h>
+}
 
 /*
  * prints matrices
@@ -63,6 +64,7 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 // it multiplies square matrices
 /*__host__*/ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 {
+    //#pragma omp parallel for collapse(2)
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < m; ++j) {
             float tmp = 0.0;
@@ -157,6 +159,9 @@ int main(void)
     // Grid dimension is found by dividing matrix dimension to block_size
     dim3 Grid_dim(dim / BLOCK_SIZE, dim / BLOCK_SIZE);
 
+    printf("Number of threads: %i (%ix%i)\n", Block_dim.x * Block_dim.y, Block_dim.x, Block_dim.y);
+    printf("Number of blocks: %i (%ix%i)\n", Grid_dim.x * Grid_dim.y, Grid_dim.x, Grid_dim.y);
+
     // commented out the functions which helps to calculate time
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
@@ -165,7 +170,7 @@ int main(void)
 
     // kernel call
     // multiply < < Grid_dim, Block_dim >> > (Left_Vector_d, Right_Vector_d, Res_d, dim);
-    my::cuda::multiply(Grid_dim, Block_dim, Left_Vector_d, Right_Vector_d, Res_d, dim);
+    my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, Left_Vector_d, Right_Vector_d, Res_d, dim);
 
     // commented out the functions which helps to calculate time
     cudaEventRecord(stop, 0);
