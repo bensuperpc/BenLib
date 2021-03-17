@@ -41,8 +41,7 @@ void my::cuda::vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, d
     vecAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-extern "C"
-void vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
+extern "C" void vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
 {
     vecAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
@@ -83,8 +82,7 @@ void my::cuda::vecMult(size_t gridSize, size_t blockSize, double *a, double *b, 
     vecMult_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-extern "C"
-void vecMult(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
+extern "C" void vecMult(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
 {
     vecMult_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
@@ -104,8 +102,7 @@ void my::cuda::vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, d
     vecDiv_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-extern "C"
-void vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
+extern "C" void vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
 {
     vecDiv_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
@@ -130,8 +127,7 @@ void my::cuda::matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, flo
     matrixMultiplySimple_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-extern "C"
-void matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
+extern "C" void matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
 {
     matrixMultiplySimple_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
@@ -176,8 +172,7 @@ void my::cuda::matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, 
     matrixMultiplyOptimised_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-extern "C"
-void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
+extern "C" void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
 {
     matrixMultiplyOptimised_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
@@ -197,15 +192,13 @@ __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
     //__syncthreads();
 }
 
-
 void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
     cudaDeviceSynchronize();
 }
 
-extern "C"
-void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
+extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
     cudaDeviceSynchronize();
@@ -213,18 +206,18 @@ void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size
 
 #define BLOCK_SIZE 16
 
-__global__ void multiply_kernel(float *left, float *right, float *res, int dim) {
+__global__ void multiply_kernel(float *left, float *right, float *res, int dim)
+{
 
-    int i,j;
+    int i, j;
     float temp = 0;
 
-    __shared__ float Left_shared_t [BLOCK_SIZE][BLOCK_SIZE];
+    __shared__ float Left_shared_t[BLOCK_SIZE][BLOCK_SIZE];
     __shared__ float Right_shared_t[BLOCK_SIZE][BLOCK_SIZE];
 
     // Row i of matrix left
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
-
 
     for (int tileNUM = 0; tileNUM < gridDim.x; tileNUM++) {
 
@@ -233,7 +226,7 @@ __global__ void multiply_kernel(float *left, float *right, float *res, int dim) 
         i = tileNUM * BLOCK_SIZE + threadIdx.y;
         // Load left[i][j] to shared mem
 
-        Left_shared_t[threadIdx.y][threadIdx.x] = left[row * dim + j];// Coalesced access
+        Left_shared_t[threadIdx.y][threadIdx.x] = left[row * dim + j]; // Coalesced access
         // Load right[i][j] to shared mem
 
         Right_shared_t[threadIdx.y][threadIdx.x] = right[i * dim + col]; // Coalesced access
@@ -243,7 +236,7 @@ __global__ void multiply_kernel(float *left, float *right, float *res, int dim) 
         // Accumulate one tile of res from tiles of left and right in shared mem
         for (int k = 0; k < BLOCK_SIZE; k++) {
 
-            temp += Left_shared_t[threadIdx.y][k] * Right_shared_t[k][threadIdx.x]; //no shared memory bank conflict
+            temp += Left_shared_t[threadIdx.y][k] * Right_shared_t[k][threadIdx.x]; // no shared memory bank conflict
         }
         // Synchronize
         __syncthreads();
@@ -257,8 +250,7 @@ void my::cuda::multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float
     multiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-extern "C"
-void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+extern "C" void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     multiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }

@@ -43,7 +43,7 @@ void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, 
 
 void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
 void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
-}
-}
+} // namespace cuda
+} // namespace my
 
 #endif
