@@ -15,11 +15,11 @@ endif (WIN32)
 find_package(Boost 1.65.0 COMPONENTS thread filesystem system unit_test_framework QUIET)
 
 if(Boost_FOUND)
-    message(STATUS "Boost FOUND on filesystem")
+    message(STATUS "Boost FOUND on ${PROJECT_NAME}")
     include_directories( ${Boost_INCLUDE_DIRS})
     link_directories(${Boost_LIBRARIES})
 else()
-    message(STATUS "Boost: NOT FOUND on filesystem")
+    message(STATUS "Boost: NOT FOUND on ${PROJECT_NAME}")
 endif()
 
 set(SRCS

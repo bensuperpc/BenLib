@@ -35,6 +35,8 @@
 cmake_minimum_required(VERSION 3.9)
 project(my_cuda LANGUAGES CUDA CXX C)
 
+
+#   ================    CUDA    ================
 find_package(CUDA QUIET REQUIRED)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
@@ -48,9 +50,22 @@ if (CUDA_FOUND)
         --std=c++11
     )
 
-    message(STATUS "CUDA: FOUND on my_cuda")
+    message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
 else()
-    message(STATUS "CUDA: NOT FOUND on my_cuda")
+    message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
+endif()
+
+
+#   ================    OpenMP    ================
+find_package(OpenMP QUIET)
+
+if (OPENMP_FOUND)
+    message(STATUS "OPENMP: FOUND on ${PROJECT_NAME}")
+    #set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    #set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+else()
+    message(STATUS "OPENMP: NOT FOUND on ${PROJECT_NAME}")
 endif()
 
 
@@ -91,12 +106,21 @@ target_link_libraries(vec1d my_cuda)
 set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 75)
 
 add_executable(vec2d_mult vec2d_mult.c)
+if (OPENMP_FOUND)
+    target_link_libraries(vec2d_mult ${CUDA_LIBRARIES} OpenMP::OpenMP_C)
+else()
 target_link_libraries(vec2d_mult ${CUDA_LIBRARIES})
+endif()
 target_link_libraries(vec2d_mult my_cuda)
 set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 75)
 
+
 add_executable(vec2d_add vec2d_add.c)
+if (OPENMP_FOUND)
+    target_link_libraries(vec2d_add ${CUDA_LIBRARIES} OpenMP::OpenMP_C)
+else()
 target_link_libraries(vec2d_add ${CUDA_LIBRARIES})
+endif()
 target_link_libraries(vec2d_add my_cuda)
 set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 75)
 

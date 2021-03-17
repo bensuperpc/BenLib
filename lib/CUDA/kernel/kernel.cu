@@ -18,7 +18,6 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-
 extern "C"
 {
 // Can be remove if use "external *Function*" in .c/cpp file
@@ -157,11 +156,19 @@ __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
     size_t col = threadIdx.x + blockIdx.x * blockDim.x;
     size_t row = threadIdx.y + blockIdx.y * blockDim.y;
     size_t index = row * N + col;
-    c[index] = a[index] + b[index];
+    if (col < N && row < N) {
+        c[index] = a[index] + b[index];
+        // printf("Hello from blockx %d, threadx %d\n", blockIdx.x, threadIdx.x);
+        // printf("Hello from blocky %d, thready %d\n", blockIdx.y, threadIdx.y);
+        // printf("Hello from col %d, row %d\n", col, row);
+        // printf("c:%d = a:%d + b:%d\n", c[index], a[index], b[index]);
+    }
+    //__syncthreads();
 }
 
 // extern "C"
 void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    cudaDeviceSynchronize();
 }

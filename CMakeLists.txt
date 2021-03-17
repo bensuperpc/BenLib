@@ -268,7 +268,7 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 # https://stackoverflow.com/a/12404666/10152334
 # https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html
 # OpenMP::OpenMP_CXX
-find_package(OpenMP)
+find_package(OpenMP QUIET)
 
 if (OPENMP_FOUND OR OpenMP_CXX_FOUND)
     message(STATUS "OPENMP: FOUND")

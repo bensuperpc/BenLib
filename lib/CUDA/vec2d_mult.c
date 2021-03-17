@@ -13,12 +13,11 @@
 //  file: OpenCL_test.cpp                                   //
 //  Crypto                                                  //
 //  Source: https://github.com/Kaixhin/cuda-workshop                                                 //
-//          https://forums.developer.nvidia.com/t/double-pointer-allocation/9390                                                 // //
+//          https://forums.developer.nvidia.com/t/double-pointer-allocation/9390                                                 //
+//          https://stackoverflow.com/a/31382775/10152334                                                 //
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
-
-
 
 #include <cuda.h>
 #include <cuda_runtime_api.h>
@@ -34,6 +33,22 @@ void matrixMultiplyCPU(float *a, float *b, float *c, int width)
 {
     float result;
 
+    for (size_t row = 0; row < width; row++) {
+        for (size_t col = 0; col < width; col++) {
+            result = 0;
+            for (size_t k = 0; k < width; k++) {
+                result += a[row * width + k] * b[k * width + col];
+            }
+            c[row * width + col] = result;
+        }
+    }
+}
+
+void matrixMultiplyCPU_MP(float *a, float *b, float *c, int width)
+{
+    float result = 0.0;
+//#pragma omp parallel
+#pragma omp parallel for collapse(2) private(result)
     for (size_t row = 0; row < width; row++) {
         for (size_t col = 0; col < width; col++) {
             result = 0;
@@ -128,7 +143,7 @@ int main()
     cudaEventRecord(start, 0);
 
     // Launch CPU code
-    matrixMultiplyCPU(a_h, b_h, d_h, width);
+    matrixMultiplyCPU_MP(a_h, b_h, d_h, width);
 
     // Stop timer
     cudaEventRecord(stop, 0);

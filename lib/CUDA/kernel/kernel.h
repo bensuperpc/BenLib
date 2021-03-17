@@ -19,12 +19,12 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-
 #ifndef MY_CUDA_H
 #define MY_CUDA_H
 
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include "stdio.h"
 
 // 1D vector
 void vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);

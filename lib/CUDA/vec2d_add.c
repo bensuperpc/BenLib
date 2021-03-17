@@ -13,7 +13,8 @@
 //  file: OpenCL_test.cpp                                   //
 //  Crypto                                                  //
 //  Source: https://github.com/Kaixhin/cuda-workshop                                                 //
-//          https://forums.developer.nvidia.com/t/double-pointer-allocation/9390                                                 // //
+//          https://forums.developer.nvidia.com/t/double-pointer-allocation/9390                                                 //
+//          https://stackoverflow.com/a/31382775/10152334                                                 //
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -21,16 +22,32 @@
 #include <cuda.h>
 #include <cuda_runtime_api.h>
 #include <math.h>
+#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "kernel.h"
 
-#define THREADS_PER_BLOCK 1024
+#define THREADS_PER_BLOCK 1024 // Max 1024
 
 void matrixAdd(int *a, int *b, int *c, int N)
 {
     int index = 0;
+    //#pragma omp parallel for
     for (int col = 0; col < N; col++) {
+        for (int row = 0; row < N; row++) {
+            index = row * N + col;
+            c[index] = a[index] + b[index];
+        }
+    }
+}
+
+void matrixAdd_MP(int *a, int *b, int *c, int N)
+{
+    int index = 0;
+//#pragma omp parallel for schedule(dynamic, 2)
+#pragma omp parallel
+    for (int col = 0; col < N; col++) {
+#pragma omp for nowait
         for (int row = 0; row < N; row++) {
             index = row * N + col;
             c[index] = a[index] + b[index];
@@ -40,14 +57,16 @@ void matrixAdd(int *a, int *b, int *c, int N)
 
 int main()
 {
-    int N = 4096; // Define size of 1 side of square matrix
-    // Initialise grid and block variables
-    // dim3 grid(N / THREADS_PER_BLOCK, 1, 1);
-    // dim3 block(THREADS_PER_BLOCK, 1, 1);
+    int N = 8192; // Define size of 1 side of square matrix
 
-    dim3 grid = {N / THREADS_PER_BLOCK, 1, 1};
-    dim3 block = {THREADS_PER_BLOCK, 1, 1};
+    int sqrtThreads = sqrt(THREADS_PER_BLOCK);
+    int nBlocks = N / sqrtThreads;
+    if (N % sqrtThreads != 0) { // Add an extra block if necessary
+        nBlocks++;
+    }
 
+    dim3 grid = {nBlocks, nBlocks, 1};
+    dim3 block = {sqrtThreads, sqrtThreads, 1};
     // Initialise host pointers (dynamically allocated memory) and device pointers
     int *a_h;
     int *b_h;
@@ -118,7 +137,7 @@ int main()
     cudaEventRecord(start, 0);
 
     // Launch CPU code
-    matrixAdd(a_h, b_h, d_h, N);
+    matrixAdd_MP(a_h, b_h, d_h, N);
 
     // Stop timer
     cudaEventRecord(stop, 0);
@@ -126,12 +145,13 @@ int main()
     cudaEventElapsedTime(&elapsedTime, start, stop);
 
     // Print execution time
-    printf("Time to calculate results on CPU: %f ms\n", elapsedTime);
+    printf("Time to calculate results on CPU: %f ms\n", elapsedTime * 2.0);
 
     // Compare results
     for (size_t i = 0; i < N * N; i++) {
         if (c_h[i] != d_h[i]) {
             printf("Error: CPU and GPU results do not match\n");
+            printf("c_h: %i, d_h: %i, i: %li\n", c_h[i], d_h[i], i);
             break;
         }
     }
