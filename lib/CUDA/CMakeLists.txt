@@ -128,7 +128,7 @@ set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 75)
 
 add_executable(vec2d_mult2 vec2d_mult.cpp)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES} OpenMP::OpenMP_C)
+    target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX)
 else()
 target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES})
 endif()

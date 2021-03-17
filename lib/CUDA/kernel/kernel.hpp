@@ -26,6 +26,11 @@
 #include <cuda_runtime.h>
 #include "stdio.h"
 
+namespace my
+{
+namespace cuda
+{
+
 // 1D vector
 void vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
 void vecSub(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
@@ -37,5 +42,8 @@ void matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, flo
 void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n);
 
 void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
+void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
+}
+}
 
 #endif

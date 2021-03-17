@@ -15,6 +15,7 @@
 //  Source: https://github.com/Kaixhin/cuda-workshop                                                 //
 //          https://forums.developer.nvidia.com/t/double-pointer-allocation/9390                                                 //
 //          https://stackoverflow.com/a/31382775/10152334                                                 //
+//          https://github.com/kberkay/Cuda-Matrix-Multiplication/blob/master/matrix_Multiplication.cu                                                 //
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -166,7 +167,7 @@ int main(void)
 
     //kernel call
     //multiply < < Grid_dim, Block_dim >> > (Left_Vector_d, Right_Vector_d, Res_d, dim);
-    //multiply(Grid_dim, Block_dim, Left_Vector_d, Right_Vector_d, Res_d, dim);
+    my::cuda::multiply(Grid_dim, Block_dim, Left_Vector_d, Right_Vector_d, Res_d, dim);
 
     //commented out the functions which helps to calculate time
     cudaEventRecord(stop,0);

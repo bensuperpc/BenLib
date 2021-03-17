@@ -36,7 +36,12 @@ __global__ void vecAdd_kernel(double *a, double *b, double *c, size_t n)
         c[id] = a[id] + b[id];
 }
 
-// extern "C"
+void my::cuda::vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
+{
+    vecAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+}
+
+extern "C"
 void vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
 {
     vecAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
@@ -50,6 +55,11 @@ __global__ void vecSub_kernel(double *a, double *b, double *c, size_t n)
     // Make sure we do not go out of bounds
     if (id < n)
         c[id] = a[id] - b[id];
+}
+
+void my::cuda::vecSub(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
+{
+    vecSub_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
 // extern "C"
@@ -68,7 +78,12 @@ __global__ void vecMult_kernel(double *a, double *b, double *c, size_t n)
         c[id] = a[id] - b[id];
 }
 
-// extern "C"
+void my::cuda::vecMult(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
+{
+    vecMult_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+}
+
+extern "C"
 void vecMult(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
 {
     vecMult_kernel<<<gridSize, blockSize>>>(a, b, c, n);
@@ -84,7 +99,12 @@ __global__ void vecDiv_kernel(double *a, double *b, double *c, size_t n)
         c[id] = a[id] - b[id];
 }
 
-// extern "C"
+void my::cuda::vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
+{
+    vecDiv_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+}
+
+extern "C"
 void vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
 {
     vecDiv_kernel<<<gridSize, blockSize>>>(a, b, c, n);
@@ -105,7 +125,12 @@ __global__ void matrixMultiplySimple_kernel(float *a, float *b, float *c, size_t
     }
 }
 
-// extern "C"
+void my::cuda::matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
+{
+    matrixMultiplySimple_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+}
+
+extern "C"
 void matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
 {
     matrixMultiplySimple_kernel<<<gridSize, blockSize>>>(a, b, c, n);
@@ -146,7 +171,12 @@ __global__ void matrixMultiplyOptimised_kernel(float *a, float *b, float *c, siz
     c[row * width + col] = result;
 }
 
-// extern "C"
+void my::cuda::matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
+{
+    matrixMultiplyOptimised_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+}
+
+extern "C"
 void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n)
 {
     matrixMultiplyOptimised_kernel<<<gridSize, blockSize>>>(a, b, c, n);
@@ -167,7 +197,14 @@ __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
     //__syncthreads();
 }
 
-// extern "C"
+
+void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
+{
+    matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    cudaDeviceSynchronize();
+}
+
+extern "C"
 void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
@@ -215,7 +252,12 @@ __global__ void multiply_kernel(float *left, float *right, float *res, int dim) 
     res[row * dim + col] = temp;
 }
 
-// extern "C"
+void my::cuda::multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+{
+    multiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+}
+
+extern "C"
 void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     multiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
