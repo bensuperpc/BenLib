@@ -75,6 +75,8 @@ set(SRCS
 	
 set(HEADERS
     kernel/kernel.cuh
+    kernel/kernel.h
+    kernel/kernel.hpp
     )
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
