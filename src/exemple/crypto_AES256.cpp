@@ -20,7 +20,8 @@
 
 #include <iomanip>
 #include <iostream>
-extern "C" {
+extern "C"
+{
 #include <openssl/aes.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>

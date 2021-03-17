@@ -41,10 +41,10 @@
 #pragma GCC diagnostic pop
 #include <fstream>
 #include <iostream>
-extern "C" {
+extern "C"
+{
 #include <stdio.h>
 }
-
 
 int main(int argc, char **argv)
 {

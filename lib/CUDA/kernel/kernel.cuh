@@ -11,7 +11,7 @@
 //  BenLib, 2021                                            //
 //  Created: 16, March, 2021                                //
 //  Modified: 17, March, 2021                               //
-//  file: kernel.h                                          //
+//  file: kernel.cuh                                        //
 //  Crypto                                                  //
 //  Source: https://stackoverflow.com/questions/13553015/cuda-c-linker-error-undefined-reference                                                //
 //          https://www.olcf.ornl.gov/tutorials/cuda-vector-addition/                                                //
@@ -20,22 +20,22 @@
 //////////////////////////////////////////////////////////////
 
 
-#ifndef MY_CUDA_H
-#define MY_CUDA_H
+#ifndef MY_CUDA_CUH
+#define MY_CUDA_CUH
 
 #include <cuda.h>
 #include <cuda_runtime.h>
 
 // 1D vector
-void vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
-void vecSub(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
-void vecMult(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
-void vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
+__global__ void vecAdd_kernel(double *a, double *b, double *c, size_t n);
+__global__ void vecSub_kernel(double *a, double *b, double *c, size_t n);
+__global__ void vecMult_kernel(double *a, double *b, double *c, size_t n);
+__global__ void vecDiv_kernel(double *a, double *b, double *c, size_t n);
 
 // 2D vector
-void matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n);
-void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n);
+__global__ void matrixMultiplySimple_kernel(float *a, float *b, float *c, size_t width);
+__global__ void matrixMultiplyOptimised_kernel(float *a, float *b, float *c, size_t width);
 
-void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
+__global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N);
 
 #endif

@@ -59,6 +59,7 @@ set(SRCS
 	)
 	
 set(HEADERS
+    kernel/kernel.cuh
     )
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
@@ -84,10 +85,20 @@ if(UNIX)
   set_property(TARGET my_cuda PROPERTY BUILD_RPATH ${CMAKE_CUDA_IMPLICIT_LINK_DIRECTORIES})
 endif()
 
-cuda_add_executable(vecAdd main.c)
-target_link_libraries(vecAdd ${CUDA_LIBRARIES})
-target_link_libraries(vecAdd my_cuda)
-set_property(TARGET vecAdd PROPERTY CUDA_ARCHITECTURES 75)
+add_executable(vec1d vec1d.c)
+target_link_libraries(vec1d ${CUDA_LIBRARIES})
+target_link_libraries(vec1d my_cuda)
+set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 75)
+
+add_executable(vec2d_mult vec2d_mult.c)
+target_link_libraries(vec2d_mult ${CUDA_LIBRARIES})
+target_link_libraries(vec2d_mult my_cuda)
+set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 75)
+
+add_executable(vec2d_add vec2d_add.c)
+target_link_libraries(vec2d_add ${CUDA_LIBRARIES})
+target_link_libraries(vec2d_add my_cuda)
+set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 75)
 
 
 #cuda_add_executable(main main.cpp)

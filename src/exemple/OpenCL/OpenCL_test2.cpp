@@ -22,7 +22,8 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
-extern "C" {
+extern "C"
+{
 #include <stdlib.h>
 }
 #include <string>

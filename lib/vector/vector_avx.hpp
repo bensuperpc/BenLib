@@ -27,7 +27,8 @@
 #    include <algorithm>
 
 #    if (__AVX2__ || __AVX__ || __SSE3__)
-extern "C" {
+extern "C"
+{
 #        include <emmintrin.h>
 #        include <immintrin.h>
 #        include <mmintrin.h>

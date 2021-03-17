@@ -2,7 +2,8 @@
 #define BOOST_TEST_MODULE crypto
 
 #include <algorithm>
-extern "C" {
+extern "C"
+{
 #include <boost/predef.h>
 }
 #include <random>

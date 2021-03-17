@@ -9,7 +9,8 @@
 #define QT_UTILS_HPP
 
 #include <QImage>
-extern "C" {
+extern "C"
+{
 #include <boost/predef.h>
 }
 #include <opencv2/core/core.hpp>

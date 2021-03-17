@@ -3,7 +3,8 @@
 
 #include <algorithm>
 #include <boost/test/unit_test.hpp>
-extern "C" {
+extern "C"
+{
 #include <boost/predef.h>
 #include <openssl/aes.h>
 #include <openssl/err.h>

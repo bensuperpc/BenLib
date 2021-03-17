@@ -13,7 +13,8 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 #define BUFFSIZE 16384
 
 // For RSA
-extern "C" {
+extern "C"
+{
 #include <openssl/engine.h>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
