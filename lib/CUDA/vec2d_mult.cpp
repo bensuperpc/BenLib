@@ -137,8 +137,8 @@ int main(void)
 
     int dim = fill(&Left_Vector_h, &Right_Vector_h, Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y); //fills the matrices with random values
 
-    print_matrices(Left_Vector_h,"Input_LHS",Left_matrix_x,Left_matrix_y,dim);
-    print_matrices(Right_Vector_h,"Input_RHS",Right_matrix_x,Right_matrix_y,dim);
+    //print_matrices(Left_Vector_h,"Input_LHS",Left_matrix_x,Left_matrix_y,dim);
+    //print_matrices(Right_Vector_h,"Input_RHS",Right_matrix_x,Right_matrix_y,dim);
 
     size_t vector_size;
     vector_size = dim*dim * sizeof(float);
@@ -192,8 +192,8 @@ int main(void)
     printf("CPU time= %lf ms\n", time_spent);
 
     //Prints the results
-    print_matrices(Res_h,"GPU_out",Left_matrix_x,Right_matrix_y,dim);
-    print_matrices(CPU,"CPU_out",Left_matrix_x,Right_matrix_y,dim);
+    //print_matrices(Res_h,"GPU_out",Left_matrix_x,Right_matrix_y,dim);
+    //print_matrices(CPU,"CPU_out",Left_matrix_x,Right_matrix_y,dim);
 
     bool eqaul = true;
     for (int i=0;i< Left_matrix_x && eqaul;i++){

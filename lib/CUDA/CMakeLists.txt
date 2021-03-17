@@ -126,6 +126,15 @@ endif()
 target_link_libraries(vec2d_add my_cuda)
 set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 75)
 
+add_executable(vec2d_mult2 vec2d_mult.cpp)
+if (OPENMP_FOUND)
+    target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES} OpenMP::OpenMP_C)
+else()
+target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES})
+endif()
+target_link_libraries(vec2d_mult2 my_cuda)
+set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 75)
+
 
 #cuda_add_executable(main main.cpp)
 #target_link_libraries(main ${CUDA_LIBRARIES})
