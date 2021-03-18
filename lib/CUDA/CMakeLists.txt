@@ -81,6 +81,7 @@ set(HEADERS
     kernel/matrix.cuh
     kernel/matrix.h
     kernel/matrix.hpp
+    kernel/matrix.tpp
     )
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)

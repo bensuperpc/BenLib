@@ -17,6 +17,7 @@
 //          https://stackoverflow.com/a/31382775/10152334                                                 //
 //          https://github.com/kberkay/Cuda-Matrix-Multiplication/blob/master/matrix_Multiplication.cu                                                 //
 //          https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#optimize
+//          https://medium.com/gpgpu/multi-gpu-programming-6768eeb42e2c
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -29,6 +30,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include "matrix.hpp"
+#include "matrix.tpp"
 extern "C"
 {
 #include <math.h>
@@ -58,9 +60,8 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
     }
 }
 
-
 // it multiplies square matrices
-/*__host__*/ 
+/*__host__*/
 void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 {
     if (m > 32) {
@@ -205,10 +206,10 @@ int main(void)
     printf("Number of blocks: %i (%ix%i)\n", Grid_dim.x * Grid_dim.y, Grid_dim.x, Grid_dim.y);
     printf("Output matrix size: %i (%ix%i)\n", dim * dim, dim, dim);
     size_t matrix_lenght = (dim * dim) * sizeof(int);
-    if (matrix_lenght > 1000000) {
-        printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000000.0);
-    } if else {
+    if (matrix_lenght < 1000000) {
         printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000.0);
+    } else {
+        printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000000.0);
     }
     printf("\n");
 

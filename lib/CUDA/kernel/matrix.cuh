@@ -27,6 +27,7 @@
 
 // 2D vector
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim);
+__global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 
 __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N);
 

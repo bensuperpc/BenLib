@@ -15,6 +15,7 @@
 //  Source: https://stackoverflow.com/questions/13553015/cuda-c-linker-error-undefined-reference                                                //
 //          https://www.olcf.ornl.gov/tutorials/cuda-vector-addition/                                                //
 //          https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#asynchronous-transfers-and-overlapping-transfers-with-computation__concurrent-copy-and-execute
+//          https://www.ce.jhu.edu/dalrymple/classes/602/Class12.pdf                                                //
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -128,5 +129,45 @@ extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, fl
 extern "C" void matrixMultiplySharedS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
+}
+*/
+
+__global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
+{
+    float CValue = 0;
+    int Row = blockIdx.y * BLOCK_SIZE + threadIdx.y;
+    int Col = blockIdx.x * BLOCK_SIZE + threadIdx.x;
+    __shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
+    __shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
+    for (int k = 0; k < (BLOCK_SIZE + ACols - 1) / BLOCK_SIZE; k++) {
+        if (k * BLOCK_SIZE + threadIdx.x < ACols && Row < ARows)
+            As[threadIdx.y][threadIdx.x] = A[Row * ACols + k * BLOCK_SIZE + threadIdx.x];
+        else
+            As[threadIdx.y][threadIdx.x] = 0.0;
+        if (k * BLOCK_SIZE + threadIdx.y < BRows && Col < BCols)
+            Bs[threadIdx.y][threadIdx.x] = B[(k * BLOCK_SIZE + threadIdx.y) * BCols + Col];
+        else
+            Bs[threadIdx.y][threadIdx.x] = 0.0;
+        __syncthreads();
+        for (int n = 0; n < BLOCK_SIZE; ++n)
+            CValue += As[threadIdx.y][n] * Bs[n][threadIdx.x];
+        __syncthreads();
+    }
+    if (Row < CRows && Col < CCols)
+        C[((blockIdx.y * blockDim.y + threadIdx.y) * CCols) + (blockIdx.x * blockDim.x) + threadIdx.x] = CValue;
+}
+
+void my::cuda::matrixMultiplyShared(
+    dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
+{
+    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
+    cudaStreamSynchronize(0);
+}
+
+/*
+void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int ARows, int ACols, int BRows, int
+BCols, int CRows, int CCols)
+{
+    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
 }
 */
