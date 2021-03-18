@@ -19,7 +19,7 @@
 #           https://stackoverflow.com/questions/33442355/cmake-file-for-c-cuda-project
 #           https://stackoverflow.com/questions/58861467/how-to-compile-c-as-cuda-using-cmake
 #           https://gist.github.com/ashwin/6547060
-#           https://stackoverflow.com/questions/62056517/build-cuda-kernel-with-meson
+#           https://stackoverflow.com/questions/61056517/build-cuda-kernel-with-meson
 #           https://mesonbuild.com/Tutorial.html
 #           https://cmake.org/cmake/help/git-stage/prop_tgt/CUDA_ARCHITECTURES.html
 #           https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#gpu-feature-list
@@ -46,8 +46,8 @@ if (CUDA_FOUND)
     set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS}	-Xcompiler=-Wall")
     set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall -gencode arch=compute_75,code=sm_75;
-        --std=c++11
+        -O3 -Wall -gencode arch=compute_61,code=sm_61;
+        --std=c++14
     )
 
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
@@ -85,7 +85,7 @@ include_directories("kernel/")
 target_compile_features(my_cuda PUBLIC cxx_std_11)
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
-set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 75)
+set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 61)
 
 
 if(APPLE)
@@ -105,7 +105,7 @@ endif()
 add_executable(vec1d vec1d.c)
 target_link_libraries(vec1d ${CUDA_LIBRARIES})
 target_link_libraries(vec1d my_cuda)
-set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 75)
+set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 61)
 
 add_executable(vec2d_mult vec2d_mult.c)
 if (OPENMP_FOUND)
@@ -114,7 +114,7 @@ else()
 target_link_libraries(vec2d_mult ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec2d_mult my_cuda)
-set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 75)
+set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 61)
 
 
 add_executable(vec2d_add vec2d_add.c)
@@ -124,7 +124,7 @@ else()
 target_link_libraries(vec2d_add ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec2d_add my_cuda)
-set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 75)
+set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 61)
 
 add_executable(vec2d_mult2 vec2d_mult.cpp)
 if (OPENMP_FOUND)
@@ -133,7 +133,7 @@ else()
 target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec2d_mult2 my_cuda)
-set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 75)
+set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 61)
 
 
 #cuda_add_executable(main main.cpp)

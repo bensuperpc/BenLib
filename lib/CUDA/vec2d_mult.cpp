@@ -62,7 +62,7 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 // it multiplies square matrices
 /*__host__*/ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 {
-    #pragma omp parallel for collapse(2)
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < m; ++j) {
             float tmp = 0.0;
@@ -107,12 +107,15 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
     memset(*Lmatrix, 0, pt_size);
     memset(*Rmatrix, 0, pt_size);
 
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < LdimX; i++) {
         for (int j = 0; j < LdimY; j++) {
             int dummy = size * i + j;
             (*Lmatrix)[dummy] = sinf(dummy);
         }
     }
+
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < RdimX; i++) {
         for (int j = 0; j < RdimY; j++) {
             int dummy = size * i + j;
@@ -125,6 +128,33 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 // main routine that executes on the host
 int main(void)
 {
+    int deviceCount;
+    cudaGetDeviceCount(&deviceCount);
+    printf("Number of GPU devices: %i\n", deviceCount);
+
+    // Get CUDA driver and runtime version
+    int driverVersion;
+    int runtimeVersion;
+    cudaDriverGetVersion(&driverVersion);
+    cudaRuntimeGetVersion(&runtimeVersion);
+    printf("CUDA Driver Version / Runtime Version: %d.%d / %d.%d\n", driverVersion / 1000, (driverVersion % 100) / 10, runtimeVersion / 1000,
+        (runtimeVersion % 100) / 10);
+
+    // Get device properties
+    cudaDeviceProp deviceProperties;
+    for (int i = 0; i < deviceCount; i++) {
+        cudaGetDeviceProperties(&deviceProperties, i);
+        printf("Name: %s\n", deviceProperties.name);
+    }
+
+    int device = 0;
+    cudaDeviceProp deviceProp;
+    cudaGetDevice(&device);
+    cudaGetDeviceProperties(&deviceProp, device);
+    int clockRate = deviceProp.clockRate;
+    printf("Device clock rate: %.3f GHz\n", (float)clockRate / 1000000);
+    printf("\n");
+
     // size of the vectors to be processed  and matrix dimensions
     int Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y, Left_vector_size, Right_vector_size;
 
@@ -145,12 +175,12 @@ int main(void)
     Res_h = (float *)malloc(vector_size); // Allocate array on host for result
     CPU = (float *)malloc(vector_size);   // Allocate array on host for CPU_matrix_multiplication result
 
-    cudaMalloc((void **)&Left_Vector_d, vector_size);  // Allocate array on device for LHS operand
-    cudaMalloc((void **)&Right_Vector_d, vector_size); // Allocate array on device for RHS operand but this is vector 1xN
-    cudaMalloc((void **)&Res_d, vector_size);          // Allocate array on device for result
+    gpuErrchk(cudaMalloc((void **)&Left_Vector_d, vector_size));  // Allocate array on device for LHS operand
+    gpuErrchk(cudaMalloc((void **)&Right_Vector_d, vector_size)); // Allocate array on device for RHS operand but this is vector 1xN
+    gpuErrchk(cudaMalloc((void **)&Res_d, vector_size));          // Allocate array on device for result
 
-    cudaMemcpy(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice);   // copy values to device
-    cudaMemcpy(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice); // copy values to device
+    gpuErrchk(cudaMemcpy(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice));   // copy values to device
+    gpuErrchk(cudaMemcpy(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice)); // copy values to device
 
     // Block dimension is directly from block_size
     dim3 Block_dim(BLOCK_SIZE, BLOCK_SIZE);
@@ -159,6 +189,8 @@ int main(void)
 
     printf("Number of threads: %i (%ix%i)\n", Block_dim.x * Block_dim.y, Block_dim.x, Block_dim.y);
     printf("Number of blocks: %i (%ix%i)\n", Grid_dim.x * Grid_dim.y, Grid_dim.x, Grid_dim.y);
+    printf("Output matrix size: %i (%ix%i)\n", dim * dim, dim, dim);
+    printf("\n");
 
     // commented out the functions which helps to calculate time
     cudaEvent_t start, stop;
@@ -173,11 +205,11 @@ int main(void)
     // commented out the functions which helps to calculate time
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
-    float et;
-    cudaEventElapsedTime(&et, start, stop);
+    float gpu_time;
+    cudaEventElapsedTime(&gpu_time, start, stop);
 
     // Retrieve result from device and store it in host array
-    cudaMemcpy(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost);
+    gpuErrchk(cudaMemcpy(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost));
 
     cudaEventRecord(start, 0);
 
@@ -186,16 +218,27 @@ int main(void)
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
 
-    float time_spent;
-    cudaEventElapsedTime(&time_spent, start, stop);
+    float cpu_time;
+    cudaEventElapsedTime(&cpu_time, start, stop);
 
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
 
     // commented out the functions which helps to calculate time
-    printf("GPU time= %f ms\n", et);
+    size_t matrix_lenght = (dim * dim) * sizeof(int);
+    if (matrix_lenght < 1000000) {
+        printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000.0);
+    } else {
+        printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000000.0);
+    }
 
-    printf("CPU time= %lf ms\n", time_spent);
+    printf("GPU time: %f ms\n", gpu_time);
+    printf("GPU perf: %f KOps/s\n", ((dim * dim) / gpu_time) / 1000.0);
+
+    printf("CPU time: %lf ms\n", cpu_time);
+    printf("CPU perf: %f KOps/s\n", ((dim * dim) / cpu_time) / 1000.0);
+
+    printf("CPU/GPU perf diff: x%lf\n", cpu_time / gpu_time);
 
     // Prints the results
     // print_matrices(Res_h,"GPU_out",Left_matrix_x,Right_matrix_y,dim);

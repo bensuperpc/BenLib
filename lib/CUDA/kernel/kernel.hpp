@@ -15,6 +15,8 @@
 //  Crypto                                                  //
 //  Source: https://stackoverflow.com/questions/13553015/cuda-c-linker-error-undefined-reference                                                //
 //          https://www.olcf.ornl.gov/tutorials/cuda-vector-addition/                                                //
+//          https://gist.github.com/AndiH/2e2f6cd9bccd64ec73c3b1d2d18284e0
+//          https://stackoverflow.com/a/14038590/10152334
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -24,11 +26,25 @@
 
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include <iostream>
 #include "stdio.h"
 
 #ifndef BLOCK_SIZE
 #    define BLOCK_SIZE 16
 #endif
+
+#define gpuErrchk(ans)                                                                                                                                         \
+    {                                                                                                                                                          \
+        gpuAssert((ans), __FILE__, __LINE__);                                                                                                                  \
+    }
+inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort = true)
+{
+    if (code != cudaSuccess) {
+        fprintf(stderr, "GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
+        if (abort)
+            exit(code);
+    }
+}
 
 namespace my
 {
