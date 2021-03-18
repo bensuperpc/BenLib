@@ -16,6 +16,7 @@
 //          https://forums.developer.nvidia.com/t/double-pointer-allocation/9390                                                 //
 //          https://stackoverflow.com/a/31382775/10152334                                                 //
 //          https://github.com/kberkay/Cuda-Matrix-Multiplication/blob/master/matrix_Multiplication.cu                                                 //
+//          https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#optimize
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -27,7 +28,7 @@
 #include <iostream>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "kernel.hpp"
+#include "matrix.hpp"
 extern "C"
 {
 #include <math.h>
@@ -57,19 +58,31 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
     }
 }
 
-// naive CPU matrix multiplication code
-// because of its simplicity directly taken from web
+
 // it multiplies square matrices
-/*__host__*/ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
+/*__host__*/ 
+void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 {
+    if (m > 32) {
 #pragma omp parallel for collapse(2) schedule(auto)
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < m; ++j) {
-            float tmp = 0.0;
-            for (int h = 0; h < m; ++h) {
-                tmp += h_a[i * m + h] * h_b[h * m + j];
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < m; ++j) {
+                float tmp = 0.0;
+                for (int h = 0; h < m; ++h) {
+                    tmp += h_a[i * m + h] * h_b[h * m + j];
+                }
+                h_result[i * m + j] = tmp;
             }
-            h_result[i * m + j] = tmp;
+        }
+    } else {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < m; ++j) {
+                float tmp = 0.0;
+                for (int h = 0; h < m; ++h) {
+                    tmp += h_a[i * m + h] * h_b[h * m + j];
+                }
+                h_result[i * m + j] = tmp;
+            }
         }
     }
 }
@@ -192,10 +205,10 @@ int main(void)
     printf("Number of blocks: %i (%ix%i)\n", Grid_dim.x * Grid_dim.y, Grid_dim.x, Grid_dim.y);
     printf("Output matrix size: %i (%ix%i)\n", dim * dim, dim, dim);
     size_t matrix_lenght = (dim * dim) * sizeof(int);
-    if (matrix_lenght < 1000000) {
-        printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000.0);
-    } else {
+    if (matrix_lenght > 1000000) {
         printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000000.0);
+    } if else {
+        printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000.0);
     }
     printf("\n");
 
@@ -245,16 +258,16 @@ int main(void)
     // print_matrices(Res_h,"GPU_out",Left_matrix_x,Right_matrix_y,dim);
     // print_matrices(CPU,"CPU_out",Left_matrix_x,Right_matrix_y,dim);
 
-    bool eqaul = true;
-    for (int i = 0; i < Left_matrix_x && eqaul; i++) {
-        for (int j = 0; j < Right_matrix_y && eqaul; j++) {
+    bool equal = true;
+    for (int i = 0; i < Left_matrix_x && equal; i++) {
+        for (int j = 0; j < Right_matrix_y && equal; j++) {
             if (abs(Res_h[i * dim + j] - CPU[i * dim + j]) > 0.001) {
-                eqaul = false;
+                equal = false;
                 printf("NOT EQUAL\n");
             }
         }
     }
-    if (eqaul) {
+    if (equal) {
         std::cout << "Results are equal!" << std::endl;
     } else {
         std::cout << "Results are NOT equal!" << std::endl;

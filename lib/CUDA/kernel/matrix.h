@@ -11,7 +11,7 @@
 //  BenLib, 2021                                            //
 //  Created: 16, March, 2021                                //
 //  Modified: 17, March, 2021                               //
-//  file: kernel.cuh                                        //
+//  file: kernel.h                                          //
 //  Crypto                                                  //
 //  Source: https://stackoverflow.com/questions/13553015/cuda-c-linker-error-undefined-reference                                                //
 //          https://www.olcf.ornl.gov/tutorials/cuda-vector-addition/                                                //
@@ -19,20 +19,20 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-#ifndef MY_CUDA_CUH
-#define MY_CUDA_CUH
+#ifndef MY_CUDA_MATRIX_H
+#define MY_CUDA_MATRIX_H
 
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include "stdio.h"
 
-// 1D vector
-__global__ void vecAdd_kernel(double *a, double *b, double *c, size_t n);
-__global__ void vecSub_kernel(double *a, double *b, double *c, size_t n);
-__global__ void vecMult_kernel(double *a, double *b, double *c, size_t n);
-__global__ void vecDiv_kernel(double *a, double *b, double *c, size_t n);
+#ifndef BLOCK_SIZE
+#    define BLOCK_SIZE 16
+#endif
 
-// 2D vector
-__global__ void matrixMultiplySimple_kernel(float *a, float *b, float *c, size_t width);
-__global__ void matrixMultiplyOptimised_kernel(float *a, float *b, float *c, size_t width);
+void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
+void matrixAddKernelS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
 
+void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
+void matrixMultiplySharedS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n);
 #endif

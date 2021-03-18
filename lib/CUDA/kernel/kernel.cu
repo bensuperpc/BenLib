@@ -178,128 +178,17 @@ extern "C" void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a,
     matrixMultiplyOptimised_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-__global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
+__global__ void sharedABMultiply(float *a, float *b, float *c, int N)
 {
-    size_t col = threadIdx.x + blockIdx.x * blockDim.x;
-    size_t row = threadIdx.y + blockIdx.y * blockDim.y;
-    size_t index = row * N + col;
-    if (col < N && row < N) {
-        c[index] = a[index] + b[index];
-        // printf("Hello from blockx %d, threadx %d\n", blockIdx.x, threadIdx.x);
-        // printf("Hello from blocky %d, thready %d\n", blockIdx.y, threadIdx.y);
-        // printf("Hello from col %d, row %d\n", col, row);
-        // printf("c:%d = a:%d + b:%d\n", c[index], a[index], b[index]);
-    }
-    //__syncthreads();
-}
-
-void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
-{
-    matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaStreamSynchronize(0);
-    //cudaDeviceSynchronize();
-}
-
-/*
-void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n)
-{
-    matrixAddKernel_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
-}
-*/
-
-extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
-{
-    matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaStreamSynchronize(0);
-    //cudaDeviceSynchronize();
-}
-
-/*
-extern "C" void matrixAddKernelS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n)
-{
-    matrixAddKernel_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
-}
-*/
-
-__global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)
-{
-
-    int i, j;
-    float temp = 0;
-
-    __shared__ float Left_shared_t[BLOCK_SIZE][BLOCK_SIZE];
-    __shared__ float Right_shared_t[BLOCK_SIZE][BLOCK_SIZE];
-
-    // Row i of matrix left
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-
-    for (int tileNUM = 0; tileNUM < gridDim.x; tileNUM++) {
-
-        // Column j of matrix left
-        j = tileNUM * BLOCK_SIZE + threadIdx.x;
-        i = tileNUM * BLOCK_SIZE + threadIdx.y;
-        // Load left[i][j] to shared mem
-
-        Left_shared_t[threadIdx.y][threadIdx.x] = left[row * dim + j]; // Coalesced access
-        // Load right[i][j] to shared mem
-
-        Right_shared_t[threadIdx.y][threadIdx.x] = right[i * dim + col]; // Coalesced access
-        // Synchronize before computation
-        __syncthreads();
-
-        // Accumulate one tile of res from tiles of left and right in shared mem
-        for (int k = 0; k < BLOCK_SIZE; k++) {
-
-            temp += Left_shared_t[threadIdx.y][k] * Right_shared_t[k][threadIdx.x]; // no shared memory bank conflict
-        }
-        // Synchronize
-        __syncthreads();
-    }
-    // Store accumulated value to res
-    res[row * dim + col] = temp;
-}
-
-void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
-{
-    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaStreamSynchronize(0);
-}
-
-/*
-void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n)
-{
-    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
-}
-*/
-
-extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
-{
-    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaStreamSynchronize(0);
-}
-
-
-/*
-extern "C" void matrixMultiplySharedS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n)
-{
-    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
-}
-*/
-
-__global__ void sharedABMultiply(float *a, float* b, float *c,
-                                 int N)
-{
-    __shared__ float aTile[BLOCK_SIZE][BLOCK_SIZE],
-                     bTile[BLOCK_SIZE][BLOCK_SIZE];
+    __shared__ float aTile[BLOCK_SIZE][BLOCK_SIZE], bTile[BLOCK_SIZE][BLOCK_SIZE];
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     float sum = 0.0f;
-    aTile[threadIdx.y][threadIdx.x] = a[row*BLOCK_SIZE+threadIdx.x];
-    bTile[threadIdx.y][threadIdx.x] = b[threadIdx.y*N+col];
+    aTile[threadIdx.y][threadIdx.x] = a[row * BLOCK_SIZE + threadIdx.x];
+    bTile[threadIdx.y][threadIdx.x] = b[threadIdx.y * N + col];
     __syncthreads();
     for (int i = 0; i < BLOCK_SIZE; i++) {
-        sum += aTile[threadIdx.y][i]* bTile[i][threadIdx.x];
+        sum += aTile[threadIdx.y][i] * bTile[i][threadIdx.x];
     }
-    c[row*N+col] = sum;
+    c[row * N + col] = sum;
 }

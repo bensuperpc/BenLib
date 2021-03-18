@@ -19,20 +19,15 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-#ifndef MY_CUDA_CUH
-#define MY_CUDA_CUH
+#ifndef MY_CUDA_MATRIX_CUH
+#define MY_CUDA_MATRIX_CUH
 
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-// 1D vector
-__global__ void vecAdd_kernel(double *a, double *b, double *c, size_t n);
-__global__ void vecSub_kernel(double *a, double *b, double *c, size_t n);
-__global__ void vecMult_kernel(double *a, double *b, double *c, size_t n);
-__global__ void vecDiv_kernel(double *a, double *b, double *c, size_t n);
-
 // 2D vector
-__global__ void matrixMultiplySimple_kernel(float *a, float *b, float *c, size_t width);
-__global__ void matrixMultiplyOptimised_kernel(float *a, float *b, float *c, size_t width);
+__global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim);
+
+__global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N);
 
 #endif

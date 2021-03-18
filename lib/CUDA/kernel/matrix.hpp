@@ -21,8 +21,8 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-#ifndef MY_CUDA_HPP
-#define MY_CUDA_HPP
+#ifndef MY_CUDA_MATRIX_HPP
+#define MY_CUDA_MATRIX_HPP
 
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -51,15 +51,11 @@ namespace my
 namespace cuda
 {
 
-// 1D vector
-void vecAdd(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
-void vecSub(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
-void vecMult(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
-void vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n);
+void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
+void matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
 
-// 2D vector
-void matrixMultiplySimple(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n);
-void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, size_t n);
+void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
+void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n);
 } // namespace cuda
 } // namespace my
 
