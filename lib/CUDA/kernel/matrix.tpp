@@ -65,7 +65,7 @@ template <typename T> void my::cuda::flatten1D(const T *a, T *b, const size_t xM
         for (size_t z = 0; z < zMax; z++) {
             for (size_t y = 0; y < yMax; y++) {
                 for (size_t x = 0; x < xMax; x++) {
-                    b[x + y * yMax + z * xMax * yMax + w * xMax * yMax * zMax] = a[w][z][y][x];
+                    b[x + y * xMax + z * yMax * xMax + w * yMax * xMax * zMax] = a[w][z][y][x];
                 }
             }
         }
@@ -104,7 +104,7 @@ template <typename T> void my::cuda::reshape4D(const T *a, T *b, const size_t xM
         for (size_t z = 0; z < zMax; z++) {
             for (size_t y = 0; y < yMax; y++) {
                 for (size_t x = 0; x < xMax; x++) {
-                    b[w][z][y][x] = a[x + y * yMax + z * xMax * yMax + w * xMax * yMax * zMax];
+                    b[w][z][y][x] = a[x + y * xMax + z * yMax * xMax + w * yMax * xMax * zMax];
                 }
             }
         }
