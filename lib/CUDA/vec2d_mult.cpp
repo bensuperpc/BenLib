@@ -62,7 +62,7 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 // it multiplies square matrices
 /*__host__*/ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 {
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for collapse(2) schedule(auto)
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < m; ++j) {
             float tmp = 0.0;
@@ -107,7 +107,7 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
     memset(*Lmatrix, 0, pt_size);
     memset(*Rmatrix, 0, pt_size);
 
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for collapse(2) schedule(auto)
     for (int i = 0; i < LdimX; i++) {
         for (int j = 0; j < LdimY; j++) {
             int dummy = size * i + j;
@@ -115,7 +115,7 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
         }
     }
 
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for collapse(2) schedule(auto)
     for (int i = 0; i < RdimX; i++) {
         for (int j = 0; j < RdimY; j++) {
             int dummy = size * i + j;
@@ -128,13 +128,14 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 // main routine that executes on the host
 int main(void)
 {
-    int deviceCount;
+    cudaSetDevice(0);
+    int deviceCount = 0;
     cudaGetDeviceCount(&deviceCount);
     printf("Number of GPU devices: %i\n", deviceCount);
 
     // Get CUDA driver and runtime version
-    int driverVersion;
-    int runtimeVersion;
+    int driverVersion = 0;
+    int runtimeVersion = 0;
     cudaDriverGetVersion(&driverVersion);
     cudaRuntimeGetVersion(&runtimeVersion);
     printf("CUDA Driver Version / Runtime Version: %d.%d / %d.%d\n", driverVersion / 1000, (driverVersion % 100) / 10, runtimeVersion / 1000,
@@ -179,8 +180,8 @@ int main(void)
     gpuErrchk(cudaMalloc((void **)&Right_Vector_d, vector_size)); // Allocate array on device for RHS operand but this is vector 1xN
     gpuErrchk(cudaMalloc((void **)&Res_d, vector_size));          // Allocate array on device for result
 
-    gpuErrchk(cudaMemcpy(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice));   // copy values to device
-    gpuErrchk(cudaMemcpy(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice)); // copy values to device
+    gpuErrchk(cudaMemcpyAsync(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice, 0));   // copy values to device
+    gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, 0)); // copy values to device
 
     // Block dimension is directly from block_size
     dim3 Block_dim(BLOCK_SIZE, BLOCK_SIZE);
@@ -190,6 +191,12 @@ int main(void)
     printf("Number of threads: %i (%ix%i)\n", Block_dim.x * Block_dim.y, Block_dim.x, Block_dim.y);
     printf("Number of blocks: %i (%ix%i)\n", Grid_dim.x * Grid_dim.y, Grid_dim.x, Grid_dim.y);
     printf("Output matrix size: %i (%ix%i)\n", dim * dim, dim, dim);
+    size_t matrix_lenght = (dim * dim) * sizeof(int);
+    if (matrix_lenght < 1000000) {
+        printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000.0);
+    } else {
+        printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000000.0);
+    }
     printf("\n");
 
     // commented out the functions which helps to calculate time
@@ -225,12 +232,6 @@ int main(void)
     cudaEventDestroy(stop);
 
     // commented out the functions which helps to calculate time
-    size_t matrix_lenght = (dim * dim) * sizeof(int);
-    if (matrix_lenght < 1000000) {
-        printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000.0);
-    } else {
-        printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000000.0);
-    }
 
     printf("GPU time: %f ms\n", gpu_time);
     printf("GPU perf: %f KOps/s\n", ((dim * dim) / gpu_time) / 1000.0);
@@ -267,4 +268,5 @@ int main(void)
     cudaFree(Left_Vector_d);
     cudaFree(Right_Vector_d);
     cudaFree(Res_d);
+    cudaDeviceReset();
 }

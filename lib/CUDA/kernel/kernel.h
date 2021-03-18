@@ -27,7 +27,7 @@
 #include "stdio.h"
 
 #ifndef BLOCK_SIZE
-#    define BLOCK_SIZE 16
+#define BLOCK_SIZE 16
 #endif
 
 // 1D vector
@@ -42,7 +42,8 @@ void matrixMultiplyOptimised(dim3 gridSize, dim3 blockSize, float *a, float *b, 
 void multiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
 
 void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
+void matrixAddKernelS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
 
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
-
+void matrixMultiplySharedS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n);
 #endif

@@ -14,6 +14,7 @@
 //  Crypto                                                  //
 //  Source: https://stackoverflow.com/questions/13553015/cuda-c-linker-error-undefined-reference                                                //
 //          https://www.olcf.ornl.gov/tutorials/cuda-vector-addition/                                                //
+//          https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#asynchronous-transfers-and-overlapping-transfers-with-computation__concurrent-copy-and-execute
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -195,14 +196,30 @@ __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
 void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaDeviceSynchronize();
+    cudaStreamSynchronize(0);
+    //cudaDeviceSynchronize();
 }
+
+/*
+void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n)
+{
+    matrixAddKernel_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
+}
+*/
 
 extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaDeviceSynchronize();
+    cudaStreamSynchronize(0);
+    //cudaDeviceSynchronize();
 }
+
+/*
+extern "C" void matrixAddKernelS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n)
+{
+    matrixAddKernel_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
+}
+*/
 
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)
 {
@@ -246,9 +263,43 @@ __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *re
 void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    cudaStreamSynchronize(0);
 }
+
+/*
+void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n)
+{
+    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
+}
+*/
 
 extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    cudaStreamSynchronize(0);
+}
+
+
+/*
+extern "C" void matrixMultiplySharedS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n)
+{
+    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
+}
+*/
+
+__global__ void sharedABMultiply(float *a, float* b, float *c,
+                                 int N)
+{
+    __shared__ float aTile[BLOCK_SIZE][BLOCK_SIZE],
+                     bTile[BLOCK_SIZE][BLOCK_SIZE];
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    float sum = 0.0f;
+    aTile[threadIdx.y][threadIdx.x] = a[row*BLOCK_SIZE+threadIdx.x];
+    bTile[threadIdx.y][threadIdx.x] = b[threadIdx.y*N+col];
+    __syncthreads();
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        sum += aTile[threadIdx.y][i]* bTile[i][threadIdx.x];
+    }
+    c[row*N+col] = sum;
 }
