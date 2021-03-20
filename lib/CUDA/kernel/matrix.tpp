@@ -34,7 +34,7 @@
 #include <matrix.hpp>
 #include <stdio.h>
 
-template <typename T> void my::cuda::flatten1D(const T *a, T *b, const size_t xMax, const size_t yMax)
+template <typename T> void my::cuda::flatten1D(T **a, T *b, const size_t xMax, const size_t yMax)
 {
 //#pragma omp parallel for collapse(2) schedule(auto)
 #pragma omp parallel for schedule(auto)
@@ -45,20 +45,22 @@ template <typename T> void my::cuda::flatten1D(const T *a, T *b, const size_t xM
     }
 }
 
-template <typename T> void my::cuda::flatten1D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax)
+template <typename T> void my::cuda::flatten1D(T ***a, T *b, const size_t xMax, const size_t yMax, const size_t zMax)
 {
 #pragma omp parallel for collapse(2) schedule(auto)
     for (size_t z = 0; z < zMax; z++) {
         for (size_t y = 0; y < yMax; y++) {
             for (size_t x = 0; x < xMax; x++) {
-                b[(z * xMax * yMax) + (y * xMax) + x] = a[z][y][x];
+                b[x + y * xMax + z * xMax * yMax] = a[z][y][x];
+                // b[x + WIDTH * (y + DEPTH * z)]
+                // Flat[x + WIDTH * (y + DEPTH * z)] = Original[x, y, z]
             }
         }
     }
     // Flat[x + WIDTH * (y + DEPTH * z)] = Original[x, y, z]
 }
 
-template <typename T> void my::cuda::flatten1D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax)
+template <typename T> void my::cuda::flatten1D(T ****a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax)
 {
 #pragma omp parallel for collapse(3) schedule(auto)
     for (size_t w = 0; w < wMax; w++) {
@@ -73,7 +75,7 @@ template <typename T> void my::cuda::flatten1D(const T *a, T *b, const size_t xM
     // x + y*width + z*height*width + w*height*width*depth.
 }
 
-template <typename T> void my::cuda::reshape2D(const T *a, T *b, const size_t xMax, const size_t yMax)
+template <typename T> void my::cuda::reshape2D(T *a, T **b, const size_t xMax, const size_t yMax)
 {
 //#pragma omp parallel for collapse(2) schedule(auto)
 #pragma omp parallel for schedule(auto)
@@ -84,7 +86,7 @@ template <typename T> void my::cuda::reshape2D(const T *a, T *b, const size_t xM
     }
 }
 
-template <typename T> void my::cuda::reshape3D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax)
+template <typename T> void my::cuda::reshape3D(T *a, T ***b, const size_t xMax, const size_t yMax, const size_t zMax)
 {
 #pragma omp parallel for collapse(2) schedule(auto)
     for (size_t z = 0; z < zMax; z++) {
@@ -97,7 +99,7 @@ template <typename T> void my::cuda::reshape3D(const T *a, T *b, const size_t xM
     // Flat[x + WIDTH * (y + DEPTH * z)] = Original[x, y, z]
 }
 
-template <typename T> void my::cuda::reshape4D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax)
+template <typename T> void my::cuda::reshape4D(T *a, T ****b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax)
 {
 #pragma omp parallel for collapse(3) schedule(auto)
     for (size_t w = 0; w < wMax; w++) {
@@ -110,6 +112,34 @@ template <typename T> void my::cuda::reshape4D(const T *a, T *b, const size_t xM
         }
     }
     // x + y*width + z*height*width + w*height*width*depth.
+}
+
+template <typename T> void my::cuda::cpu_matrix_mult(T *h_a, T *h_b, T *h_result, const size_t m)
+{
+    float tmp = 0.0;
+
+    for (size_t i = 0; i < m; ++i) {
+        for (size_t j = 0; j < m; ++j) {
+            for (size_t h = 0; h < m; ++h) {
+                tmp += h_a[i * m + h] * h_b[h * m + j];
+            }
+            h_result[i * m + j] = tmp;
+            tmp = 0.0;
+        }
+    }
+}
+
+template <typename T> void my::cuda::cpu_matrix_mult(T *matA, size_t rA, size_t cA, T *matB, size_t rB, size_t cB, T *matC, size_t rC, size_t cC)
+{
+    for (size_t i = 0; i < rA; i++) {
+        for (size_t j = 0; j < cB; j++) {
+            T sum = 0.0;
+            for (size_t h = 0; h < rB; h++) {
+                sum += matA[i * cA + h] * matB[h * cB + j];
+            }
+            matC[i * cC + j] = sum;
+        }
+    }
 }
 
 #endif

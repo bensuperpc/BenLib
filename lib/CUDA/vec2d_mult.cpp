@@ -64,26 +64,14 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 /*__host__*/
 void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 {
-    if (m > 32) {
 #pragma omp parallel for collapse(2) schedule(auto)
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < m; ++j) {
-                float tmp = 0.0;
-                for (int h = 0; h < m; ++h) {
-                    tmp += h_a[i * m + h] * h_b[h * m + j];
-                }
-                h_result[i * m + j] = tmp;
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < m; ++j) {
+            float tmp = 0.0;
+            for (int h = 0; h < m; ++h) {
+                tmp += h_a[i * m + h] * h_b[h * m + j];
             }
-        }
-    } else {
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < m; ++j) {
-                float tmp = 0.0;
-                for (int h = 0; h < m; ++h) {
-                    tmp += h_a[i * m + h] * h_b[h * m + j];
-                }
-                h_result[i * m + j] = tmp;
-            }
+            h_result[i * m + j] = tmp;
         }
     }
 }
@@ -143,6 +131,7 @@ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 int main(void)
 {
     cudaSetDevice(0);
+    // auto current_device = cuda::device::current::get();
     int deviceCount = 0;
     cudaGetDeviceCount(&deviceCount);
     printf("Number of GPU devices: %i\n", deviceCount);
@@ -181,8 +170,8 @@ int main(void)
 
     int dim = fill(&Left_Vector_h, &Right_Vector_h, Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y); // fills the matrices with random values
 
-    // print_matrices(Left_Vector_h,"Input_LHS",Left_matrix_x,Left_matrix_y,dim);
-    // print_matrices(Right_Vector_h,"Input_RHS",Right_matrix_x,Right_matrix_y,dim);
+    print_matrices(Left_Vector_h, "Input_LHS", Left_matrix_x, Left_matrix_y, dim);
+    print_matrices(Right_Vector_h, "Input_RHS", Right_matrix_x, Right_matrix_y, dim);
 
     size_t vector_size;
     vector_size = dim * dim * sizeof(float);
@@ -198,9 +187,9 @@ int main(void)
     gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, 0)); // copy values to device
 
     // Block dimension is directly from block_size
-    dim3 Block_dim(BLOCK_SIZE, BLOCK_SIZE);
+    dim3 Block_dim(BLOCK_SIZE, BLOCK_SIZE, 1);
     // Grid dimension is found by dividing matrix dimension to block_size
-    dim3 Grid_dim(dim / BLOCK_SIZE, dim / BLOCK_SIZE);
+    dim3 Grid_dim(dim / BLOCK_SIZE, dim / BLOCK_SIZE, 1);
 
     printf("Number of threads: %i (%ix%i)\n", Block_dim.x * Block_dim.y, Block_dim.x, Block_dim.y);
     printf("Number of blocks: %i (%ix%i)\n", Grid_dim.x * Grid_dim.y, Grid_dim.x, Grid_dim.y);
@@ -256,8 +245,8 @@ int main(void)
     printf("CPU/GPU perf diff: x%lf\n", cpu_time / gpu_time);
 
     // Prints the results
-    // print_matrices(Res_h,"GPU_out",Left_matrix_x,Right_matrix_y,dim);
-    // print_matrices(CPU,"CPU_out",Left_matrix_x,Right_matrix_y,dim);
+    print_matrices(Res_h, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
+    print_matrices(CPU, "CPU_out", Left_matrix_x, Right_matrix_y, dim);
 
     bool equal = true;
     for (int i = 0; i < Left_matrix_x && equal; i++) {

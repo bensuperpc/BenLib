@@ -59,18 +59,23 @@ void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, flo
 // void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n);
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 
+void matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][100][100]);
+
 // 2D to 1D
-template <typename T> void flatten1D(const T *a, T *b, const size_t xMax, const size_t yMax);
+template <typename T> void flatten1D(T **a, T *b, const size_t xMax, const size_t yMax);
 // 3D to 1D
-template <typename T> void flatten1D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax);
+template <typename T> void flatten1D(T ***a, T *b, const size_t xMax, const size_t yMax, const size_t zMax);
 // 4D to 1D
-template <typename T> void flatten1D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
+template <typename T> void flatten1D(T ****a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
 // 1D to 2D
-template <typename T> void reshape2D(const T *a, T *b, const size_t xMax, const size_t yMax);
+template <typename T> void reshape2D(T *a, T *b, const size_t xMax, const size_t yMax);
 // 1D to 3D
 template <typename T> void reshape3D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax);
 // 1D to 4D
 template <typename T> void reshape4D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
+
+template <typename T> void cpu_matrix_mult(T *h_a, T *h_b, T *h_result, const size_t m);
+template <typename T> void cpu_matrix_mult(T *matA, size_t rA, size_t cA, T *matB, size_t rB, size_t cB, T *matC, size_t rC, size_t cC);
 } // namespace cuda
 } // namespace my
 
