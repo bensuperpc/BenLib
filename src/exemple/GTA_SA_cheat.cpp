@@ -43,11 +43,11 @@
 #include <tuple>
 #include <utility> // std::make_pair
 #include <vector>
-#include "thread/Pool.hpp"        // Threadpool
+//#include "thread/Pool.hpp"        // Threadpool
 #include "time/chrono/chrono.hpp" // Chrono
 
 // If you want display less informations, comment it
-//#define MORE_INFO
+#define MORE_INFO
 
 // For debug mode
 //#define DNDEBUG
@@ -123,12 +123,74 @@ template <class T> void findStringInv(T n, char *array)
     }
 }
 
+int main()
+{
+    std::ios_base::sync_with_stdio(false);
+
+    const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range, 1 = A
+    // 141167095653376 = ~17 days on I7 9750H
+    // 5429503678976 = ~14h on I7 9750H
+    // 208827064576 = ~28 min on I7 9750H
+    // 8031810176 = ~1 min on I7 9750H
+    // 1544578880 = ~11 sec on I7 9750H
+    // 308915776 = 2 sec on I7 9750H
+    const size_t to_range = 1544578880; // Alphabetic sequence range max, must be > from_range !
+
+#ifdef DNDEBUG
+    assert(from_range < to_range); // Test if begining value is highter than end value
+    assert(from_range > 0);        // Test forbiden value
+#endif
+
+#ifdef MORE_INFO
+    std::cout << "Number of calculations: " << (to_range - from_range) << std::endl;
+    std::cout << "" << std::endl;
+    // Display Alphabetic sequence range
+    char tmp1[29] = {0};
+    char tmp2[29] = {0};
+    findStringInv<size_t>(from_range, tmp1);
+    findStringInv<size_t>(to_range, tmp2);
+    std::cout << "From: " << tmp1 << " to: " << tmp2 << " Alphabetic sequence" << std::endl;
+    std::cout << "" << std::endl;
+#endif
+
+
+
+
+    char tmp[29] = {0}; // Temp array
+    uint32_t crc = 0;   // CRC value
+    auto &&t1 = my::chrono::now();
+#pragma omp parallel for schedule(auto) shared(results) firstprivate(tmp, crc)
+    for (std::size_t i = from_range; i < to_range; i++) {
+        // for (size_t j = i; j < i; j++) {
+        findStringInv<size_t>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
+        crc = ~(GetCrc32(tmp));        // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
+        if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
+            std::reverse(tmp, tmp + strlen(tmp));                                                   // Invert char array
+            results.emplace_back(std::make_tuple(i, std::string(tmp), crc)); // Save result: calculation position, Alphabetic sequence, CRC
+        }
+    }
+    auto &&t2 = my::chrono::now();
+    sort(results.begin(), results.end());
+    for (auto &&result : results) {
+        std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
+                  << std::left << std::setw(12) << std::get<2>(result);
+        std::cout << std::endl;
+    }
+    std::cout << "Time: " << my::chrono::duration(t1, t2).count() << " sec" << std::endl;
+    std::cout << "This program execute: " << std::fixed << ((to_range - from_range) / my::chrono::duration(t1, t2).count()) / 1000000 << " MOps/sec"
+              << std::endl;
+
+    return EXIT_SUCCESS;
+}
+
+
 /**
  * \brief Task structure for threadpool
  * \tparam T
  * \param x Range from
  * \param y Range to
  */
+ /*
 struct Task
 {
     template <class T = std::size_t> T operator()(T x, T y)
@@ -152,6 +214,7 @@ struct Task
     }
 };
 
+
 int main()
 {
     auto &&t1 = my::chrono::now();
@@ -163,8 +226,9 @@ int main()
     // 5429503678976 = ~14h on I7 9750H
     // 208827064576 = ~28 min on I7 9750H
     // 8031810176 = ~1 min on I7 9750H
+    // 1544578880 = ~11 sec on I7 9750H
     // 308915776 = 2 sec on I7 9750H
-    const size_t to_range = 308915776; // Alphabetic sequence range max, must be > from_range !
+    const size_t to_range = 1544578880; // Alphabetic sequence range max, must be > from_range !
 
 #ifdef DNDEBUG
     assert(from_range < to_range); // Test if begining value is highter than end value
@@ -245,3 +309,4 @@ int main()
     std::cout << "This program execute: " << std::fixed << (nbrcal / my::chrono::duration(t1, t2).count()) / 1000000 << " MOps/sec" << std::endl;
     return EXIT_SUCCESS;
 }
+*/

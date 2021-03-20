@@ -29,9 +29,7 @@
 #include <iostream>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "matrix.hpp"
 #include "matrix.tpp"
-#include "matrix_ops.hpp"
 #include "matrix_ops.tpp"
 extern "C"
 {

@@ -178,13 +178,13 @@ set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=for
 #    list(APPEND CHECK_CXX_COMPILER_FLAG "/usr/share/SFML/cmake/Modules")
 #endif()
 
-set(SEC_COMPILER_LINK_REL "-fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed -fuse-ld=gold")
-#-flto
+set(SEC_COMPILER_LINK_REL "-fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed -fuse-ld=lld")
+#-flto -fuse-ld=lld -fuse-ld=gold
 
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
 #-std=c99
 
-set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe -fuse-ld=gold")
+set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe -fuse-ld=lld")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
@@ -201,13 +201,13 @@ set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wdupl
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
 #Add -lstdc++fs for old compiler
-set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=gold -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
+set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=lld -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
-set(CMAKE_SHARED_LINKER_FLAGS "-fuse-ld=gold")
+set(CMAKE_SHARED_LINKER_FLAGS "-fuse-ld=lld")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${SEC_COMPILER_LINK_REL}")
 set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "${SEC_COMPILER_LINK_REL}")
 set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
@@ -696,7 +696,7 @@ add_dependencies(bench_crc32 ${CUSTOM_LIBS})
 
 if(Boost_FOUND)
     add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
-    target_link_libraries(gta_sa_cheat PRIVATE thread string_lib time)
+    target_link_libraries(gta_sa_cheat PRIVATE string_lib time OpenMP::OpenMP_CXX)
     add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
 
     add_executable(list_all_file ${LIST_ALL_FILE})
