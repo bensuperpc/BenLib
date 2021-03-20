@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////
 //                                                          //
 //  BenLib, 2021                                            //
-//  Created: 17, March, 2021                                //
-//  Modified: 17, March, 2021                               //
+//  Created: 19, March, 2021                                //
+//  Modified: 20, March, 2021                               //
 //  file: OpenCL_test.cpp                                   //
 //  Crypto                                                  //
 //  Source: https://www.techiedelight.com/dynamic-memory-allocation-in-c-for-2d-3d-array/
@@ -17,6 +17,7 @@
 //          https://stackoverflow.com/questions/18273370/the-correct-way-to-initialize-a-dynamic-pointer-to-a-multidimensional-array
 //          https://data-flair.training/blogs/multi-dimensional-arrays-in-c-cpp/
 //          https://www.geeksforgeeks.org/c-program-multiply-two-matrices/
+//          https://www.daniweb.com/programming/software-development/threads/471477/equivalent-iteration-of-2d-and-3d-array-flattened-as-1d-array
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -30,6 +31,8 @@
 #include "device_launch_parameters.h"
 #include "matrix.hpp"
 #include "matrix.tpp"
+#include "matrix_ops.hpp"
+#include "matrix_ops.tpp"
 extern "C"
 {
 #include <math.h>
@@ -48,179 +51,6 @@ extern "C"
 
 #define Min 0
 #define Max 9
-
-void copy(int ***B_, int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-void copy(int ***B_, int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
-{
-#if defined(_OPENMP)
-#    pragma omp parallel
-    {
-#    pragma omp for collapse(2) schedule(auto)
-#endif
-        for (size_t i = 0; i < sizeZ_; i++) {
-            for (size_t j = 0; j < sizeY_; j++) {
-                for (size_t k = 0; k < sizeX_; k++) {
-                    B_[i][j][k] = A_[i][j][k];
-                }
-            }
-        }
-#if defined(_OPENMP)
-    }
-#endif
-}
-
-void copy(int **B_, int **A_, size_t sizeX_, size_t sizeY_);
-void copy(int **B_, int **A_, size_t sizeX_, size_t sizeY_)
-{
-#if defined(_OPENMP)
-#    pragma omp parallel
-    {
-#    pragma omp for collapse(1) schedule(auto)
-#endif
-        for (size_t j = 0; j < sizeY_; j++) {
-            for (size_t k = 0; k < sizeX_; k++) {
-                B_[j][k] = A_[j][k];
-            }
-        }
-#if defined(_OPENMP)
-    }
-#endif
-}
-
-void display(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-void display(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
-{
-    for (size_t i = 0; i < sizeZ_; i++) {
-        std::cout << "Depth: " << i << "\n";
-        for (size_t j = 0; j < sizeY_; j++) {
-            for (size_t k = 0; k < sizeX_; k++)
-                std::cout << A_[i][j][k] << " ";
-
-            std::cout << "\n";
-        }
-        std::cout << "\n";
-    }
-    std::cout << std::endl;
-}
-
-void display(int **A_, size_t sizeX_, size_t sizeY_);
-void display(int **A_, size_t sizeX_, size_t sizeY_)
-{
-    for (size_t i = 0; i < sizeY_; i++) {
-        for (size_t j = 0; j < sizeX_; j++) {
-            std::cout << A_[i][j] << " ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << std::endl;
-}
-
-void display(int *A_, size_t sizeX_);
-void display(int *A_, size_t sizeX_)
-{
-    for (size_t j = 0; j < sizeX_; j++) {
-        std::cout << A_[j] << " ";
-    }
-    std::cout << std::endl;
-}
-
-int ****aalloc(size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_)
-{
-    int ****A_ = new int ***[sizeW_];
-    /*
-    #pragma omp parallel num_threads(2) shared(A_)
-    {
-        #pragma omp for nowait schedule(auto)
-    */
-    for (size_t i = 0; i < sizeW_; i++) {
-        A_[i] = new int **[sizeZ_];
-        for (size_t j = 0; j < sizeZ_; j++) {
-            A_[i][j] = new int *[sizeY_];
-            for (size_t k = 0; k < sizeY_; k++)
-                A_[i][j][k] = new int[sizeX_];
-        }
-    }
-    //}
-    return A_;
-}
-
-int ***aalloc(size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-int ***aalloc(size_t sizeX_, size_t sizeY_, size_t sizeZ_)
-{
-    int ***A_ = new int **[sizeZ_];
-    for (size_t i = 0; i < sizeZ_; i++) {
-        A_[i] = new int *[sizeY_];
-        for (size_t j = 0; j < sizeY_; j++) {
-            A_[i][j] = new int[sizeX_];
-        }
-    }
-    return A_;
-}
-
-int **aalloc(size_t sizeX_, size_t sizeY_);
-int **aalloc(size_t sizeX_, size_t sizeY_)
-{
-    int **A_ = new int *[sizeY_];
-    for (size_t i = 0; i < sizeY_; i++) {
-        A_[i] = new int[sizeX_];
-    }
-    return A_;
-}
-
-int *aalloc(size_t sizeX_);
-int *aalloc(size_t sizeX_)
-{
-    int *A_ = new int[sizeX_];
-    // if (A_ == NULL) { perror("malloc failure"); exit(EXIT_FAILURE); };
-    return A_;
-}
-
-void adealloc(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_);
-void adealloc(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_)
-{
-    for (size_t i = 0; i < sizeW_; i++) {
-        for (size_t j = 0; j < sizeZ_; j++) {
-            for (size_t k = 0; k < sizeY_; k++) {
-            }
-            delete[] A_[i][j];
-        }
-        delete[] A_[i];
-    }
-    delete[] A_;
-}
-
-void adealloc(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-void adealloc(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
-{
-    for (size_t i = 0; i < sizeZ_; i++) {
-        for (size_t j = 0; j < sizeY_; j++) {
-            delete[] A_[i][j];
-        }
-        delete[] A_[i];
-    }
-    delete[] A_;
-}
-
-void adealloc(int **A_, size_t sizeX_, size_t sizeY_);
-void adealloc(int **A_, size_t sizeX_, size_t sizeY_)
-{
-    for (size_t i = 0; i < sizeY_; i++)
-        delete[] A_[i];
-
-    delete[] A_;
-}
-
-void adealloc(int *A_, size_t sizeX_);
-void adealloc(int *A_, size_t sizeX_)
-{
-    delete[] A_;
-}
-
-void adealloc(int *A_);
-void adealloc(int *A_)
-{
-    delete[] A_;
-}
 
 void matmult(int **A_, int **B_, int **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY);
 void matmult(int **A_, int **B_, int **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY)
@@ -288,20 +118,20 @@ int main()
         int ****D = aalloc(175, 175, 175, 175);
         adealloc(D, 175, 175, 175, 175);
     */
-    int **M1 = aalloc(3, 3);
+    int **M1 = my::cuda::aalloc<int>(3, 3);
     fillRand(M1, sizeX, sizeY);
-    int **M2 = aalloc(3, 3);
-    copy(M2, M1, sizeX, sizeY);
-    int **M3 = aalloc(3, 3);
+    int **M2 = my::cuda::aalloc<int>(3, 3);
+    my::cuda::copy(M2, M1, sizeX, sizeY);
+    int **M3 = my::cuda::aalloc<int>(3, 3);
     matmult(M1, M2, M3, 3, 3, 3, 3);
     // multiply(M1, M2, M3);
-    display(M1, 3, 3);
-    display(M2, 3, 3);
-    display(M3, 3, 3);
+    my::cuda::display<int>(M1, 3, 3);
+    my::cuda::display<int>(M2, 3, 3);
+    my::cuda::display<int>(M3, 3, 3);
 
-    auto M4 = aalloc(3 * 3);
-    auto M5 = aalloc(3 * 3);
-    auto M6 = aalloc(3 * 3);
+    auto M4 = my::cuda::aalloc<int>(3 * 3);
+    auto M5 = my::cuda::aalloc<int>(3 * 3);
+    auto M6 = my::cuda::aalloc<int>(3 * 3);
 
     my::cuda::flatten1D<int>(M1, M4, (size_t)3, (size_t)3);
 
@@ -310,17 +140,17 @@ int main()
     my::cuda::cpu_matrix_mult<int>(M4, M5, M6, 3);
     // my::cuda::cpu_matrix_mult<int>(M4, 3 ,3 ,M5, 3, 3, M6, 3, 3);
 
-    display(M4, 3 * 3);
-    display(M5, 3 * 3);
-    display(M6, 3 * 3);
+    my::cuda::display<int>(M4, 3 * 3);
+    my::cuda::display<int>(M5, 3 * 3);
+    my::cuda::display<int>(M6, 3 * 3);
 
-    auto M7 = aalloc(175 * 175 * 175 * 175);
+    auto M7 = my::cuda::aalloc<int>(175 * 175 * 175 * 175);
     // memset(M7, 0, sizeof(M7) * 175*175*175*175);
     return 0;
 
-    int ***A = aalloc(sizeX, sizeY, sizeZ);
-    int ***B = aalloc(sizeX, sizeY, sizeZ);
-    int ***C = aalloc(sizeX, sizeY, sizeZ);
+    int ***A = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
+    int ***B = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
+    int ***C = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
 
 #pragma omp parallel
     {
@@ -339,13 +169,13 @@ int main()
 
     fillRand(A, sizeX, sizeY, sizeZ);
 
-    copy(B, A, sizeX, sizeY, sizeZ);
+    my::cuda::copy<int>(B, A, sizeX, sizeY, sizeZ);
 
-    display(A, sizeX, sizeY, sizeZ);
+    my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
 
-    adealloc(A, sizeX, sizeY, sizeZ);
-    adealloc(B, sizeX, sizeY, sizeZ);
-    adealloc(C, sizeX, sizeY, sizeZ);
+    my::cuda::adealloc<int>(A, sizeX, sizeY, sizeZ);
+    my::cuda::adealloc<int>(B, sizeX, sizeY, sizeZ);
+    my::cuda::adealloc<int>(C, sizeX, sizeY, sizeZ);
 
     return EXIT_SUCCESS;
 }

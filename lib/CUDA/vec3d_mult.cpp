@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////
 //                                                          //
 //  BenLib, 2021                                            //
-//  Created: 17, March, 2021                                //
-//  Modified: 17, March, 2021                               //
+//  Created: 19, March, 2021                                //
+//  Modified: 19, March, 2021                               //
 //  file: OpenCL_test.cpp                                   //
 //  Crypto                                                  //
 //  Source: https://github.com/Kaixhin/cuda-workshop                                                 //

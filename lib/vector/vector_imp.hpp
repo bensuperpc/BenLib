@@ -309,7 +309,7 @@ template <typename T> void my::vector::shuffle(std::vector<T> &vec, size_t &n)
     T i, t, temp;
     for (i = 0; i < n; i++) {
         t = vec[i];
-        temp = rand() % n;
+        temp = (T)rand() % n;
         vec[i] = vec[temp];
         vec[temp] = t;
     }
