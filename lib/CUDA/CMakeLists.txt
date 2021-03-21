@@ -72,6 +72,7 @@ endif()
 set(SRCS
     kernel/kernel.cu
     kernel/matrix.cu
+    kernel/crc.cu
 	)
 	
 set(HEADERS
@@ -84,6 +85,9 @@ set(HEADERS
     kernel/matrix.tpp
     kernel/matrix_ops.hpp
     kernel/matrix_ops.tpp
+    kernel/crc.cuh
+    kernel/crc.h
+    kernel/crc.hpp
     )
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)

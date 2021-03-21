@@ -85,6 +85,7 @@ __kernel void CRC32_1byte_tableless2(__global const uchar *data, ulong length, u
 		uint c = (((crc << 31) >> 31) & ((POLY >> 7) ^ (POLY >> 1))) ^ (((crc << 30) >> 31) & ((POLY >> 6) ^ POLY)) ^ (((crc << 29) >> 31) & (POLY >> 5))
 						^ (((crc << 28) >> 31) & (POLY >> 4)) ^ (((crc << 27) >> 31) & (POLY >> 3)) ^ (((crc << 26) >> 31) & (POLY >> 2))
 						^ (((crc << 25) >> 31) & (POLY >> 1)) ^ (((crc << 24) >> 31) & POLY);
+      crc = (crc >> 8) ^ c;
 	}
 	*resultCrc32 = ~crc;
 }
@@ -106,6 +107,7 @@ __kernel void JAMCRC_1byte_tableless2(__global const uchar *data, ulong length, 
 		uint c = (((crc << 31) >> 31) & ((POLY >> 7) ^ (POLY >> 1))) ^ (((crc << 30) >> 31) & ((POLY >> 6) ^ POLY)) ^ (((crc << 29) >> 31) & (POLY >> 5))
 						^ (((crc << 28) >> 31) & (POLY >> 4)) ^ (((crc << 27) >> 31) & (POLY >> 3)) ^ (((crc << 26) >> 31) & (POLY >> 2))
 						^ (((crc << 25) >> 31) & (POLY >> 1)) ^ (((crc << 24) >> 31) & POLY);
+    crc = (crc >> 8) ^ c;
 	}
 	*resultCrc32 = crc;
 }

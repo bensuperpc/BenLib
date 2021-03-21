@@ -76,7 +76,7 @@ int main(int argc, char *argv[], char *envp[])
 
     unsigned char **nx = new unsigned char *[N];
 #if defined(_OPENMP)
-#    pragma omp parallel for num_threads(12)
+#    pragma omp parallel for ordered num_threads(12)
     for (size_t x = 0; x < N; ++x) {
         nx[x] = new unsigned char[(std::size_t)std::pow(P, x)];
 // printf("Element %ld traité par le thread %d \n",x,omp_get_thread_num());

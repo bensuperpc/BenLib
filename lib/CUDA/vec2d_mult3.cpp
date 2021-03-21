@@ -43,9 +43,9 @@ extern "C"
 #    include <omp.h>
 #endif
 
-#define sizeZ 300
-#define sizeY 300
-#define sizeX 300
+#define sizeZ 4
+#define sizeY 4
+#define sizeX 4
 
 #define Min 0
 #define Max 9
@@ -125,8 +125,8 @@ int main()
     int ***B = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
     int ***C = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
 
-    // fillRand(A, sizeX, sizeY, sizeZ);
-    #pragma omp parallel for collapse(2) schedule(auto)
+// fillRand(A, sizeX, sizeY, sizeZ);
+#pragma omp parallel for collapse(2) schedule(auto)
     for (size_t z = 0; z < sizeZ; z++) {
         for (size_t y = 0; y < sizeY; y++) {
             for (size_t x = 0; x < sizeX; x++) {
@@ -134,8 +134,8 @@ int main()
             }
         }
     }
-    // my::cuda::copy<int>(B, A, sizeX, sizeY, sizeZ);
-    #pragma omp parallel for collapse(2) schedule(auto)
+// my::cuda::copy<int>(B, A, sizeX, sizeY, sizeZ);
+#pragma omp parallel for collapse(2) schedule(auto)
     for (size_t z = 0; z < sizeZ; z++) {
         for (size_t y = 0; y < sizeY; y++) {
             for (size_t x = 0; x < sizeX; x++) {
@@ -147,7 +147,7 @@ int main()
     // my::cuda::matMultFlat<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C, sizeX, sizeY, sizeZ);
     my::cuda::matMult<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C);
     // my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
-    // my::cuda::display<int>(C, sizeX, sizeY, sizeZ);
+    my::cuda::display<int>(C, sizeX, sizeY, sizeZ);
 
     my::cuda::adealloc<int>(A, sizeX, sizeY, sizeZ);
     my::cuda::adealloc<int>(B, sizeX, sizeY, sizeZ);
