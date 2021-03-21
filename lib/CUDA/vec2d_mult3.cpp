@@ -43,38 +43,12 @@ extern "C"
 #    include <omp.h>
 #endif
 
-#define sizeZ 2
-#define sizeY 3
-#define sizeX 4
+#define sizeZ 300
+#define sizeY 300
+#define sizeX 300
 
 #define Min 0
 #define Max 9
-
-void matmult(int **A_, int **B_, int **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY);
-void matmult(int **A_, int **B_, int **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY)
-{
-#pragma omp parallel for collapse(2) schedule(auto)
-    for (size_t i = 0; i < sizeAX; ++i) {
-        for (size_t j = 0; j < sizeBY; ++j) {
-            for (size_t k = 0; k < sizeBX; ++k) {
-                C_[i][j] += A_[i][k] * B_[k][j];
-            }
-        }
-    }
-}
-
-void multiply(int **mat1, int **mat2, int **res);
-void multiply(int **mat1, int **mat2, int **res)
-{
-    size_t i, j, k;
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-            res[i][j] = 0;
-            for (k = 0; k < 3; k++)
-                res[i][j] += mat1[i][k] * mat2[k][j];
-        }
-    }
-}
 
 void fillRand(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
 void fillRand(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
@@ -116,6 +90,7 @@ int main()
         int ****D = aalloc(175, 175, 175, 175);
         adealloc(D, 175, 175, 175, 175);
     */
+    /*
     int **M1 = my::cuda::aalloc<int>(3, 3);
     fillRand(M1, sizeX, sizeY);
     int **M2 = my::cuda::aalloc<int>(3, 3);
@@ -144,32 +119,33 @@ int main()
 
     auto M7 = my::cuda::aalloc<int>(175 * 175 * 175 * 175);
     // memset(M7, 0, sizeof(M7) * 175*175*175*175);
-    return 0;
+    */
 
     int ***A = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
     int ***B = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
     int ***C = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
 
-#pragma omp parallel
-    {
-#pragma omp for
-        for (int i = 0; i < sizeZ; i++) {
-            A[i] = new int *[sizeY];
-            B[i] = new int *[sizeY];
-            C[i] = new int *[sizeY];
-            for (int j = 0; j < sizeY; j++) {
-                A[i][j] = new int[sizeX];
-                B[i][j] = new int[sizeX];
-                C[i][j] = new int[sizeX];
+    // fillRand(A, sizeX, sizeY, sizeZ);
+    for (size_t z = 0; z < sizeZ; z++) {
+        for (size_t y = 0; y < sizeY; y++) {
+            for (size_t x = 0; x < sizeX; x++) {
+                A[z][y][x] = (x + y + z) / 5;
+            }
+        }
+    }
+    // my::cuda::copy<int>(B, A, sizeX, sizeY, sizeZ);
+    for (size_t z = 0; z < sizeZ; z++) {
+        for (size_t y = 0; y < sizeY; y++) {
+            for (size_t x = 0; x < sizeX; x++) {
+                B[z][y][x] = (x + y + z) / 5;
             }
         }
     }
 
-    fillRand(A, sizeX, sizeY, sizeZ);
-
-    my::cuda::copy<int>(B, A, sizeX, sizeY, sizeZ);
-
-    my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
+    // my::cuda::matMultFlat<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C, sizeX, sizeY, sizeZ);
+    my::cuda::matMult<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C);
+    // my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
+    // my::cuda::display<int>(C, sizeX, sizeY, sizeZ);
 
     my::cuda::adealloc<int>(A, sizeX, sizeY, sizeZ);
     my::cuda::adealloc<int>(B, sizeX, sizeY, sizeZ);

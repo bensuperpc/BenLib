@@ -153,9 +153,6 @@ int main()
     std::cout << "" << std::endl;
 #endif
 
-
-
-
     char tmp[29] = {0}; // Temp array
     uint32_t crc = 0;   // CRC value
     auto &&t1 = my::chrono::now();
@@ -183,130 +180,129 @@ int main()
     return EXIT_SUCCESS;
 }
 
-
 /**
  * \brief Task structure for threadpool
  * \tparam T
  * \param x Range from
  * \param y Range to
  */
- /*
+/*
 struct Task
 {
-    template <class T = std::size_t> T operator()(T x, T y)
-    {
-        char tmp[29] = {0}; // Temp array
-        uint32_t crc = 0;   // CRC value
-        for (T i = x; i < y + x; i++) {
-            findStringInv<T>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
-            crc = ~(GetCrc32(tmp));   // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
-            if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
-                std::reverse(tmp, tmp + strlen(tmp));                                                   // Invert char array
-                mutex.lock();                                                                           // Block threads
+   template <class T = std::size_t> T operator()(T x, T y)
+   {
+       char tmp[29] = {0}; // Temp array
+       uint32_t crc = 0;   // CRC value
+       for (T i = x; i < y + x; i++) {
+           findStringInv<T>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
+           crc = ~(GetCrc32(tmp));   // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
+           if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
+               std::reverse(tmp, tmp + strlen(tmp));                                                   // Invert char array
+               mutex.lock();                                                                           // Block threads
 #ifdef DNDEBUG
-                std::cout << std::dec << i << ":" << std::string(tmp) << ":0x" << std::hex << crc << std::endl;
+               std::cout << std::dec << i << ":" << std::string(tmp) << ":0x" << std::hex << crc << std::endl;
 #endif
-                results.emplace_back(std::make_tuple(i, std::string(tmp), crc)); // Save result: calculation position, Alphabetic sequence, CRC
-                mutex.unlock();                                                  // UnBlock threads
-            }
-        }
-        return 0;
-    }
+               results.emplace_back(std::make_tuple(i, std::string(tmp), crc)); // Save result: calculation position, Alphabetic sequence, CRC
+               mutex.unlock();                                                  // UnBlock threads
+           }
+       }
+       return 0;
+   }
 };
 
 
 int main()
 {
-    auto &&t1 = my::chrono::now();
-    std::ios_base::sync_with_stdio(false);                 // Improve std::cout and std::cin speed
-    std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
+   auto &&t1 = my::chrono::now();
+   std::ios_base::sync_with_stdio(false);                 // Improve std::cout and std::cin speed
+   std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
 
-    const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range, 1 = A
-    // 141167095653376 = ~17 days on I7 9750H
-    // 5429503678976 = ~14h on I7 9750H
-    // 208827064576 = ~28 min on I7 9750H
-    // 8031810176 = ~1 min on I7 9750H
-    // 1544578880 = ~11 sec on I7 9750H
-    // 308915776 = 2 sec on I7 9750H
-    const size_t to_range = 1544578880; // Alphabetic sequence range max, must be > from_range !
+   const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range, 1 = A
+   // 141167095653376 = ~17 days on I7 9750H
+   // 5429503678976 = ~14h on I7 9750H
+   // 208827064576 = ~28 min on I7 9750H
+   // 8031810176 = ~1 min on I7 9750H
+   // 1544578880 = ~11 sec on I7 9750H
+   // 308915776 = 2 sec on I7 9750H
+   const size_t to_range = 1544578880; // Alphabetic sequence range max, must be > from_range !
 
 #ifdef DNDEBUG
-    assert(from_range < to_range); // Test if begining value is highter than end value
-    assert(from_range > 0);        // Test forbiden value
+   assert(from_range < to_range); // Test if begining value is highter than end value
+   assert(from_range > 0);        // Test forbiden value
 #endif
 
-    const size_t nbrcal = to_range - from_range + 1;                    // Number of calculations to do
-    const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
-    const std::size_t threadmult = 16;                                  // Thread Multiplier (So that each pool has multiple operations available)
+   const size_t nbrcal = to_range - from_range + 1;                    // Number of calculations to do
+   const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
+   const std::size_t threadmult = 16;                                  // Thread Multiplier (So that each pool has multiple operations available)
 
-    thread::Pool thread_pool(hardthread); // Config threadpool with nbr threads
+   thread::Pool thread_pool(hardthread); // Config threadpool with nbr threads
 
-    const size_t nbrtask = hardthread * threadmult; // Total number of tasks created on the threadpool
+   const size_t nbrtask = hardthread * threadmult; // Total number of tasks created on the threadpool
 
-    const size_t nbrcalperthread = nbrcal / nbrtask; // Number of calculations per task (100K mini to 100M max recommended)
+   const size_t nbrcalperthread = nbrcal / nbrtask; // Number of calculations per task (100K mini to 100M max recommended)
 
 #ifdef MORE_INFO
-    std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
-    std::cout << "Thread multiplier: x" << threadmult << " (Nbr tasks per thread)" << std::endl;
-    std::cout << "Threadpool with: " << nbrtask << " tasks" << std::endl;
-    std::cout << "Number of calculations: " << nbrcal << std::endl;
-    std::cout << "Number of calculations per tasks: " << nbrcalperthread << std::endl;
-    std::cout << "" << std::endl;
-    // Display Alphabetic sequence range
-    char tmp1[29] = {0};
-    char tmp2[29] = {0};
-    findStringInv<size_t>(from_range, tmp1);
-    findStringInv<size_t>(to_range, tmp2);
-    std::cout << "From: " << tmp1 << " to: " << tmp2 << " Alphabetic sequence" << std::endl;
-    std::cout << "" << std::endl;
+   std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
+   std::cout << "Thread multiplier: x" << threadmult << " (Nbr tasks per thread)" << std::endl;
+   std::cout << "Threadpool with: " << nbrtask << " tasks" << std::endl;
+   std::cout << "Number of calculations: " << nbrcal << std::endl;
+   std::cout << "Number of calculations per tasks: " << nbrcalperthread << std::endl;
+   std::cout << "" << std::endl;
+   // Display Alphabetic sequence range
+   char tmp1[29] = {0};
+   char tmp2[29] = {0};
+   findStringInv<size_t>(from_range, tmp1);
+   findStringInv<size_t>(to_range, tmp2);
+   std::cout << "From: " << tmp1 << " to: " << tmp2 << " Alphabetic sequence" << std::endl;
+   std::cout << "" << std::endl;
 #endif
-    results_pool.reserve(nbrtask); // Vectors reservation
+   results_pool.reserve(nbrtask); // Vectors reservation
 
-    for (std::size_t i = from_range - 1; i < nbrtask; i++) {
-        results_pool.emplace_back(thread_pool.enqueue(Task(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
+   for (std::size_t i = from_range - 1; i < nbrtask; i++) {
+       results_pool.emplace_back(thread_pool.enqueue(Task(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
 #ifdef DNDEBUG
-        std::cout << "From: " << i * nbrcalperthread << " To: " << i * nbrcalperthread + nbrcalperthread << std::endl;
+       std::cout << "From: " << i * nbrcalperthread << " To: " << i * nbrcalperthread + nbrcalperthread << std::endl;
 #endif
-    }
+   }
 
 #ifdef MORE_INFO
-    std::size_t count = 0; // Count tasks done
+   std::size_t count = 0; // Count tasks done
 #endif
-    std::size_t t __attribute__((unused)); // Unused value
-    for (auto &&result_pool : results_pool) {
-        t = result_pool.get(); // Get result from threadpool
+   std::size_t t __attribute__((unused)); // Unused value
+   for (auto &&result_pool : results_pool) {
+       t = result_pool.get(); // Get result from threadpool
 #ifdef MORE_INFO
-        // Calculate work %
-        if (count % (std::size_t)((nbrtask / 50) + 1) == 0) {
-            std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl; // Display % of work
-        }
-        count++;
+       // Calculate work %
+       if (count % (std::size_t)((nbrtask / 50) + 1) == 0) {
+           std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl; // Display % of work
+       }
+       count++;
 #endif
-    }
+   }
 
-    // Sort result, due multi-threading, sometimes results can be differents every exec.
-    sort(results.begin(), results.end());
+   // Sort result, due multi-threading, sometimes results can be differents every exec.
+   sort(results.begin(), results.end());
 
 #ifdef MORE_INFO
-    std::cout << "" << std::endl;
-    std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code" << std::left << std::setw(16) << "CRC32/JAMCRC"
-              << "Cheat code name" << std::endl;
+   std::cout << "" << std::endl;
+   std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code" << std::left << std::setw(16) << "CRC32/JAMCRC"
+             << "Cheat code name" << std::endl;
 #endif
-    for (auto &&result : results) {
-        std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
-                  << std::left << std::setw(12) << std::get<2>(result);
+   for (auto &&result : results) {
+       std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
+                 << std::left << std::setw(12) << std::get<2>(result);
 #ifdef MORE_INFO
-        auto it = std::find(cheat_list.begin(), cheat_list.end(), std::get<2>(result));
-        if (it != cheat_list.end()) {
-            std::cout << cheat_list_name[it - cheat_list.begin()] << std::endl;
-        }
+       auto it = std::find(cheat_list.begin(), cheat_list.end(), std::get<2>(result));
+       if (it != cheat_list.end()) {
+           std::cout << cheat_list_name[it - cheat_list.begin()] << std::endl;
+       }
 #else
-        std::cout << std::endl;
+       std::cout << std::endl;
 #endif
-    }
-    auto &&t2 = my::chrono::now();
-    std::cout << "Time: " << my::chrono::duration(t1, t2).count() << " sec" << std::endl;
-    std::cout << "This program execute: " << std::fixed << (nbrcal / my::chrono::duration(t1, t2).count()) / 1000000 << " MOps/sec" << std::endl;
-    return EXIT_SUCCESS;
+   }
+   auto &&t2 = my::chrono::now();
+   std::cout << "Time: " << my::chrono::duration(t1, t2).count() << " sec" << std::endl;
+   std::cout << "This program execute: " << std::fixed << (nbrcal / my::chrono::duration(t1, t2).count()) / 1000000 << " MOps/sec" << std::endl;
+   return EXIT_SUCCESS;
 }
 */

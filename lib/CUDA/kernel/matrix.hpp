@@ -20,6 +20,7 @@
 //          https://www.daniweb.com/programming/software-development/threads/292133/convert-1d-array-to-2d-array
 //          https://www.daniweb.com/programming/software-development/threads/471477/equivalent-iteration-of-2d-and-3d-array-flattened-as-1d-array
 //          http://coliru.stacked-crooked.com/a/7c570672c13ca3bf
+//          https://math.stackexchange.com/questions/63074/is-there-a-3-dimensional-matrix-by-matrix-product
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -78,8 +79,28 @@ template <typename T> void reshape3D(const T *a, T *b, const size_t xMax, const 
 // 1D to 4D
 template <typename T> void reshape4D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
 
-template <typename T> void cpu_matrix_mult(T *h_a, T *h_b, T *h_result, const size_t m);
-template <typename T> void cpu_matrix_mult(T *matA, size_t rA, size_t cA, T *matB, size_t rB, size_t cB, T *matC, size_t rC, size_t cC);
+// 2D Flat Matrix
+template <typename T> void matMultFlat(T *h_a, T *h_b, T *h_result, const size_t m);
+template <typename T> void matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY);
+// 3D Flat Matrix
+template <typename T>
+void matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T *matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T *matC, size_t sizeCX,
+    size_t sizeCY, size_t sizeCZ);
+
+// 2D Matrix
+template <typename T> void matMult(T **matA, T **matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY);
+template <typename T> void matMult(T **A_, T **B_, T **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY);
+// 3D Matrix
+template <typename T> void matMult(T ***matA, T ***matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeBX, size_t sizeBY, size_t sizeBZ);
+template <typename T> void matMult(T ***matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T ***matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T ***matC);
+// 4D Matrix
+template <typename T>
+void matMult(
+    T ****matA, T ****matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, size_t sizeBX, size_t sizeBY, size_t sizeBZ, size_t sizeBW);
+template <typename T>
+void matMult(
+    T ****matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, T ****matB, size_t sizeBX, size_t sizeBY, size_t sizeBW, size_t sizeBZ, T ****matC);
+
 } // namespace cuda
 } // namespace my
 

@@ -21,6 +21,7 @@
 //          https://stackoverflow.com/questions/20266201/3d-array-1d-flat-indexing/20266350
 //          https://stackoverflow.com/a/34363345/10152334
 //          https://www.gamedev.net/forums/topic/635420-4d-arrays/?page=1
+//          https://math.stackexchange.com/questions/63074/is-there-a-3-dimensional-matrix-by-matrix-product
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -114,7 +115,8 @@ template <typename T> void my::cuda::reshape4D(T *a, T ****b, const size_t xMax,
     // x + y*width + z*height*width + w*height*width*depth.
 }
 
-template <typename T> void my::cuda::cpu_matrix_mult(T *h_a, T *h_b, T *h_result, const size_t m)
+// 2D flat matrix
+template <typename T> void my::cuda::matMultFlat(T *h_a, T *h_b, T *h_result, const size_t m)
 {
     float tmp = 0.0;
 
@@ -129,8 +131,27 @@ template <typename T> void my::cuda::cpu_matrix_mult(T *h_a, T *h_b, T *h_result
     }
 }
 
-template <typename T> void my::cuda::cpu_matrix_mult(T *matA, size_t rA, size_t cA, T *matB, size_t rB, size_t cB, T *matC, size_t rC, size_t cC)
+// 2D flat matrix
+template <typename T>
+void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY)
 {
+    for (size_t i = 0; i < sizeAX; i++) {
+        for (size_t j = 0; j < sizeBY; j++) {
+            T sum = 0.0;
+            for (size_t h = 0; h < sizeBX; h++) {
+                sum += matA[i * sizeAY + h] * matB[h * sizeBY + j];
+            }
+            matC[i * sizeCY + j] = sum;
+        }
+    }
+}
+
+// 3D flat matrix
+template <typename T>
+void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T *matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T *matC, size_t sizeCX,
+    size_t sizeCY, size_t sizeCZ)
+{
+    /*
     for (size_t i = 0; i < rA; i++) {
         for (size_t j = 0; j < cB; j++) {
             T sum = 0.0;
@@ -138,6 +159,81 @@ template <typename T> void my::cuda::cpu_matrix_mult(T *matA, size_t rA, size_t 
                 sum += matA[i * cA + h] * matB[h * cB + j];
             }
             matC[i * cC + j] = sum;
+        }
+    }
+    */
+}
+
+template <typename T> void my::cuda::matMult(T **matA, T **matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY)
+{
+    my::cuda::matMult(matA, sizeAX, sizeAY, matB, sizeBX, sizeBY, matC);
+}
+
+template <typename T> void my::cuda::matMult(T **A_, T **B_, T **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY)
+{
+#pragma omp parallel for collapse(2) schedule(auto)
+    for (size_t y = 0; y < sizeAX; ++y) {
+        for (size_t x = 0; x < sizeBY; ++x) {
+            C_[y][x] = 0;
+            for (size_t s = 0; s < sizeBX; ++s) {
+                C_[y][x] += A_[y][s] * B_[s][x];
+            }
+        }
+    }
+}
+
+template <typename T>
+void my::cuda::matMult(T ***matA, T ***matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeBX, size_t sizeBY, size_t sizeBZ)
+{
+    my::cuda::matMult(matA, sizeAX, sizeAY, sizeAZ, matB, sizeBX, sizeBY, sizeBZ, matC);
+}
+
+template <typename T>
+void my::cuda::matMult(T ***matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T ***matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T ***matC)
+{
+#pragma omp parallel for collapse(3) schedule(auto)
+    // The first group loop
+    for (size_t z = 0; z < sizeAX; ++z) {
+        for (size_t y = 0; y < sizeBY; ++y) {
+            for (size_t x = 0; x < sizeBZ; ++x) {
+                // The second group loop
+                // matC[z][y][x] = 0;
+                for (size_t s = 0; s < sizeBX; ++s) {
+                    // matC[z][y][x] += matA[z][y][ys] * matB[ys][y][x];
+                    matC[z][y][x] = matC[z][y][x] + matA[z][y][s] * matB[s][y][x];
+                }
+                // End of the second group loop
+            }
+        }
+    }
+}
+
+template <typename T>
+void my::cuda::matMult(
+    T ****matA, T ****matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, size_t sizeBX, size_t sizeBY, size_t sizeBZ, size_t sizeBW)
+{
+    my::cuda::matMult(matA, sizeAX, sizeAY, sizeAZ, sizeAW, matB, sizeBX, sizeBY, sizeBZ, sizeBW, matC);
+}
+
+template <typename T>
+void my::cuda::matMult(
+    T ****matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, T ****matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, size_t sizeBW, T ****matC)
+{
+#pragma omp parallel for collapse(4) schedule(auto)
+    // The first group loop
+    for (size_t w = 0; w < sizeAX; ++w) {
+        for (size_t z = 0; z < sizeBY; ++z) {
+            for (size_t y = 0; y < sizeBZ; ++y) {
+                for (size_t x = 0; x < sizeBW; ++x) {
+                    // The second group loop
+                    // matC[w][z][y][x] = 0;
+                    for (size_t s = 0; s < sizeBX; ++s) {
+                        // matC[w][z][y][x] += matA[w][z][y][ys] * matB[ys][y][x];
+                        matC[w][z][y][x] = matC[w][z][y][x] + matA[w][z][y][s] * matB[s][z][y][x];
+                    }
+                    // End of the second group loop
+                }
+            }
         }
     }
 }
