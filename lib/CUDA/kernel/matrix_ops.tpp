@@ -130,7 +130,6 @@ template <typename T> T ***my::cuda::aalloc(size_t sizeX_, size_t sizeY_, size_t
     for (size_t i = 0; i < sizeZ_; i++) {
         A_[i] = new T *[sizeY_];
         for (size_t j = 0; j < sizeY_; j++) {
-            // std::cout << i << " " << j << " " << sizeX_ << std::endl;
             A_[i][j] = new T[sizeX_];
         }
     }

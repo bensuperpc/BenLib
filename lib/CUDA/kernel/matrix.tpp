@@ -167,7 +167,8 @@ void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ,
                     // b[z][y][x] = a[(z * xMax * yMax) + (y * xMax) + x];
 
                     // tmp += matA[y * sizeAY + s] * matB[s * sizeBY + x];
-                    // tmp += matA[y * sizeAY + s] * matB[s * sizeBY + x];
+                    // tmp += matA[y * sizeAY + s + z * xMax * yMax] * matB[s * sizeBY + x + z * xMax * yMax];
+                    tmp += matA[y * sizeAY + s + z * sizeAX * sizeAZ] * matB[s * sizeBY + x + z * sizeBX * sizeBZ];
                 }
                 // End of the second group loop
                 // = tmp;
@@ -206,20 +207,20 @@ template <typename T>
 void my::cuda::matMult(T ***matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T ***matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T ***matC)
 {
     T tmp;
-#pragma omp parallel for collapse(3) schedule(auto) private(tmp)
+#pragma omp parallel for collapse(3) schedule(auto) //private(tmp)
     // The first group loop
     for (size_t z = 0; z < sizeAX; ++z) {
         for (size_t y = 0; y < sizeBY; ++y) {
             for (size_t x = 0; x < sizeBZ; ++x) {
                 // The second group loop
                 // matC[z][y][x] = 0;
-                tmp = (T)0;
+                //tmp = (T)0;
                 for (size_t s = 0; s < sizeBX; ++s) {
                     // matC[z][y][x] += matA[z][y][ys] * matB[ys][y][x];
-                    // matC[z][y][x] = matC[z][y][x] + matA[z][y][s] * matB[s][y][x];
-                    tmp += matA[z][y][s] * matB[s][y][x];
+                    matC[z][y][x] = matC[z][y][x] + matA[z][y][s] * matB[s][y][x];
+                    //tmp += matA[z][y][s] * matB[s][y][x];
                 }
-                matC[z][y][x] = tmp;
+                //matC[z][y][x] = tmp;
                 // End of the second group loop
             }
         }
@@ -238,7 +239,7 @@ void my::cuda::matMult(
     T ****matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, T ****matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, size_t sizeBW, T ****matC)
 {
     T tmp;
-#pragma omp parallel for collapse(4) schedule(auto) private(tmp)
+#pragma omp parallel for collapse(4) schedule(auto) //private(tmp)
     // The first group loop
     for (size_t w = 0; w < sizeAX; ++w) {
         for (size_t z = 0; z < sizeBY; ++z) {
@@ -246,11 +247,11 @@ void my::cuda::matMult(
                 for (size_t x = 0; x < sizeBW; ++x) {
                     // The second group loop
                     // matC[w][z][y][x] = 0;
-                    tmp = (T)0;
+                    //tmp = (T)0;
                     for (size_t s = 0; s < sizeBX; ++s) {
                         // matC[w][z][y][x] += matA[w][z][y][ys] * matB[ys][y][x];
-                        // matC[w][z][y][x] = matC[w][z][y][x] + matA[w][z][y][s] * matB[s][z][y][x];
-                        tmp += matA[w][z][y][s] * matB[s][z][y][x];
+                        matC[w][z][y][x] = matC[w][z][y][x] + matA[w][z][y][s] * matB[s][z][y][x];
+                        //tmp += matA[w][z][y][s] * matB[s][z][y][x];
                     }
                     matC[w][z][y][x] = tmp;
                     // End of the second group loop

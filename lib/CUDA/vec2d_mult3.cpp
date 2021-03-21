@@ -126,18 +126,20 @@ int main()
     int ***C = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
 
     // fillRand(A, sizeX, sizeY, sizeZ);
+    #pragma omp parallel for collapse(2) schedule(auto)
     for (size_t z = 0; z < sizeZ; z++) {
         for (size_t y = 0; y < sizeY; y++) {
             for (size_t x = 0; x < sizeX; x++) {
-                A[z][y][x] = (x + y + z) / 5;
+                A[z][y][x] = (x + y + z) / 2;
             }
         }
     }
     // my::cuda::copy<int>(B, A, sizeX, sizeY, sizeZ);
+    #pragma omp parallel for collapse(2) schedule(auto)
     for (size_t z = 0; z < sizeZ; z++) {
         for (size_t y = 0; y < sizeY; y++) {
             for (size_t x = 0; x < sizeX; x++) {
-                B[z][y][x] = (x + y + z) / 5;
+                B[z][y][x] = (x + y + z) / 2;
             }
         }
     }
