@@ -3,6 +3,7 @@
 # make.sh - Make ben libs
 #
 # Created by Bensuperpc at 6, October of 2020
+# Modified by Bensuperpc at 21, March of 2021
 #
 # Released into the Public domain with MIT licence
 # https://opensource.org/licenses/MIT
@@ -12,6 +13,7 @@
 #
 # ==============================================================================
 
+mkdir -p build
 cd build
 #cmake .. && make -j$(nproc)
 #Release/Debug/Coverage/MinSizeRel
@@ -21,5 +23,6 @@ cmake $@ -G Ninja ..
 
 ninja
 ctest --output-on-failure -j$(nproc) #--extra-verbose
+
 
 #make install 

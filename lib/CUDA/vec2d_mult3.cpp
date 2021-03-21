@@ -43,12 +43,32 @@ extern "C"
 #    include <omp.h>
 #endif
 
-#define sizeZ 4
-#define sizeY 4
-#define sizeX 4
+#define sizeZ 400
+#define sizeY 400
+#define sizeX 400
 
 #define Min 0
 #define Max 9
+
+void fillRand(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_);
+void fillRand(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_)
+{
+    unsigned int seed;
+#pragma omp parallel
+    {
+#pragma omp for collapse(3) schedule(auto) private(seed)
+    for (size_t w = 0; w < sizeW_; w++) {
+        for (size_t z = 0; z < sizeZ_; z++) {
+            for (size_t y = 0; y < sizeY_; y++) {
+                seed = 25234U + 16U * (unsigned int)omp_get_thread_num(); // 17U
+                for (size_t x = 0; x < sizeX_; x++) {
+                    A_[w][z][y][x] = (rand_r(&seed) % (Max - Min + 1)) + Min;
+                }
+            }
+        }
+    }
+    }
+}
 
 void fillRand(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
 void fillRand(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
@@ -79,6 +99,46 @@ void fillRand(int **A_, size_t sizeX_, size_t sizeY_)
             seed = 25234U + 16U * (unsigned int)omp_get_thread_num(); // 17U
             for (size_t k = 0; k < sizeX_; k++) {
                 A_[j][k] = (rand_r(&seed) % (Max - Min + 1)) + Min;
+            }
+        }
+    }
+}
+
+void fill(int **A_, size_t sizeX_, size_t sizeY_, int value_);
+void fill(int **A_, size_t sizeX_, size_t sizeY_, int value_)
+{
+
+#pragma omp parallel for collapse(2) schedule(auto)
+    for (size_t y = 0; y < sizeY_; y++) {
+        for (size_t x = 0; x < sizeX_; x++) {
+            A_[y][x] = value_;
+        }
+    }
+}
+
+void fill(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, int value_);
+void fill(int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, int value_)
+{
+#pragma omp parallel for collapse(3) schedule(auto)
+    for (size_t z = 0; z < sizeZ_; z++) {
+        for (size_t y = 0; y < sizeY_; y++) {
+            for (size_t x = 0; x < sizeX_; x++) {
+                A_[z][y][x] = value_;
+            }
+        }
+    }
+}
+
+void fill(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_, int value_);
+void fill(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_, int value_)
+{
+#pragma omp parallel for collapse(4) schedule(auto)
+    for (size_t w = 0; w < sizeW_; w++) {
+        for (size_t z = 0; z < sizeZ_; z++) {
+            for (size_t y = 0; y < sizeY_; y++) {
+                for (size_t x = 0; x < sizeX_; x++) {
+                    A_[w][z][y][x] = value_;
+                }
             }
         }
     }
@@ -126,7 +186,7 @@ int main()
     int ***C = my::cuda::aalloc<int>(sizeX, sizeY, sizeZ);
 
 // fillRand(A, sizeX, sizeY, sizeZ);
-#pragma omp parallel for collapse(2) schedule(auto)
+#pragma omp parallel for collapse(3) schedule(auto)
     for (size_t z = 0; z < sizeZ; z++) {
         for (size_t y = 0; y < sizeY; y++) {
             for (size_t x = 0; x < sizeX; x++) {
@@ -134,8 +194,9 @@ int main()
             }
         }
     }
+
 // my::cuda::copy<int>(B, A, sizeX, sizeY, sizeZ);
-#pragma omp parallel for collapse(2) schedule(auto)
+#pragma omp parallel for collapse(3) schedule(auto)
     for (size_t z = 0; z < sizeZ; z++) {
         for (size_t y = 0; y < sizeY; y++) {
             for (size_t x = 0; x < sizeX; x++) {
@@ -144,9 +205,9 @@ int main()
         }
     }
 
-    // my::cuda::matMultFlat<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C, sizeX, sizeY, sizeZ);
+    //my::cuda::matMultFlat<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C, sizeX, sizeY, sizeZ);
     my::cuda::matMult<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C);
-    // my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
+    //my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
     my::cuda::display<int>(C, sizeX, sizeY, sizeZ);
 
     my::cuda::adealloc<int>(A, sizeX, sizeY, sizeZ);
