@@ -26,19 +26,32 @@
 
 int main(int argc, char *argv[], char *envp[])
 {
-    const std::filesystem::path path = ".";
+    if (argc < 2) {
+        std::cout << "You need enter more arguments: './list_all_file_hash *path* for exemple" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    // Vector to save files list
+    std::vector<std::string> files;
+    files.reserve(100);
+
+    for (size_t i = 1; i < (size_t)argc; i++) {
+        const std::filesystem::path path = argv[i];
+        for (const auto &p : std::filesystem::recursive_directory_iterator(path)) {
+            if (!std::filesystem::is_directory(p)) {
+                files.emplace_back(p.path().string());
+            }
+        }
+    }
 
     const std::vector<std::pair<const std::string, std::string (*)(const std::string &)>> pointer_map {{"get_md5hash", &my::crypto::get_md5hash},
         {"get_sha1hash", &my::crypto::get_sha1hash}, {"get_sha256hash", &my::crypto::get_sha256hash}, {"get_sha512hash", &my::crypto::get_sha512hash}};
-
-    for (const auto &p : std::filesystem::recursive_directory_iterator(path)) {
-        if (!std::filesystem::is_directory(p)) {
-#pragma omp parallel for schedule(auto) ordered
-            for (size_t i = 0; i < pointer_map.size(); i++) {
-                auto str = (pointer_map[i].second)(p.path().string());
+#pragma omp parallel for ordered schedule(auto)
+    for (size_t i = 0; i < files.size(); i++) {
+        for (size_t j = 0; j < pointer_map.size(); j++) {
+            const auto str = (pointer_map[j].second)(files[i]);
 #pragma omp ordered
-                std::cout << p.path().string() << ":" << '\n' << pointer_map[i].first << ": " << str << '\n';
-            }
+            std::cout << files[i] << ":" << '\n' << pointer_map[j].first << ": " << str << std::endl;
         }
     }
     return EXIT_SUCCESS;
