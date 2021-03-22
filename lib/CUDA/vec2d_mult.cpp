@@ -39,6 +39,10 @@ extern "C"
 #include <string.h>
 }
 
+#define NUM_STREAMS 1
+
+#define nStreams = 4;
+
 /*
  * prints matrices
  * Because matrices filled with dummy 0s function takes 3 dim arguments:
@@ -176,12 +180,18 @@ int main(void)
     size_t vector_size;
     vector_size = dim * dim * sizeof(float);
 
-    Res_h = (float *)malloc(vector_size); // Allocate array on host for result
+    
+    //Res_h = (float *)malloc(vector_size); // Allocate array on host for result
     CPU = (float *)malloc(vector_size);   // Allocate array on host for CPU_matrix_multiplication result
+    cudaMallocHost((void**)&Res_h, vector_size);
 
     gpuErrchk(cudaMalloc((void **)&Left_Vector_d, vector_size));  // Allocate array on device for LHS operand
     gpuErrchk(cudaMalloc((void **)&Right_Vector_d, vector_size)); // Allocate array on device for RHS operand but this is vector 1xN
     gpuErrchk(cudaMalloc((void **)&Res_d, vector_size));          // Allocate array on device for result
+
+
+
+
 
     gpuErrchk(cudaMemcpyAsync(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice, 0));   // copy values to device
     gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, 0)); // copy values to device
@@ -219,7 +229,7 @@ int main(void)
     cudaEventElapsedTime(&gpu_time, start, stop);
 
     // Retrieve result from device and store it in host array
-    gpuErrchk(cudaMemcpy(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost));
+    gpuErrchk(cudaMemcpyAsync(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost));
 
     cudaEventRecord(start, 0);
 
@@ -264,10 +274,12 @@ int main(void)
     }
 
     // Cleanup
-    free(Left_Vector_h);
-    free(Right_Vector_h);
-    free(Res_h);
+    //free(Left_Vector_h);
+    //free(Right_Vector_h);
+    //free(Res_h);
     free(CPU);
+    cudaFreeHost(Res_h);
+    
     cudaFree(Left_Vector_d);
     cudaFree(Right_Vector_d);
     cudaFree(Res_d);

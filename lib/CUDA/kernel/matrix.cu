@@ -42,30 +42,23 @@ __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
 void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaStreamSynchronize(0);
+    //cudaStreamSynchronize(0);
     // cudaDeviceSynchronize();
 }
 
-/*
-void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n)
+void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
 {
-    matrixAddKernel_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
+    matrixAddKernel_kernel<<<gridSize, blockSize, 0,stream>>>(a, b, c, n);
+    //cudaStreamSynchronize(0);
+    // cudaDeviceSynchronize();
 }
-*/
 
 extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    cudaStreamSynchronize(0);
+    //cudaStreamSynchronize(0);
     // cudaDeviceSynchronize();
 }
-
-/*
-extern "C" void matrixAddKernelS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n)
-{
-    matrixAddKernel_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
-}
-*/
 
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)
 {
@@ -112,12 +105,12 @@ void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, flo
     // cudaStreamSynchronize(0);
 }
 
-/*
-void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n)
+void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
 {
-    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
+    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
+    // cudaStreamSynchronize(0);
 }
-*/
+
 
 extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
@@ -125,12 +118,6 @@ extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, fl
     // cudaStreamSynchronize(0);
 }
 
-/*
-extern "C" void matrixMultiplySharedS(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int n)
-{
-    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, n);
-}
-*/
 /*
 __global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
 {

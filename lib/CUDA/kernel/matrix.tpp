@@ -22,6 +22,7 @@
 //          https://stackoverflow.com/a/34363345/10152334
 //          https://www.gamedev.net/forums/topic/635420-4d-arrays/?page=1
 //          https://math.stackexchange.com/questions/63074/is-there-a-3-dimensional-matrix-by-matrix-product
+//          https://stackoverflow.com/a/49435122/10152334
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -34,6 +35,14 @@
 #include <iostream>
 #include <matrix.hpp>
 #include <stdio.h>
+
+template <class... Args> void print(Args... args);
+
+template <class... Args> void print(Args... args)
+{
+    (std::cout << ... << args) << "\n";
+}
+// print(1, ':', " Hello", ',', " ", "World!");
 
 template <typename T> void my::cuda::flatten1D(T **a, T *b, const size_t xMax, const size_t yMax)
 {

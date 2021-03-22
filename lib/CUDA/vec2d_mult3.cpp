@@ -18,6 +18,8 @@
 //          https://data-flair.training/blogs/multi-dimensional-arrays-in-c-cpp/
 //          https://www.geeksforgeeks.org/c-program-multiply-two-matrices/
 //          https://www.daniweb.com/programming/software-development/threads/471477/equivalent-iteration-of-2d-and-3d-array-flattened-as-1d-array
+//          https://stackoverflow.com/a/96419/10152334
+//          https://forums.developer.nvidia.com/t/how-to-implement-calculation-pipeline-via-cuda-streams/27931
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -43,12 +45,36 @@ extern "C"
 #    include <omp.h>
 #endif
 
-#define sizeZ 400
-#define sizeY 400
-#define sizeX 400
+#define sizeZ 300
+#define sizeY 300
+#define sizeX 300
 
 #define Min 0
 #define Max 9
+
+#if defined(_WIN32) || defined(_WIN64)
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#else
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif
+
+#define RAISE_ERROR_STL(p_strMessage)                                          \
+do                                                                             \
+{                                                                              \
+   try                                                                         \
+   {                                                                           \
+      std::stringstream strBuffer;                                            \
+      strBuffer << p_strMessage;                                               \
+      auto strMessage = strBuffer.str();                                           \
+      std::cout << __FILENAME__ << __PRETTY_FUNCTION__ << __LINE__ << strBuffer.str() << std::endl; \
+   }                                                                           \
+   catch(...){}                                                                \
+   {                                                                           \
+   }                                                                           \
+}                                                                              \
+while(false)
+
+
 
 void fillRand(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_);
 void fillRand(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_)
@@ -57,16 +83,16 @@ void fillRand(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t si
 #pragma omp parallel
     {
 #pragma omp for collapse(3) schedule(auto) private(seed)
-    for (size_t w = 0; w < sizeW_; w++) {
-        for (size_t z = 0; z < sizeZ_; z++) {
-            for (size_t y = 0; y < sizeY_; y++) {
-                seed = 25234U + 16U * (unsigned int)omp_get_thread_num(); // 17U
-                for (size_t x = 0; x < sizeX_; x++) {
-                    A_[w][z][y][x] = (rand_r(&seed) % (Max - Min + 1)) + Min;
+        for (size_t w = 0; w < sizeW_; w++) {
+            for (size_t z = 0; z < sizeZ_; z++) {
+                for (size_t y = 0; y < sizeY_; y++) {
+                    seed = 25234U + 16U * (unsigned int)omp_get_thread_num(); // 17U
+                    for (size_t x = 0; x < sizeX_; x++) {
+                        A_[w][z][y][x] = (rand_r(&seed) % (Max - Min + 1)) + Min;
+                    }
                 }
             }
         }
-    }
     }
 }
 
@@ -204,15 +230,15 @@ int main()
             }
         }
     }
-
-    //my::cuda::matMultFlat<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C, sizeX, sizeY, sizeZ);
+    RAISE_ERROR_STL("Hello... The following values " << 1 << " and " << 2 << " are wrong");
+    // my::cuda::matMultFlat<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C, sizeX, sizeY, sizeZ);
     my::cuda::matMult<int>(A, sizeX, sizeY, sizeZ, B, sizeX, sizeY, sizeZ, C);
-    //my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
-    my::cuda::display<int>(C, sizeX, sizeY, sizeZ);
+    // my::cuda::display<int>(A, sizeX, sizeY, sizeZ);
+    // my::cuda::display<int>(C, sizeX, sizeY, sizeZ);
 
     my::cuda::adealloc<int>(A, sizeX, sizeY, sizeZ);
     my::cuda::adealloc<int>(B, sizeX, sizeY, sizeZ);
     my::cuda::adealloc<int>(C, sizeX, sizeY, sizeZ);
-
+    print(1, ':', " Hello", ',', " ", "World!");
     return EXIT_SUCCESS;
 }
