@@ -68,8 +68,6 @@ void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t stream, fl
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 void matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][100][100]);
 
-
-
 // 2D to 1D
 template <typename T> void flatten1D(T **a, T *b, const size_t xMax, const size_t yMax);
 // 3D to 1D

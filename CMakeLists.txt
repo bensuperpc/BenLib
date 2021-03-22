@@ -734,7 +734,7 @@ add_dependencies(parse_csv ${CUSTOM_LIBS})
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})
-    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
+    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} stdc++fs my_crypto OpenMP::OpenMP_CXX time)
     add_dependencies(list_all_file_hash ${CUSTOM_LIBS})
 
     add_executable(crypto_AES ${CRYPTO_AES})

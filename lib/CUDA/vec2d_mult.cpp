@@ -60,22 +60,6 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
     }
 }
 
-// it multiplies square matrices
-/*__host__*/
-void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
-{
-#pragma omp parallel for collapse(2) schedule(auto)
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < m; ++j) {
-            float tmp = 0.0;
-            for (int h = 0; h < m; ++h) {
-                tmp += h_a[i * m + h] * h_b[h * m + j];
-            }
-            h_result[i * m + j] = tmp;
-        }
-    }
-}
-
 // this function is for filling the matrices with cos and sin values randomly
 // I transform the matrices to square matrix in order to perform better multiplication
 /*__host__*/ int fill(float **Lmatrix, float **Rmatrix, int LdimX, int LdimY, int RdimX, int RdimY)
@@ -105,8 +89,8 @@ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 
     *Lmatrix = (float *)malloc(pt_size);
     *Rmatrix = (float *)malloc(pt_size);
-    //cudaMallocHost((void**)Lmatrix, pt_size);
-    //cudaMallocHost((void**)Rmatrix, pt_size);
+    // cudaMallocHost((void**)Lmatrix, pt_size);
+    // cudaMallocHost((void**)Rmatrix, pt_size);
 
     memset(*Lmatrix, 0, pt_size);
     memset(*Rmatrix, 0, pt_size);
@@ -161,7 +145,6 @@ int main(void)
     printf("Device clock rate: %.3f GHz\n", (float)clockRate / 1000000);
     printf("\n");
 
-
     cudaStream_t stream;
     cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
 
@@ -182,18 +165,13 @@ int main(void)
     size_t vector_size;
     vector_size = dim * dim * sizeof(float);
 
-    
-    //Res_h = (float *)malloc(vector_size); // Allocate array on host for result
-    CPU = (float *)malloc(vector_size);   // Allocate array on host for CPU_matrix_multiplication result
-    cudaMallocHost((void**)&Res_h, vector_size);
+    // Res_h = (float *)malloc(vector_size); // Allocate array on host for result
+    CPU = (float *)malloc(vector_size); // Allocate array on host for CPU_matrix_multiplication result
+    cudaMallocHost((void **)&Res_h, vector_size);
 
     gpuErrchk(cudaMalloc((void **)&Left_Vector_d, vector_size));  // Allocate array on device for LHS operand
     gpuErrchk(cudaMalloc((void **)&Right_Vector_d, vector_size)); // Allocate array on device for RHS operand but this is vector 1xN
     gpuErrchk(cudaMalloc((void **)&Res_d, vector_size));          // Allocate array on device for result
-
-
-
-
 
     gpuErrchk(cudaMemcpyAsync(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice, stream));   // copy values to device
     gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, stream)); // copy values to device
@@ -234,11 +212,11 @@ int main(void)
     gpuErrchk(cudaMemcpyAsync(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost, stream));
     // Block main thread until idle stream
     cudaStreamSynchronize(stream);
-    //cudaStreamQuery(stream)
+    // cudaStreamQuery(stream)
 
     cudaEventRecord(start, 0);
 
-    cpu_matrix_mult(Left_Vector_h, Right_Vector_h, CPU, dim); // matrix multiplication on cpu
+    my::cuda::matMultFlat<float>(Left_Vector_h, Right_Vector_h, CPU, dim); // matrix multiplication on cpu
 
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
@@ -279,13 +257,13 @@ int main(void)
     }
 
     // Cleanup
-    //free(Left_Vector_h);
-    //free(Right_Vector_h);
-    //free(Res_h);
+    // free(Left_Vector_h);
+    // free(Right_Vector_h);
+    // free(Res_h);
     cudaStreamDestroy(stream);
     free(CPU);
     cudaFreeHost(Res_h);
-    
+
     cudaFree(Left_Vector_d);
     cudaFree(Right_Vector_d);
     cudaFree(Res_d);

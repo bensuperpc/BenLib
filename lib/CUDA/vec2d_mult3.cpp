@@ -20,6 +20,7 @@
 //          https://www.daniweb.com/programming/software-development/threads/471477/equivalent-iteration-of-2d-and-3d-array-flattened-as-1d-array
 //          https://stackoverflow.com/a/96419/10152334
 //          https://forums.developer.nvidia.com/t/how-to-implement-calculation-pipeline-via-cuda-streams/27931
+//          https://github.com/NVIDIA-developer-blog/code-samples/blob/master/series/cuda-cpp/overlap-data-transfers/async.cu
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -53,28 +54,24 @@ extern "C"
 #define Max 9
 
 #if defined(_WIN32) || defined(_WIN64)
-#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#    define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 #else
-#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#    define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif
 
-#define RAISE_ERROR_STL(p_strMessage)                                          \
-do                                                                             \
-{                                                                              \
-   try                                                                         \
-   {                                                                           \
-      std::stringstream strBuffer;                                            \
-      strBuffer << p_strMessage;                                               \
-      auto strMessage = strBuffer.str();                                           \
-      std::cout << __FILENAME__ << __PRETTY_FUNCTION__ << __LINE__ << strBuffer.str() << std::endl; \
-   }                                                                           \
-   catch(...){}                                                                \
-   {                                                                           \
-   }                                                                           \
-}                                                                              \
-while(false)
-
-
+#define RAISE_ERROR_STL(p_strMessage)                                                                                                                          \
+    do {                                                                                                                                                       \
+        try {                                                                                                                                                  \
+            std::stringstream strBuffer;                                                                                                                       \
+            strBuffer << p_strMessage;                                                                                                                         \
+            auto strMessage = strBuffer.str();                                                                                                                 \
+            std::cout << __FILENAME__ << __PRETTY_FUNCTION__ << __LINE__ << strBuffer.str() << std::endl;                                                      \
+        }                                                                                                                                                      \
+        catch (...) {                                                                                                                                          \
+        }                                                                                                                                                      \
+        {                                                                                                                                                      \
+        }                                                                                                                                                      \
+    } while (false)
 
 void fillRand(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_);
 void fillRand(int ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_)

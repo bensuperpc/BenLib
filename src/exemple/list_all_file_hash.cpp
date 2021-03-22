@@ -17,77 +17,28 @@
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include "crypto/crypto.hpp"
-#include "filesystem/filesystem.hpp"
-#if __cplusplus >= 201703L
-#    include "thread/Pool.hpp"
-#else
-#    include "thread/ThreadPool.h"
-#endif
-
-struct Processor
-{
-    std::pair<std::string, std::string> operator()(std::function<std::string(const std::string &)> elem_fn, const std::string &elem)
-    {
-        return std::make_pair(elem, (elem_fn)(elem));
-    }
-};
 
 int main(int argc, char *argv[], char *envp[])
 {
-    std::vector<std::string> list_files = {};
-    list_files.reserve(1000);
-
-    // Get file list in current directory
-    my::filesystem::list_all_files(list_files, ".");
-
-    // Improve cout perf by disable sync with Clib.
-    std::ios_base::sync_with_stdio(false);
-
-    std::vector<std::pair<std::string, std::vector<std::future<std::pair<std::string, std::string>>>>> results {};
-#if __cplusplus >= 201703L
-    thread::Pool thread_pool(std::thread::hardware_concurrency());
-#else
-    ThreadPool thread_pool(std::thread::hardware_concurrency());
-#endif
+    const std::filesystem::path path = ".";
 
     const std::vector<std::pair<const std::string, std::string (*)(const std::string &)>> pointer_map {{"get_md5hash", &my::crypto::get_md5hash},
         {"get_sha1hash", &my::crypto::get_sha1hash}, {"get_sha256hash", &my::crypto::get_sha256hash}, {"get_sha512hash", &my::crypto::get_sha512hash}};
 
-    results.reserve(list_files.size());
-
-    for (auto &elem_fn : pointer_map) {
-        results.emplace_back(std::pair<std::string, std::vector<std::future<std::pair<std::string, std::string>>>>());
-        results.back().first = elem_fn.first;
-        results.back().second.reserve(list_files.size());
-        for (auto &file : list_files) {
-            results.back().second.emplace_back(thread_pool.enqueue(Processor(), elem_fn.second, file));
-        }
-    }
-
-    size_t count = 0;
-    const size_t xElem = 15;
-    std::vector<std::pair<std::string, std::vector<std::pair<std::string, std::string>>>> time {};
-    time.reserve(results.size());
-    for (auto &y : results) {
-        time.emplace_back(std::pair<std::string, std::vector<std::pair<std::string, std::string>>>());
-        time.back().second.reserve(y.second.size());
-        time.back().first = y.first;
-        for (auto &x : y.second) {
-            time.back().second.emplace_back(x.get());
-            count++;
-            if (count % xElem == 0) {
-                std::cout << double(count) / double(list_files.size() * pointer_map.size()) * 100.0f << " %" << std::endl;
+    for (const auto &p : std::filesystem::recursive_directory_iterator(path)) {
+        if (!std::filesystem::is_directory(p)) {
+#pragma omp parallel for schedule(auto) ordered
+            for (size_t i = 0; i < pointer_map.size(); i++) {
+                auto str = (pointer_map[i].second)(p.path().string());
+#pragma omp ordered
+                std::cout << p.path().string() << ":" << '\n' << pointer_map[i].first << ": " << str << '\n';
             }
-        }
-    }
-    std::cout << "Get data: OK" << std::endl;
-    for (const auto &x : time) {
-        // std::cout << x.first << std::endl;
-        for (const auto &y : x.second) {
-            std::cout << x.first << " : " << y.first << " : " << y.second << std::endl;
         }
     }
     return EXIT_SUCCESS;

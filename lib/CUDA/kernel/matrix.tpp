@@ -144,15 +144,12 @@ template <typename T> void my::cuda::matMultFlat(T *h_a, T *h_b, T *h_result, co
 template <typename T>
 void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY)
 {
-    T tmp = (T)0;
-#pragma omp parallel for collapse(2) schedule(auto) private(tmp)
+#pragma omp parallel for collapse(2) schedule(auto)
     for (size_t y = 0; y < sizeAX; y++) {
         for (size_t x = 0; x < sizeBY; x++) {
-            tmp = (T)0;
             for (size_t s = 0; s < sizeBX; s++) {
-                tmp += matA[y * sizeAY + s] * matB[s * sizeBY + x];
+                matC[y * sizeCY + x] = matC[y * sizeCY + x] + matA[y * sizeAY + s] * matB[s * sizeBY + x];
             }
-            matC[y * sizeCY + x] = tmp;
         }
     }
 }

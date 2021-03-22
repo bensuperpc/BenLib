@@ -42,21 +42,21 @@ __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
 void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    //cudaStreamSynchronize(0);
+    // cudaStreamSynchronize(0);
     // cudaDeviceSynchronize();
 }
 
 void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
 {
-    matrixAddKernel_kernel<<<gridSize, blockSize, 0,stream>>>(a, b, c, n);
-    //cudaStreamSynchronize(0);
+    matrixAddKernel_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
+    // cudaStreamSynchronize(0);
     // cudaDeviceSynchronize();
 }
 
 extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    //cudaStreamSynchronize(0);
+    // cudaStreamSynchronize(0);
     // cudaDeviceSynchronize();
 }
 
@@ -110,7 +110,6 @@ void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t 
     matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
     // cudaStreamSynchronize(0);
 }
-
 
 extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
@@ -236,5 +235,5 @@ void my::cuda::matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][DATAYSIZE][D
 {
     // matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
     set<<<gridSize, blockSize>>>(mat);
-    //cudaStreamSynchronize(0);
+    // cudaStreamSynchronize(0);
 }
