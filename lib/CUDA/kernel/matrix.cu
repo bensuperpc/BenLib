@@ -236,5 +236,5 @@ void my::cuda::matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][DATAYSIZE][D
 {
     // matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
     set<<<gridSize, blockSize>>>(mat);
-    cudaStreamSynchronize(0);
+    //cudaStreamSynchronize(0);
 }

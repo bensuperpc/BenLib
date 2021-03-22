@@ -39,10 +39,6 @@ extern "C"
 #include <string.h>
 }
 
-#define NUM_STREAMS 1
-
-#define nStreams = 4;
-
 /*
  * prints matrices
  * Because matrices filled with dummy 0s function takes 3 dim arguments:
@@ -109,6 +105,8 @@ void cpu_matrix_mult(float *h_a, float *h_b, float *h_result, int m)
 
     *Lmatrix = (float *)malloc(pt_size);
     *Rmatrix = (float *)malloc(pt_size);
+    //cudaMallocHost((void**)Lmatrix, pt_size);
+    //cudaMallocHost((void**)Rmatrix, pt_size);
 
     memset(*Lmatrix, 0, pt_size);
     memset(*Rmatrix, 0, pt_size);
@@ -163,6 +161,10 @@ int main(void)
     printf("Device clock rate: %.3f GHz\n", (float)clockRate / 1000000);
     printf("\n");
 
+
+    cudaStream_t stream;
+    cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
+
     // size of the vectors to be processed  and matrix dimensions
     int Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y, Left_vector_size, Right_vector_size;
 
@@ -193,8 +195,8 @@ int main(void)
 
 
 
-    gpuErrchk(cudaMemcpyAsync(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice, 0));   // copy values to device
-    gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, 0)); // copy values to device
+    gpuErrchk(cudaMemcpyAsync(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice, stream));   // copy values to device
+    gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, stream)); // copy values to device
 
     // Block dimension is directly from block_size
     dim3 Block_dim(BLOCK_SIZE, BLOCK_SIZE, 1);
@@ -220,7 +222,7 @@ int main(void)
 
     // kernel call
     // multiply < < Grid_dim, Block_dim >> > (Left_Vector_d, Right_Vector_d, Res_d, dim);
-    my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, Left_Vector_d, Right_Vector_d, Res_d, dim);
+    my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, stream, Left_Vector_d, Right_Vector_d, Res_d, dim);
 
     // commented out the functions which helps to calculate time
     cudaEventRecord(stop, 0);
@@ -229,7 +231,10 @@ int main(void)
     cudaEventElapsedTime(&gpu_time, start, stop);
 
     // Retrieve result from device and store it in host array
-    gpuErrchk(cudaMemcpyAsync(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost));
+    gpuErrchk(cudaMemcpyAsync(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost, stream));
+    // Block main thread until idle stream
+    cudaStreamSynchronize(stream);
+    //cudaStreamQuery(stream)
 
     cudaEventRecord(start, 0);
 
@@ -277,6 +282,7 @@ int main(void)
     //free(Left_Vector_h);
     //free(Right_Vector_h);
     //free(Res_h);
+    cudaStreamDestroy(stream);
     free(CPU);
     cudaFreeHost(Res_h);
     
