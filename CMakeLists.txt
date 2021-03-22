@@ -50,7 +50,8 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 
 # Have cmake create a compile database
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+
+#set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
 #set(Var1 "This is variable 1" PARENT_SCOPE)
 

@@ -27,7 +27,7 @@ namespace my
 {
 namespace cpu
 {
-#if (__i386__ || _M_IX86 || __x86_64__ || _M_AMD64)
+#if (__i386__ || __x86_64__ || _M_AMD64)
 
 uint64_t rdtsc();
 

@@ -147,6 +147,7 @@ int main(void)
 
     cudaStream_t stream;
     cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
+    // cudaStreamCreate(&stream2);
 
     // size of the vectors to be processed  and matrix dimensions
     int Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y, Left_vector_size, Right_vector_size;

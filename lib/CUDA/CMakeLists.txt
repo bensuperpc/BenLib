@@ -27,13 +27,24 @@
 #           https://hothardware.com/news/cuda-on-intel-gpus-zluda
 #           https://stackoverflow.com/questions/18273760/cmake-how-to-add-cuda-to-existing-project
 #           https://developer.download.nvidia.com/video/gputechconf/gtc/2019/presentation/s9444-build-systems-exploring-modern-cmake-cuda-v2.pdf
+#           https://gitlab.kitware.com/cmake/cmake/-/issues/16586
+#           https://releases.llvm.org/6.0.0/docs/CompileCudaWithLLVM.html
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
 ##############################################################
 
 cmake_minimum_required(VERSION 3.9)
-project(my_cuda LANGUAGES CUDA CXX C)
+#project(my_cuda LANGUAGES CUDA CXX C)
+project(my_cuda LANGUAGES CXX C)
+
+
+include(CheckLanguage)
+check_language(CUDA)
+if(CMAKE_CUDA_COMPILER)
+	enable_language(CUDA)
+    message(STATUS "CMAKE_CUDA_COMPILER: True")
+endif()
 
 
 #   ================    CUDA    ================
@@ -55,6 +66,14 @@ else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
 endif()
 
+#For clang CUDA
+# --cuda-path=${CUDA_TOOLKIT_ROOT_DIR}
+# -lcudart_static or -lcudart
+# -x cuda
+# --cuda-gpu-arch=sm_30
+# Optional
+# CUDACXX=clang++
+# 
 
 #   ================    OpenMP    ================
 find_package(OpenMP QUIET)

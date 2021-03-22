@@ -117,7 +117,40 @@ extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, fl
     // cudaStreamSynchronize(0);
 }
 
-/*
+__global__ void sharedABMultiply_kernel(float *a, float *b, float *c, int N)
+{
+    __shared__ float aTile[BLOCK_SIZE][BLOCK_SIZE], bTile[BLOCK_SIZE][BLOCK_SIZE];
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    float sum = 0.0f;
+    aTile[threadIdx.y][threadIdx.x] = a[row * BLOCK_SIZE + threadIdx.x];
+    bTile[threadIdx.y][threadIdx.x] = b[threadIdx.y * N + col];
+    __syncthreads();
+    for (unsigned int i = 0; i < BLOCK_SIZE; i++) {
+        sum += aTile[threadIdx.y][i] * bTile[i][threadIdx.x];
+    }
+    c[row * N + col] = sum;
+}
+
+void my::cuda::sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+{
+    sharedABMultiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    // cudaStreamSynchronize(0);
+}
+
+void my::cuda::sharedABMultiply(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
+{
+    sharedABMultiply_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
+    // cudaStreamSynchronize(0);
+}
+
+extern "C" void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+{
+    sharedABMultiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    // cudaStreamSynchronize(0);
+}
+
+
 __global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
 {
     float CValue = 0;
@@ -150,14 +183,20 @@ void my::cuda::matrixMultiplyShared(
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
     cudaStreamSynchronize(0);
 }
-*/
-/*
-void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, float *a, float *b, float *c, int ARows, int ACols, int BRows, int
+
+void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int
 BCols, int CRows, int CCols)
 {
-    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, streams>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
+    matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
 }
-*/
+
+/*
+extern "C" void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
+{
+    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
+    // cudaStreamSynchronize(0);
+}*/
+
 
 /*
 
