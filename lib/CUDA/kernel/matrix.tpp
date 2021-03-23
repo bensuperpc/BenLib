@@ -112,7 +112,7 @@ template <typename T> void my::cuda::reshape3D(T *a, T ***b, const size_t xMax, 
 
 template <typename T> void my::cuda::reshape4D(T *a, T ****b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax)
 {
-#pragma omp parallel for collapse(4) schedule(auto)
+#pragma omp parallel for collapse(3) schedule(auto) shared(b)
     for (size_t w = 0; w < wMax; w++) {
         for (size_t z = 0; z < zMax; z++) {
             for (size_t y = 0; y < yMax; y++) {
@@ -128,26 +128,22 @@ template <typename T> void my::cuda::reshape4D(T *a, T ****b, const size_t xMax,
 // 2D flat matrix
 template <typename T> void my::cuda::matMultFlat(T *matA, T *matB, T *matC, const size_t m)
 {
-#pragma omp parallel for collapse(3) schedule(auto)
-    for (size_t i = 0; i < m; ++i) {
-        for (size_t j = 0; j < m; ++j) {
-            for (size_t h = 0; h < m; ++h) {
-                matC[i * m + j] = matC[i * m + j] + matA[i * m + h] * matB[h * m + j];
-            }
-        }
-    }
+    my::cuda::matMultFlat(matA, m, m, matB, m, m, matC, m, m);
 }
 
 // 2D flat matrix
 template <typename T>
 void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY)
 {
-#pragma omp parallel for collapse(3) schedule(auto)
+    T tmp;
+#pragma omp parallel for collapse(2) schedule(auto) private(tmp)
     for (size_t y = 0; y < sizeAX; y++) {
         for (size_t x = 0; x < sizeBY; x++) {
             for (size_t s = 0; s < sizeBX; s++) {
-                matC[y * sizeCY + x] = matC[y * sizeCY + x] + matA[y * sizeAY + s] * matB[s * sizeBY + x];
+                tmp += matA[y * sizeAY + s] * matB[s * sizeBY + x];
             }
+            matC[y * sizeCY + x] = tmp;
+            tmp = (T)0.0;
         }
     }
 }
@@ -158,7 +154,8 @@ void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ,
     size_t sizeCY, size_t sizeCZ)
 {
 #warning "To do: my::cuda::matMultFlat : 3D flat matrix "
-#pragma omp parallel for collapse(3) schedule(auto) // private(tmp)
+    T tmp;
+#pragma omp parallel for collapse(2) schedule(auto) private(tmp)
     // The first group loop
     for (size_t z = 0; z < sizeAX; ++z) {
         for (size_t y = 0; y < sizeBY; ++y) {
@@ -199,7 +196,7 @@ void my::cuda::matMult(T ***matA, T ***matB, T ****matC, size_t sizeAX, size_t s
 template <typename T>
 void my::cuda::matMult(T ***matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T ***matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T ***matC)
 {
-#pragma omp parallel for collapse(4) schedule(auto) // private(tmp)
+#pragma omp parallel for collapse(4) schedule(auto)
     // The first group loop
     for (size_t z = 0; z < sizeAX; ++z) {
         for (size_t y = 0; y < sizeBY; ++y) {

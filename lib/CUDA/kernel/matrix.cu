@@ -17,6 +17,8 @@
 //          https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#asynchronous-transfers-and-overlapping-transfers-with-computation__concurrent-copy-and-execute
 //          https://www.ce.jhu.edu/dalrymple/classes/602/Class12.pdf                                                //
 //          https://docs.nvidia.com/cuda/pdf/CUDA_C_Programming_Guide.pdf
+//          http://oz.nthu.edu.tw/~d947207/NVIDIA/copy3D/Matrix_transpose_post.pdf
+//          https://on-demand.gputechconf.com/gtc/2017/presentation/s7122-stephen-jones-cuda-optimization-tips-tricks-and-techniques.pdf
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -192,58 +194,6 @@ extern "C" void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float 
     // cudaStreamSynchronize(0);
 }*/
 
-/*
-
-__global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)
-{
-
-    unsigned int i, j, w;
-    float temp = 0;
-
-    __shared__ float Left_shared_t[BLOCK_SIZE][BLOCK_SIZE][BLOCK_SIZE];
-    __shared__ float Right_shared_t[BLOCK_SIZE][BLOCK_SIZE][BLOCK_SIZE];
-
-    // Row i of matrix left
-    unsigned int row = blockIdx.y * blockDim.y + threadIdx.y;
-    unsigned int col = blockIdx.x * blockDim.x + threadIdx.x;
-    unsigned int depth = threadIdx.z + blockIdx.z * blockDim.z;
-
-    // Check image dimensions
-    printf("Current x: %d\n", threadIdx.x);
-    printf("Current y: %d\n", threadIdx.y);
-    printf("Current z: %d\n", threadIdx.z);
-
-    ////x + y * xMax + z * xMax * yMax
-    for (unsigned int tileNUM = 0; tileNUM < gridDim.x; tileNUM++) {
-
-        // Column j of matrix left
-        j = tileNUM * BLOCK_SIZE + threadIdx.x;
-        i = tileNUM * BLOCK_SIZE + threadIdx.y;
-        w = tileNUM * BLOCK_SIZE + threadIdx.z;
-        // Load left[i][j] to shared mem
-
-        Left_shared_t[threadIdx.z][threadIdx.y][threadIdx.x] = left[row * dim + j + dim * dim * w]; // Coalesced access
-        // Load right[i][j] to shared mem
-
-        Right_shared_t[threadIdx.z][threadIdx.y][threadIdx.x] = right[i * dim + col + dim * dim * w]; // Coalesced access
-        // Synchronize before computation
-        __syncthreads();
-
-        // Accumulate one tile of res from tiles of left and right in shared mem
-        for (unsigned int k = 0; k < BLOCK_SIZE; k++) {
-            for (unsigned int n = 0; n < BLOCK_SIZE; n++) {
-                temp += Left_shared_t[n][threadIdx.y][k] * Right_shared_t[n][k][threadIdx.x]; // no shared memory bank conflict
-            }
-        }
-        // Synchronize
-        __syncthreads();
-    }
-    // Store accumulated value to res
-    res[row * dim + col + dim * dim * depth] = temp;
-    //x + y*width + z*height*width + w*height*width*depth.
-}
-*/
-
 #define DATAXSIZE 100
 #define DATAYSIZE 100
 #define DATAZSIZE 20
@@ -266,9 +216,7 @@ __global__ void set(int a[][100][100])
 
 void my::cuda::matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][DATAYSIZE][DATAXSIZE])
 {
-    // matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
-    set<<<gridSize, blockSize>>>(mat);
-    // cudaStreamSynchronize(0);
+
 }
 
 /**
