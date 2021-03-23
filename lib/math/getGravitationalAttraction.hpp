@@ -9,6 +9,7 @@
 #define GETGRAVITATIONATTRACTION_HPP
 
 #include "constant.hpp"
+
 namespace my
 {
 namespace math
@@ -19,6 +20,5 @@ template <typename T> T getGravitationalAttraction(const T &m1, const T &m2, con
 } // namespace ga
 } // namespace math
 } // namespace my
-#include "getGravitationalAttraction_imp.hpp"
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include "math/constant.hpp"
-#include "math/getGravitationalAttraction.hpp"
+#include "math/getGravitationalAttraction_imp.hpp"
 
 BOOST_AUTO_TEST_CASE(test_getGravitationalAttraction_1)
 {

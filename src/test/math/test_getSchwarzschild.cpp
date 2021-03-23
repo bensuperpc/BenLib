@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE getSchwarzschild
 #include <boost/test/unit_test.hpp>
 #include "math/constant.hpp"
-#include "math/getSchwarzschild.hpp"
+#include "math/getSchwarzschild_imp.hpp"
 
 namespace schwarzschild = my::math::schwarzschild;
 

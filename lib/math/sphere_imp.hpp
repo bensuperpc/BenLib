@@ -16,17 +16,19 @@ template <typename T> T my::math::sphere::sphereSurface(const T &r)
 }
 
 #if __cplusplus < 202002L
-#    if CMAKE_CXX_EXTENSIONS == 1
+#    ifdef CMAKE_CXX_EXTENSIONS
+#        if CMAKE_CXX_EXTENSIONS == 1
 template <typename T> T my::math::sphere::sphereVolume_Q(const T &r)
 {
-#        pragma GCC diagnostic ignored "-Wpedantic"
+#            pragma GCC diagnostic ignored "-Wpedantic"
     return (4.0 / 3.0) * Q_PI * (r * r * r);
 }
 template <typename T> T my::math::sphere::sphereSurface_Q(const T &r)
 {
-#        pragma GCC diagnostic ignored "-Wpedantic"
+#            pragma GCC diagnostic ignored "-Wpedantic"
     return (4.0 * Q_PI * r);
 }
+#        endif
 #    endif
 #else
 template <typename T> T my::math::sphere::sphereVolume_Q(const T &r)

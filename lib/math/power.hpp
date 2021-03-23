@@ -15,5 +15,4 @@ template <typename T> T power(T, long int);
 template <typename T> bool isPowerOfTwo(T);
 } // namespace math
 } // namespace my
-#include "power_imp.hpp"
 #endif

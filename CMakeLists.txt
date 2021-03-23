@@ -13,6 +13,8 @@
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:  https://medium.com/@mikkelwilson/opencv-with-cuda-acceleration-test-e9f7155e1c84                                                   #
+#           https://onqtam.com/programming/2019-12-20-pch-unity-cmake-3-16/
+#           https://stackoverflow.com/questions/61548932/force-cmake-to-rebuild-precompiled-headers
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -44,6 +46,9 @@ else()
     set(CMAKE_UNITY_BUILD 0)
     message(STATUS "CMAKE_UNITY_BUILD : 0")
 endif()
+
+#Disable precompiled header, save space
+set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
 
 # Add Postfix for debug conf
 set(CMAKE_DEBUG_POSTFIX "_d")

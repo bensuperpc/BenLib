@@ -10,7 +10,10 @@
 
 #include <algorithm>
 #include <cmath>
+extern "C"
+{
 #include <stdio.h>
+}
 
 namespace my
 {

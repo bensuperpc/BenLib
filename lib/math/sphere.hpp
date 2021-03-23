@@ -30,6 +30,5 @@ template <typename T> T sphereVolume_Q(const T &r);
 } // namespace sphere
 } // namespace math
 } // namespace my
-#include "sphere_imp.hpp"
 
 #endif

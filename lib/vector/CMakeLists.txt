@@ -17,7 +17,7 @@ set(HEADERS
 add_library(vector SHARED ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(vector PROPERTIES UNITY_BUILD ON)
-	target_precompile_headers(vector PUBLIC ${HEADERS})
+	#target_precompile_headers(vector PUBLIC ${HEADERS})
     message(STATUS "CMAKE_UNITY_BUILD : 1 on ${PROJECT_NAME}")
 else()
     message(STATUS "CMAKE_UNITY_BUILD : 0 on ${PROJECT_NAME}")

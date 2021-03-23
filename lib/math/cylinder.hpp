@@ -26,6 +26,5 @@ template <typename T> T cylinderVolume(const T &, const T &);
 } // namespace cylinder
 } // namespace math
 } // namespace my
-#include "cylinder_imp.hpp"
 
 #endif

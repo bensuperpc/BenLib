@@ -31,7 +31,7 @@
 #include <type_traits>
 #include <vector>
 #include "time/chrono/chrono.hpp"
-#include "vector/vector.hpp"
+#include "vector/vector_imp.hpp"
 
 // Define nbr calculations
 #define NBRS 33554432 // 16777216

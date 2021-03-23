@@ -27,7 +27,7 @@
 #include <vector>
 #include "math/prime.hpp"
 #include "time/chrono/chrono.hpp"
-#include "vector/vector.hpp"
+#include "vector/vector_imp.hpp"
 
 #if __cplusplus >= 201703L
 #    include "thread/Pool.hpp"

@@ -25,7 +25,7 @@
 #include <random>
 #include <thread>
 #include <vector>
-#include "math/count_digits.hpp"
+#include "math/count_digits_imp.hpp"
 #include "time/chrono/chrono.hpp"
 #include "vector/vector.hpp"
 
