@@ -12,7 +12,7 @@
 #  Modified: 16, March, 2021                                 #
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
-#  Source:                                                   #
+#  Source:  https://medium.com/@mikkelwilson/opencv-with-cuda-acceleration-test-e9f7155e1c84                                                   #
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -339,12 +339,19 @@ else()
     if(NOT EXTERNAL_LIB)
         set(EXTERNAL_LIB "")
     endif()
+    if (WIN64)
+        set(OpenCV_DIR "C:/Users/Benoit/Downloads/opencv-4.4.0/build")
+    endif (WIN64)
     string(APPEND EXTERNAL_LIB "opencv_lib")
     ExternalProject_Add(opencv_lib
         GIT_REPOSITORY https:#github.com/opencv/opencv.git
         GIT_TAG 4.4.0
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
+        CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
+        CMAKE_ARGS -D BUILD_EXAMPLES=OFF -D OPENCV_ENABLE_NONFREE=ON
+        CMAKE_ARGS -D INSTALL_C_EXAMPLES=OFF -D INSTALL_PYTHON_EXAMPLES=OFF
+        #CMAKE_ARGS -DOPENCV_EXTRA_MODULES_PATH=/build/opencv_contrib-4.1.1/modules
         #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        #-D WITH_CUDA=ON
         CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
     )
 endif()
@@ -394,8 +401,13 @@ if (CUDA_FOUND)
     set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
     set(CMAKE_CUDA_STANDARD 14)
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall -gencode arch=compute_75,code=sm_75;
-        --std=c++11
+        -O3 -Wall --std=c++14
+        -gencode=arch=compute_52,code=sm_52
+        -gencode=arch=compute_60,code=sm_60
+        -gencode arch=compute_61,code=sm_61
+        -gencode=arch=compute_70,code=sm_70
+        -gencode arch=compute_75,code=sm_75
+        -gencode=arch=compute_75,code=compute_75
     )
 
     message(STATUS "CUDA: FOUND")

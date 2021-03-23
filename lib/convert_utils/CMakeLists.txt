@@ -43,6 +43,15 @@ add_library(convert_utils SHARED ${SRCS} ${HEADERS})
 target_include_directories(convert_utils PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+    set_target_properties(convert_utils PROPERTIES UNITY_BUILD ON)
+	target_precompile_headers(convert_utils PUBLIC ${HEADERS})
+    message(STATUS "CMAKE_UNITY_BUILD : 1 on ${PROJECT_NAME}")
+else()
+    message(STATUS "CMAKE_UNITY_BUILD : 0 on ${PROJECT_NAME}")
+endif()
+
 if (QT_FOUND)
 	target_link_libraries(convert_utils PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia)
 endif()

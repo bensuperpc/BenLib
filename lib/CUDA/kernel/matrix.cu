@@ -29,13 +29,20 @@ extern "C"
 #include "matrix.cuh"
 #include "matrix.hpp"
 
-__global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
+/**
+ * \brief To mult 2D flat Matrix
+ * \param int* matA 2D flat matrix
+ * \param int* matB 2D flat matrix
+ * \param int* matC 2D flat matrix
+ * \param size_t size of matrix
+ */
+__global__ void matrixAddKernel_kernel(int *matA, int *matB, int *matC, size_t N)
 {
     size_t col = threadIdx.x + blockIdx.x * blockDim.x;
     size_t row = threadIdx.y + blockIdx.y * blockDim.y;
     size_t index = row * N + col;
     if (col < N && row < N) {
-        c[index] = a[index] + b[index];
+        matC[index] = matA[index] + matB[index];
     }
     //__syncthreads();
 }
@@ -43,22 +50,16 @@ __global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N)
 void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
-    // cudaDeviceSynchronize();
 }
 
 void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
-    // cudaDeviceSynchronize();
 }
 
 extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
-    // cudaDeviceSynchronize();
 }
 
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)
@@ -103,19 +104,16 @@ __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *re
 void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
 }
 
 void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
 }
 
 extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
 }
 
 __global__ void sharedABMultiply_kernel(float *a, float *b, float *c, int N)
@@ -136,19 +134,16 @@ __global__ void sharedABMultiply_kernel(float *a, float *b, float *c, int N)
 void my::cuda::sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     sharedABMultiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
 }
 
 void my::cuda::sharedABMultiply(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
 {
     sharedABMultiply_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
 }
 
 extern "C" void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
 {
     sharedABMultiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
-    // cudaStreamSynchronize(0);
 }
 
 __global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
@@ -274,4 +269,79 @@ void my::cuda::matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][DATAYSIZE][D
     // matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
     set<<<gridSize, blockSize>>>(mat);
     // cudaStreamSynchronize(0);
+}
+
+/**
+ * \brief To fill 2D flat Matrix with value
+ * \param int* matA 2D flat matrix
+ * \param int value
+ * \param size_t sizeAX size of matrix
+ * \param size_t sizeAY size of matrix
+ */
+__global__ void matFill_kernel(int *matA, int value, size_t sizeAX, size_t sizeAY)
+{
+#warning "To do: test my::cuda::matFill_kernel"
+    size_t col = threadIdx.x + blockIdx.x * blockDim.x;
+    size_t row = threadIdx.y + blockIdx.y * blockDim.y;
+    size_t index = row * sizeAX + col;
+    if (col < sizeAX && row < sizeAY) {
+        matA[index] = value;
+    }
+}
+
+void my::cuda::matFill(dim3 gridSize, dim3 blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY)
+{
+    matFill_kernel<<<gridSize, blockSize>>>(matA, value, sizeAX, sizeAY);
+}
+
+void my::cuda::matFill(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *matA, int value, size_t sizeAX, size_t sizeAY)
+{
+    matFill_kernel<<<gridSize, blockSize, 0, stream>>>(matA, value, sizeAX, sizeAY);
+}
+
+extern "C" void matFill(dim3 gridSize, dim3 blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY)
+{
+    matFill_kernel<<<gridSize, blockSize>>>(matA, value, sizeAX, sizeAY);
+}
+
+/**
+ * \brief To copy 2D flat Matrix to other matrix
+ * \param int* matA 2D flat matrix
+ * \param int* matB 2D flat matrix
+ * \param size_t sizeAX size of matrix
+ * \param size_t sizeAY size of matrix
+ */
+__global__ void matCopy_kernel(int *matB, int *matA, int width, int height)
+{
+#warning "To do: test my::cuda::matCopy_kernel"
+    __shared__ int block[BLOCK_SIZE][BLOCK_SIZE + 1];
+
+    unsigned int xIndex = blockIdx.x * BLOCK_SIZE + threadIdx.x;
+    unsigned int yIndex = blockIdx.y * BLOCK_SIZE + threadIdx.y;
+    if ((xIndex < width) && (yIndex < height)) {
+        unsigned int index_in = yIndex * width + xIndex;
+        block[threadIdx.y][threadIdx.x] = matA[index_in];
+    }
+    __syncthreads();
+    xIndex = blockIdx.y * BLOCK_SIZE + threadIdx.x;
+    yIndex = blockIdx.x * BLOCK_SIZE + threadIdx.y;
+    if ((xIndex < height) && (yIndex < width)) {
+        unsigned int index_out = yIndex * height + xIndex;
+        matB[index_out] = block[threadIdx.x][threadIdx.y];
+    }
+}
+
+void my::cuda::matCopy(dim3 gridSize, dim3 blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
+{
+    matCopy_kernel<<<gridSize, blockSize>>>(matA, matB, sizeAX, sizeAY);
+}
+
+void my::cuda::matCopy(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
+{
+    matCopy_kernel<<<gridSize, blockSize, 0, stream>>>(matA, matB, sizeAX, sizeAY);
+}
+
+extern "C" void matCopy(dim3 gridSize, dim3 blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
+{
+    matCopy_kernel<<<gridSize, blockSize>>>(matA, matB, sizeAX, sizeAY);
 }

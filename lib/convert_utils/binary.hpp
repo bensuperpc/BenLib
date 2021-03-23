@@ -79,6 +79,5 @@ template <typename T> T bitArrayToInt_big(const std::vector<bool> &, size_t);
 
 } // namespace binary
 } // namespace my
-#include "binary_imp.hpp"
 
 #endif

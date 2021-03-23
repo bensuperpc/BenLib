@@ -31,7 +31,10 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <iostream>
+extern "C"
+{
 #include "stdio.h"
+}
 
 #ifndef BLOCK_SIZE
 #    define BLOCK_SIZE 16
@@ -56,6 +59,9 @@ namespace my
 {
 namespace cuda
 {
+/*
+ *  Kernel Functions
+ */
 
 void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
 // void matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
@@ -72,6 +78,15 @@ void matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][100][100]);
 void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
 void sharedABMultiply(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n);
 
+void matFill(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *matA, int value, size_t sizeAX, size_t sizeAY);
+void matFill(dim3 gridSize, dim3 blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY);
+void matCopy(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY);
+void matCopy(dim3 gridSize, dim3 blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY);
+
+/*
+ *  CPU Functions
+ */
+
 // 2D to 1D
 template <typename T> void flatten1D(T **a, T *b, const size_t xMax, const size_t yMax);
 // 3D to 1D
@@ -86,7 +101,7 @@ template <typename T> void reshape3D(const T *a, T *b, const size_t xMax, const 
 template <typename T> void reshape4D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
 
 // 2D Flat Matrix
-template <typename T> void matMultFlat(T *h_a, T *h_b, T *h_result, const size_t m);
+template <typename T> void matMultFlat(T *matA, T *matB, T *matC, const size_t m);
 template <typename T> void matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY);
 // 3D Flat Matrix
 template <typename T>

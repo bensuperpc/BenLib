@@ -35,12 +35,12 @@
 #define alphabetMax "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define alphabetMin "abcdefghijklmnopqrstuvwxyz"
 
-constexpr std::uint32_t alphabetSize {26};
-
 namespace my
 {
 namespace string
 {
+constexpr std::uint32_t alphabetSize {26};
+
 template <class T> std::string findString(T n);
 template <class T> void findStringInv(T n, char *array);
 template <class T> void findString(T n, char *array);

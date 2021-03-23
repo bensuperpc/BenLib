@@ -292,8 +292,10 @@ int main(void)
     free(CPU);
     // cudaFreeHost(Res_h);
 
-    cudaFree(Left_Vector_d);
-    cudaFree(Right_Vector_d);
+    // cudaFree(Left_Vector_d);
+    // cudaFree(Right_Vector_d);
+    cudaFree(Left_Vector_h);
+    cudaFree(Right_Vector_h);
     cudaFree(Res_d);
     cudaDeviceReset();
 }

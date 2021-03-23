@@ -35,4 +35,6 @@ void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
 
 void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
+
+void matFill(dim3 gridSize, dim3 blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY);
 #endif

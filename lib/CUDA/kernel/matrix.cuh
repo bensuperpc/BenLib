@@ -25,12 +25,15 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-__global__ void matrixAddKernel_kernel(int *a, int *b, int *c, size_t N);
+__global__ void matrixAddKernel_kernel(int *matA, int *matB, int *matC, size_t N);
 
 // 2D vector
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim);
 __global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 
 __global__ void sharedABMultiply_kernel(float *a, float *b, float *c, int N);
+
+__global__ void matFill_kernel(int *matA, int value, size_t sizeAX, size_t sizeAY);
+__global__ void matCopy_kernel(int *matB, int *matA, int width, int height);
 
 #endif

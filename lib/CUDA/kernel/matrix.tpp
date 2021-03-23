@@ -34,7 +34,10 @@
 #include <cuda_runtime.h>
 #include <iostream>
 #include <matrix.hpp>
+extern "C"
+{
 #include <stdio.h>
+}
 
 template <class... Args> void print(Args... args);
 
@@ -46,8 +49,7 @@ template <class... Args> void print(Args... args)
 
 template <typename T> void my::cuda::flatten1D(T **a, T *b, const size_t xMax, const size_t yMax)
 {
-//#pragma omp parallel for collapse(2) schedule(auto)
-#pragma omp parallel for schedule(auto)
+#pragma omp parallel for collapse(2) schedule(auto)
     for (size_t y = 0; y < yMax; y++) {
         for (size_t x = 0; x < xMax; x++) {
             b[y * xMax + x] = a[y][x];
@@ -57,7 +59,7 @@ template <typename T> void my::cuda::flatten1D(T **a, T *b, const size_t xMax, c
 
 template <typename T> void my::cuda::flatten1D(T ***a, T *b, const size_t xMax, const size_t yMax, const size_t zMax)
 {
-#pragma omp parallel for collapse(2) schedule(auto)
+#pragma omp parallel for collapse(3) schedule(auto)
     for (size_t z = 0; z < zMax; z++) {
         for (size_t y = 0; y < yMax; y++) {
             for (size_t x = 0; x < xMax; x++) {
@@ -72,7 +74,7 @@ template <typename T> void my::cuda::flatten1D(T ***a, T *b, const size_t xMax, 
 
 template <typename T> void my::cuda::flatten1D(T ****a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax)
 {
-#pragma omp parallel for collapse(3) schedule(auto)
+#pragma omp parallel for collapse(4) schedule(auto)
     for (size_t w = 0; w < wMax; w++) {
         for (size_t z = 0; z < zMax; z++) {
             for (size_t y = 0; y < yMax; y++) {
@@ -87,8 +89,7 @@ template <typename T> void my::cuda::flatten1D(T ****a, T *b, const size_t xMax,
 
 template <typename T> void my::cuda::reshape2D(T *a, T **b, const size_t xMax, const size_t yMax)
 {
-//#pragma omp parallel for collapse(2) schedule(auto)
-#pragma omp parallel for schedule(auto)
+#pragma omp parallel for collapse(2) schedule(auto)
     for (size_t y = 0; y < yMax; y++) {
         for (size_t x = 0; x < xMax; x++) {
             b[y][x] = a[y * xMax + x];
@@ -98,7 +99,7 @@ template <typename T> void my::cuda::reshape2D(T *a, T **b, const size_t xMax, c
 
 template <typename T> void my::cuda::reshape3D(T *a, T ***b, const size_t xMax, const size_t yMax, const size_t zMax)
 {
-#pragma omp parallel for collapse(2) schedule(auto)
+#pragma omp parallel for collapse(3) schedule(auto)
     for (size_t z = 0; z < zMax; z++) {
         for (size_t y = 0; y < yMax; y++) {
             for (size_t x = 0; x < xMax; x++) {
@@ -111,7 +112,7 @@ template <typename T> void my::cuda::reshape3D(T *a, T ***b, const size_t xMax, 
 
 template <typename T> void my::cuda::reshape4D(T *a, T ****b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax)
 {
-#pragma omp parallel for collapse(3) schedule(auto)
+#pragma omp parallel for collapse(4) schedule(auto)
     for (size_t w = 0; w < wMax; w++) {
         for (size_t z = 0; z < zMax; z++) {
             for (size_t y = 0; y < yMax; y++) {
@@ -125,17 +126,14 @@ template <typename T> void my::cuda::reshape4D(T *a, T ****b, const size_t xMax,
 }
 
 // 2D flat matrix
-template <typename T> void my::cuda::matMultFlat(T *h_a, T *h_b, T *h_result, const size_t m)
+template <typename T> void my::cuda::matMultFlat(T *matA, T *matB, T *matC, const size_t m)
 {
-    float tmp = 0.0;
-
+#pragma omp parallel for collapse(3) schedule(auto)
     for (size_t i = 0; i < m; ++i) {
         for (size_t j = 0; j < m; ++j) {
             for (size_t h = 0; h < m; ++h) {
-                tmp += h_a[i * m + h] * h_b[h * m + j];
+                matC[i * m + j] = matC[i * m + j] + matA[i * m + h] * matB[h * m + j];
             }
-            h_result[i * m + j] = tmp;
-            tmp = 0.0;
         }
     }
 }
@@ -144,7 +142,7 @@ template <typename T> void my::cuda::matMultFlat(T *h_a, T *h_b, T *h_result, co
 template <typename T>
 void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY)
 {
-#pragma omp parallel for collapse(2) schedule(auto)
+#pragma omp parallel for collapse(3) schedule(auto)
     for (size_t y = 0; y < sizeAX; y++) {
         for (size_t x = 0; x < sizeBY; x++) {
             for (size_t s = 0; s < sizeBX; s++) {
@@ -159,25 +157,17 @@ template <typename T>
 void my::cuda::matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T *matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T *matC, size_t sizeCX,
     size_t sizeCY, size_t sizeCZ)
 {
-    T tmp;
-#pragma omp parallel for collapse(3) schedule(auto) private(tmp)
+#warning "To do: my::cuda::matMultFlat : 3D flat matrix "
+#pragma omp parallel for collapse(3) schedule(auto) // private(tmp)
     // The first group loop
     for (size_t z = 0; z < sizeAX; ++z) {
         for (size_t y = 0; y < sizeBY; ++y) {
             for (size_t x = 0; x < sizeBZ; ++x) {
                 // The second group loop
-                tmp = 0;
                 for (size_t s = 0; s < sizeBX; ++s) {
-                    // matC[z][y][x] = matC[z][y][x] + matA[z][y][s] * matB[s][y][x];
-                    // matC[y * sizeCY + x] = matC[y * sizeCY + x] + matA[y * sizeAY + s] * matB[s * sizeBY + x];
-                    // b[z][y][x] = a[(z * xMax * yMax) + (y * xMax) + x];
-
-                    // tmp += matA[y * sizeAY + s] * matB[s * sizeBY + x];
-                    // tmp += matA[y * sizeAY + s + z * xMax * yMax] * matB[s * sizeBY + x + z * xMax * yMax];
-                    tmp += matA[y * sizeAY + s + z * sizeAX * sizeAZ] * matB[s * sizeBY + x + z * sizeBX * sizeBZ];
+                    // matC[y * sizeCY + x] = matC[y * sizeCY + x] + matA[y * sizeAY + s + z * sizeAX * sizeAZ] * matB[s * sizeBY + x + z * sizeBX * sizeBZ];
                 }
                 // End of the second group loop
-                // = tmp;
             }
         }
     }
@@ -190,15 +180,12 @@ template <typename T> void my::cuda::matMult(T **matA, T **matB, T ****matC, siz
 
 template <typename T> void my::cuda::matMult(T **A_, T **B_, T **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY)
 {
-    T tmp;
-#pragma omp parallel for collapse(2) schedule(auto) private(tmp)
+#pragma omp parallel for collapse(3) schedule(auto)
     for (size_t y = 0; y < sizeAX; ++y) {
         for (size_t x = 0; x < sizeBY; ++x) {
-            tmp = 0;
             for (size_t s = 0; s < sizeBX; ++s) {
-                tmp += A_[y][s] * B_[s][x];
+                C_[y][x] = C_[y][x] + A_[y][s] * B_[s][x];
             }
-            C_[y][x] = tmp;
         }
     }
 }
@@ -212,22 +199,15 @@ void my::cuda::matMult(T ***matA, T ***matB, T ****matC, size_t sizeAX, size_t s
 template <typename T>
 void my::cuda::matMult(T ***matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T ***matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T ***matC)
 {
-    T tmp;
-#pragma omp parallel for collapse(3) schedule(auto) // private(tmp)
+#pragma omp parallel for collapse(4) schedule(auto) // private(tmp)
     // The first group loop
     for (size_t z = 0; z < sizeAX; ++z) {
         for (size_t y = 0; y < sizeBY; ++y) {
             for (size_t x = 0; x < sizeBZ; ++x) {
                 // The second group loop
-                // matC[z][y][x] = 0;
-                // tmp = (T)0;
                 for (size_t s = 0; s < sizeBX; ++s) {
-                    // matC[z][y][x] += matA[z][y][ys] * matB[ys][y][x];
                     matC[z][y][x] = matC[z][y][x] + matA[z][y][s] * matB[s][y][x];
-                    // tmp += matA[z][y][s] * matB[s][y][x];
                 }
-                // matC[z][y][x] = tmp;
-                // End of the second group loop
             }
         }
     }
@@ -244,22 +224,16 @@ template <typename T>
 void my::cuda::matMult(
     T ****matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, T ****matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, size_t sizeBW, T ****matC)
 {
-    T tmp;
-#pragma omp parallel for collapse(4) schedule(auto) // private(tmp)
+#pragma omp parallel for collapse(4) schedule(auto)
     // The first group loop
     for (size_t w = 0; w < sizeAX; ++w) {
         for (size_t z = 0; z < sizeBY; ++z) {
             for (size_t y = 0; y < sizeBZ; ++y) {
                 for (size_t x = 0; x < sizeBW; ++x) {
                     // The second group loop
-                    // matC[w][z][y][x] = 0;
-                    // tmp = (T)0;
                     for (size_t s = 0; s < sizeBX; ++s) {
-                        // matC[w][z][y][x] += matA[w][z][y][ys] * matB[ys][y][x];
                         matC[w][z][y][x] = matC[w][z][y][x] + matA[w][z][y][s] * matB[s][z][y][x];
-                        // tmp += matA[w][z][y][s] * matB[s][z][y][x];
                     }
-                    matC[w][z][y][x] = tmp;
                     // End of the second group loop
                 }
             }

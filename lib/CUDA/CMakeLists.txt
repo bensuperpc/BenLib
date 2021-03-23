@@ -35,7 +35,7 @@
 #                                                            #
 ##############################################################
 
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.11)
 #project(my_cuda LANGUAGES CUDA CXX C)
 project(my_cuda LANGUAGES CXX C)
 
@@ -47,7 +47,6 @@ if(CMAKE_CUDA_COMPILER)
     message(STATUS "CMAKE_CUDA_COMPILER: True")
 endif()
 
-
 #   ================    CUDA    ================
 find_package(CUDA QUIET REQUIRED)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
@@ -58,7 +57,8 @@ if (CUDA_FOUND)
     set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS}	-Xcompiler=-Wall")
     set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall --std=c++14
+        -O3 -Wall -pipe --std=c++14
+        -Xptxas -O2
         -gencode=arch=compute_52,code=sm_52
         -gencode=arch=compute_60,code=sm_60
         -gencode arch=compute_61,code=sm_61
@@ -118,9 +118,18 @@ set(HEADERS
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda STATIC ${SRCS} ${HEADERS})
 include_directories("kernel/")
-target_compile_features(my_cuda PUBLIC cxx_std_11)
+target_compile_features(my_cuda PUBLIC cxx_std_14)
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
+# If support unity build, improve speed on headers
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+    set_target_properties(my_cuda PROPERTIES UNITY_BUILD ON)
+	#target_precompile_headers(convert_utils PUBLIC ${HEADERS})
+    message(STATUS "CMAKE_UNITY_BUILD : 1 on ${PROJECT_NAME}")
+else()
+    message(STATUS "CMAKE_UNITY_BUILD : 0 on ${PROJECT_NAME}")
+endif()
+
 set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 62 70 75)
 
 
