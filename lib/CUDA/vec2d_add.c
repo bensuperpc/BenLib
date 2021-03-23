@@ -29,7 +29,7 @@
 
 #define THREADS_PER_BLOCK 1024 // Max 1024
 
-void matrixAdd(int *a, int *b, int *c, int N)
+void matrixAdd_CPU(int *a, int *b, int *c, int N)
 {
     int index = 0;
     //#pragma omp parallel for
@@ -120,7 +120,7 @@ int main()
 
     // Launch kernel
     // matrixAddKernel<<<grid, block>>>(a_d, b_d, c_d, N);
-    matrixAddKernel(grid, block, a_d, b_d, c_d, N);
+    matrixAdd(grid, block, a_d, b_d, c_d, N);
 
     // Stop timer
     cudaEventRecord(stop, 0);

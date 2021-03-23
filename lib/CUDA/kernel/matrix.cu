@@ -19,6 +19,7 @@
 //          https://docs.nvidia.com/cuda/pdf/CUDA_C_Programming_Guide.pdf
 //          http://oz.nthu.edu.tw/~d947207/NVIDIA/copy3D/Matrix_transpose_post.pdf
 //          https://on-demand.gputechconf.com/gtc/2017/presentation/s7122-stephen-jones-cuda-optimization-tips-tricks-and-techniques.pdf
+//          https://github.com/NVIDIA/cuda-samples/blob/v11.2/Samples/matrixMul/matrixMul.cu
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ extern "C"
  * \param int* matC 2D flat matrix
  * \param size_t size of matrix
  */
-__global__ void matrixAddKernel_kernel(int *matA, int *matB, int *matC, size_t N)
+__global__ void matrixAdd_kernel(int *matA, int *matB, int *matC, size_t N)
 {
     size_t col = threadIdx.x + blockIdx.x * blockDim.x;
     size_t row = threadIdx.y + blockIdx.y * blockDim.y;
@@ -49,19 +50,19 @@ __global__ void matrixAddKernel_kernel(int *matA, int *matB, int *matC, size_t N
     //__syncthreads();
 }
 
-void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
+void my::cuda::matrixAdd(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
-    matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    matrixAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-void my::cuda::matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
+void my::cuda::matrixAdd(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
 {
-    matrixAddKernel_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
+    matrixAdd_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
 }
 
-extern "C" void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
+extern "C" void matrixAdd(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
 {
-    matrixAddKernel_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    matrixAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)

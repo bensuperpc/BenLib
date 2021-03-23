@@ -30,7 +30,7 @@
 #    define BLOCK_SIZE 16
 #endif
 
-void matrixAddKernel(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
+void matrixAdd(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n);
 
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
 

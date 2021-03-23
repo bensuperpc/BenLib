@@ -66,7 +66,7 @@ if (CUDA_FOUND)
         -gencode arch=compute_75,code=sm_75
         -gencode=arch=compute_75,code=compute_75
     )
-
+#–default-stream per-thread
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")

@@ -25,7 +25,7 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-__global__ void matrixAddKernel_kernel(int *matA, int *matB, int *matC, size_t N);
+__global__ void matrixAdd_kernel(int *matA, int *matB, int *matC, size_t N);
 
 // 2D vector
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim);

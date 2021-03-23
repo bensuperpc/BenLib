@@ -153,6 +153,7 @@ void driver()
 int main(void)
 {
     cudaSetDevice(0);
+    //cudaDeviceEnablePeerAccess(0, 0);
     device();
     driver();
 
@@ -233,7 +234,7 @@ int main(void)
 
     // Retrieve result from device and store it in host array
     // gpuErrchk(cudaMemcpyAsync(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost, stream));
-    cudaMemPrefetchAsync(Res_d, vector_size, 0, stream);
+    // cudaMemPrefetchAsync(Res_d, vector_size, 0, stream); // Optional for faster Unified memory
     // Block main thread until idle stream
     cudaStreamSynchronize(stream);
     // cudaStreamQuery(stream)
