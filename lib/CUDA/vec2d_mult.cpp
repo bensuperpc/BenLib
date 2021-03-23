@@ -18,6 +18,10 @@
 //          https://github.com/kberkay/Cuda-Matrix-Multiplication/blob/master/matrix_Multiplication.cu                                                 //
 //          https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#optimize
 //          https://medium.com/gpgpu/multi-gpu-programming-6768eeb42e2c
+//          https://developer.nvidia.com/blog/how-query-device-properties-and-handle-errors-cuda-cc/
+//          https://developer.nvidia.com/blog/unified-memory-cuda-beginners/
+//          https://docs.nvidia.com/cuda/pdf/CUDA_C_Programming_Guide.pdf
+//          https://github.com/evlasblom/cuda-opencv-examples
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -87,14 +91,20 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 
     size_t pt_size = size * size * sizeof(float);
 
-    *Lmatrix = (float *)malloc(pt_size);
-    *Rmatrix = (float *)malloc(pt_size);
+    //*Lmatrix = (float *)malloc(pt_size);
+    //*Rmatrix = (float *)malloc(pt_size);
+
+    // int device = -1;
+    // cudaGetDevice(&device);
+
+    cudaMallocManaged(Lmatrix, pt_size); // cudaMemAttachHost
+
+    cudaMallocManaged(Rmatrix, pt_size); // cudaMemAttachHost
     // cudaMallocHost((void**)Lmatrix, pt_size);
     // cudaMallocHost((void**)Rmatrix, pt_size);
 
     memset(*Lmatrix, 0, pt_size);
     memset(*Rmatrix, 0, pt_size);
-
 #pragma omp parallel for collapse(2) schedule(auto)
     for (int i = 0; i < LdimX; i++) {
         for (int j = 0; j < LdimY; j++) {
@@ -113,41 +123,47 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
     return size;
 }
 
-// main routine that executes on the host
-int main(void)
+void device()
 {
-    cudaSetDevice(0);
-    // auto current_device = cuda::device::current::get();
-    int deviceCount = 0;
-    cudaGetDeviceCount(&deviceCount);
-    printf("Number of GPU devices: %i\n", deviceCount);
+    int nDevices;
 
-    // Get CUDA driver and runtime version
+    cudaGetDeviceCount(&nDevices);
+    for (int i = 0; i < nDevices; i++) {
+        cudaDeviceProp prop;
+        cudaGetDeviceProperties(&prop, i);
+        printf("Device Number: %d\n", i);
+        printf("  Device name: %s\n", prop.name);
+        printf("  Memory Clock Rate (KHz): %d\n", prop.memoryClockRate);
+        printf("  Memory Bus Width (bits): %d\n", prop.memoryBusWidth);
+        printf("  Peak Memory Bandwidth (GB/s): %f\n\n", 2.0 * prop.memoryClockRate * (prop.memoryBusWidth / 8) / 1.0e6);
+    }
+}
+
+void driver()
+{
     int driverVersion = 0;
     int runtimeVersion = 0;
     cudaDriverGetVersion(&driverVersion);
     cudaRuntimeGetVersion(&runtimeVersion);
     printf("CUDA Driver Version / Runtime Version: %d.%d / %d.%d\n", driverVersion / 1000, (driverVersion % 100) / 10, runtimeVersion / 1000,
         (runtimeVersion % 100) / 10);
+}
 
-    // Get device properties
-    cudaDeviceProp deviceProperties;
-    for (int i = 0; i < deviceCount; i++) {
-        cudaGetDeviceProperties(&deviceProperties, i);
-        printf("Name: %s\n", deviceProperties.name);
-    }
+// main routine that executes on the host
+int main(void)
+{
+    cudaSetDevice(0);
+    device();
+    driver();
 
-    int device = 0;
-    cudaDeviceProp deviceProp;
-    cudaGetDevice(&device);
-    cudaGetDeviceProperties(&deviceProp, device);
-    int clockRate = deviceProp.clockRate;
-    printf("Device clock rate: %.3f GHz\n", (float)clockRate / 1000000);
-    printf("\n");
-
+    int priority_high, priority_low;
+    cudaDeviceGetStreamPriorityRange(&priority_low, &priority_high);
+    cudaStream_t st_high, st_low;
+    cudaStreamCreateWithPriority(&st_high, cudaStreamNonBlocking, priority_high);
+    cudaStreamCreateWithPriority(&st_low, cudaStreamNonBlocking, priority_low);
     cudaStream_t stream;
+    // cudaStreamAttachMemAsync(stream1, &x);
     cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
-    // cudaStreamCreate(&stream2);
 
     // size of the vectors to be processed  and matrix dimensions
     int Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y, Left_vector_size, Right_vector_size;
@@ -168,14 +184,17 @@ int main(void)
 
     // Res_h = (float *)malloc(vector_size); // Allocate array on host for result
     CPU = (float *)malloc(vector_size); // Allocate array on host for CPU_matrix_multiplication result
-    cudaMallocHost((void **)&Res_h, vector_size);
+    // cudaMallocHost((void **)&Res_h, vector_size);
 
-    gpuErrchk(cudaMalloc((void **)&Left_Vector_d, vector_size));  // Allocate array on device for LHS operand
-    gpuErrchk(cudaMalloc((void **)&Right_Vector_d, vector_size)); // Allocate array on device for RHS operand but this is vector 1xN
-    gpuErrchk(cudaMalloc((void **)&Res_d, vector_size));          // Allocate array on device for result
+    // gpuErrchk(cudaMalloc((void **)&Left_Vector_d, vector_size));  // Allocate array on device for LHS operand
+    // gpuErrchk(cudaMalloc((void **)&Right_Vector_d, vector_size)); // Allocate array on device for RHS operand but this is vector 1xN
+    // gpuErrchk(cudaMalloc((void **)&Res_d, vector_size));          // Allocate array on device for result
+    cudaMallocManaged((void **)&Res_d, vector_size);
 
-    gpuErrchk(cudaMemcpyAsync(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice, stream));   // copy values to device
-    gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, stream)); // copy values to device
+    // gpuErrchk(cudaMemcpyAsync(Left_Vector_d, Left_Vector_h, vector_size, cudaMemcpyHostToDevice, stream));   // copy values to device
+    // gpuErrchk(cudaMemcpyAsync(Right_Vector_d, Right_Vector_h, vector_size, cudaMemcpyHostToDevice, stream)); // copy values to device
+    cudaMemPrefetchAsync(Left_Vector_h, vector_size, 0, stream);
+    cudaMemPrefetchAsync(Right_Vector_h, vector_size, 0, stream);
 
     // Block dimension is directly from block_size
     dim3 Block_dim(BLOCK_SIZE, BLOCK_SIZE, 1);
@@ -201,7 +220,10 @@ int main(void)
 
     // kernel call
     // multiply < < Grid_dim, Block_dim >> > (Left_Vector_d, Right_Vector_d, Res_d, dim);
-    my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, stream, Left_Vector_d, Right_Vector_d, Res_d, dim);
+
+    // my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, stream, Left_Vector_d, Right_Vector_d, Res_d, dim);
+    // cudaMemPrefetchAsync(Res_d, vector_size, 0, stream);
+    my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, stream, Left_Vector_h, Right_Vector_h, Res_d, dim);
 
     // commented out the functions which helps to calculate time
     cudaEventRecord(stop, 0);
@@ -210,7 +232,8 @@ int main(void)
     cudaEventElapsedTime(&gpu_time, start, stop);
 
     // Retrieve result from device and store it in host array
-    gpuErrchk(cudaMemcpyAsync(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost, stream));
+    // gpuErrchk(cudaMemcpyAsync(Res_h, Res_d, vector_size, cudaMemcpyDeviceToHost, stream));
+    cudaMemPrefetchAsync(Res_d, vector_size, 0, stream);
     // Block main thread until idle stream
     cudaStreamSynchronize(stream);
     // cudaStreamQuery(stream)
@@ -239,13 +262,15 @@ int main(void)
     printf("CPU/GPU perf diff: x%lf\n", cpu_time / gpu_time);
 
     // Prints the results
-    print_matrices(Res_h, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
+    // print_matrices(Res_h, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
+    print_matrices(Res_d, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
     print_matrices(CPU, "CPU_out", Left_matrix_x, Right_matrix_y, dim);
 
     bool equal = true;
     for (int i = 0; i < Left_matrix_x && equal; i++) {
         for (int j = 0; j < Right_matrix_y && equal; j++) {
-            if (abs(Res_h[i * dim + j] - CPU[i * dim + j]) > 0.001) {
+            // if (abs(Res_h[i * dim + j] - CPU[i * dim + j]) > 0.001) {
+            if (abs(Res_d[i * dim + j] - CPU[i * dim + j]) > 0.001) {
                 equal = false;
                 printf("NOT EQUAL\n");
             }
@@ -262,8 +287,10 @@ int main(void)
     // free(Right_Vector_h);
     // free(Res_h);
     cudaStreamDestroy(stream);
+    cudaStreamDestroy(st_high);
+    cudaStreamDestroy(st_low);
     free(CPU);
-    cudaFreeHost(Res_h);
+    // cudaFreeHost(Res_h);
 
     cudaFree(Left_Vector_d);
     cudaFree(Right_Vector_d);

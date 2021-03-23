@@ -29,6 +29,7 @@
 #           https://developer.download.nvidia.com/video/gputechconf/gtc/2019/presentation/s9444-build-systems-exploring-modern-cmake-cuda-v2.pdf
 #           https://gitlab.kitware.com/cmake/cmake/-/issues/16586
 #           https://releases.llvm.org/6.0.0/docs/CompileCudaWithLLVM.html
+#           https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -57,8 +58,13 @@ if (CUDA_FOUND)
     set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS}	-Xcompiler=-Wall")
     set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall -gencode arch=compute_61,code=sm_61;
-        --std=c++14
+        -O3 -Wall --std=c++14
+        -gencode=arch=compute_52,code=sm_52
+        -gencode=arch=compute_60,code=sm_60
+        -gencode arch=compute_61,code=sm_61
+        -gencode=arch=compute_70,code=sm_70
+        -gencode arch=compute_75,code=sm_75
+        -gencode=arch=compute_75,code=compute_75
     )
 
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
@@ -115,7 +121,7 @@ include_directories("kernel/")
 target_compile_features(my_cuda PUBLIC cxx_std_11)
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
-set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 62 70 75)
 
 
 if(APPLE)

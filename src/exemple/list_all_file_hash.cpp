@@ -46,7 +46,7 @@ int main(int argc, char *argv[], char *envp[])
 
     const std::vector<std::pair<const std::string, std::string (*)(const std::string &)>> pointer_map {{"get_md5hash", &my::crypto::get_md5hash},
         {"get_sha1hash", &my::crypto::get_sha1hash}, {"get_sha256hash", &my::crypto::get_sha256hash}, {"get_sha512hash", &my::crypto::get_sha512hash}};
-#pragma omp parallel for ordered schedule(auto)
+#pragma omp parallel for collapse(2) ordered schedule(auto)
     for (size_t i = 0; i < files.size(); i++) {
         for (size_t j = 0; j < pointer_map.size(); j++) {
             const auto str = (pointer_map[j].second)(files[i]);

@@ -64,8 +64,8 @@ void matrixAddKernel(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *a,
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n);
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n);
 
-void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int
-BCols, int CRows, int CCols);
+void matrixMultiplyShared(
+    dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 void matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][100][100]);
 
