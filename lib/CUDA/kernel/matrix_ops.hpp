@@ -71,6 +71,8 @@ template <typename T> void adealloc(T **A_, size_t sizeX_, size_t sizeY_);
 template <typename T> void adealloc(T *A_, size_t sizeX_);
 template <typename T> void adealloc(T *A_);
 
+template <typename T> void print_matrices(T *matrix, char *file_Name, T x_dim, size_t y_dim, size_t dim);
+
 } // namespace cuda
 } // namespace my
 

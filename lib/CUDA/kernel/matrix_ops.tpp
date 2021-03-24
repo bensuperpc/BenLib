@@ -194,4 +194,21 @@ template <typename T> void my::cuda::adealloc(T *A_)
     delete[] A_;
 }
 
+template <typename T> void my::cuda::print_matrices(T *matrix, char *file_Name, T x_dim, size_t y_dim, size_t dim)
+{
+    std::ofstream outFile;
+    outFile.open(file_Name);
+
+    outFile << std::fixed;
+    outFile << std::setprecision(3);
+
+    for (size_t i = 0; i < x_dim; i++) {
+        for (size_t j = 0; j < y_dim; j++) {
+            size_t dummy = x_dim * i + j;
+            outFile << matrix[dummy] << " ";
+        }
+        outFile << std::endl;
+    }
+}
+
 #endif

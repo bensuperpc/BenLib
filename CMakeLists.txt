@@ -392,7 +392,8 @@ else()
 endif()
 
 #   ================    CUDA    ================
-#https://bugs.archlinux.org/task/62258
+# https://bugs.archlinux.org/task/62258
+# https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 #export PATH=/opt/cuda/bin:$PATH
 #export LD_LIBRARY_PATH=/opt/cuda/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
 
@@ -406,10 +407,17 @@ if (CUDA_FOUND)
     set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
     set(CMAKE_CUDA_STANDARD 17)
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall --std=c++17
+        -O3 -Wall -pipe --std=c++17
+        -Xptxas -O2 --default-stream per-thread
+        --threads 0
+        # Maxwell
         -gencode=arch=compute_52,code=sm_52
+        -gencode=arch=compute_53,code=sm_53
+        # Pascale
         -gencode=arch=compute_60,code=sm_60
         -gencode arch=compute_61,code=sm_61
+        -gencode arch=compute_62,code=sm_62
+        # Turing
         -gencode=arch=compute_70,code=sm_70
         -gencode=arch=compute_72,code=sm_72
         -gencode arch=compute_75,code=sm_75

@@ -48,6 +48,7 @@ if(CMAKE_CUDA_COMPILER)
 endif()
 
 #   ================    CUDA    ================
+# https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 find_package(CUDA QUIET REQUIRED)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
@@ -59,13 +60,20 @@ if (CUDA_FOUND)
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
         -O3 -Wall -pipe --std=c++17
         -Xptxas -O2 --default-stream per-thread
+        --threads 0
+        # Maxwell
         -gencode=arch=compute_52,code=sm_52
+        -gencode arch=compute_53,code=sm_53
+        # Pascale
         -gencode=arch=compute_60,code=sm_60
         -gencode arch=compute_61,code=sm_61
+        -gencode arch=compute_62,code=sm_62
+        # Turing
         -gencode=arch=compute_70,code=sm_70
         -gencode=arch=compute_72,code=sm_72
         -gencode arch=compute_75,code=sm_75
         -gencode=arch=compute_75,code=compute_75
+        # Ampere 80 and 86
     )
 #–default-stream per-thread
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
@@ -99,6 +107,7 @@ set(SRCS
     kernel/kernel.cu
     kernel/matrix.cu
     kernel/crc.cu
+    kernel/cuda_utils.cpp
 	)
 	
 set(HEADERS
@@ -114,10 +123,12 @@ set(HEADERS
     kernel/crc.cuh
     kernel/crc.h
     kernel/crc.hpp
+    kernel/cuda_utils.hpp
+    kernel/cuda_utils.h
     )
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
-add_library(my_cuda STATIC ${SRCS} ${HEADERS})
+add_library(my_cuda SHARED ${SRCS} ${HEADERS})
 include_directories("kernel/")
 target_compile_features(my_cuda PUBLIC cxx_std_17)
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
