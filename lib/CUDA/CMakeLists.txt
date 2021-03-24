@@ -53,16 +53,17 @@ find_package(CUDA QUIET REQUIRED)
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
     link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})
-    set(CMAKE_CUDA_STANDARD 14)
+    set(CMAKE_CUDA_STANDARD 17)
     set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS}	-Xcompiler=-Wall")
     set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall -pipe --std=c++14
-        -Xptxas -O2
+        -O3 -Wall -pipe --std=c++17
+        -Xptxas -O2 --default-stream per-thread
         -gencode=arch=compute_52,code=sm_52
         -gencode=arch=compute_60,code=sm_60
         -gencode arch=compute_61,code=sm_61
         -gencode=arch=compute_70,code=sm_70
+        -gencode=arch=compute_72,code=sm_72
         -gencode arch=compute_75,code=sm_75
         -gencode=arch=compute_75,code=compute_75
     )
@@ -118,7 +119,7 @@ set(HEADERS
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda STATIC ${SRCS} ${HEADERS})
 include_directories("kernel/")
-target_compile_features(my_cuda PUBLIC cxx_std_14)
+target_compile_features(my_cuda PUBLIC cxx_std_17)
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # If support unity build, improve speed on headers
@@ -130,7 +131,7 @@ else()
     message(STATUS "CMAKE_UNITY_BUILD : 0 on ${PROJECT_NAME}")
 endif()
 
-set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 62 70 75)
+set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 62 70 72 75)
 
 
 if(APPLE)
@@ -150,7 +151,7 @@ endif()
 add_executable(vec1d vec1d.c)
 target_link_libraries(vec1d ${CUDA_LIBRARIES})
 target_link_libraries(vec1d my_cuda)
-set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec2d_mult vec2d_mult.c)
 if (OPENMP_FOUND)
@@ -159,7 +160,7 @@ else()
 target_link_libraries(vec2d_mult ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec2d_mult my_cuda)
-set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 72)
 
 
 add_executable(vec2d_add vec2d_add.c)
@@ -169,7 +170,7 @@ else()
 target_link_libraries(vec2d_add ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec2d_add my_cuda)
-set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec2d_mult2 vec2d_mult.cpp)
 if (OPENMP_FOUND)
@@ -178,7 +179,7 @@ else()
 target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec2d_mult2 my_cuda)
-set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec2d_mult3 vec2d_mult3.cpp)
 if (OPENMP_FOUND)
@@ -187,7 +188,7 @@ else()
 target_link_libraries(vec2d_mult3 ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec2d_mult3 my_cuda)
-set_property(TARGET vec2d_mult3 PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET vec2d_mult3 PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec3d_mult vec3d_mult.cpp)
 if (OPENMP_FOUND)
@@ -196,7 +197,7 @@ else()
 target_link_libraries(vec3d_mult ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec3d_mult my_cuda)
-set_property(TARGET vec3d_mult PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET vec3d_mult PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec3d_mult2 vec3d_mult2.cpp)
 if (OPENMP_FOUND)
@@ -205,7 +206,7 @@ else()
 target_link_libraries(vec3d_mult2 ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec3d_mult2 my_cuda)
-set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 61)
+set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 72)
 
 
 #cuda_add_executable(main main.cpp)

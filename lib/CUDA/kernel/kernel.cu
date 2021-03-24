@@ -75,7 +75,7 @@ __global__ void vecMult_kernel(double *a, double *b, double *c, size_t n)
 
     // Make sure we do not go out of bounds
     if (id < n)
-        c[id] = a[id] - b[id];
+        c[id] = a[id] * b[id];
 }
 
 void my::cuda::vecMult(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)
@@ -94,8 +94,12 @@ __global__ void vecDiv_kernel(double *a, double *b, double *c, size_t n)
     int id = blockIdx.x * blockDim.x + threadIdx.x;
 
     // Make sure we do not go out of bounds
-    if (id < n)
-        c[id] = a[id] - b[id];
+    if (id < n) {
+        // Check to avoid 0 divition
+        if (b[id] != 0.0) {
+            c[id] = a[id] / b[id];
+        }
+    }
 }
 
 void my::cuda::vecDiv(size_t gridSize, size_t blockSize, double *a, double *b, double *c, size_t n)

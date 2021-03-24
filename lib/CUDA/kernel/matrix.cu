@@ -217,7 +217,6 @@ __global__ void set(int a[][100][100])
 
 void my::cuda::matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][DATAYSIZE][DATAXSIZE])
 {
-
 }
 
 /**

@@ -31,10 +31,12 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <type_traits>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include "matrix.hpp"
 #include "matrix.tpp"
+
 extern "C"
 {
 #include <math.h>
@@ -48,28 +50,27 @@ extern "C"
  * Because matrices filled with dummy 0s function takes 3 dim arguments:
  *      actual x and y dimension and dim as big square matrix's dimension
  */
-void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int dim)
+template <typename T> void print_matrices(T *matrix, char *file_Name, T x_dim, size_t y_dim, size_t dim)
 {
     std::ofstream outFile;
     outFile.open(file_Name);
 
     outFile << std::fixed;
-    outFile << std::setprecision(2);
+    outFile << std::setprecision(3);
 
-    for (int i = 0; i < x_dim; i++) {
-        for (int j = 0; j < y_dim; j++) {
+    for (size_t i = 0; i < x_dim; i++) {
+        for (size_t j = 0; j < y_dim; j++) {
             outFile << matrix[i * dim + j] << " ";
         }
         outFile << std::endl;
     }
 }
 
-// this function is for filling the matrices with cos and sin values randomly
-// I transform the matrices to square matrix in order to perform better multiplication
-/*__host__*/ int fill(float **Lmatrix, float **Rmatrix, int LdimX, int LdimY, int RdimX, int RdimY)
-{
 
-    int sqr_dim_X, sqr_dim_Y, size;
+template <typename T>
+/*__host__*/ int allocFill(T **Lmatrix, T **Rmatrix, size_t LdimX, size_t LdimY, size_t RdimX, size_t RdimY, bool Unified_memory = false)
+{
+    size_t sqr_dim_X, sqr_dim_Y, size;
 
     sqr_dim_X = RdimX;
     if (LdimX > RdimX) {
@@ -86,38 +87,47 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
         size = sqr_dim_X;
     }
 
-    int temp = size / BLOCK_SIZE + (size % BLOCK_SIZE == 0 ? 0 : 1);
+    size_t temp = size / BLOCK_SIZE + (size % BLOCK_SIZE == 0 ? 0 : 1);
     size = temp * BLOCK_SIZE;
 
-    size_t pt_size = size * size * sizeof(float);
+    size_t pt_size = size * size * sizeof(T);
 
-    //*Lmatrix = (float *)malloc(pt_size);
-    //*Rmatrix = (float *)malloc(pt_size);
+    // If Unified memory is enable
+    if (Unified_memory == false) {
+        *Lmatrix = (T *)malloc(pt_size);
+        *Rmatrix = (T *)malloc(pt_size);
+        // cudaMallocHost((void**)Lmatrix, pt_size);
+        // cudaMallocHost((void**)Rmatrix, pt_size);
+    } else {
+        cudaMallocManaged(Lmatrix, pt_size); // cudaMemAttachHost
+        cudaMallocManaged(Rmatrix, pt_size); // cudaMemAttachHost
+    }
 
-    // int device = -1;
-    // cudaGetDevice(&device);
-
-    cudaMallocManaged(Lmatrix, pt_size); // cudaMemAttachHost
-
-    cudaMallocManaged(Rmatrix, pt_size); // cudaMemAttachHost
-    // cudaMallocHost((void**)Lmatrix, pt_size);
-    // cudaMallocHost((void**)Rmatrix, pt_size);
-
+    // set all value to 0
     memset(*Lmatrix, 0, pt_size);
     memset(*Rmatrix, 0, pt_size);
+
 #pragma omp parallel for collapse(2) schedule(auto)
-    for (int i = 0; i < LdimX; i++) {
-        for (int j = 0; j < LdimY; j++) {
-            int dummy = size * i + j;
-            (*Lmatrix)[dummy] = sinf(dummy);
+    for (size_t i = 0; i < LdimX; i++) {
+        for (size_t j = 0; j < LdimY; j++) {
+            size_t dummy = size * i + j;
+            if constexpr (std::is_floating_point_v<T>) {
+                (*Lmatrix)[dummy] = (T)sinf(dummy);
+            } else {
+                (*Rmatrix)[dummy] = (T)rand_r(dummy);
+            }
         }
     }
 
 #pragma omp parallel for collapse(2) schedule(auto)
-    for (int i = 0; i < RdimX; i++) {
-        for (int j = 0; j < RdimY; j++) {
-            int dummy = size * i + j;
-            (*Rmatrix)[dummy] = cosf(dummy);
+    for (size_t i = 0; i < RdimX; i++) {
+        for (size_t j = 0; j < RdimY; j++) {
+            size_t dummy = size * i + j;
+            if constexpr (std::is_floating_point_v<T>) {
+                (*Rmatrix)[dummy] = (T)cosf(dummy);
+            } else {
+                (*Rmatrix)[dummy] = (T)rand_r(dummy);
+            }
         }
     }
     return size;
@@ -126,8 +136,14 @@ void print_matrices(float *matrix, char *file_Name, int x_dim, int y_dim, int di
 void device()
 {
     int nDevices;
-
     cudaGetDeviceCount(&nDevices);
+    if(nDevices == 0) {
+        printf("Cuda device not found.\n");
+        return;
+    }
+
+    printf("Found %i Cuda device(s).\n",nDevices);
+
     for (int i = 0; i < nDevices; i++) {
         cudaDeviceProp prop;
         cudaGetDeviceProperties(&prop, i);
@@ -135,7 +151,22 @@ void device()
         printf("  Device name: %s\n", prop.name);
         printf("  Memory Clock Rate (KHz): %d\n", prop.memoryClockRate);
         printf("  Memory Bus Width (bits): %d\n", prop.memoryBusWidth);
-        printf("  Peak Memory Bandwidth (GB/s): %f\n\n", 2.0 * prop.memoryClockRate * (prop.memoryBusWidth / 8) / 1.0e6);
+        printf("  Peak Memory Bandwidth (GB/s): %f\n", 2.0 * prop.memoryClockRate * (prop.memoryBusWidth / 8) / 1.0e6);
+        printf("  totalGlobablMem: %lu\n", (unsigned long)prop.totalGlobalMem);
+        printf("  sharedMemPerBlock: %i\n", prop.sharedMemPerBlock);
+        printf("  regsPerBlock: %i\n", prop.regsPerBlock);
+        printf("  warpSize: %i\n", prop.warpSize);
+        printf("  memPitch: %i\n", prop.memPitch);
+        printf("  maxThreadsPerBlock: %i\n", prop.maxThreadsPerBlock);
+        printf("  maxThreadsDim: %i, %i, %i\n", prop.maxThreadsDim[0], prop.maxThreadsDim[1], prop.maxThreadsDim[2]);
+        printf("  maxGridSize: %i, %i, %i\n", prop.maxGridSize[0], prop.maxGridSize[1], prop.maxGridSize[2]);
+        printf("  clockRate (MHz): %i\n", prop.clockRate / 1000);
+        printf("  totalConstMem: %i\n", prop.totalConstMem);
+        printf("  major: %i\n", prop.major);
+        printf("  minor: %i\n", prop.minor);
+        printf("  textureAlignment: %i\n", prop.textureAlignment);
+        printf("  deviceOverlap: %i\n", prop.deviceOverlap);
+        printf("  multiProcessorCount: %i\n", prop.multiProcessorCount);
     }
 }
 
@@ -153,7 +184,7 @@ void driver()
 int main(void)
 {
     cudaSetDevice(0);
-    //cudaDeviceEnablePeerAccess(0, 0);
+    // cudaDeviceEnablePeerAccess(0, 0);
     device();
     driver();
 
@@ -175,10 +206,12 @@ int main(void)
 
     scanf("%d %d %d %d", &Left_matrix_x, &Left_matrix_y, &Right_matrix_x, &Right_matrix_y); // input matrix dimensions are taken
 
-    int dim = fill(&Left_Vector_h, &Right_Vector_h, Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y); // fills the matrices with random values
+    // return dimention of Matc to store result
+    int dim = allocFill<float>(
+        &Left_Vector_h, &Right_Vector_h, Left_matrix_x, Left_matrix_y, Right_matrix_x, Right_matrix_y, true); // fills the matrices with random values
 
-    print_matrices(Left_Vector_h, "Input_LHS", Left_matrix_x, Left_matrix_y, dim);
-    print_matrices(Right_Vector_h, "Input_RHS", Right_matrix_x, Right_matrix_y, dim);
+    print_matrices<float>(Left_Vector_h, "Input_LHS", Left_matrix_x, Left_matrix_y, dim);
+    print_matrices<float>(Right_Vector_h, "Input_RHS", Right_matrix_x, Right_matrix_y, dim);
 
     size_t vector_size;
     vector_size = dim * dim * sizeof(float);
@@ -205,11 +238,11 @@ int main(void)
     printf("Number of threads: %i (%ix%i)\n", Block_dim.x * Block_dim.y, Block_dim.x, Block_dim.y);
     printf("Number of blocks: %i (%ix%i)\n", Grid_dim.x * Grid_dim.y, Grid_dim.x, Grid_dim.y);
     printf("Output matrix size: %i (%ix%i)\n", dim * dim, dim, dim);
-    size_t matrix_lenght = (dim * dim) * sizeof(int);
+    size_t matrix_lenght = (dim * dim) * sizeof(float);
     if (matrix_lenght < 1000000) {
-        printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000.0);
+        printf("Matrix lenght: %f Ko (x3)\n", (double)((dim * dim) * sizeof(float)) / 1000.0);
     } else {
-        printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(int)) / 1000000.0);
+        printf("Matrix lenght: %f Mo (x3)\n", (double)((dim * dim) * sizeof(float)) / 1000000.0);
     }
     printf("\n");
 
@@ -224,6 +257,7 @@ int main(void)
 
     // my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, stream, Left_Vector_d, Right_Vector_d, Res_d, dim);
     // cudaMemPrefetchAsync(Res_d, vector_size, 0, stream);
+
     my::cuda::matrixMultiplyShared(Grid_dim, Block_dim, stream, Left_Vector_h, Right_Vector_h, Res_d, dim);
 
     // commented out the functions which helps to calculate time
@@ -263,9 +297,9 @@ int main(void)
     printf("CPU/GPU perf diff: x%lf\n", cpu_time / gpu_time);
 
     // Prints the results
-    // print_matrices(Res_h, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
-    print_matrices(Res_d, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
-    print_matrices(CPU, "CPU_out", Left_matrix_x, Right_matrix_y, dim);
+    // print_matrices<float>(Res_h, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
+    print_matrices<float>(Res_d, "GPU_out", Left_matrix_x, Right_matrix_y, dim);
+    print_matrices<float>(CPU, "CPU_out", Left_matrix_x, Right_matrix_y, dim);
 
     bool equal = true;
     for (int i = 0; i < Left_matrix_x && equal; i++) {

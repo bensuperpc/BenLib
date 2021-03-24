@@ -404,13 +404,14 @@ if (CUDA_FOUND)
     link_directories(${CUDA_LIBRARIES})
     set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS} -Xcompiler=-Wall")
     set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
-    set(CMAKE_CUDA_STANDARD 14)
+    set(CMAKE_CUDA_STANDARD 17)
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall --std=c++14
+        -O3 -Wall --std=c++17
         -gencode=arch=compute_52,code=sm_52
         -gencode=arch=compute_60,code=sm_60
         -gencode arch=compute_61,code=sm_61
         -gencode=arch=compute_70,code=sm_70
+        -gencode=arch=compute_72,code=sm_72
         -gencode arch=compute_75,code=sm_75
         -gencode=arch=compute_75,code=compute_75
     )
