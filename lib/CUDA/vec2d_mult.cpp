@@ -22,6 +22,7 @@
 //          https://developer.nvidia.com/blog/unified-memory-cuda-beginners/
 //          https://docs.nvidia.com/cuda/pdf/CUDA_C_Programming_Guide.pdf
 //          https://github.com/evlasblom/cuda-opencv-examples
+//          https://github.com/NVIDIA/cuda-samples/blob/master/Samples/matrixMul/matrixMul.cu
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -65,7 +66,6 @@ template <typename T> void print_matrices(T *matrix, char *file_Name, T x_dim, s
         outFile << std::endl;
     }
 }
-
 
 template <typename T>
 /*__host__*/ int allocFill(T **Lmatrix, T **Rmatrix, size_t LdimX, size_t LdimY, size_t RdimX, size_t RdimY, bool Unified_memory = false)
@@ -133,26 +133,56 @@ template <typename T>
     return size;
 }
 
+template <typename T>
+/*__host__*/ void matAllocFill(T *matA, T *matB, T *matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC, bool Unified_memory = false)
+{
+    size_t size_A = dimsA.x * dimsA.y;
+    size_t mem_size_A = sizeof(T) * size_A;
+
+    size_t size_B = dimsB.x * dimsB.y;
+    size_t mem_size_B = sizeof(T) * size_B;
+
+    dimsC = dim3(dimsB.x, dimsA.y, 1);
+    size_t mem_size_C = dimsC.x * dimsC.y * sizeof(T);
+
+    // If Unified memory is enable
+    if (Unified_memory == false) {
+        matA = (T *)malloc(mem_size_A);
+        matB = (T *)malloc(mem_size_B);
+        matC = (T *)malloc(mem_size_C);
+        // cudaMallocHost((void**)Lmatrix, pt_size);
+        // cudaMallocHost((void**)Rmatrix, pt_size);
+    } else {
+        cudaMallocManaged(reinterpret_cast<void **>(&matA), mem_size_A); // cudaMemAttachHost
+        cudaMallocManaged(reinterpret_cast<void **>(&matB), mem_size_B); // cudaMemAttachHost
+        cudaMallocManaged(reinterpret_cast<void **>(&matC), mem_size_C); // cudaMemAttachHost
+    }
+    if (matA == NULL || matB == NULL || matC == NULL) {
+        fprintf(stderr, "Failed to allocate host matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 void device()
 {
     int nDevices;
     cudaGetDeviceCount(&nDevices);
-    if(nDevices == 0) {
+    if (nDevices == 0) {
         printf("Cuda device not found.\n");
         return;
     }
 
-    printf("Found %i Cuda device(s).\n",nDevices);
+    printf("Found %i Cuda device(s).\n", nDevices);
 
     for (int i = 0; i < nDevices; i++) {
         cudaDeviceProp prop;
         cudaGetDeviceProperties(&prop, i);
         printf("Device Number: %d\n", i);
         printf("  Device name: %s\n", prop.name);
-        printf("  Memory Clock Rate (KHz): %d\n", prop.memoryClockRate);
+        printf("  Memory Clock Rate (MHz): %d\n", prop.memoryClockRate / 1000);
         printf("  Memory Bus Width (bits): %d\n", prop.memoryBusWidth);
         printf("  Peak Memory Bandwidth (GB/s): %f\n", 2.0 * prop.memoryClockRate * (prop.memoryBusWidth / 8) / 1.0e6);
-        printf("  totalGlobablMem: %lu\n", (unsigned long)prop.totalGlobalMem);
+        printf("  totalGlobablMem (GB): %lu\n", (unsigned long)prop.totalGlobalMem);
         printf("  sharedMemPerBlock: %i\n", prop.sharedMemPerBlock);
         printf("  regsPerBlock: %i\n", prop.regsPerBlock);
         printf("  warpSize: %i\n", prop.warpSize);
@@ -204,7 +234,34 @@ int main(void)
 
     printf("Enter m n n k :\n");
 
-    scanf("%d %d %d %d", &Left_matrix_x, &Left_matrix_y, &Right_matrix_x, &Right_matrix_y); // input matrix dimensions are taken
+    dim3 dimsA(5 * 2 * BLOCK_SIZE, 5 * 2 * BLOCK_SIZE, 1);
+    dim3 dimsB(5 * 4 * BLOCK_SIZE, 5 * 2 * BLOCK_SIZE, 1);
+    dim3 dimsC(5 * 4 * BLOCK_SIZE, 5 * 2 * BLOCK_SIZE, 1);
+
+    // scanf("%d %d %d %d", &Left_matrix_x, &Left_matrix_y, &Right_matrix_x, &Right_matrix_y); // input matrix dimensions are taken
+    scanf("%d %d %d %d", &dimsA.x, &dimsA.y, &dimsB.x, &dimsB.y);
+
+    if (dimsA.x != dimsB.y) {
+        printf("Error: outer matrix dimensions must be equal. (%d != %d)\n", dimsA.x, dimsB.y);
+        exit(EXIT_FAILURE);
+    }
+
+    float *MatA, *MatB, *MatC;
+
+    matAllocFill<float>(MatA, MatB, MatC, dimsA, dimsB, dimsC);
+    cudaMemPrefetchAsync(MatA, dimsA.x * dimsA.y * sizeof(float), 0, stream);
+    cudaMemPrefetchAsync(MatB, dimsB.x * dimsB.y * sizeof(float), 0, stream);
+
+    printf("MatrixA(%d,%d), MatrixB(%d,%d), MatrixC(%d,%d)\n", dimsA.x, dimsA.y, dimsB.x, dimsB.y, dimsC.x, dimsC.y);
+
+    // Setup execution parameters
+    dim3 threads(BLOCK_SIZE, BLOCK_SIZE);
+    dim3 grid(dimsB.x / threads.x, dimsA.y / threads.y);
+    my::cuda::MatrixMulCUDA(grid, threads, stream, MatA, MatB, MatC, dimsA.x, dimsB.x);
+
+    // my::cuda::matrixMultiplyShared(grid, threads, stream, MatA, MatB, MatB, 100);
+    //<<<grid, threads, 0, stream>>>(d_C, d_A, d_B, dimsA.x, dimsB.x);
+    return 0;
 
     // return dimention of Matc to store result
     int dim = allocFill<float>(

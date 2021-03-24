@@ -20,6 +20,7 @@
 //          http://oz.nthu.edu.tw/~d947207/NVIDIA/copy3D/Matrix_transpose_post.pdf
 //          https://on-demand.gputechconf.com/gtc/2017/presentation/s7122-stephen-jones-cuda-optimization-tips-tricks-and-techniques.pdf
 //          https://github.com/NVIDIA/cuda-samples/blob/v11.2/Samples/matrixMul/matrixMul.cu
+//          https://github.com/NVIDIA/cuda-samples/blob/master/Samples/matrixMul/matrixMul.cu
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -50,19 +51,19 @@ __global__ void matrixAdd_kernel(int *matA, int *matB, int *matC, size_t N)
     //__syncthreads();
 }
 
-void my::cuda::matrixAdd(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
+void my::cuda::matrixAdd(dim3 &gridSize, dim3 &blockSize, int *a, int *b, int *c, size_t n)
 {
     matrixAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-void my::cuda::matrixAdd(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
+void my::cuda::matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
 {
     matrixAdd_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
 }
 
-extern "C" void matrixAdd(dim3 gridSize, dim3 blockSize, int *a, int *b, int *c, size_t n)
+extern "C" void matrixAdd(dim3 *gridSize, dim3 *blockSize, int *a, int *b, int *c, size_t n)
 {
-    matrixAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    matrixAdd_kernel<<<*gridSize, *blockSize>>>(a, b, c, n);
 }
 
 __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *res, int dim)
@@ -104,19 +105,19 @@ __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *re
     res[row * dim + col] = temp;
 }
 
-void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+void my::cuda::matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-void my::cuda::matrixMultiplyShared(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
+void my::cuda::matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
 }
 
-extern "C" void matrixMultiplyShared(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+extern "C" void matrixMultiplyShared(dim3 *gridSize, dim3 *blockSize, float *a, float *b, float *c, int n)
 {
-    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    matrixMultiplyShared_kernel<<<*gridSize, *blockSize>>>(a, b, c, n);
 }
 
 __global__ void sharedABMultiply_kernel(float *a, float *b, float *c, int N)
@@ -134,19 +135,19 @@ __global__ void sharedABMultiply_kernel(float *a, float *b, float *c, int N)
     c[row * N + col] = sum;
 }
 
-void my::cuda::sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+void my::cuda::sharedABMultiply(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int n)
 {
     sharedABMultiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-void my::cuda::sharedABMultiply(dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
+void my::cuda::sharedABMultiply(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
 {
     sharedABMultiply_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
 }
 
-extern "C" void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int n)
+extern "C" void sharedABMultiply(dim3 *gridSize, dim3 *blockSize, float *a, float *b, float *c, int n)
 {
-    sharedABMultiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
+    sharedABMultiply_kernel<<<*gridSize, *blockSize>>>(a, b, c, n);
 }
 
 __global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
@@ -176,24 +177,109 @@ __global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int AR
 }
 
 void my::cuda::matrixMultiplyShared(
-    dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
+    dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
-    cudaStreamSynchronize(0);
 }
 
 void my::cuda::matrixMultiplyShared(
-    dim3 gridSize, dim3 blockSize, cudaStream_t stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
+    dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
 }
 
 /*
-extern "C" void sharedABMultiply(dim3 gridSize, dim3 blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
+extern "C" void sharedABMultiply(dim3 *gridSize, dim3 *blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int
+CCols)
 {
-    matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
+    matrixMultiplyShared_kernel<<<*gridSize, *blockSize>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
     // cudaStreamSynchronize(0);
 }*/
+
+__global__ void MatrixMulCUDA_kernel(float *C, float *A, float *B, int wA, int wB)
+{
+    // Block index
+    int bx = blockIdx.x;
+    int by = blockIdx.y;
+
+    // Thread index
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+
+    // Index of the first sub-matrix of A processed by the block
+    int aBegin = wA * BLOCK_SIZE * by;
+
+    // Index of the last sub-matrix of A processed by the block
+    int aEnd = aBegin + wA - 1;
+
+    // Step size used to iterate through the sub-matrices of A
+    int aStep = BLOCK_SIZE;
+
+    // Index of the first sub-matrix of B processed by the block
+    int bBegin = BLOCK_SIZE * bx;
+
+    // Step size used to iterate through the sub-matrices of B
+    int bStep = BLOCK_SIZE * wB;
+
+    // Csub is used to store the element of the block sub-matrix
+    // that is computed by the thread
+    float Csub = 0;
+
+    // Loop over all the sub-matrices of A and B
+    // required to compute the block sub-matrix
+    for (int a = aBegin, b = bBegin; a <= aEnd; a += aStep, b += bStep) {
+        // Declaration of the shared memory array As used to
+        // store the sub-matrix of A
+        __shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
+
+        // Declaration of the shared memory array Bs used to
+        // store the sub-matrix of B
+        __shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
+
+        // Load the matrices from device memory
+        // to shared memory; each thread loads
+        // one element of each matrix
+        As[ty][tx] = A[a + wA * ty + tx];
+        Bs[ty][tx] = B[b + wB * ty + tx];
+
+        // Synchronize to make sure the matrices are loaded
+        __syncthreads();
+
+        // Multiply the two matrices together;
+        // each thread computes one element
+        // of the block sub-matrix
+#pragma unroll
+
+        for (int k = 0; k < BLOCK_SIZE; ++k) {
+            Csub += As[ty][k] * Bs[k][tx];
+        }
+
+        // Synchronize to make sure that the preceding
+        // computation is done before loading two new
+        // sub-matrices of A and B in the next iteration
+        __syncthreads();
+    }
+
+    // Write the block sub-matrix to device memory;
+    // each thread writes one element
+    int c = wB * BLOCK_SIZE * by + BLOCK_SIZE * bx;
+    C[c + wB * ty + tx] = Csub;
+}
+
+void my::cuda::MatrixMulCUDA(dim3 &grid, dim3 &threads, float *A, float *B, float *C, size_t wA, size_t wB)
+{
+    MatrixMulCUDA_kernel<<<grid, threads>>>(C, A, B, wA, wB);
+}
+
+void my::cuda::MatrixMulCUDA(dim3 &grid, dim3 &threads, cudaStream_t stream, float *A, float *B, float *C, size_t wA, size_t wB)
+{
+    MatrixMulCUDA_kernel<<<grid, threads, 0, stream>>>(C, A, B, wA, wB);
+}
+
+extern "C" void MatrixMulCUDA(dim3 *grid, dim3 *threads, float *A, float *B, float *C, size_t wA, size_t wB)
+{
+    MatrixMulCUDA_kernel<<<*grid, *threads>>>(C, A, B, wA, wB);
+}
 
 #define DATAXSIZE 100
 #define DATAYSIZE 100
@@ -217,6 +303,7 @@ __global__ void set(int a[][100][100])
 
 void my::cuda::matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][DATAYSIZE][DATAXSIZE])
 {
+    set<<<gridSize, blockSize>>>(mat);
 }
 
 /**
@@ -237,19 +324,19 @@ __global__ void matFill_kernel(int *matA, int value, size_t sizeAX, size_t sizeA
     }
 }
 
-void my::cuda::matFill(dim3 gridSize, dim3 blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY)
+void my::cuda::matFill(dim3 &gridSize, dim3 &blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY)
 {
     matFill_kernel<<<gridSize, blockSize>>>(matA, value, sizeAX, sizeAY);
 }
 
-void my::cuda::matFill(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *matA, int value, size_t sizeAX, size_t sizeAY)
+void my::cuda::matFill(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *matA, int value, size_t sizeAX, size_t sizeAY)
 {
     matFill_kernel<<<gridSize, blockSize, 0, stream>>>(matA, value, sizeAX, sizeAY);
 }
 
-extern "C" void matFill(dim3 gridSize, dim3 blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY)
+extern "C" void matFill(dim3 *gridSize, dim3 *blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY)
 {
-    matFill_kernel<<<gridSize, blockSize>>>(matA, value, sizeAX, sizeAY);
+    matFill_kernel<<<*gridSize, *blockSize>>>(matA, value, sizeAX, sizeAY);
 }
 
 /**
@@ -279,17 +366,17 @@ __global__ void matCopy_kernel(int *matB, int *matA, int width, int height)
     }
 }
 
-void my::cuda::matCopy(dim3 gridSize, dim3 blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
+void my::cuda::matCopy(dim3 &gridSize, dim3 &blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
 {
     matCopy_kernel<<<gridSize, blockSize>>>(matA, matB, sizeAX, sizeAY);
 }
 
-void my::cuda::matCopy(dim3 gridSize, dim3 blockSize, cudaStream_t stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
+void my::cuda::matCopy(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
 {
     matCopy_kernel<<<gridSize, blockSize, 0, stream>>>(matA, matB, sizeAX, sizeAY);
 }
 
-extern "C" void matCopy(dim3 gridSize, dim3 blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
+extern "C" void matCopy(dim3 *gridSize, dim3 *blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
 {
-    matCopy_kernel<<<gridSize, blockSize>>>(matA, matB, sizeAX, sizeAY);
+    matCopy_kernel<<<*gridSize, *blockSize>>>(matA, matB, sizeAX, sizeAY);
 }

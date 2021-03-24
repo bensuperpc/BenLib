@@ -32,6 +32,7 @@ __global__ void matrixMultiplyShared_kernel(float *left, float *right, float *re
 __global__ void matrixMultiplyShared_kernel(float *A, float *B, float *C, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 
 __global__ void sharedABMultiply_kernel(float *a, float *b, float *c, int N);
+__global__ void MatrixMulCUDA_kernel(float *C, float *A, float *B, int wA, int wB);
 
 __global__ void matFill_kernel(int *matA, int value, size_t sizeAX, size_t sizeAY);
 __global__ void matCopy_kernel(int *matB, int *matA, int width, int height);
