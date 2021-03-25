@@ -51,19 +51,20 @@ __global__ void CRC32_byte_tableless_kernel(uchar *data, ulong length, uint prev
     *resultCrc32 = ~crc;
 }
 
-void my::cuda::CRC32_byte_tableless(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::CRC32_byte_tableless(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    CRC32_byte_tableless_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    CRC32_byte_tableless_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
-void my::cuda::CRC32_byte_tableless(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::CRC32_byte_tableless(
+    const dim3 &grid, const dim3 &threads, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    CRC32_byte_tableless_kernel<<<gridSize, blockSize, 0, stream>>>(data, length, previousCrc32, resultCrc32);
+    CRC32_byte_tableless_kernel<<<grid, threads, 0, stream>>>(data, length, previousCrc32, resultCrc32);
 }
 
-extern "C" void CRC32_byte_tableless(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+extern "C" void CRC32_byte_tableless(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    CRC32_byte_tableless_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    CRC32_byte_tableless_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
 /**
@@ -88,19 +89,20 @@ __global__ void JAMCRC_byte_tableless_kernel(uchar *data, ulong length, uint pre
     *resultCrc32 = crc;
 }
 
-void my::cuda::JAMCRC_byte_tableless(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::JAMCRC_byte_tableless(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    JAMCRC_byte_tableless_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    JAMCRC_byte_tableless_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
-void my::cuda::JAMCRC_byte_tableless(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::JAMCRC_byte_tableless(
+    const dim3 &grid, const dim3 &threads, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    JAMCRC_byte_tableless_kernel<<<gridSize, blockSize, 0, stream>>>(data, length, previousCrc32, resultCrc32);
+    JAMCRC_byte_tableless_kernel<<<grid, threads, 0, stream>>>(data, length, previousCrc32, resultCrc32);
 }
 
-extern "C" void JAMCRC_byte_tableless(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+extern "C" void JAMCRC_byte_tableless(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    JAMCRC_byte_tableless_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    JAMCRC_byte_tableless_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
 /**
@@ -125,19 +127,20 @@ __global__ void CRC32_byte_tableless2_kernel(uchar *data, ulong length, uint pre
     *resultCrc32 = ~crc;
 }
 
-void my::cuda::CRC32_byte_tableless2(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::CRC32_byte_tableless2(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    CRC32_byte_tableless2_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    CRC32_byte_tableless2_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
-void my::cuda::CRC32_byte_tableless2(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::CRC32_byte_tableless2(
+    const dim3 &grid, const dim3 &threads, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    CRC32_byte_tableless2_kernel<<<gridSize, blockSize, 0, stream>>>(data, length, previousCrc32, resultCrc32);
+    CRC32_byte_tableless2_kernel<<<grid, threads, 0, stream>>>(data, length, previousCrc32, resultCrc32);
 }
 
-extern "C" void CRC32_byte_tableless2(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+extern "C" void CRC32_byte_tableless2(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    CRC32_byte_tableless2_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    CRC32_byte_tableless2_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
 /**
@@ -162,17 +165,18 @@ __global__ void JAMCRC_byte_tableless2_kernel(uchar *data, ulong length, uint pr
     *resultCrc32 = crc;
 }
 
-void my::cuda::JAMCRC_byte_tableless2(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::JAMCRC_byte_tableless2(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    JAMCRC_byte_tableless2_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    JAMCRC_byte_tableless2_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
-void my::cuda::JAMCRC_byte_tableless2(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+void my::cuda::JAMCRC_byte_tableless2(
+    const dim3 &grid, const dim3 &threads, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    JAMCRC_byte_tableless2_kernel<<<gridSize, blockSize, 0, stream>>>(data, length, previousCrc32, resultCrc32);
+    JAMCRC_byte_tableless2_kernel<<<grid, threads, 0, stream>>>(data, length, previousCrc32, resultCrc32);
 }
 
-extern "C" void JAMCRC_byte_tableless2(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
+extern "C" void JAMCRC_byte_tableless2(const dim3 &grid, const dim3 &threads, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
-    JAMCRC_byte_tableless2_kernel<<<gridSize, blockSize>>>(data, length, previousCrc32, resultCrc32);
+    JAMCRC_byte_tableless2_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }

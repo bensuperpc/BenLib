@@ -30,13 +30,13 @@
 #    define BLOCK_SIZE 16
 #endif
 
-void matrixAdd(dim3 *gridSize, dim3 *blockSize, int *a, int *b, int *c, size_t n);
+void matrixAdd(const dim3 *grid, const dim3 *threads, int *a, int *b, int *c, size_t n);
 
-void matrixMultiplyShared(dim3 *gridSize, dim3 *blockSize, float *a, float *b, float *c, int n);
+void matrixMultiplyShared(const dim3 *grid, const dim3 *threads, float *a, float *b, float *c, int n);
 
-void sharedABMultiply(dim3 *gridSize, dim3 *blockSize, float *a, float *b, float *c, int n);
+void sharedABMultiply(const dim3 *grid, const dim3 *threads, float *a, float *b, float *c, int n);
 
-void MatrixMulCUDA(dim3 *grid, dim3 *threads, float *A, float *B, float *C, size_t wA, size_t wB);
+void MatrixMulCUDA(const dim3 *grid, const dim3 *threads, float *A, float *B, float *C, size_t wA, size_t wB);
 
-void matFill(dim3 *gridSize, dim3 *blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY);
+void matFill(const dim3 *grid, const dim3 *threads, int *matA, int value, size_t sizeAX, size_t sizeAY);
 #endif

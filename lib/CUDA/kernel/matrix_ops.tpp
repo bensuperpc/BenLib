@@ -34,7 +34,7 @@
 #include <matrix_ops.hpp>
 #include <stdio.h>
 
-template <typename T> void my::cuda::copy(T ***B_, int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
+template <typename T> void my::cuda::copy(T ***B_, int ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_)
 {
 #if defined(_OPENMP)
 #    pragma omp parallel
@@ -53,7 +53,7 @@ template <typename T> void my::cuda::copy(T ***B_, int ***A_, size_t sizeX_, siz
 #endif
 }
 
-template <typename T> void my::cuda::copy(T **B_, int **A_, size_t sizeX_, size_t sizeY_)
+template <typename T> void my::cuda::copy(T **B_, int **A_, const size_t sizeX_, const size_t sizeY_)
 {
 #if defined(_OPENMP)
 #    pragma omp parallel
@@ -70,7 +70,7 @@ template <typename T> void my::cuda::copy(T **B_, int **A_, size_t sizeX_, size_
 #endif
 }
 
-template <typename T> void my::cuda::display(T ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
+template <typename T> void my::cuda::display(T ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_)
 {
     for (size_t i = 0; i < sizeZ_; i++) {
         std::cout << "Depth: " << i << "\n";
@@ -85,7 +85,7 @@ template <typename T> void my::cuda::display(T ***A_, size_t sizeX_, size_t size
     std::cout << std::endl;
 }
 
-template <typename T> void my::cuda::display(T **A_, size_t sizeX_, size_t sizeY_)
+template <typename T> void my::cuda::display(T **A_, const size_t sizeX_, const size_t sizeY_)
 {
     for (size_t i = 0; i < sizeY_; i++) {
         for (size_t j = 0; j < sizeX_; j++) {
@@ -96,7 +96,7 @@ template <typename T> void my::cuda::display(T **A_, size_t sizeX_, size_t sizeY
     std::cout << std::endl;
 }
 
-template <typename T> void my::cuda::display(T *A_, size_t sizeX_)
+template <typename T> void my::cuda::display(T *A_, const size_t sizeX_)
 {
     for (size_t j = 0; j < sizeX_; j++) {
         std::cout << A_[j] << " ";
@@ -104,7 +104,7 @@ template <typename T> void my::cuda::display(T *A_, size_t sizeX_)
     std::cout << std::endl;
 }
 
-template <typename T> T ****my::cuda::aalloc(size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_)
+template <typename T> T ****my::cuda::aalloc(const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_, const size_t sizeW_)
 {
     T ****A_ = new T ***[sizeW_];
     /*
@@ -124,7 +124,7 @@ template <typename T> T ****my::cuda::aalloc(size_t sizeX_, size_t sizeY_, size_
     return A_;
 }
 
-template <typename T> T ***my::cuda::aalloc(size_t sizeX_, size_t sizeY_, size_t sizeZ_)
+template <typename T> T ***my::cuda::aalloc(const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_)
 {
     T ***A_ = new T **[sizeZ_];
     for (size_t i = 0; i < sizeZ_; i++) {
@@ -136,7 +136,7 @@ template <typename T> T ***my::cuda::aalloc(size_t sizeX_, size_t sizeY_, size_t
     return A_;
 }
 
-template <typename T> T **my::cuda::aalloc(size_t sizeX_, size_t sizeY_)
+template <typename T> T **my::cuda::aalloc(const size_t sizeX_, const size_t sizeY_)
 {
     T **A_ = new T *[sizeY_];
     for (size_t i = 0; i < sizeY_; i++) {
@@ -145,14 +145,14 @@ template <typename T> T **my::cuda::aalloc(size_t sizeX_, size_t sizeY_)
     return A_;
 }
 
-template <typename T> T *my::cuda::aalloc(size_t sizeX_)
+template <typename T> T *my::cuda::aalloc(const size_t sizeX_)
 {
     T *A_ = new T[sizeX_];
     // if (A_ == NULL) { perror("malloc failure"); exit(EXIT_FAILURE); };
     return A_;
 }
 
-template <typename T> void my::cuda::adealloc(T ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_)
+template <typename T> void my::cuda::adealloc(T ****A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_, const size_t sizeW_)
 {
     for (size_t i = 0; i < sizeW_; i++) {
         for (size_t j = 0; j < sizeZ_; j++) {
@@ -165,7 +165,7 @@ template <typename T> void my::cuda::adealloc(T ****A_, size_t sizeX_, size_t si
     delete[] A_;
 }
 
-template <typename T> void my::cuda::adealloc(T ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_)
+template <typename T> void my::cuda::adealloc(T ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_)
 {
     for (size_t i = 0; i < sizeZ_; i++) {
         for (size_t j = 0; j < sizeY_; j++) {
@@ -176,7 +176,7 @@ template <typename T> void my::cuda::adealloc(T ***A_, size_t sizeX_, size_t siz
     delete[] A_;
 }
 
-template <typename T> void my::cuda::adealloc(T **A_, size_t sizeX_, size_t sizeY_)
+template <typename T> void my::cuda::adealloc(T **A_, const size_t sizeX_, const size_t sizeY_)
 {
     for (size_t i = 0; i < sizeY_; i++)
         delete[] A_[i];
@@ -184,7 +184,7 @@ template <typename T> void my::cuda::adealloc(T **A_, size_t sizeX_, size_t size
     delete[] A_;
 }
 
-template <typename T> void my::cuda::adealloc(T *A_, size_t sizeX_)
+template <typename T> void my::cuda::adealloc(T *A_, const size_t sizeX_)
 {
     delete[] A_;
 }
@@ -227,13 +227,14 @@ template <typename T> int my::cuda::matRandFill(T **matA, dim3 &dimsA)
     return 0;
 }
 
-template <typename T> int my::cuda::mMatAlloc(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC)
+template <typename T> int my::cuda::mMatAlloc(T **matA, T **matB, T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC)
 {
     return my::cuda::mMatAlloc<T>(&(*matA), &(*matB), &(*matC), dimsA, dimsB, dimsC, true, false, true);
 }
 
 template <typename T>
-int my::cuda::mMatAlloc(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC, bool Unified_memory, bool Pinned_memory, bool set_memset)
+int my::cuda::mMatAlloc(
+    T **matA, T **matB, T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset)
 {
     if (Unified_memory == true && Pinned_memory == true) {
         fprintf(stderr, "You can't activate Unified_memory and Pinned_memory at same time!\n");
@@ -273,6 +274,39 @@ int my::cuda::mMatAlloc(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, 
     if (set_memset == true) {
         memset(*matA, 0, mem_size_A);
         memset(*matB, 0, mem_size_B);
+        memset(*matC, 0, mem_size_C);
+    }
+    return 0;
+}
+
+template <typename T>
+int my::cuda::mMatAlloc(
+    T **matC, const dim3 &dimsA, const dim3 &dimsB, const dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset)
+{
+    if (Unified_memory == true && Pinned_memory == true) {
+        fprintf(stderr, "You can't activate Unified_memory and Pinned_memory at same time!\n");
+        return 1;
+    }
+
+    dimsC = dim3(dimsB.x, dimsA.y, 1);
+    size_t mem_size_C = dimsC.x * dimsC.y * sizeof(T);
+
+    // If Unified memory is enable
+    if (Unified_memory == true) {
+        gpuErrchk(cudaMallocManaged(reinterpret_cast<void **>(matC), mem_size_C)); // Unified memory
+    } else if (Pinned_memory == true) {
+        gpuErrchk(cudaMallocHost((void **)&(*matC), mem_size_C)); // host pinned
+    } else {
+        *matC = reinterpret_cast<T *>(malloc(mem_size_C)); // host pageable
+    }
+
+    if (*matC == NULL) {
+        fprintf(stderr, "Failed to allocate matrix!\n");
+        return 1;
+    }
+
+    // set all value to 0
+    if (set_memset == true) {
         memset(*matC, 0, mem_size_C);
     }
     return 0;

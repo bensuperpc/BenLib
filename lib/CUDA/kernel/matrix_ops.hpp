@@ -62,19 +62,19 @@ namespace my
 namespace cuda
 {
 
-template <typename T> void copy(T ***B_, int ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-template <typename T> void copy(T **B_, int **A_, size_t sizeX_, size_t sizeY_);
-template <typename T> void display(T ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-template <typename T> void display(T **A_, size_t sizeX_, size_t sizeY_);
-template <typename T> void display(T *A_, size_t sizeX_);
-template <typename T> T ****aalloc(size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_);
-template <typename T> T ***aalloc(size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-template <typename T> T **aalloc(size_t sizeX_, size_t sizeY_);
-template <typename T> T *aalloc(size_t sizeX_);
-template <typename T> void adealloc(T ****A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_, size_t sizeW_);
-template <typename T> void adealloc(T ***A_, size_t sizeX_, size_t sizeY_, size_t sizeZ_);
-template <typename T> void adealloc(T **A_, size_t sizeX_, size_t sizeY_);
-template <typename T> void adealloc(T *A_, size_t sizeX_);
+template <typename T> void copy(T ***B_, int ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_);
+template <typename T> void copy(T **B_, int **A_, const size_t sizeX_, const size_t sizeY_);
+template <typename T> void display(T ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_);
+template <typename T> void display(T **A_, const size_t sizeX_, const size_t sizeY_);
+template <typename T> void display(T *A_, const size_t sizeX_);
+template <typename T> T ****aalloc(const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_, const size_t sizeW_);
+template <typename T> T ***aalloc(const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_);
+template <typename T> T **aalloc(const size_t sizeX_, const size_t sizeY_);
+template <typename T> T *aalloc(const size_t sizeX_);
+template <typename T> void adealloc(T ****A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_, const size_t sizeW_);
+template <typename T> void adealloc(T ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_);
+template <typename T> void adealloc(T **A_, const size_t sizeX_, const size_t sizeY_);
+template <typename T> void adealloc(T *A_, const size_t sizeX_);
 template <typename T> void adealloc(T *A_);
 
 template <typename T> void print_matrices(T *matrix, char *file_Name, T x_dim, size_t y_dim, size_t dim);
@@ -82,8 +82,12 @@ template <typename T> void print_matrices(T *matrix, char *file_Name, T x_dim, s
 template <typename T> int matRandFill(T **matA, dim3 &dimsA);
 
 template <typename T>
-int mMatAlloc(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC, bool Unified_memory, bool Pinned_memory, bool set_memset);
-template <typename T> int mMatAlloc(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC);
+int mMatAlloc(T **matA, T **matB, T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory,
+    const bool set_memset);
+template <typename T> int mMatAlloc(T **matA, T **matB, T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC);
+
+template <typename T>
+int mMatAlloc(T **matC, const dim3 &dimsA, const dim3 &dimsB, const dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset);
 } // namespace cuda
 } // namespace my
 

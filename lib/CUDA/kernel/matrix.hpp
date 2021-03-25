@@ -63,28 +63,29 @@ namespace cuda
  *  Kernel Functions
  */
 
-void matrixAdd(dim3 &gridSize, dim3 &blockSize, int *a, int *b, int *c, size_t n);
-// void matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
-void matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *a, int *b, int *c, size_t n);
+void matrixAdd(const dim3 &grid, const dim3 &threads, int *a, int *b, int *c, size_t n);
+// void matrixAdd(const dim3 &grid, const dim3 &threads, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
+void matrixAdd(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, int *a, int *b, int *c, size_t n);
 
-void matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int n);
-void matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int n);
+void matrixMultiplyShared(const dim3 &grid, const dim3 &threads, float *a, float *b, float *c, int n);
+void matrixMultiplyShared(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, float *a, float *b, float *c, int n);
 
+void matrixMultiplyShared(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols,
+    int CRows, int CCols);
 void matrixMultiplyShared(
-    dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
-void matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
-void matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][100][100]);
+    const dim3 &grid, const dim3 &threads, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
+void matrixMut3D(dim3 grid, dim3 threads, int mat[][100][100]);
 
-void sharedABMultiply(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int n);
-void sharedABMultiply(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int n);
+void sharedABMultiply(const dim3 &grid, const dim3 &threads, float *a, float *b, float *c, int n);
+void sharedABMultiply(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, float *a, float *b, float *c, int n);
 
-void MatrixMulCUDA(dim3 &grid, dim3 &threads, float *A, float *B, float *C, size_t wA, size_t wB);
-void MatrixMulCUDA(dim3 &grid, dim3 &threads, cudaStream_t &stream, float *A, float *B, float *C, size_t wA, size_t wB);
+void MatrixMulCUDA(const dim3 &grid, const dim3 &threads, float *A, float *B, float *C, size_t wA, size_t wB);
+void MatrixMulCUDA(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, float *A, float *B, float *C, size_t wA, size_t wB);
 
-void matFill(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *matA, int value, size_t sizeAX, size_t sizeAY);
-void matFill(dim3 &gridSize, dim3 &blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY);
-void matCopy(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY);
-void matCopy(dim3 &gridSize, dim3 &blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY);
+void matFill(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, int *matA, int value, const size_t sizeAX, const size_t sizeAY);
+void matFill(const dim3 &grid, const dim3 &threads, int *matA, int value, const size_t sizeAX, const size_t sizeAY);
+void matCopy(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, int *matA, int *matB, const size_t sizeAX, const size_t sizeAY);
+void matCopy(const dim3 &grid, const dim3 &threads, int *matA, int *matB, const size_t sizeAX, const size_t sizeAY);
 
 /*
  *  CPU Functions
@@ -105,25 +106,28 @@ template <typename T> void reshape4D(const T *a, T *b, const size_t xMax, const 
 
 // 2D Flat Matrix
 template <typename T> void matMultFlat(T *matA, T *matB, T *matC, const size_t m);
-template <typename T> void matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY);
+template <typename T>
+void matMultFlat(T *matA, const size_t sizeAX, const size_t sizeAY, T *matB, size_t sizeBX, size_t sizeBY, T *matC, size_t sizeCX, size_t sizeCY);
 // 3D Flat Matrix
 template <typename T>
-void matMultFlat(T *matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T *matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T *matC, size_t sizeCX,
+void matMultFlat(T *matA, const size_t sizeAX, const size_t sizeAY, size_t sizeAZ, T *matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T *matC, size_t sizeCX,
     size_t sizeCY, size_t sizeCZ);
 
 // 2D Matrix
-template <typename T> void matMult(T **matA, T **matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY);
-template <typename T> void matMult(T **A_, T **B_, T **C_, size_t sizeAX, size_t sizeAY, size_t sizeBX, size_t sizeBY);
+template <typename T> void matMult(T **matA, T **matB, T ****matC, const size_t sizeAX, const size_t sizeAY, size_t sizeBX, size_t sizeBY);
+template <typename T> void matMult(T **A_, T **B_, T **C_, const size_t sizeAX, const size_t sizeAY, size_t sizeBX, size_t sizeBY);
 // 3D Matrix
-template <typename T> void matMult(T ***matA, T ***matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeBX, size_t sizeBY, size_t sizeBZ);
-template <typename T> void matMult(T ***matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, T ***matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T ***matC);
+template <typename T>
+void matMult(T ***matA, T ***matB, T ****matC, const size_t sizeAX, const size_t sizeAY, size_t sizeAZ, size_t sizeBX, size_t sizeBY, size_t sizeBZ);
+template <typename T>
+void matMult(T ***matA, const size_t sizeAX, const size_t sizeAY, size_t sizeAZ, T ***matB, size_t sizeBX, size_t sizeBY, size_t sizeBZ, T ***matC);
 // 4D Matrix
 template <typename T>
-void matMult(
-    T ****matA, T ****matB, T ****matC, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, size_t sizeBX, size_t sizeBY, size_t sizeBZ, size_t sizeBW);
+void matMult(T ****matA, T ****matB, T ****matC, const size_t sizeAX, const size_t sizeAY, size_t sizeAZ, size_t sizeAW, size_t sizeBX, size_t sizeBY,
+    size_t sizeBZ, size_t sizeBW);
 template <typename T>
-void matMult(
-    T ****matA, size_t sizeAX, size_t sizeAY, size_t sizeAZ, size_t sizeAW, T ****matB, size_t sizeBX, size_t sizeBY, size_t sizeBW, size_t sizeBZ, T ****matC);
+void matMult(T ****matA, const size_t sizeAX, const size_t sizeAY, size_t sizeAZ, size_t sizeAW, T ****matB, size_t sizeBX, size_t sizeBY, size_t sizeBW,
+    size_t sizeBZ, T ****matC);
 
 } // namespace cuda
 } // namespace my
