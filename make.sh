@@ -13,13 +13,16 @@
 #
 # ==============================================================================
 
+#https://developers.redhat.com/blog/2019/05/15/2-tips-to-make-your-c-projects-compile-3-times-faster/
+
 mkdir -p build
 cd build
 #cmake .. && make -j$(nproc)
 #Release/Debug/Coverage/MinSizeRel
 #-DCMAKE_BUILD_TYPE=Release
 #-DENABLE_CODE_ANALYSIS=O
-cmake $@ -G Ninja ..
+cmake $@ -G Ninja .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+-DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_BUILD_TYPE=Release
 
 ninja
 ctest --output-on-failure -j$(nproc) #--extra-verbose

@@ -9,12 +9,13 @@
 #                                                            #
 #  BenLib, 2020                                              #
 #  Created: 19, March, 2020                                  #
-#  Modified: 16, March, 2021                                 #
+#  Modified: 25, March, 2021                                 #
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:  https://medium.com/@mikkelwilson/opencv-with-cuda-acceleration-test-e9f7155e1c84                                                   #
 #           https://onqtam.com/programming/2019-12-20-pch-unity-cmake-3-16/
 #           https://stackoverflow.com/questions/61548932/force-cmake-to-rebuild-precompiled-headers
+#           https://www.virag.si/2015/07/use-ccache-with-cmake-for-faster-compilation/
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -30,7 +31,6 @@ project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Release")
-    set(CMAKE_BUILD_TYPE "Release")
 else()
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif()
@@ -56,9 +56,16 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 # Have cmake create a compile database
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+#set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+#set(CMAKE_C_COMPILER_LAUNCHER ccache)
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
 #set(Var1 "This is variable 1" PARENT_SCOPE)
+
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) # Less useful to do it for linking, see edit2
+endif(CCACHE_FOUND)
 
 include(CheckLanguage)
 check_language(CUDA)
