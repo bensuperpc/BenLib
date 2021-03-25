@@ -56,7 +56,17 @@ namespace my
 {
 namespace cuda
 {
+void CRC32_byte_tableless(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+void CRC32_byte_tableless(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
 
+void JAMCRC_byte_tableless(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+void JAMCRC_byte_tableless(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+
+void CRC32_byte_tableless2(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+void CRC32_byte_tableless2(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+
+void JAMCRC_byte_tableless2(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+void JAMCRC_byte_tableless2(dim3 &gridSize, dim3 &blockSize, uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
 } // namespace cuda
 } // namespace my
 

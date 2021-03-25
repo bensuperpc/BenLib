@@ -24,14 +24,17 @@
 
 #define POLY 0xEDB88320
 
+// To use same data type to OpenCL
 using uchar = unsigned char;
 using ulong = unsigned long;
 
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-__global__ void JAMCRC_byte_tableless(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+__global__ void CRC32_byte_tableless_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+__global__ void JAMCRC_byte_tableless_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
 
-__global__ void CRC32_byte_tableless2(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+__global__ void CRC32_byte_tableless2_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+__global__ void JAMCRC_byte_tableless2_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
 
 #endif

@@ -30,6 +30,7 @@
 #           https://gitlab.kitware.com/cmake/cmake/-/issues/16586
 #           https://releases.llvm.org/6.0.0/docs/CompileCudaWithLLVM.html
 #           https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
+#           https://stackoverflow.com/questions/53256405/howto-pass-flag-to-nvcc-compiler-in-cmake
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -49,34 +50,18 @@ endif()
 
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
-find_package(CUDA QUIET REQUIRED)
+find_package(CUDA 10.0 QUIET)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
     link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})
     set(CMAKE_CUDA_STANDARD 17)
-    set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS}	-Xcompiler=-Wall")
-    set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall -pipe --std=c++17
-        -Xptxas -O2 --default-stream per-thread
-        --threads 0
-        # Maxwell
-        -gencode=arch=compute_52,code=sm_52
-        -gencode arch=compute_53,code=sm_53
-        # Pascale
-        -gencode=arch=compute_60,code=sm_60
-        -gencode arch=compute_61,code=sm_61
-        -gencode arch=compute_62,code=sm_62
-        # Turing
-        -gencode=arch=compute_70,code=sm_70
-        -gencode=arch=compute_72,code=sm_72
-        -gencode arch=compute_75,code=sm_75
-        -gencode=arch=compute_75,code=compute_75
-        # Ampere 80 and 86
-    )
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+    #set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS}	-Xcompiler=-Wall")
+    #set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
 #–default-stream per-thread
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
+    message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
 endif()
@@ -131,8 +116,29 @@ set(HEADERS
 add_library(my_cuda SHARED ${SRCS} ${HEADERS})
 include_directories("kernel/")
 target_compile_features(my_cuda PUBLIC cxx_std_17)
+target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--threads 0 
+    -O3 -Wall -Wextra -pipe --std=c++17
+    -Xptxas -O2 --default-stream per-thread
+    -Xcompiler=-Wall -Xcompiler=-fopenmp -Xcompiler=-Wextra
+    #--resource-usage
+    # Maxwell
+    -arch=sm_52
+    -gencode=arch=compute_52,code=sm_52
+    -gencode arch=compute_53,code=sm_53
+    # Pascale
+    -gencode=arch=compute_60,code=sm_60
+    -gencode=arch=compute_61,code=sm_61
+    -gencode=arch=compute_62,code=sm_62
+    # Turing
+    -gencode=arch=compute_70,code=sm_70
+    -gencode=arch=compute_72,code=sm_72
+    -gencode=arch=compute_75,code=compute_75
+    # Ampere 80 and 86
+    >)
+
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(my_cuda PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 # If support unity build, improve speed on headers
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(my_cuda PROPERTIES UNITY_BUILD ON)
@@ -218,6 +224,14 @@ target_link_libraries(vec3d_mult2 ${CUDA_LIBRARIES})
 endif()
 target_link_libraries(vec3d_mult2 my_cuda)
 set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 72)
+
+
+install(TARGETS
+    my_cuda
+
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
 
 
 #cuda_add_executable(main main.cpp)

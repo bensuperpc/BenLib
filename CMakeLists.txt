@@ -398,33 +398,17 @@ endif()
 #export LD_LIBRARY_PATH=/opt/cuda/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
 
 #set(CUTLASS_NATIVE_CUDA_INIT ON)
-find_package(CUDA QUIET)
-#set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
+find_package(CUDA 10.0 QUIET)
+#set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda")
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS})
     link_directories(${CUDA_LIBRARIES})
-    set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS} -Xcompiler=-Wall")
-    set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
-    set(CMAKE_CUDA_STANDARD 17)
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};
-        -O3 -Wall -pipe --std=c++17
-        -Xptxas -O2 --default-stream per-thread
-        --threads 0
-        # Maxwell
-        -gencode=arch=compute_52,code=sm_52
-        -gencode=arch=compute_53,code=sm_53
-        # Pascale
-        -gencode=arch=compute_60,code=sm_60
-        -gencode arch=compute_61,code=sm_61
-        -gencode arch=compute_62,code=sm_62
-        # Turing
-        -gencode=arch=compute_70,code=sm_70
-        -gencode=arch=compute_72,code=sm_72
-        -gencode arch=compute_75,code=sm_75
-        -gencode=arch=compute_75,code=compute_75
-    )
+    #set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS} -Xcompiler=-Wall")
+    #set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
+    #set(CMAKE_CUDA_STANDARD 17)
 
     message(STATUS "CUDA: FOUND")
+    message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
 else()
     message(STATUS "CUDA: NOT FOUND")
 endif()

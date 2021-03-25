@@ -56,7 +56,7 @@ void my::cuda::matrixAdd(dim3 &gridSize, dim3 &blockSize, int *a, int *b, int *c
     matrixAdd_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-void my::cuda::matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n)
+void my::cuda::matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *a, int *b, int *c, size_t n)
 {
     matrixAdd_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
 }
@@ -110,7 +110,7 @@ void my::cuda::matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, float *a, f
     matrixMultiplyShared_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-void my::cuda::matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
+void my::cuda::matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int n)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
 }
@@ -140,7 +140,7 @@ void my::cuda::sharedABMultiply(dim3 &gridSize, dim3 &blockSize, float *a, float
     sharedABMultiply_kernel<<<gridSize, blockSize>>>(a, b, c, n);
 }
 
-void my::cuda::sharedABMultiply(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int n)
+void my::cuda::sharedABMultiply(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int n)
 {
     sharedABMultiply_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, n);
 }
@@ -183,7 +183,7 @@ void my::cuda::matrixMultiplyShared(
 }
 
 void my::cuda::matrixMultiplyShared(
-    dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
+    dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols)
 {
     matrixMultiplyShared_kernel<<<gridSize, blockSize, 0, stream>>>(a, b, c, ARows, ACols, BRows, BCols, CRows, CCols);
 }
@@ -271,7 +271,7 @@ void my::cuda::MatrixMulCUDA(dim3 &grid, dim3 &threads, float *A, float *B, floa
     MatrixMulCUDA_kernel<<<grid, threads>>>(C, A, B, wA, wB);
 }
 
-void my::cuda::MatrixMulCUDA(dim3 &grid, dim3 &threads, cudaStream_t stream, float *A, float *B, float *C, size_t wA, size_t wB)
+void my::cuda::MatrixMulCUDA(dim3 &grid, dim3 &threads, cudaStream_t &stream, float *A, float *B, float *C, size_t wA, size_t wB)
 {
     MatrixMulCUDA_kernel<<<grid, threads, 0, stream>>>(C, A, B, wA, wB);
 }
@@ -329,7 +329,7 @@ void my::cuda::matFill(dim3 &gridSize, dim3 &blockSize, int *matA, int value, si
     matFill_kernel<<<gridSize, blockSize>>>(matA, value, sizeAX, sizeAY);
 }
 
-void my::cuda::matFill(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *matA, int value, size_t sizeAX, size_t sizeAY)
+void my::cuda::matFill(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *matA, int value, size_t sizeAX, size_t sizeAY)
 {
     matFill_kernel<<<gridSize, blockSize, 0, stream>>>(matA, value, sizeAX, sizeAY);
 }
@@ -371,7 +371,7 @@ void my::cuda::matCopy(dim3 &gridSize, dim3 &blockSize, int *matA, int *matB, si
     matCopy_kernel<<<gridSize, blockSize>>>(matA, matB, sizeAX, sizeAY);
 }
 
-void my::cuda::matCopy(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
+void my::cuda::matCopy(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY)
 {
     matCopy_kernel<<<gridSize, blockSize, 0, stream>>>(matA, matB, sizeAX, sizeAY);
 }

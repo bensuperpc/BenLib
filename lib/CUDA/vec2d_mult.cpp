@@ -167,6 +167,7 @@ int main(void)
 
     my::cuda::MatrixMulCUDA(grid, threads, stream, MatA, MatB, MatC, dimsA.x, dimsB.x);
     cudaStreamSynchronize(stream);
+    // cudaDeviceSynchronize()
 
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);

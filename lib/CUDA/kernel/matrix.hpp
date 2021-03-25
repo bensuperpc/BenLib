@@ -65,25 +65,25 @@ namespace cuda
 
 void matrixAdd(dim3 &gridSize, dim3 &blockSize, int *a, int *b, int *c, size_t n);
 // void matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
-void matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *a, int *b, int *c, size_t n);
+void matrixAdd(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *a, int *b, int *c, size_t n);
 
 void matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int n);
-void matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int n);
+void matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int n);
 
 void matrixMultiplyShared(
-    dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
+    dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 void matrixMultiplyShared(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int ARows, int ACols, int BRows, int BCols, int CRows, int CCols);
 void matrixMut3D(dim3 gridSize, dim3 blockSize, int mat[][100][100]);
 
 void sharedABMultiply(dim3 &gridSize, dim3 &blockSize, float *a, float *b, float *c, int n);
-void sharedABMultiply(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, float *a, float *b, float *c, int n);
+void sharedABMultiply(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, float *a, float *b, float *c, int n);
 
 void MatrixMulCUDA(dim3 &grid, dim3 &threads, float *A, float *B, float *C, size_t wA, size_t wB);
-void MatrixMulCUDA(dim3 &grid, dim3 &threads, cudaStream_t stream, float *A, float *B, float *C, size_t wA, size_t wB);
+void MatrixMulCUDA(dim3 &grid, dim3 &threads, cudaStream_t &stream, float *A, float *B, float *C, size_t wA, size_t wB);
 
-void matFill(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *matA, int value, size_t sizeAX, size_t sizeAY);
+void matFill(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *matA, int value, size_t sizeAX, size_t sizeAY);
 void matFill(dim3 &gridSize, dim3 &blockSize, int *matA, int value, size_t sizeAX, size_t sizeAY);
-void matCopy(dim3 &gridSize, dim3 &blockSize, cudaStream_t stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY);
+void matCopy(dim3 &gridSize, dim3 &blockSize, cudaStream_t &stream, int *matA, int *matB, size_t sizeAX, size_t sizeAY);
 void matCopy(dim3 &gridSize, dim3 &blockSize, int *matA, int *matB, size_t sizeAX, size_t sizeAY);
 
 /*
