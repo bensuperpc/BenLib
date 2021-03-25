@@ -28,19 +28,6 @@ extern "C"
 #include "crc.cuh"
 #include "crc.hpp"
 
-/*
-__global__ void test_kebrel(int *a, int *b, int *c, size_t N)
-{
-    size_t col = threadIdx.x + blockIdx.x * blockDim.x;
-    size_t row = threadIdx.y + blockIdx.y * blockDim.y;
-    size_t index = row * N + col;
-    if (col < N && row < N) {
-        c[index] = a[index] + b[index];
-    }
-    //__syncthreads();
-}
-*/
-
 /**
  * \brief To get JAMCRC hash
  * \param __global const uchar *data : data

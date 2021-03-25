@@ -30,7 +30,13 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <iostream>
-#include "stdio.h"
+extern "C"
+{
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+}
 
 #ifndef BLOCK_SIZE
 #    define BLOCK_SIZE 16
@@ -73,6 +79,11 @@ template <typename T> void adealloc(T *A_);
 
 template <typename T> void print_matrices(T *matrix, char *file_Name, T x_dim, size_t y_dim, size_t dim);
 
+template <typename T> void matRandFill(T **matA, dim3 &dimsA);
+
+template <typename T>
+void mMatAlloc(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC, bool Unified_memory, bool Pinned_memory, bool set_memset);
+template <typename T> void mMatAlloc(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC);
 } // namespace cuda
 } // namespace my
 

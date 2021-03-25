@@ -48,8 +48,8 @@ extern "C"
 #include <string.h>
 }
 
-template <typename T>
-/*__host__*/ int allocFill(T **Lmatrix, T **Rmatrix, size_t LdimX, size_t LdimY, size_t RdimX, size_t RdimY, bool Unified_memory = false)
+/*
+template <typename T> int allocFill(T **Lmatrix, T **Rmatrix, size_t LdimX, size_t LdimY, size_t RdimX, size_t RdimY, bool Unified_memory = false)
 {
     size_t sqr_dim_X, sqr_dim_Y, size;
 
@@ -112,80 +112,7 @@ template <typename T>
         }
     }
     return size;
-}
-
-template <typename T>
-/*__host__*/ void matAllocFill(T **matA, T **matB, T **matC, dim3 &dimsA, dim3 &dimsB, dim3 &dimsC, bool Unified_memory = true, bool Pinned_memory = false)
-{
-
-    if (Unified_memory == true && Pinned_memory == true) {
-    }
-
-    size_t size_A = dimsA.x * dimsA.y;
-    size_t mem_size_A = sizeof(T) * size_A;
-
-    size_t size_B = dimsB.x * dimsB.y;
-    size_t mem_size_B = sizeof(T) * size_B;
-
-    dimsC = dim3(dimsB.x, dimsA.y, 1);
-    size_t mem_size_C = dimsC.x * dimsC.y * sizeof(T);
-
-    // If Unified memory is enable
-    if (Unified_memory == true) {
-        gpuErrchk(cudaMallocManaged(reinterpret_cast<void **>(matA), mem_size_A)); // Unified memory
-        gpuErrchk(cudaMallocManaged(reinterpret_cast<void **>(matB), mem_size_B)); // Unified memory
-        gpuErrchk(cudaMallocManaged(reinterpret_cast<void **>(matC), mem_size_C)); // Unified memory
-    } else if (Pinned_memory == true) {
-#ifdef __CUDACC__ || __CUDA_ARCH__
-        gpuErrchk(cudaMallocHost(reinterpret_cast<void **>(matA), mem_size_A)); // host pinned
-        gpuErrchk(cudaMallocHost(reinterpret_cast<void **>(matB), mem_size_B)); // host pinned
-        gpuErrchk(CudaMallocHost(reinterpret_cast<void **>(matC), mem_size_C)); // host pinned
-#else
-#    warning Use malloc instead CudaMallocHost
-        *matA = (T *)malloc(mem_size_A); // host pageable
-        *matB = (T *)malloc(mem_size_B); // host pageable
-        *matC = (T *)malloc(mem_size_C); // host pageable
-#endif
-    } else {
-        *matA = (T *)malloc(mem_size_A); // host pageable
-        *matB = (T *)malloc(mem_size_B); // host pageable
-        *matC = (T *)malloc(mem_size_C); // host pageable
-    }
-
-    if (*matA == NULL || *matB == NULL || *matC == NULL) {
-        fprintf(stderr, "Failed to allocate matrix!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // set all value to 0
-    memset(*matA, 0, mem_size_A);
-    memset(*matB, 0, mem_size_B);
-    memset(*matC, 0, mem_size_C);
-
-#pragma omp parallel for collapse(2) schedule(auto)
-    for (size_t i = 0; i < dimsA.x; i++) {
-        for (size_t j = 0; j < dimsA.y; j++) {
-            size_t dummy = dimsA.x * i + j;
-            if constexpr (std::is_floating_point_v<T>) {
-                (*matA)[dummy] = (T)sinf(dummy);
-            } else {
-                (*matA)[dummy] = (T)rand_r(dummy);
-            }
-        }
-    }
-
-#pragma omp parallel for collapse(2) schedule(auto)
-    for (size_t i = 0; i < dimsB.x; i++) {
-        for (size_t j = 0; j < dimsB.x; j++) {
-            size_t dummy = dimsB.x * i + j;
-            if constexpr (std::is_floating_point_v<T>) {
-                (*matB)[dummy] = (T)cosf(dummy);
-            } else {
-                (*matB)[dummy] = (T)rand_r(dummy);
-            }
-        }
-    }
-}
+}*/
 
 // main routine that executes on the host
 int main(void)
@@ -219,7 +146,10 @@ int main(void)
 
     float *MatA, *MatB, *MatC;
 
-    matAllocFill<float>(&MatA, &MatB, &MatC, dimsA, dimsB, dimsC);
+    my::cuda::mMatAlloc<float>(&MatA, &MatB, &MatC, dimsA, dimsB, dimsC);
+
+    my::cuda::matRandFill<float>(&MatA, dimsA);
+    my::cuda::matRandFill<float>(&MatB, dimsB);
 
     cudaMemPrefetchAsync(MatA, dimsA.x * dimsA.y * sizeof(float), 0, stream);
     cudaMemPrefetchAsync(MatB, dimsB.x * dimsB.y * sizeof(float), 0, stream);
