@@ -28,11 +28,8 @@
 #ifndef MY_CUDA_MATRIX_OPS_TPP
 #define MY_CUDA_MATRIX_OPS_TPP
 
-#include <cuda.h>
-#include <cuda_runtime.h>
-#include <iostream>
 #include <matrix_ops.hpp>
-#include <stdio.h>
+
 
 template <typename T> void my::cuda::copy(T ***B_, int ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_)
 {
@@ -216,11 +213,11 @@ template <typename T> int my::cuda::matRandFill(T **matA, dim3 &dimsA)
 #pragma omp parallel for collapse(2) schedule(auto)
     for (size_t i = 0; i < dimsA.x; i++) {
         for (size_t j = 0; j < dimsA.y; j++) {
-            size_t dummy = dimsA.x * i + j;
+            unsigned int dummy = dimsA.x * i + j;
             if constexpr (std::is_floating_point_v<T>) {
                 (*matA)[dummy] = (T)sinf(dummy);
             } else {
-                (*matA)[dummy] = (T)rand_r(dummy);
+                (*matA)[dummy] = (T)rand_r(&dummy);
             }
         }
     }
@@ -281,7 +278,7 @@ int my::cuda::mMatAlloc(
 
 template <typename T>
 int my::cuda::mMatAlloc(
-    T **matC, const dim3 &dimsA, const dim3 &dimsB, const dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset)
+    T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset)
 {
     if (Unified_memory == true && Pinned_memory == true) {
         fprintf(stderr, "You can't activate Unified_memory and Pinned_memory at same time!\n");

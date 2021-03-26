@@ -98,12 +98,11 @@ template <typename T> void flatten1D(T ***a, T *b, const size_t xMax, const size
 // 4D to 1D
 template <typename T> void flatten1D(T ****a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
 // 1D to 2D
-template <typename T> void reshape2D(T *a, T *b, const size_t xMax, const size_t yMax);
+template <typename T> void reshape2D(const T *a, T **b, const size_t xMax, const size_t yMax);
 // 1D to 3D
-template <typename T> void reshape3D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax);
+template <typename T> void reshape3D(const T *a, T ***b, const size_t xMax, const size_t yMax, const size_t zMax);
 // 1D to 4D
-template <typename T> void reshape4D(const T *a, T *b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
-
+template <typename T> void reshape4D(const T *a, T ****b, const size_t xMax, const size_t yMax, const size_t zMax, const size_t wMax);
 // 2D Flat Matrix
 template <typename T> void matMultFlat(T *matA, T *matB, T *matC, const size_t m);
 template <typename T>

@@ -30,6 +30,10 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <iostream>
+
+#include <cstdlib>
+#include <random>
+
 extern "C"
 {
 #include <math.h>
@@ -87,7 +91,7 @@ int mMatAlloc(T **matA, T **matB, T **matC, const dim3 &dimsA, const dim3 &dimsB
 template <typename T> int mMatAlloc(T **matA, T **matB, T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC);
 
 template <typename T>
-int mMatAlloc(T **matC, const dim3 &dimsA, const dim3 &dimsB, const dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset);
+int mMatAlloc(T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset);
 } // namespace cuda
 } // namespace my
 

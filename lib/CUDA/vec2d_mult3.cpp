@@ -36,6 +36,7 @@
 #include "matrix_ops.tpp"
 extern "C"
 {
+#include <cstdlib>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

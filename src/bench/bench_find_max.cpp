@@ -178,6 +178,6 @@ int main(int argc, char *argv[], char *envp[])
     for (size_t i = 0; i < N; ++i) {
         delete nx[i];
     }
-    delete nx;
+    delete[] nx;
     return EXIT_SUCCESS;
 }

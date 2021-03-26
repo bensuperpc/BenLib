@@ -179,9 +179,11 @@ endif()
 
 
 #=== OPTIMIZATION FLAGS ===
-#-mavx2 -flto
-set(OPTI_COMPILER_REL "-march=native -s -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all")
-
+#-mavx2
+set(OPTI_COMPILER_REL " -march=native -ffunction-sections -fdata-sections ")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(OPTI_COMPILER_REL " ${OPTI_COMPILER_REL} -Wl,--gc-sections -Wl,--strip-all ")
+endif()
 #=== SECURITY RELEASE FLAGS ===
 
 set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
@@ -191,13 +193,10 @@ set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=for
 #    list(APPEND CHECK_CXX_COMPILER_FLAG "/usr/share/SFML/cmake/Modules")
 #endif()
 
-set(SEC_COMPILER_LINK_REL "-fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed -fuse-ld=lld")
-#-flto -fuse-ld=lld -fuse-ld=gold
-
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
 #-std=c99
 
-set(CMAKE_C_FLAGS                "${WARNINGS_COMPILER_C} -pipe -fuse-ld=lld")
+set(CMAKE_C_FLAGS                " -march=native ${WARNINGS_COMPILER_C} -pipe ")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
@@ -207,27 +206,48 @@ set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wpedantic -Wall -Wextra -Wshadow -Wstrict-overflow=5 -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wmissing-include-dirs -Wmissing-noreturn -Wimport -Winit-self -Winvalid-pch -Wstrict-aliasing=2 -Wswitch-default -Wunreachable-code -Wunused")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Woverloaded-virtual  -Wdisabled-optimization -Winline -Wredundant-decls -Wsign-conversion -Wformat-nonliteral -Wformat-security")
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wwrite-strings -Wcast-align -Wcast-qual -Wfloat-equal -Wvariadic-macros -Wpacked -Wpointer-arith -Weffc++ -Wformat=2 -Wfloat-equal -Wabi=11")
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference")
+set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wwrite-strings -Wcast-align -Wcast-qual -Wfloat-equal -Wvariadic-macros -Wpacked -Wpointer-arith -Weffc++ -Wformat=2 -Wfloat-equal")
+set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wnull-dereference")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wabi=11 -Wduplicated-branches -Wduplicated-cond -Wlogical-op")
+endif()
+
 
 # Removed : -Wconversion -Wuseless-cast
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
 #Add -lstdc++fs for old compiler
-set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=lld -pipe -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
+set(CMAKE_CXX_FLAGS                " -march=native ${WARNINGS_COMPILER_CXX} -pipe")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
+endif()
+
+
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
-set(CMAKE_SHARED_LINKER_FLAGS "-fuse-ld=lld")
-set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${SEC_COMPILER_LINK_REL}")
-set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "${SEC_COMPILER_LINK_REL}")
-set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
-set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} --coverage -pg")
+#-flto -fuse-ld=lld -fuse-ld=gold
+set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all")
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    string(APPEND CMAKE_CXX_FLAGS " -fext-numeric-literals")
+
+#set(CMAKE_SHARED_LINKER_FLAGS " -fuse-ld=lld ")
+#set(CMAKE_SHARED_LINKER_FLAGS_RELEASE " ${SEC_COMPILER_LINK_REL} ")
+#set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL " ${SEC_COMPILER_LINK_REL} ")
+#set(CMAKE_EXE_LINKER_FLAGS_COVERAGE " ${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage ")
+#set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "$ {CMAKE_SHARED_LINKER_FLAGS_DEBUG} --coverage -pg ")
+
+
+
+if (CMAKE_GENERATOR STREQUAL "Ninja")
+  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
+  elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdiagnostics-color=always")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
 endif()
 
 #add_compile_options(
