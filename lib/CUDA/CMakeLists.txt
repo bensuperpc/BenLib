@@ -170,9 +170,9 @@ set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 
 add_executable(vec2d_mult vec2d_mult.c)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda)
+    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda m)
 else()
-    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda)
+    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda m)
 endif()
 set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 

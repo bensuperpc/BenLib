@@ -112,63 +112,7 @@ endif()
 
 #=== C++ VERSION CHECK ===
 #Set the highest C++ standard supported by the compiler
-
-if(NOT CMAKE_CXX_STANDARD)
-    include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG("-std=c++23" COMPILER_SUPPORTS_CXX23)
-    CHECK_CXX_COMPILER_FLAG("-std=c++20" COMPILER_SUPPORTS_CXX20)
-    CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
-    CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
-    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-    CHECK_CXX_COMPILER_FLAG("-std=c++03" COMPILER_SUPPORTS_CXX03)
-    CHECK_CXX_COMPILER_FLAG("-std=c++98" COMPILER_SUPPORTS_CXX98)
-
-    if(COMPILER_SUPPORTS_CXX20)
-        set(CMAKE_CXX_STANDARD 20)
-        message(STATUS "C++20: OK")
-    elseif(COMPILER_SUPPORTS_CXX17)
-        set(CMAKE_CXX_STANDARD 17)
-        message(STATUS "C++17: OK")
-    elseif(COMPILER_SUPPORTS_CXX14)
-        set(CMAKE_CXX_STANDARD 14)
-        message(WARNING "C++14: Error")
-        message(FATAL_ERROR "C++14 is old, please use newer compiler.")
-    elseif(COMPILER_SUPPORTS_CXX11)
-        set(CMAKE_CXX_STANDARD 11)
-        message(WARNING "C++11: OK")
-        message(FATAL_ERROR "C++11 is old, please use newer compiler.")
-    elseif(COMPILER_SUPPORTS_CXX03)
-        set(CMAKE_CXX_STANDARD 03)
-        message(WARNING "C++03: OK")
-        message(FATAL_ERROR "C++03 is old, please use newer compiler.")
-    elseif(COMPILER_SUPPORTS_CXX98)
-        set(CMAKE_CXX_STANDARD 98)
-        message(WARNING "C++98: OK")
-        message(FATAL_ERROR "C++98 is old, please use newer compiler.")
-    else()
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
-    endif()
-
-    # Compiler-specific C++11 activation.
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        # require at least gcc 4.8
-        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
-            message(FATAL_ERROR "GCC version must be at least 4.8!")
-            set(CMAKE_CXX_STANDARD 14)
-        endif()
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        # require at least clang 3.2
-        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.2)
-            message(FATAL_ERROR "Clang version must be at least 3.2!")
-        endif()
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14.0")
-        message(FATAL_ERROR "Insufficient msvc version")
-        endif()
-    else()
-        message(WARNING "You are using an unsupported compiler! Compilation has only been tested with Clang and GCC.")
-    endif()
-endif()
+set(CMAKE_CXX_STANDARD 17)
 
 
 
@@ -715,27 +659,27 @@ set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu ve
 
 add_executable(bench_isprime ${BENCH_ISPRIME})
 target_link_libraries(bench_isprime PRIVATE thread Threads::Threads vector math time stdc++fs)
-add_dependencies(bench_isprime ${CUSTOM_LIBS})
+add_dependencies(bench_isprime vector math time thread)
 
 add_executable(bench_vector_copy ${BENCH_VECTOR_COPY})
 target_link_libraries(bench_vector_copy PRIVATE thread Threads::Threads vector math time stdc++fs)
-add_dependencies(bench_vector_copy ${CUSTOM_LIBS})
+add_dependencies(bench_vector_copy thread vector math time)
 
 add_executable(bench_vector_sort ${BENCH_VECTOR_SORT})
 target_link_libraries(bench_vector_sort PRIVATE thread Threads::Threads vector math time stdc++fs)
-add_dependencies(bench_vector_sort ${CUSTOM_LIBS})
+add_dependencies(bench_vector_sort thread vector math time)
 
 add_executable(bench_digits_count ${BENCH_DIGITS_COUNT})
 target_link_libraries(bench_digits_count PRIVATE thread Threads::Threads vector math time stdc++fs)
-add_dependencies(bench_digits_count ${CUSTOM_LIBS})
+add_dependencies(bench_digits_count thread vector math time)
 
 add_executable(bench_find_max ${BENCH_FIND_MAX})
 target_link_libraries(bench_find_max PRIVATE thread Threads::Threads vector math time)
-add_dependencies(bench_find_max ${CUSTOM_LIBS})
+add_dependencies(bench_find_max thread vector math time)
 
 add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
-add_dependencies(bench_pc ${CUSTOM_LIBS})
+add_dependencies(bench_pc time vector)
 
 add_executable(bench_crc32 ${BENCH_CRC32})
 if(OpenMP_CXX_FOUND)
