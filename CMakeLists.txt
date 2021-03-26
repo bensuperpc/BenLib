@@ -30,7 +30,7 @@ project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 #   ==================================================
 
 if (NOT CMAKE_BUILD_TYPE)
-    message(STATUS "No build type selected, default to Debug")
+    message(STATUS "No build type selected, default to Release")
 else()
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif()
@@ -41,19 +41,17 @@ set(CMAKE_VERBOSE_MAKEFILE 1)
 # If support unity build, improve speed on headers
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set(CMAKE_UNITY_BUILD 1)
-    message(STATUS "CMAKE_UNITY_BUILD : ON")
+    message(STATUS "CMAKE_UNITY_BUILD : 1")
 else()
     set(CMAKE_UNITY_BUILD 0)
-    message(STATUS "CMAKE_UNITY_BUILD : OFF")
+    message(STATUS "CMAKE_UNITY_BUILD : 0")
 endif()
 
 #Disable precompiled header, save space
-option(CMAKE_DISABLE_PRECOMPILE_HEADERS "DISABLE_PRECOMPILE_HEADERS" ON)
-
+set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
 
 # Add Postfix for debug conf
 set(CMAKE_DEBUG_POSTFIX "_d")
-set(CMAKE_COVERAGE_POSTFIX "_cov")
 
 # Have cmake create a compile database
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -216,7 +214,7 @@ set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wduplicated-branches -Wdupl
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
 #Add -lstdc++fs for old compiler
-set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=lld -pipe -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
+set(CMAKE_CXX_FLAGS                "${WARNINGS_COMPILER_CXX} -fuse-ld=lld -pipe -pthread -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib -pthread")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
@@ -295,7 +293,7 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 # OpenMP::OpenMP_CXX
 find_package(OpenMP QUIET)
 
-if (OPENMP_FOUND OR OpenMP_C_FOUND OR OpenMP_CXX_FOUND)
+if (OPENMP_FOUND OR OpenMP_CXX_FOUND)
     message(STATUS "OPENMP: FOUND")
     #set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -472,9 +470,8 @@ endif()
 
 #   ================    Qt    ================
 
-#Disable beacause rebuild when change CMake
-set(CMAKE_AUTOUIC OFF)
-set(CMAKE_AUTOMOC OFF) 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
@@ -492,16 +489,6 @@ else()
     message(STATUS "QT: NOT FOUND")
 endif()
 
-#   ================    THREADS    ================
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads QUIET)
-
-if (Threads_FOUND)
-    message(STATUS "Threads: FOUND")
-    include_directories( ${QT_INCLUDES})
-else()
-    message(STATUS "Threads: NOT FOUND")
-endif()
 
 #   ================    cppcheck    ================
 
@@ -703,23 +690,23 @@ set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu ve
 #   ==================================================
 
 add_executable(bench_isprime ${BENCH_ISPRIME})
-target_link_libraries(bench_isprime PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_isprime PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_isprime ${CUSTOM_LIBS})
 
 add_executable(bench_vector_copy ${BENCH_VECTOR_COPY})
-target_link_libraries(bench_vector_copy PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_vector_copy PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_vector_copy ${CUSTOM_LIBS})
 
 add_executable(bench_vector_sort ${BENCH_VECTOR_SORT})
-target_link_libraries(bench_vector_sort PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_vector_sort PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_vector_sort ${CUSTOM_LIBS})
 
 add_executable(bench_digits_count ${BENCH_DIGITS_COUNT})
-target_link_libraries(bench_digits_count PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_digits_count PRIVATE thread vector math time stdc++fs)
 add_dependencies(bench_digits_count ${CUSTOM_LIBS})
 
 add_executable(bench_find_max ${BENCH_FIND_MAX})
-target_link_libraries(bench_find_max PRIVATE thread Threads::Threads vector math time)
+target_link_libraries(bench_find_max PRIVATE thread vector math time)
 add_dependencies(bench_find_max ${CUSTOM_LIBS})
 
 add_executable(bench_pc ${BENCH_PC})
@@ -809,7 +796,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_SCHWARZSCHILD} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_SCHWARZSCHILD} PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(${TEST_SCHWARZSCHILD} ${Boost_LIBRARIES})
     add_test(NAME ${TEST_SCHWARZSCHILD} COMMAND ${CMAKE_COMMAND} --build . --target ${TEST_SCHWARZSCHILD})
 
     #Test getGravitationalAttraction
@@ -818,7 +805,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_GA} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_GA} PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(${TEST_GA} ${Boost_LIBRARIES})
     add_test(NAME ${TEST_GA} COMMAND ${TEST_GA})
 
     #Test sphere
@@ -827,7 +814,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_SPHERE} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_SPHERE} PRIVATE ${Boost_LIBRARIES} quadmath)
+    target_link_libraries(${TEST_SPHERE} ${Boost_LIBRARIES} quadmath)
     add_test(NAME ${TEST_SPHERE} COMMAND ${TEST_SPHERE})
 
     #Test cylinder
@@ -836,7 +823,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_CYLINDER} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_CYLINDER} PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(${TEST_CYLINDER} ${Boost_LIBRARIES})
     add_test(NAME ${TEST_CYLINDER} COMMAND ${TEST_CYLINDER})
 
     #Test vector sort
@@ -845,7 +832,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_VECTOR_SORT} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_VECTOR_SORT} PRIVATE ${Boost_LIBRARIES} vector)
+    target_link_libraries(${TEST_VECTOR_SORT} ${Boost_LIBRARIES} vector)
     add_test(NAME ${TEST_VECTOR_SORT} COMMAND ${TEST_VECTOR_SORT})
 
     #Test vector copy
@@ -854,7 +841,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_VECTOR_COPY} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_VECTOR_COPY} PRIVATE ${Boost_LIBRARIES} vector)
+    target_link_libraries(${TEST_VECTOR_COPY} ${Boost_LIBRARIES} vector)
     add_test(NAME ${TEST_VECTOR_COPY} COMMAND ${TEST_VECTOR_COPY})
 
     #Test vector copy
@@ -863,7 +850,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_VECTOR_MAX_SIMD} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_VECTOR_MAX_SIMD} PRIVATE ${Boost_LIBRARIES} vector)
+    target_link_libraries(${TEST_VECTOR_MAX_SIMD} ${Boost_LIBRARIES} vector)
     add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
 
     set(TEST_STRING_SEQ test_string_seq)
@@ -871,7 +858,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_STRING_SEQ} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_STRING_SEQ} PRIVATE ${Boost_LIBRARIES} string_lib)
+    target_link_libraries(${TEST_STRING_SEQ} ${Boost_LIBRARIES} string_lib)
     add_test(NAME ${TEST_STRING_SEQ} COMMAND ${TEST_STRING_SEQ})
 endif()
 
@@ -882,7 +869,7 @@ if (OPENSSL_FOUND AND Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_CRYPTO} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_CRYPTO} PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    target_link_libraries(${TEST_CRYPTO} ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
     add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
 
     #Test crypto AES
@@ -891,7 +878,7 @@ if (OPENSSL_FOUND AND Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_CRYPTO_AES} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_CRYPTO_AES} PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    target_link_libraries(${TEST_CRYPTO_AES} ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
     add_test(NAME ${TEST_CRYPTO_AES} COMMAND ${TEST_CRYPTO_AES})
 
     set(TEST_CRYPTO_CRC test_crypto_CRC)
@@ -899,7 +886,7 @@ if (OPENSSL_FOUND AND Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_CRYPTO_CRC} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_CRYPTO_CRC} PRIVATE ${Boost_LIBRARIES} my_crypto)
+    target_link_libraries(${TEST_CRYPTO_CRC} ${Boost_LIBRARIES} my_crypto)
     add_test(NAME ${TEST_CRYPTO_CRC} COMMAND ${TEST_CRYPTO_CRC})
 endif()
 
@@ -911,7 +898,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_REV_STR} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_REV_STR} PRIVATE ${Boost_LIBRARIES} string_c)
+    target_link_libraries(${TEST_REV_STR} ${Boost_LIBRARIES} string_c)
     add_test(NAME ${TEST_REV_STR} COMMAND ${TEST_REV_STR})
 
     set(TEST_IS_NUM test_my_isnum)
@@ -919,7 +906,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_IS_NUM} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_IS_NUM} PRIVATE ${Boost_LIBRARIES} string_is_c)
+    target_link_libraries(${TEST_IS_NUM} ${Boost_LIBRARIES} string_is_c)
     add_test(NAME ${TEST_IS_NUM} COMMAND ${TEST_IS_NUM})
 
     set(TEST_STR_IS_NUM test_my_str_isnum)
@@ -927,7 +914,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_STR_IS_NUM} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_STR_IS_NUM} PRIVATE ${Boost_LIBRARIES} string_is_c)
+    target_link_libraries(${TEST_STR_IS_NUM} ${Boost_LIBRARIES} string_is_c)
     add_test(NAME ${TEST_STR_IS_NUM} COMMAND ${TEST_STR_IS_NUM})
 
 
@@ -937,7 +924,7 @@ if(Boost_FOUND)
     if(EXTERNAL_LIB)
         add_dependencies(${TEST_POWER} ${EXTERNAL_LIB})
     endif()
-    target_link_libraries(${TEST_POWER} PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(${TEST_POWER} ${Boost_LIBRARIES})
     add_test(NAME ${TEST_POWER} COMMAND ${TEST_POWER})
 endif()
 #add_test(NAME ${TEST_POWER} COMMAND ${CMAKE_COMMAND} --build . --target ${TEST_POWER})
