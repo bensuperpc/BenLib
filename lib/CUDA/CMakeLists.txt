@@ -48,6 +48,7 @@ if(CMAKE_CUDA_COMPILER)
     message(STATUS "CMAKE_CUDA_COMPILER: True")
 endif()
 
+
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 find_package(CUDA 10.0 QUIET)
@@ -114,6 +115,7 @@ set(HEADERS
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda SHARED ${SRCS} ${HEADERS})
+target_link_libraries(my_cuda PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX OpenMP::OpenMP_C)
 include_directories("kernel/")
 target_compile_features(my_cuda PUBLIC cxx_std_17)
 target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--threads 0 
@@ -166,63 +168,31 @@ if(UNIX)
 endif()
 
 add_executable(vec1d vec1d.c)
-target_link_libraries(vec1d ${CUDA_LIBRARIES})
-target_link_libraries(vec1d my_cuda)
+target_link_libraries(vec1d PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C m my_cuda)
 set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec2d_mult vec2d_mult.c)
-if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult ${CUDA_LIBRARIES} OpenMP::OpenMP_C)
-else()
-target_link_libraries(vec2d_mult ${CUDA_LIBRARIES})
-endif()
-target_link_libraries(vec2d_mult my_cuda)
+target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda)
 set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 72)
 
-
 add_executable(vec2d_add vec2d_add.c)
-if (OPENMP_FOUND)
-    target_link_libraries(vec2d_add ${CUDA_LIBRARIES} OpenMP::OpenMP_C)
-else()
-target_link_libraries(vec2d_add ${CUDA_LIBRARIES})
-endif()
-target_link_libraries(vec2d_add my_cuda)
+target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda)
 set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec2d_mult2 vec2d_mult.cpp)
-if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX)
-else()
-target_link_libraries(vec2d_mult2 ${CUDA_LIBRARIES})
-endif()
-target_link_libraries(vec2d_mult2 my_cuda)
+target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
 set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec2d_mult3 vec2d_mult3.cpp)
-if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult3 ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX)
-else()
-target_link_libraries(vec2d_mult3 ${CUDA_LIBRARIES})
-endif()
-target_link_libraries(vec2d_mult3 my_cuda)
+target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
 set_property(TARGET vec2d_mult3 PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec3d_mult vec3d_mult.cpp)
-if (OPENMP_FOUND)
-    target_link_libraries(vec3d_mult ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX)
-else()
-target_link_libraries(vec3d_mult ${CUDA_LIBRARIES})
-endif()
-target_link_libraries(vec3d_mult my_cuda)
+target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
 set_property(TARGET vec3d_mult PROPERTY CUDA_ARCHITECTURES 72)
 
 add_executable(vec3d_mult2 vec3d_mult2.cpp)
-if (OPENMP_FOUND)
-    target_link_libraries(vec3d_mult2 ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX)
-else()
-target_link_libraries(vec3d_mult2 ${CUDA_LIBRARIES})
-endif()
-target_link_libraries(vec3d_mult2 my_cuda)
+target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
 set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 72)
 
 

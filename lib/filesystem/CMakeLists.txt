@@ -33,7 +33,7 @@ set(HEADERS
 
 #add_library(filesystem_static STATIC ${SRCS} ${HEADERS})
 add_library(filesystem SHARED ${SRCS} ${HEADERS})
-target_link_libraries(filesystem ${Boost_LIBRARIES})
+target_link_libraries(filesystem PRIVATE ${Boost_LIBRARIES})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(filesystem PROPERTIES UNITY_BUILD ON)
 	target_precompile_headers(filesystem PUBLIC ${HEADERS})

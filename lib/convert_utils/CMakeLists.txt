@@ -7,13 +7,14 @@ project(convert_utils VERSION 0.0.2 LANGUAGES CXX C)
 
 #set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 
-#set(CMAKE_AUTOMOC ON)  
-#set(CMAKE_AUTOUIC ON)     
-#set(CMAKE_INCLUDE_CURRENT_DIR ON) 
-#REQUIRED
-#find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
-#find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
-#Qt5_FOUND
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
+find_package(Qt${QT_VERSION_MAJOR}QuickCompiler)
 if (QT_FOUND)
     message(STATUS "QT: FOUND on convert_utils")
     include_directories(${QT_INCLUDES})
@@ -47,9 +48,9 @@ target_include_directories(convert_utils PUBLIC
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(convert_utils PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(convert_utils PUBLIC ${HEADERS})
-    message(STATUS "CMAKE_UNITY_BUILD : 1 on ${PROJECT_NAME}")
+    message(STATUS "CMAKE_UNITY_BUILD : ON ${PROJECT_NAME}")
 else()
-    message(STATUS "CMAKE_UNITY_BUILD : 0 on ${PROJECT_NAME}")
+    message(STATUS "CMAKE_UNITY_BUILD : OFF ${PROJECT_NAME}")
 endif()
 
 if (QT_FOUND)
