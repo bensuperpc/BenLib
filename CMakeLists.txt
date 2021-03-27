@@ -65,6 +65,8 @@ find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) # Less useful to do it for linking, see edit2
+    set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+    set(CMAKE_C_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
 
 include(CheckLanguage)
@@ -125,9 +127,6 @@ endif()
 #=== OPTIMIZATION FLAGS ===
 #-mavx2
 set(OPTI_COMPILER_REL " -march=native -ffunction-sections -fdata-sections ")
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(OPTI_COMPILER_REL " ${OPTI_COMPILER_REL} -Wl,--gc-sections -Wl,--strip-all ")
-endif()
 #=== SECURITY RELEASE FLAGS ===
 
 set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
@@ -140,11 +139,16 @@ set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=for
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
 #-std=c99
 
-set(CMAKE_C_FLAGS                " -march=native ${WARNINGS_COMPILER_C} -pipe ")
+set(CMAKE_C_FLAGS                " -march=native -mtune=native ${WARNINGS_COMPILER_C} -pipe ")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
+endif()
+
 
 #-Wold-style-cast -Wdouble-promotion -fstack-usage -Wpadded
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wpedantic -Wall -Wextra -Wshadow -Wstrict-overflow=5 -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter")
@@ -165,7 +169,9 @@ set(CMAKE_CXX_FLAGS                "  -ffunction-sections -march=native ${WARNIN
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
 endif()
-
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
+endif()
 
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
@@ -173,8 +179,10 @@ set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # 
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
 #-flto -fuse-ld=lld -fuse-ld=gold
-set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition")
-
+set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition,--thinlto-jobs=all")
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin")
+endif()
 
 #set(CMAKE_SHARED_LINKER_FLAGS " -fuse-ld=lld ")
 #set(CMAKE_SHARED_LINKER_FLAGS_RELEASE " ${SEC_COMPILER_LINK_REL} ")

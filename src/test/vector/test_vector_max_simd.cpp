@@ -21,7 +21,7 @@ extern "C"
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_1)
 {
-    const size_t i = 8000;
+    const size_t i = 8192;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = rand() % 2000000000;
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_1)
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_2)
 {
-    const size_t i = 100000;
+    const size_t i = 8192;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = rand() % 8000;
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_2)
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_3)
 {
-    const size_t i = 1000;
+    const size_t i = 1024;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = rand() % 1000;
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_3)
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_4)
 {
-    const size_t i = 10000;
+    const size_t i = 8192;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = 1000;
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_4)
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_5)
 {
-    const size_t i = 10000;
+    const size_t i = 16384;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = 0;
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_5)
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_6)
 {
-    const size_t i = 10000;
+    const size_t i = 16384;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = 2147483647;
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_6)
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_7)
 {
-    const size_t i = 10000;
+    const size_t i = 16384;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = -2147483647;
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(test_vector_max_simd_7)
 
 BOOST_AUTO_TEST_CASE(test_vector_max_simd_8)
 {
-    const size_t i = 100000;
+    const size_t i = 16384;
     int *n = new int[i];
     for (size_t x = 0; x < i; ++x) {
         n[x] = rand() % 100000;

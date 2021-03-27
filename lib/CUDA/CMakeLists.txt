@@ -120,6 +120,7 @@ target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--threads 0
     -O3 -Wall -Wextra -pipe --std=c++17
     -Xptxas -O2 --default-stream per-thread
     -Xcompiler=-Wall -Xcompiler=-fopenmp -Xcompiler=-Wextra
+    -Xcompiler -flto
     #--resource-usage
     # Maxwell
     -arch=sm_52
@@ -135,6 +136,8 @@ target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--threads 0
     -gencode=arch=compute_75,code=compute_75
     # Ampere 80 and 86
     >)
+target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
+
 
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
