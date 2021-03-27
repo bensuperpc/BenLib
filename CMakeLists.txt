@@ -161,7 +161,7 @@ endif()
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
 #Add -lstdc++fs for old compiler
-set(CMAKE_CXX_FLAGS                " -march=native ${WARNINGS_COMPILER_CXX} -pipe")
+set(CMAKE_CXX_FLAGS                "  -ffunction-sections -march=native ${WARNINGS_COMPILER_CXX} -pipe")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
 endif()
@@ -173,7 +173,7 @@ set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # 
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
 #-flto -fuse-ld=lld -fuse-ld=gold
-set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all")
+set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition")
 
 
 #set(CMAKE_SHARED_LINKER_FLAGS " -fuse-ld=lld ")
@@ -334,8 +334,10 @@ else()
     endif (WIN64)
     string(APPEND EXTERNAL_LIB "opencv_lib")
     ExternalProject_Add(opencv_lib
-        GIT_REPOSITORY https:#github.com/opencv/opencv.git
+        GIT_REPOSITORY https://github.com/opencv/opencv
         GIT_TAG 4.4.0
+        SOURCE_DIR opencv
+        BINARY_DIR opencv-build
         CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
         CMAKE_ARGS -D BUILD_EXAMPLES=OFF -D OPENCV_ENABLE_NONFREE=ON
         CMAKE_ARGS -D INSTALL_C_EXAMPLES=OFF -D INSTALL_PYTHON_EXAMPLES=OFF

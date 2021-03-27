@@ -1,4 +1,3 @@
-#include <string.h>
 #include "my_revstr.h"
 
 void my_revstr(char *str)

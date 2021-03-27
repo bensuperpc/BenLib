@@ -25,7 +25,7 @@ cmake $@ -G Ninja .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAU
 -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_BUILD_TYPE=Release
 
 ninja -d explain 
-#ctest --output-on-failure -j$(nproc) #--extra-verbose
-
-
+ctest --output-on-failure -j$(nproc) #--extra-verbose
+#cmake .. --graphviz=foo.dot
+#dot -Tpng -Gdpi=120 foo.dot -o foo.png
 #make install 

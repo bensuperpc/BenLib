@@ -1,5 +1,6 @@
 #ifndef MY_REVSTR_H
 #define MY_REVSTR_H
+#include "my_strlen.h"
 
 #define XOR_SWAP(a, b)                                                                                                                                         \
     do {                                                                                                                                                       \
