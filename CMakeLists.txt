@@ -9,13 +9,23 @@
 #                                                            #
 #  BenLib, 2020                                              #
 #  Created: 19, March, 2020                                  #
-#  Modified: 25, March, 2021                                 #
+#  Modified: 28, March, 2021                                 #
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:  https://medium.com/@mikkelwilson/opencv-with-cuda-acceleration-test-e9f7155e1c84                                                   #
 #           https://onqtam.com/programming/2019-12-20-pch-unity-cmake-3-16/
 #           https://stackoverflow.com/questions/61548932/force-cmake-to-rebuild-precompiled-headers
 #           https://www.virag.si/2015/07/use-ccache-with-cmake-for-faster-compilation/
+#           https://cmake.org/cmake/help/latest/module/CPack.html#variable:CPACK_BINARY_%3CGENNAME%3E
+#           https://cmake.org/cmake/help/v3.0/module/CPack.html
+#           https://gitlab.kitware.com/cmake/community/-/wikis/doc/cpack/PackageGenerators
+#           https://cmake.org/cmake/help/v3.0/module/CPackRPM.html
+#           https://blog.usejournal.com/creating-debian-packages-cmake-e519a0186e87
+#           https://stackoverflow.com/questions/49644273/cmake-change-stack-size
+#           https://stackoverflow.com/questions/46713143/cmake-install-library-and-development-files-as-separate-components-using-public
+#           https://github.com/Pseudomanifold/cmake-cpp
+#           https://cmake.org/cmake/help/v3.1/prop_tgt/C_EXTENSIONS.html#prop_tgt:C_EXTENSIONS
+#           
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
