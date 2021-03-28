@@ -30,12 +30,17 @@ project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 #   ==================================================
 
 option(ENABLE_CCACHE "Whether to use ccache to speed up compiling" ON)
+# Include
 option(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Increase verbose CMake
 option(CMAKE_VERBOSE_MAKEFILE ON)
+# Have cmake create a compile database
+option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#Disable precompiled header, save space
+option(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
 
-if (NOT CMAKE_BUILD_TYPE)
-    message(STATUS "No build type selected, default to Debug")
-else()
+
+if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif()
 
@@ -49,14 +54,8 @@ else()
     message(STATUS "CMAKE_UNITY_BUILD : 0")
 endif()
 
-#Disable precompiled header, save space
-set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
-
 # Add Postfix for debug conf
 set(CMAKE_DEBUG_POSTFIX "_d")
-
-# Have cmake create a compile database
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 #set(CMAKE_C_COMPILER_LAUNCHER ccache)
@@ -87,6 +86,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #   ================================================
 #   ================    COMPILER    ================
 #   ================================================
+# Enable CXX standard required
+option(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Enable C standard required
+option(CMAKE_C_STANDARD_REQUIRED ON)
+option(CMAKE_CXX_EXTENSIONS OFF)
+option(CMAKE_C_EXTENSIONS OFF)
+
+option(AUTODETECT_CXX_MAX_VERSION "Detect automatically CXX Max supported version by compiler" ON)
+option(AUTODETECT_C_MAX_VERSION "Detect automatically C Max supported version by compiler" ON)
+# Shared libs, decrease bin size
+option(BUILD_SHARED_LIBRARIES ON)
 
 if(NOT CMAKE_C_COMPILER)
     set(CMAKE_C_COMPILER /usr/bin/clang)
@@ -98,17 +108,22 @@ if(NOT CMAKE_CXX_COMPILER)
 endif()
 
 #Set the highest C++ standard supported by the compiler
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
+#set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_C_STANDARD 11)
 
 #=== C VERSION CHECK ===
 # Set the highest C standard supported by the compiler
 
-if(NOT CMAKE_C_STANDARD)
+if(NOT CMAKE_C_STANDARD AND AUTODETECT_C_MAX_VERSION)
     include(CheckCCompilerFlag)
+    CHECK_C_COMPILER_FLAG("-std=c23" COMPILER_SUPPORTS_C23)
+    CHECK_C_COMPILER_FLAG("-std=c20" COMPILER_SUPPORTS_C20)
+    CHECK_C_COMPILER_FLAG("-std=c18" COMPILER_SUPPORTS_C18)
+    CHECK_C_COMPILER_FLAG("-std=c17" COMPILER_SUPPORTS_C17) # Not working with CMake 3.19
     CHECK_C_COMPILER_FLAG("-std=c11" COMPILER_SUPPORTS_C11)
     CHECK_C_COMPILER_FLAG("-std=c99" COMPILER_SUPPORTS_C99)
     CHECK_C_COMPILER_FLAG("-std=c90" COMPILER_SUPPORTS_C90)
+    CHECK_C_COMPILER_FLAG("-std=c89" COMPILER_SUPPORTS_C89)
     
     if(COMPILER_SUPPORTS_C11)
         message(STATUS "C11: OK")
@@ -119,20 +134,17 @@ if(NOT CMAKE_C_STANDARD)
     elseif(COMPILER_SUPPORTS_C90)
         message(STATUS "C90: OK")
         set(CMAKE_C_STANDARD 90)
+    elseif(COMPILER_SUPPORTS_C89)
+        message(STATUS "C89: OK")
+        set(CMAKE_C_STANDARD 89)
     else()
         message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
     endif()
 endif()
 
 
-set(CMAKE_CXX_STANDARD_REQUIRED 1)
-if(NOT CMAKE_CXX_EXTENSIONS)
-    set(CMAKE_CXX_EXTENSIONS 1)
-endif()
-
-
 #=== C++ VERSION CHECK ===
-if(NOT CMAKE_CXX_STANDARD)
+if(NOT CMAKE_CXX_STANDARD AND AUTODETECT_CXX_MAX_VERSION)
     include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG("-std=c++23" COMPILER_SUPPORTS_CXX23)
     CHECK_CXX_COMPILER_FLAG("-std=c++20" COMPILER_SUPPORTS_CXX20)
@@ -190,32 +202,24 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 
-#=== OPTIMIZATION FLAGS ===
-#-mavx2
-set(OPTI_COMPILER_REL " -march=native -ffunction-sections -fdata-sections ")
 #=== SECURITY RELEASE FLAGS ===
-
 set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
-#For Ubuntu 18.04 and 16.04
-#CHECK_CXX_COMPILER_FLAG("-fstack-clash-protection" COMPILER_SUPPORTS_SEC_FLAG)
-#if(NOT COMPILER_SUPPORTS_SEC_FLAG)
-#    list(APPEND CHECK_CXX_COMPILER_FLAG "/usr/share/SFML/cmake/Modules")
-#endif()
 
+#=== C FLAGS ===
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
 #-std=c99
 
-set(CMAKE_C_FLAGS                " -march=native ${WARNINGS_COMPILER_C} -pipe ")
-set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
+set(CMAKE_C_FLAGS                " -march=native -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_C} -pipe ")
+set(CMAKE_C_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL}")
+set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL}")
+set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
 endif()
 
-
+#=== CXX FLAGS ===
 #-Wold-style-cast -Wdouble-promotion -fstack-usage -Wpadded
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wpedantic -Wall -Wextra -Wshadow -Wstrict-overflow=5 -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wmissing-include-dirs -Wmissing-noreturn -Wimport -Winit-self -Winvalid-pch -Wstrict-aliasing=2 -Wswitch-default -Wunreachable-code -Wunused")
@@ -231,31 +235,24 @@ endif()
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
 #Add -lstdc++fs for old compiler
-set(CMAKE_CXX_FLAGS                "  -ffunction-sections -march=native ${WARNINGS_COMPILER_CXX} -pipe")
+set(CMAKE_CXX_FLAGS                "  -ffunction-sections -fdata-sections -march=native ${WARNINGS_COMPILER_CXX} -pipe")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
+    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs")
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
 endif()
 
-set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
+set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL} -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL} -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
-#-flto -fuse-ld=lld -fuse-ld=gold
-set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition,--thinlto-jobs=all")
+
+set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib ")
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
+    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
 endif()
-
-#set(CMAKE_SHARED_LINKER_FLAGS " -fuse-ld=lld ")
-#set(CMAKE_SHARED_LINKER_FLAGS_RELEASE " ${SEC_COMPILER_LINK_REL} ")
-#set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL " ${SEC_COMPILER_LINK_REL} ")
-#set(CMAKE_EXE_LINKER_FLAGS_COVERAGE " ${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage ")
-#set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "$ {CMAKE_SHARED_LINKER_FLAGS_DEBUG} --coverage -pg ")
-
 
 
 if (CMAKE_GENERATOR STREQUAL "Ninja")
@@ -272,10 +269,19 @@ endif()
 #    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CXX_FLAGS}>
 #    $<$<COMPILE_LANGUAGE:C>:${c_flags}>
 #    )
+#target_compile_options(my-target
+#  PRIVATE
+#    $<$<CXX_COMPILER_ID:Gnu>:
+#      # g++ warning flags
+#    >
+#    $<$<CXX_COMPILER_ID:Clang>:
+#      # clang warning flags
+#    >
+#    $<$<CXX_COMPILER_ID:MSVC>:
+#      # MSVC warning flags
+#    >
+#)
 
-
-#set(BUILD_SHARED_LIBRARIES 0)
-#set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 #   ================    COMPILER DEF    ================
 
@@ -283,11 +289,11 @@ add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 add_definitions(-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
 add_definitions(-DCMAKE_C_FLAGS="${CMAKE_C_FLAGS}")
 add_definitions(-DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}")
-
 add_definitions(-DCMAKE_CXX_COMPILER_ID="${CMAKE_CXX_COMPILER_ID}")
 add_definitions(-DCMAKE_C_COMPILER_ID="${CMAKE_C_COMPILER_ID}")
 add_definitions(-DCMAKE_CXX_COMPILER_VERSION="${CMAKE_CXX_COMPILER_VERSION}")
 add_definitions(-DCMAKE_C_COMPILER_VERSION="${CMAKE_C_COMPILER_VERSION}")
+add_definitions(-DCMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS}")
 
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 2)
@@ -310,17 +316,6 @@ endif()
 
 include(ExternalProject)
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
-
-
-
-#ExternalProject_Add(opencv_lib
-#    GIT_REPOSITORY https:#github.com/boostorg/boost
-#    GIT_TAG 4.4.0
-#    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-    #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-#    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
-#)
-
 
 #   ================    OpenMP    ================
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -356,13 +351,13 @@ if(SFML_FOUND)
     add_compile_definitions(SFML_VERSION="${SFML_VERSION}")
 else()
     message(STATUS "SFML: NOT FOUND")
-    ExternalProject_Add(sfml_lib
-        GIT_REPOSITORY https:#github.com/SFML/SFML.git
-        GIT_TAG 2.5.1
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
+    #ExternalProject_Add(sfml_lib
+    #    GIT_REPOSITORY https:#github.com/SFML/SFML.git
+    #    GIT_TAG 2.5.1
+    #    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
         #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
-    )
+    #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
+    #)
 endif()
 
 #   ================    BOOST    ================
@@ -398,19 +393,19 @@ else()
     if (WIN64)
         set(OpenCV_DIR "C:/Users/Benoit/Downloads/opencv-4.4.0/build")
     endif (WIN64)
-    ExternalProject_Add(opencv_lib
-        GIT_REPOSITORY https://github.com/opencv/opencv
-        GIT_TAG 4.4.0
-        SOURCE_DIR opencv
-        BINARY_DIR opencv-build
-        CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-        CMAKE_ARGS -D BUILD_EXAMPLES=OFF -D OPENCV_ENABLE_NONFREE=ON
-        CMAKE_ARGS -D INSTALL_C_EXAMPLES=OFF -D INSTALL_PYTHON_EXAMPLES=OFF
+    #ExternalProject_Add(opencv_lib
+    #    GIT_REPOSITORY https://github.com/opencv/opencv
+    #    GIT_TAG 4.4.0
+    #    SOURCE_DIR opencv
+    #    BINARY_DIR opencv-build
+    #    CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
+    #    CMAKE_ARGS -D BUILD_EXAMPLES=OFF -D OPENCV_ENABLE_NONFREE=ON
+    #    CMAKE_ARGS -D INSTALL_C_EXAMPLES=OFF -D INSTALL_PYTHON_EXAMPLES=OFF
         #CMAKE_ARGS -DOPENCV_EXTRA_MODULES_PATH=/build/opencv_contrib-4.1.1/modules
         #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         #-D WITH_CUDA=ON
-        CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
-    )
+    #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
+    #)
 endif()
 
 
@@ -788,7 +783,6 @@ if (OPENCV_FOUND)
 
     add_executable(image_diff ${IMAGE_DIFF})
     target_link_libraries(image_diff PRIVATE filesystem ${OpenCV_LIBS} stdc++fs utils_opencv)
-    add_dependencies(image_diff filesystem ${OpenCV_LIBS} utils_opencv)
 endif()
 
 #   ================================================
@@ -798,70 +792,59 @@ endif()
 if(Boost_FOUND)
     enable_testing()
     #Test getSchwarzschild
-    set(TEST_SCHWARZSCHILD test_getSchwarzschild)
-    add_executable(${TEST_SCHWARZSCHILD} ${lib_path}src/test/math/test_getSchwarzschild.cpp)
-    target_link_libraries(${TEST_SCHWARZSCHILD} PRIVATE ${Boost_LIBRARIES})
-    add_test(NAME ${TEST_SCHWARZSCHILD} COMMAND ${CMAKE_COMMAND} --build . --target ${TEST_SCHWARZSCHILD})
+    add_executable(test_getSchwarzschild ${lib_path}src/test/math/test_getSchwarzschild.cpp)
+    target_link_libraries(test_getSchwarzschild PRIVATE ${Boost_LIBRARIES})
+    add_test(NAME test_getSchwarzschild COMMAND ${CMAKE_COMMAND} --build . --target test_getSchwarzschild)
 
     #Test getGravitationalAttraction
-    set(TEST_GA test_getGravitationalAttraction)
-    add_executable(${TEST_GA} ${lib_path}src/test/math/test_getGravitationalAttraction.cpp)
-    target_link_libraries(${TEST_GA} PRIVATE ${Boost_LIBRARIES})
-    add_test(NAME ${TEST_GA} COMMAND ${TEST_GA})
+    add_executable(test_getGravitationalAttraction ${lib_path}src/test/math/test_getGravitationalAttraction.cpp)
+    target_link_libraries(test_getGravitationalAttraction PRIVATE ${Boost_LIBRARIES})
+    add_test(NAME test_getGravitationalAttraction COMMAND test_getGravitationalAttraction)
 
     #Test sphere
-    set(TEST_SPHERE test_sphere)
-    add_executable(${TEST_SPHERE} ${lib_path}src/test/math/test_sphere.cpp)
-    target_link_libraries(${TEST_SPHERE} PRIVATE ${Boost_LIBRARIES} quadmath)
-    add_test(NAME ${TEST_SPHERE} COMMAND ${TEST_SPHERE})
+    add_executable(test_sphere ${lib_path}src/test/math/test_sphere.cpp)
+    target_link_libraries(test_sphere PRIVATE ${Boost_LIBRARIES} quadmath)
+    add_test(NAME test_sphere COMMAND test_sphere)
 
     #Test cylinder
-    set(TEST_CYLINDER test_cylinder)
-    add_executable(${TEST_CYLINDER} ${lib_path}src/test/math/test_cylinder.cpp)
-    target_link_libraries(${TEST_CYLINDER} PRIVATE ${Boost_LIBRARIES})
-    add_test(NAME ${TEST_CYLINDER} COMMAND ${TEST_CYLINDER})
+    add_executable(test_cylinder ${lib_path}src/test/math/test_cylinder.cpp)
+    target_link_libraries(test_cylinder PRIVATE ${Boost_LIBRARIES})
+    add_test(NAME test_cylinder COMMAND test_cylinder)
 
     #Test vector sort
-    set(TEST_VECTOR_SORT test_vector_sort)
-    add_executable(${TEST_VECTOR_SORT} ${lib_path}src/test/vector/test_vector_sort.cpp)
-    target_link_libraries(${TEST_VECTOR_SORT} PRIVATE ${Boost_LIBRARIES} vector)
-    add_test(NAME ${TEST_VECTOR_SORT} COMMAND ${TEST_VECTOR_SORT})
+    add_executable(test_vector_sort ${lib_path}src/test/vector/test_vector_sort.cpp)
+    target_link_libraries(test_vector_sort PRIVATE ${Boost_LIBRARIES} vector)
+    add_test(NAME test_vector_sort COMMAND test_vector_sort)
 
     #Test vector copy
-    set(TEST_VECTOR_COPY test_vector_copy)
-    add_executable(${TEST_VECTOR_COPY} ${lib_path}src/test/vector/test_vector_copy.cpp)
-    target_link_libraries(${TEST_VECTOR_COPY} PRIVATE ${Boost_LIBRARIES} vector)
-    add_test(NAME ${TEST_VECTOR_COPY} COMMAND ${TEST_VECTOR_COPY})
+    add_executable(test_vector_copy ${lib_path}src/test/vector/test_vector_copy.cpp)
+    target_link_libraries(test_vector_copy PRIVATE ${Boost_LIBRARIES} vector)
+    add_test(NAME test_vector_copy COMMAND test_vector_copy)
 
     #Test vector copy
-    set(TEST_VECTOR_MAX_SIMD test_vector_max_simd)
-    add_executable(${TEST_VECTOR_MAX_SIMD} ${lib_path}src/test/vector/test_vector_max_simd.cpp)
-    target_link_libraries(${TEST_VECTOR_MAX_SIMD} PRIVATE ${Boost_LIBRARIES} vector)
-    add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
+    add_executable(test_vector_max_simd ${lib_path}src/test/vector/test_vector_max_simd.cpp)
+    target_link_libraries(test_vector_max_simd PRIVATE ${Boost_LIBRARIES} vector)
+    add_test(NAME test_vector_max_simd COMMAND test_vector_max_simd)
 
-    set(TEST_STRING_SEQ test_string_seq)
-    add_executable(${TEST_STRING_SEQ} ${lib_path}src/test/string/test_string_seq.cpp)
-    target_link_libraries(${TEST_STRING_SEQ} PRIVATE ${Boost_LIBRARIES} string_lib)
-    add_test(NAME ${TEST_STRING_SEQ} COMMAND ${TEST_STRING_SEQ})
+    add_executable(test_string_seq ${lib_path}src/test/string/test_string_seq.cpp)
+    target_link_libraries(test_string_seq PRIVATE ${Boost_LIBRARIES} string_lib)
+    add_test(NAME test_string_seq COMMAND test_string_seq)
 endif()
 
 if (OPENSSL_FOUND AND Boost_FOUND)
     #Test crypto
-    set(TEST_CRYPTO test_crypto)
-    add_executable(${TEST_CRYPTO} ${lib_path}src/test/crypto/test_crypto.cpp)
-    target_link_libraries(${TEST_CRYPTO} PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
-    add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
+    add_executable(test_crypto ${lib_path}src/test/crypto/test_crypto.cpp)
+    target_link_libraries(test_crypto PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    add_test(NAME test_crypto COMMAND test_crypto)
 
     #Test crypto AES
-    set(TEST_CRYPTO_AES test_crypto_aes)
-    add_executable(${TEST_CRYPTO_AES} ${lib_path}src/test/crypto/test_crypto_AES.cpp)
-    target_link_libraries(${TEST_CRYPTO_AES} PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
-    add_test(NAME ${TEST_CRYPTO_AES} COMMAND ${TEST_CRYPTO_AES})
+    add_executable(test_crypto_aes ${lib_path}src/test/crypto/test_crypto_AES.cpp)
+    target_link_libraries(test_crypto_aes PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    add_test(NAME test_crypto_aes COMMAND test_crypto_aes)
 
-    set(TEST_CRYPTO_CRC test_crypto_CRC)
-    add_executable(${TEST_CRYPTO_CRC} ${lib_path}src/test/crypto/test_crypto_CRC.cpp)
-    target_link_libraries(${TEST_CRYPTO_CRC} PRIVATE ${Boost_LIBRARIES} my_crypto)
-    add_test(NAME ${TEST_CRYPTO_CRC} COMMAND ${TEST_CRYPTO_CRC})
+    add_executable(test_crypto_CRC ${lib_path}src/test/crypto/test_crypto_CRC.cpp)
+    target_link_libraries(test_crypto_CRC PRIVATE ${Boost_LIBRARIES} my_crypto)
+    add_test(NAME test_crypto_CRC COMMAND test_crypto_CRC)
 endif()
 
 #Test C string
