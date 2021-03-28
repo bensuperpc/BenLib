@@ -30,7 +30,6 @@
 
 #include <matrix_ops.hpp>
 
-
 template <typename T> void my::cuda::copy(T ***B_, int ***A_, const size_t sizeX_, const size_t sizeY_, const size_t sizeZ_)
 {
 #if defined(_OPENMP)
@@ -277,8 +276,7 @@ int my::cuda::mMatAlloc(
 }
 
 template <typename T>
-int my::cuda::mMatAlloc(
-    T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset)
+int my::cuda::mMatAlloc(T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset)
 {
     if (Unified_memory == true && Pinned_memory == true) {
         fprintf(stderr, "You can't activate Unified_memory and Pinned_memory at same time!\n");

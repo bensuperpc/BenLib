@@ -35,6 +35,15 @@ cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
 #project(BENLIB VERSION 0.0.5 LANGUAGES CUDA CXX C)
 project(BENLIB VERSION 0.0.5 DESCRIPTION "Bensuperpc's libs" LANGUAGES CXX C)
 
+#Add CUDA if it found
+include(CheckLanguage)
+check_language(CUDA)
+if(CMAKE_CUDA_COMPILER)
+	enable_language(CUDA)
+    message(STATUS "CMAKE_CUDA_COMPILER: True")
+endif()
+
+
 #   ==================================================
 #   ================    CMAKE CONF    ================
 #   ==================================================
@@ -78,13 +87,6 @@ if(CCACHE_FOUND AND ENABLE_CCACHE)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) # Less useful to do it for linking, see edit2
     set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
     set(CMAKE_C_COMPILER_LAUNCHER ccache)
-endif()
-
-include(CheckLanguage)
-check_language(CUDA)
-if(CMAKE_CUDA_COMPILER)
-	enable_language(CUDA)
-    message(STATUS "CMAKE_CUDA_COMPILER: True")
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -948,7 +950,7 @@ set(CPACK_PACKAGE_CONTACT "bensuperpc@gmail.com")
 #set(CPACK_PACKAGE_VERSION_MINOR "3")
 #set(CPACK_PACKAGE_VERSION_PATCH "2")
 set(CPACK_PACKAGE_VERSION "1.0.0")
-
+set(CPACK_PACKAGE_DIRECTORY "Package")
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
 if(WIN32 AND NOT UNIX)
@@ -963,6 +965,8 @@ else()
   set(CPACK_STRIP_FILES "bin/MyExecutable")
   set(CPACK_SOURCE_STRIP_FILES "")
 endif()
+
+set(CPACK_PACKAGE_RELEASE "${CMAKE_BUILD_TYPE}")
 set(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
 
@@ -983,7 +987,7 @@ set(CPACK_RPM_PACKAGE_CONFLICTS "libxml2")
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home")
 list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home/vesoft")
 #set(CPACK_RPM_COMPRESSION_TYPE "xz")
-#set(CPACK_RPM_FILE_NAME "test.rpm")
+set(CPACK_RPM_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}.rpm")
 
 # ====== DEB ======
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Bensuperpc")

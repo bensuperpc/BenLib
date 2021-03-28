@@ -27,11 +27,10 @@
 #ifndef MY_CUDA_MATRIX_OPS_HPP
 #define MY_CUDA_MATRIX_OPS_HPP
 
+#include <cstdlib>
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <iostream>
-
-#include <cstdlib>
 #include <random>
 
 extern "C"

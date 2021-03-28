@@ -12,7 +12,7 @@
   - New CRC32 and JAMCRC algo
   - GTA SA alternate cheats codes finder, via Brute 
     force: JAMCRC collisions generator (WIP)
-  - New Readme
+  - CPack with package installer for Debian, Manjaro, Fedora ect...
 
 ### Tech
 

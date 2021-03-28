@@ -29,7 +29,9 @@
 const int TILE_WIDTH = 16;
 #define THREADS_PER_BLOCK 1024
 
-void matrixMultiplyCPU(float *a, float *b, float *c, int width)
+
+void matrixMultiplyCPU(float *a, float *b, float *c, size_t width);
+void matrixMultiplyCPU(float *a, float *b, float *c, size_t width)
 {
     float result;
 
@@ -44,7 +46,8 @@ void matrixMultiplyCPU(float *a, float *b, float *c, int width)
     }
 }
 
-void matrixMultiplyCPU_MP(float *a, float *b, float *c, int width)
+void matrixMultiplyCPU_MP(float *a, float *b, float *c, size_t width);
+void matrixMultiplyCPU_MP(float *a, float *b, float *c, size_t width)
 {
     float result = 0.0;
 //#pragma omp parallel
@@ -62,10 +65,10 @@ void matrixMultiplyCPU_MP(float *a, float *b, float *c, int width)
 
 int main()
 {
-    int width = 2000; // Define width of square matrix
+    size_t width = 2000; // Define width of square matrix
     // Initialise grid and block variables
     int sqrtThreads = sqrt(THREADS_PER_BLOCK);
-    int nBlocks = width / sqrtThreads;
+    size_t nBlocks = width / sqrtThreads;
     if (width % sqrtThreads != 0) { // Add an extra block if necessary
         nBlocks++;
     }
@@ -83,7 +86,7 @@ int main()
     float *b_d;
     float *c_d;
 
-    int size; // Number of bytes required by arrays
+    size_t size; // Number of bytes required by arrays
 
     // Create timer
     cudaEvent_t start;
