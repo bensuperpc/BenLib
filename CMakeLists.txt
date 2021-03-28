@@ -76,17 +76,23 @@ if(CMAKE_CUDA_COMPILER)
     message(STATUS "CMAKE_CUDA_COMPILER: True")
 endif()
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+#set(PROJECT_BINARY_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+#set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 #   ================================================
 #   ================    COMPILER    ================
 #   ================================================
 
 if(NOT CMAKE_C_COMPILER)
-#    set(CMAKE_C_COMPILER /usr/bin/clang)
-    set(CMAKE_C_COMPILER /usr/bin/gcc)
+    set(CMAKE_C_COMPILER /usr/bin/clang)
+#    set(CMAKE_C_COMPILER /usr/bin/gcc)
 endif()
 if(NOT CMAKE_CXX_COMPILER)
-#    set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-    set(CMAKE_CXX_COMPILER /usr/bin/g++)
+    set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+#    set(CMAKE_CXX_COMPILER /usr/bin/g++)
 endif()
 
 #=== C VERSION CHECK ===
@@ -115,7 +121,7 @@ endif()
 #=== C++ VERSION CHECK ===
 #Set the highest C++ standard supported by the compiler
 set(CMAKE_CXX_STANDARD 17)
-
+set(CMAKE_C_STANDARD 11)
 
 
 set(CMAKE_CXX_STANDARD_REQUIRED 1)
@@ -139,7 +145,7 @@ set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=for
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
 #-std=c99
 
-set(CMAKE_C_FLAGS                " -march=native -mtune=native ${WARNINGS_COMPILER_C} -pipe ")
+set(CMAKE_C_FLAGS                " -march=native ${WARNINGS_COMPILER_C} -pipe ")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${OPTI_COMPILER_REL} ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 ${OPTI_COMPILER_REL} -pg") # Remove -v
@@ -181,7 +187,7 @@ set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 #-flto -fuse-ld=lld -fuse-ld=gold
 set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition,--thinlto-jobs=all")
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin")
+    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,-rpath,../lib")
 endif()
 
 #set(CMAKE_SHARED_LINKER_FLAGS " -fuse-ld=lld ")
@@ -210,12 +216,6 @@ endif()
 
 #set(BUILD_SHARED_LIBRARIES 0)
 #set(CMAKE_EXE_LINKER_FLAGS "-static")
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-#set(PROJECT_BINARY_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-#set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 #   ================    COMPILER DEF    ================
 
@@ -251,6 +251,8 @@ endif()
 include(ExternalProject)
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
+
+
 #ExternalProject_Add(opencv_lib
 #    GIT_REPOSITORY https:#github.com/boostorg/boost
 #    GIT_TAG 4.4.0
@@ -259,9 +261,12 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
 #)
 
+
 #   ================    OpenMP    ================
 set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(CMAKE_THREAD_PREFER_PTHREAD ON)
 find_package(Threads REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 #   ================    OpenMP    ================
 # https://stackoverflow.com/a/12404666/10152334
@@ -940,16 +945,74 @@ configure_file(${lib_path}lib/opencl/kernels/gta_sa.cl ${CMAKE_BINARY_DIR}/kerne
 #    COMMAND cp -R -u -p "../texture/PIPOYA FREE RPG Character Sprites 32x32" "texture/PIPOYA FREE RPG Character Sprites 32x32"
 #)
 
-#   ================================================
+#   =================================================
 #   ===============    UNSET VALUE    ===============
-#   ================================================
+#   =================================================
 
 
 #unset(CMAKE_BUILD_TYPE CACHE)
 
+#   ================================================
+#   =================    CPack    ==================
+#   ================================================
 
+include(InstallRequiredSystemLibraries)
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My funky project")
+set(CPACK_PACKAGE_VENDOR "Me, myself, and I")
+#set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
+#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Copyright.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "3")
+set(CPACK_PACKAGE_VERSION_PATCH "2")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
+if(WIN32 AND NOT UNIX)
+  # There is a bug in NSI that does not handle full UNIX paths properly.
+  # Make sure there is at least one set of four backlashes.
+  set(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
+  set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
+  set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} My Famous Project")
+  set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.my-project-home-page.org")
+  set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.my-personal-home-page.com")
+  set(CPACK_NSIS_CONTACT "me@my-personal-home-page.com")
+  set(CPACK_NSIS_MODIFY_PATH ON)
+else()
+  set(CPACK_STRIP_FILES "bin/MyExecutable")
+  set(CPACK_SOURCE_STRIP_FILES "")
+endif()
+set(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
+
+# ====== LIBS ======
+install(TARGETS my_crypto
+  ARCHIVE
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS my_cuda
+  ARCHIVE
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS math
+  ARCHIVE
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS string_lib
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+# ====== BIN ======
+install(TARGETS list_all_file_hash
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+# ====== TESTS ======
+install(TARGETS test_power
+  RUNTIME
+  DESTINATION tests
+  COMPONENT tests)
+#install(FILES mylib.h
+#  DESTINATION include
+#  COMPONENT headers)
+
+set(CPACK_COMPONENTS_ALL applications libraries headers tests)
 # Section CPack
 include (CPack)
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "CMake main lib")
-SET(CPACK_PACKAGE_VENDOR "Ben")
-SET(CPACK_PACKAGE_EXECUTABLES "benlib" "benlib")
