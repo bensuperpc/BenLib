@@ -95,6 +95,10 @@ if(NOT CMAKE_CXX_COMPILER)
 #    set(CMAKE_CXX_COMPILER /usr/bin/g++)
 endif()
 
+#Set the highest C++ standard supported by the compiler
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 11)
+
 #=== C VERSION CHECK ===
 # Set the highest C standard supported by the compiler
 
@@ -118,15 +122,69 @@ if(NOT CMAKE_C_STANDARD)
     endif()
 endif()
 
-#=== C++ VERSION CHECK ===
-#Set the highest C++ standard supported by the compiler
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
-
 
 set(CMAKE_CXX_STANDARD_REQUIRED 1)
 if(NOT CMAKE_CXX_EXTENSIONS)
     set(CMAKE_CXX_EXTENSIONS 1)
+endif()
+
+
+#=== C++ VERSION CHECK ===
+if(NOT CMAKE_CXX_STANDARD)
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-std=c++23" COMPILER_SUPPORTS_CXX23)
+    CHECK_CXX_COMPILER_FLAG("-std=c++20" COMPILER_SUPPORTS_CXX20)
+    CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
+    CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+    CHECK_CXX_COMPILER_FLAG("-std=c++03" COMPILER_SUPPORTS_CXX03)
+    CHECK_CXX_COMPILER_FLAG("-std=c++98" COMPILER_SUPPORTS_CXX98)
+
+    if(COMPILER_SUPPORTS_CXX20)
+        set(CMAKE_CXX_STANDARD 20)
+        message(STATUS "C++20: OK")
+    elseif(COMPILER_SUPPORTS_CXX17)
+        set(CMAKE_CXX_STANDARD 17)
+        message(STATUS "C++17: OK")
+    elseif(COMPILER_SUPPORTS_CXX14)
+        set(CMAKE_CXX_STANDARD 14)
+        message(WARNING "C++14: Error")
+        message(FATAL_ERROR "C++14 is old, please use newer compiler.")
+    elseif(COMPILER_SUPPORTS_CXX11)
+        set(CMAKE_CXX_STANDARD 11)
+        message(WARNING "C++11: OK")
+        message(FATAL_ERROR "C++11 is old, please use newer compiler.")
+    elseif(COMPILER_SUPPORTS_CXX03)
+        set(CMAKE_CXX_STANDARD 03)
+        message(WARNING "C++03: OK")
+        message(FATAL_ERROR "C++03 is old, please use newer compiler.")
+    elseif(COMPILER_SUPPORTS_CXX98)
+        set(CMAKE_CXX_STANDARD 98)
+        message(WARNING "C++98: OK")
+        message(FATAL_ERROR "C++98 is old, please use newer compiler.")
+    else()
+        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
+    endif()
+
+    # Compiler-specific C++11 activation.
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        # require at least gcc 4.8
+        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
+            message(FATAL_ERROR "GCC version must be at least 4.8!")
+            set(CMAKE_CXX_STANDARD 14)
+        endif()
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        # require at least clang 3.2
+        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.2)
+            message(FATAL_ERROR "Clang version must be at least 3.2!")
+        endif()
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14.0")
+        message(FATAL_ERROR "Insufficient msvc version")
+        endif()
+    else()
+        message(WARNING "You are using an unsupported compiler! Compilation has only been tested with Clang and GCC.")
+    endif()
 endif()
 
 
@@ -187,7 +245,7 @@ set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 #-flto -fuse-ld=lld -fuse-ld=gold
 set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition,--thinlto-jobs=all")
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,-rpath,../lib")
+    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,-rpath,../lib -Wl,-rpath,../external/lib")
 endif()
 
 #set(CMAKE_SHARED_LINKER_FLAGS " -fuse-ld=lld ")
@@ -960,27 +1018,46 @@ include(InstallRequiredSystemLibraries)
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My funky project")
 set(CPACK_PACKAGE_VENDOR "Me, myself, and I")
+set(CPACK_PACKAGE_NAME "BenLib")
 #set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
 #set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Copyright.txt")
-set(CPACK_PACKAGE_VERSION_MAJOR "1")
-set(CPACK_PACKAGE_VERSION_MINOR "3")
-set(CPACK_PACKAGE_VERSION_PATCH "2")
+#set(CPACK_PACKAGE_VERSION_MAJOR "1")
+#set(CPACK_PACKAGE_VERSION_MINOR "3")
+#set(CPACK_PACKAGE_VERSION_PATCH "2")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+
+
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
 if(WIN32 AND NOT UNIX)
-  # There is a bug in NSI that does not handle full UNIX paths properly.
-  # Make sure there is at least one set of four backlashes.
   set(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
   set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
   set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} My Famous Project")
-  set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.my-project-home-page.org")
-  set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.my-personal-home-page.com")
-  set(CPACK_NSIS_CONTACT "me@my-personal-home-page.com")
+  set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.bensuperpc.org")
+  set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.bensuperpc.com")
+  set(CPACK_NSIS_CONTACT "bensuperpc@gmail.com")
   set(CPACK_NSIS_MODIFY_PATH ON)
 else()
   set(CPACK_STRIP_FILES "bin/MyExecutable")
   set(CPACK_SOURCE_STRIP_FILES "")
 endif()
 set(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
+
+# ====== RPM ======
+set(CPACK_RPM_PACKAGE_GROUP "vesoft")
+set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+set(CPACK_RPM_PACKAGE_RELOCATABLE ON)
+set(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
+set(CPACK_RPM_PACKAGE_RELEASE ON)
+set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
+set(CPACK_RPM_PACKAGE_AUTOREQ ON)
+set(CPACK_RPM_PACKAGE_REQUIRES "clang >= 10.0.0, cmake >= 3.0")
+set(CPACK_RPM_PACKAGE_CONFLICTS "libxml2")
+#set(CPACK_RPM_PACKAGE_SUGGESTS "clang >= 10.0.0, cmake >= 3.0")
+
+
+#set(CPACK_RPM_COMPRESSION_TYPE "xz")
+#set(CPACK_RPM_FILE_NAME "test.rpm")
 
 # ====== LIBS ======
 install(TARGETS my_crypto
@@ -999,6 +1076,46 @@ install(TARGETS string_lib
   RUNTIME
   DESTINATION lib
   COMPONENT libraries)
+install(TARGETS convert_utils
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS texture
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS utils_opencv
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS utils_opengl
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS time
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS cpu
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS vector
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS thread
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS filesystem
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
+install(TARGETS std
+  RUNTIME
+  DESTINATION lib
+  COMPONENT libraries)
 # ====== BIN ======
 install(TARGETS list_all_file_hash
   RUNTIME
@@ -1014,5 +1131,6 @@ install(TARGETS test_power
 #  COMPONENT headers)
 
 set(CPACK_COMPONENTS_ALL applications libraries headers tests)
+set(CPACK_GENERATOR "TZ;STGZ;TGZ;RPM")
 # Section CPack
 include (CPack)
