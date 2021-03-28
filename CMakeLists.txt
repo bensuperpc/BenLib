@@ -29,14 +29,16 @@ project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
 #   ================    CMAKE CONF    ================
 #   ==================================================
 
+option(ENABLE_CCACHE "Whether to use ccache to speed up compiling" ON)
+option(CMAKE_INCLUDE_CURRENT_DIR ON)
+option(CMAKE_VERBOSE_MAKEFILE ON)
+
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Debug")
 else()
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif()
 
-set(CMAKE_INCLUDE_CURRENT_DIR 1)
-set(CMAKE_VERBOSE_MAKEFILE 1)
 
 # If support unity build, improve speed on headers
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
@@ -62,12 +64,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #set(Var1 "This is variable 1" PARENT_SCOPE)
 
 find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND)
+if(CCACHE_FOUND AND ENABLE_CCACHE)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) # Less useful to do it for linking, see edit2
     set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
     set(CMAKE_C_COMPILER_LAUNCHER ccache)
-endif(CCACHE_FOUND)
+endif()
 
 include(CheckLanguage)
 check_language(CUDA)
@@ -1054,6 +1056,9 @@ set(CPACK_RPM_PACKAGE_AUTOREQ ON)
 set(CPACK_RPM_PACKAGE_REQUIRES "clang >= 10.0.0, cmake >= 3.0")
 set(CPACK_RPM_PACKAGE_CONFLICTS "libxml2")
 #set(CPACK_RPM_PACKAGE_SUGGESTS "clang >= 10.0.0, cmake >= 3.0")
+set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home")
+list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home/vesoft")
+
 
 
 #set(CPACK_RPM_COMPRESSION_TYPE "xz")
