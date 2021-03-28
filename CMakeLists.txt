@@ -356,10 +356,6 @@ if(SFML_FOUND)
     add_compile_definitions(SFML_VERSION="${SFML_VERSION}")
 else()
     message(STATUS "SFML: NOT FOUND")
-    if(NOT EXTERNAL_LIB)
-        set(EXTERNAL_LIB "")
-    endif()
-    string(APPEND EXTERNAL_LIB "sfml_lib")
     ExternalProject_Add(sfml_lib
         GIT_REPOSITORY https:#github.com/SFML/SFML.git
         GIT_TAG 2.5.1
@@ -399,13 +395,9 @@ if (OPENCV_FOUND)
     message(STATUS "OPENCV: FOUND")
 else()
     message(STATUS "OPENCV: NOT FOUND")
-    if(NOT EXTERNAL_LIB)
-        set(EXTERNAL_LIB "")
-    endif()
     if (WIN64)
         set(OpenCV_DIR "C:/Users/Benoit/Downloads/opencv-4.4.0/build")
     endif (WIN64)
-    string(APPEND EXTERNAL_LIB "opencv_lib")
     ExternalProject_Add(opencv_lib
         GIT_REPOSITORY https://github.com/opencv/opencv
         GIT_TAG 4.4.0
@@ -574,7 +566,6 @@ include_directories("${lib_path}lib/") #To avoid to use full path in headers
 include_directories("${lib_path}lib/C/") #To avoid to use full path in headers
 
 
-
 # C libs
 add_subdirectory(${lib_path}lib/C/libhello "src/lib/lib/C/libhello")
 add_subdirectory(${lib_path}lib/C/string_c "src/lib/lib/C/string_c")
@@ -583,7 +574,6 @@ add_subdirectory(${lib_path}lib/C/string_is "src/lib/lib/C/string_is_c")
 add_subdirectory(${lib_path}lib/C/pointer "src/lib/lib/C/pointer_c")
 add_subdirectory(${lib_path}lib/C/display "src/lib/lib/C/display_c")
 add_subdirectory(${lib_path}lib/C/integer "src/lib/lib/C/integer_c")
-
 
 # C++ libs
 add_subdirectory(${lib_path}lib/convert_utils "src/lib/lib/convert_utils")
@@ -618,26 +608,8 @@ if (CUDA_FOUND)
     add_subdirectory(${lib_path}lib/CUDA "src/lib/lib/CUDA")
 endif()
 
-if(EXTERNAL_LIB)
-    add_dependencies(hello ${EXTERNAL_LIB})
-    add_dependencies(convert_utils ${EXTERNAL_LIB})
-    add_dependencies(texture ${EXTERNAL_LIB})
-    add_dependencies(math ${EXTERNAL_LIB})
-    add_dependencies(utils_opencv ${EXTERNAL_LIB})
-    add_dependencies(utils_opengl ${EXTERNAL_LIB})
-#   add_dependencies(utils_sfml ${EXTERNAL_LIB})
-    add_dependencies(time ${EXTERNAL_LIB})
-    add_dependencies(cpu ${EXTERNAL_LIB})
-    add_dependencies(vector ${EXTERNAL_LIB})
-    add_dependencies(thread ${EXTERNAL_LIB})
-    add_dependencies(filesystem ${EXTERNAL_LIB})
-    add_dependencies(my_crypto ${EXTERNAL_LIB})
-    add_dependencies(std ${EXTERNAL_LIB})
-endif()
+#add_dependencies(hello ${EXTERNAL_LIB})
 
-if(EXTERNAL_LIB AND CUDA_FOUND)
-    add_dependencies(my_cuda ${EXTERNAL_LIB})
-endif()
 
 
 #   =================================================
@@ -726,8 +698,6 @@ if (QT_FOUND)
     set(MAIN_LLIBS ${MAIN_LLIBS} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia)
 endif()
 
-set(CUSTOM_LIBS texture convert_utils math utils_opencv utils_opengl time cpu vector thread filesystem my_crypto std string_lib)
-
 #   ==================================================
 #   ===============    EXEC FILES    =================
 #   ==================================================
@@ -762,69 +732,63 @@ if(OpenMP_CXX_FOUND)
 else()
     target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time stdc++fs)
 endif()
-add_dependencies(bench_crc32 ${CUSTOM_LIBS})
+add_dependencies(bench_crc32 thread Threads::Threads vector my_crypto math time)
 
 
 if(Boost_FOUND)
     add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
     target_link_libraries(gta_sa_cheat PRIVATE string_lib time OpenMP::OpenMP_CXX)
-    add_dependencies(gta_sa_cheat ${CUSTOM_LIBS})
+    add_dependencies(gta_sa_cheat string_lib time OpenMP::OpenMP_CXX)
 
     add_executable(list_all_file ${LIST_ALL_FILE})
     target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
-    add_dependencies(list_all_file ${CUSTOM_LIBS})
 endif()
 
 if(OpenCL_FOUND)
     add_executable(opencl_test ${OPENCL_TEST})
     target_link_libraries(opencl_test PRIVATE ${OpenCL_LIBRARY})
-    add_dependencies(opencl_test ${CUSTOM_LIBS})
 
     add_executable(opencl_test2 ${OPENCL_TEST2})
     target_link_libraries(opencl_test2 PRIVATE ${OpenCL_LIBRARY})
-    add_dependencies(opencl_test2 ${CUSTOM_LIBS})
 
     add_executable(opencl_findstringinv ${OPENCL_FINDSTRINGINV})
     target_link_libraries(opencl_findstringinv PRIVATE ${OpenCL_LIBRARY} string_lib)
-    add_dependencies(opencl_findstringinv ${CUSTOM_LIBS})
 
     add_executable(opencl_gta_sa_gpu ${OPENCL_GTA_SA_GPU})
     target_link_libraries(opencl_gta_sa_gpu PRIVATE ${OpenCL_LIBRARY} string_lib)
-    add_dependencies(opencl_gta_sa_gpu ${CUSTOM_LIBS})
 
     if (OPENSSL_FOUND)
         add_executable(opencl_crc32 ${OPENCL_CRC32})
         target_link_libraries(opencl_crc32 PRIVATE ${OpenCL_LIBRARY} my_crypto time)
-        add_dependencies(opencl_crc32 ${CUSTOM_LIBS})
     endif()
 endif()
 
 add_executable(parse_csv ${PARSE_CSV})
 target_link_libraries(parse_csv PRIVATE string_lib)
-add_dependencies(parse_csv ${CUSTOM_LIBS})
+add_dependencies(parse_csv string_lib)
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})
     target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} stdc++fs my_crypto OpenMP::OpenMP_CXX time)
-    add_dependencies(list_all_file_hash ${CUSTOM_LIBS})
+    add_dependencies(list_all_file_hash my_crypto OpenMP::OpenMP_CXX time)
 
     add_executable(crypto_AES ${CRYPTO_AES})
     target_link_libraries(crypto_AES PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
-    add_dependencies(crypto_AES ${CUSTOM_LIBS})
+    add_dependencies(crypto_AES filesystem thread time)
 
     add_executable(crypto_RSA ${CRYPTO_RSA})
     target_link_libraries(crypto_RSA PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
-    add_dependencies(crypto_RSA ${CUSTOM_LIBS})
+    add_dependencies(crypto_RSA my_crypto thread time filesystem)
 endif()
 
 if (OPENCV_FOUND)
     add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV})
     target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS} stdc++fs)
-    add_dependencies(list_all_file_opencv ${CUSTOM_LIBS})
+    add_dependencies(list_all_file_opencv filesystem ${OpenCV_LIBS})
 
     add_executable(image_diff ${IMAGE_DIFF})
     target_link_libraries(image_diff PRIVATE filesystem ${OpenCV_LIBS} stdc++fs utils_opencv)
-    add_dependencies(image_diff ${CUSTOM_LIBS})
+    add_dependencies(image_diff filesystem ${OpenCV_LIBS} utils_opencv)
 endif()
 
 #   ================================================
@@ -836,71 +800,47 @@ if(Boost_FOUND)
     #Test getSchwarzschild
     set(TEST_SCHWARZSCHILD test_getSchwarzschild)
     add_executable(${TEST_SCHWARZSCHILD} ${lib_path}src/test/math/test_getSchwarzschild.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_SCHWARZSCHILD} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_SCHWARZSCHILD} PRIVATE ${Boost_LIBRARIES})
     add_test(NAME ${TEST_SCHWARZSCHILD} COMMAND ${CMAKE_COMMAND} --build . --target ${TEST_SCHWARZSCHILD})
 
     #Test getGravitationalAttraction
     set(TEST_GA test_getGravitationalAttraction)
     add_executable(${TEST_GA} ${lib_path}src/test/math/test_getGravitationalAttraction.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_GA} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_GA} PRIVATE ${Boost_LIBRARIES})
     add_test(NAME ${TEST_GA} COMMAND ${TEST_GA})
 
     #Test sphere
     set(TEST_SPHERE test_sphere)
     add_executable(${TEST_SPHERE} ${lib_path}src/test/math/test_sphere.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_SPHERE} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_SPHERE} PRIVATE ${Boost_LIBRARIES} quadmath)
     add_test(NAME ${TEST_SPHERE} COMMAND ${TEST_SPHERE})
 
     #Test cylinder
     set(TEST_CYLINDER test_cylinder)
     add_executable(${TEST_CYLINDER} ${lib_path}src/test/math/test_cylinder.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_CYLINDER} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_CYLINDER} PRIVATE ${Boost_LIBRARIES})
     add_test(NAME ${TEST_CYLINDER} COMMAND ${TEST_CYLINDER})
 
     #Test vector sort
     set(TEST_VECTOR_SORT test_vector_sort)
     add_executable(${TEST_VECTOR_SORT} ${lib_path}src/test/vector/test_vector_sort.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_VECTOR_SORT} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_VECTOR_SORT} PRIVATE ${Boost_LIBRARIES} vector)
     add_test(NAME ${TEST_VECTOR_SORT} COMMAND ${TEST_VECTOR_SORT})
 
     #Test vector copy
     set(TEST_VECTOR_COPY test_vector_copy)
     add_executable(${TEST_VECTOR_COPY} ${lib_path}src/test/vector/test_vector_copy.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_VECTOR_COPY} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_VECTOR_COPY} PRIVATE ${Boost_LIBRARIES} vector)
     add_test(NAME ${TEST_VECTOR_COPY} COMMAND ${TEST_VECTOR_COPY})
 
     #Test vector copy
     set(TEST_VECTOR_MAX_SIMD test_vector_max_simd)
     add_executable(${TEST_VECTOR_MAX_SIMD} ${lib_path}src/test/vector/test_vector_max_simd.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_VECTOR_MAX_SIMD} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_VECTOR_MAX_SIMD} PRIVATE ${Boost_LIBRARIES} vector)
     add_test(NAME ${TEST_VECTOR_MAX_SIMD} COMMAND ${TEST_VECTOR_MAX_SIMD})
 
     set(TEST_STRING_SEQ test_string_seq)
     add_executable(${TEST_STRING_SEQ} ${lib_path}src/test/string/test_string_seq.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_STRING_SEQ} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_STRING_SEQ} PRIVATE ${Boost_LIBRARIES} string_lib)
     add_test(NAME ${TEST_STRING_SEQ} COMMAND ${TEST_STRING_SEQ})
 endif()
@@ -909,26 +849,17 @@ if (OPENSSL_FOUND AND Boost_FOUND)
     #Test crypto
     set(TEST_CRYPTO test_crypto)
     add_executable(${TEST_CRYPTO} ${lib_path}src/test/crypto/test_crypto.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_CRYPTO} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_CRYPTO} PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
     add_test(NAME ${TEST_CRYPTO} COMMAND ${TEST_CRYPTO})
 
     #Test crypto AES
     set(TEST_CRYPTO_AES test_crypto_aes)
     add_executable(${TEST_CRYPTO_AES} ${lib_path}src/test/crypto/test_crypto_AES.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_CRYPTO_AES} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_CRYPTO_AES} PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
     add_test(NAME ${TEST_CRYPTO_AES} COMMAND ${TEST_CRYPTO_AES})
 
     set(TEST_CRYPTO_CRC test_crypto_CRC)
     add_executable(${TEST_CRYPTO_CRC} ${lib_path}src/test/crypto/test_crypto_CRC.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_CRYPTO_CRC} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_CRYPTO_CRC} PRIVATE ${Boost_LIBRARIES} my_crypto)
     add_test(NAME ${TEST_CRYPTO_CRC} COMMAND ${TEST_CRYPTO_CRC})
 endif()
@@ -938,25 +869,16 @@ if(Boost_FOUND)
     
     set(TEST_REV_STR test_rev_str)
     add_executable(${TEST_REV_STR} ${lib_path}src/test/C/string_c/test_string.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_REV_STR} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_REV_STR} PRIVATE ${Boost_LIBRARIES} string_c)
     add_test(NAME ${TEST_REV_STR} COMMAND ${TEST_REV_STR})
 
     set(TEST_IS_NUM test_my_isnum)
     add_executable(${TEST_IS_NUM} ${lib_path}src/test/C/string_is/test_my_isnum.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_IS_NUM} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_IS_NUM} PRIVATE ${Boost_LIBRARIES} string_is_c)
     add_test(NAME ${TEST_IS_NUM} COMMAND ${TEST_IS_NUM})
 
     set(TEST_STR_IS_NUM test_my_str_isnum)
     add_executable(${TEST_STR_IS_NUM} ${lib_path}src/test/C/string_is/test_my_str_isnum.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_STR_IS_NUM} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_STR_IS_NUM} PRIVATE ${Boost_LIBRARIES} string_is_c)
     add_test(NAME ${TEST_STR_IS_NUM} COMMAND ${TEST_STR_IS_NUM})
 
@@ -964,9 +886,6 @@ if(Boost_FOUND)
     #Test power
     set(TEST_POWER test_power)
     add_executable(${TEST_POWER} ${lib_path}src/test/math/test_power.cpp)
-    if(EXTERNAL_LIB)
-        add_dependencies(${TEST_POWER} ${EXTERNAL_LIB})
-    endif()
     target_link_libraries(${TEST_POWER} PRIVATE ${Boost_LIBRARIES})
     add_test(NAME ${TEST_POWER} COMMAND ${TEST_POWER})
 endif()
