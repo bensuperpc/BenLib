@@ -21,9 +21,9 @@
 #                                                            #
 ##############################################################
 
-cmake_minimum_required (VERSION 3.13)
+cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
 #project(BENLIB VERSION 0.0.5 LANGUAGES CUDA CXX C)
-project(BENLIB VERSION 0.0.5 LANGUAGES CXX C)
+project(BENLIB VERSION 0.0.5 DESCRIPTION "Bensuperpc's libs" LANGUAGES CXX C)
 
 #   ==================================================
 #   ================    CMAKE CONF    ================
@@ -80,6 +80,7 @@ endif()
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_INSTALL_INCLUDEDIR "include")
 #set(PROJECT_BINARY_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -207,12 +208,11 @@ set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=for
 
 #=== C FLAGS ===
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
-#-std=c99
 
 set(CMAKE_C_FLAGS                " -march=native -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_C} -pipe ")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
+set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -rdynamic -ggdb3 -pg") # Remove -v
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -221,7 +221,11 @@ endif()
 
 #=== CXX FLAGS ===
 #-Wold-style-cast -Wdouble-promotion -fstack-usage -Wpadded
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wpedantic -Wall -Wextra -Wshadow -Wstrict-overflow=5 -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter")
+
+#add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-Wall;-Wextra;-Wpedantic;-Wshadow>")
+
+
+set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wall -Wextra -Wpedantic -Wshadow -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wmissing-include-dirs -Wmissing-noreturn -Wimport -Winit-self -Winvalid-pch -Wstrict-aliasing=2 -Wswitch-default -Wunreachable-code -Wunused")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Woverloaded-virtual  -Wdisabled-optimization -Winline -Wredundant-decls -Wsign-conversion -Wformat-nonliteral -Wformat-security")
 set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wwrite-strings -Wcast-align -Wcast-qual -Wfloat-equal -Wvariadic-macros -Wpacked -Wpointer-arith -Weffc++ -Wformat=2 -Wfloat-equal")
@@ -234,7 +238,6 @@ endif()
 # Removed : -Wconversion -Wuseless-cast
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
-#Add -lstdc++fs for old compiler
 set(CMAKE_CXX_FLAGS                "  -ffunction-sections -fdata-sections -march=native ${WARNINGS_COMPILER_CXX} -pipe")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs")
@@ -245,15 +248,14 @@ endif()
 
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
+set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -rdynamic -ggdb3 -pg") # Remove -v
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 
 
-set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib ")
+set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
 endif()
-
 
 if (CMAKE_GENERATOR STREQUAL "Ninja")
   if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -265,6 +267,11 @@ if (CMAKE_GENERATOR STREQUAL "Ninja")
   endif()
 endif()
 
+add_compile_options(
+    "$<$<CXX_COMPILER_ID:Clang>:>"
+    "$<$<CXX_COMPILER_ID:Gnu>:>"
+    "$<$<CXX_COMPILER_ID:MSVC>:>"
+    )
 #add_compile_options(
 #    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CXX_FLAGS}>
 #    $<$<COMPILE_LANGUAGE:C>:${c_flags}>
@@ -698,19 +705,19 @@ endif()
 #   ==================================================
 
 add_executable(bench_isprime ${BENCH_ISPRIME})
-target_link_libraries(bench_isprime PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_isprime PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_isprime vector math time thread)
 
 add_executable(bench_vector_copy ${BENCH_VECTOR_COPY})
-target_link_libraries(bench_vector_copy PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_vector_copy PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_vector_copy thread vector math time)
 
 add_executable(bench_vector_sort ${BENCH_VECTOR_SORT})
-target_link_libraries(bench_vector_sort PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_vector_sort PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_vector_sort thread vector math time)
 
 add_executable(bench_digits_count ${BENCH_DIGITS_COUNT})
-target_link_libraries(bench_digits_count PRIVATE thread Threads::Threads vector math time stdc++fs)
+target_link_libraries(bench_digits_count PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_digits_count thread vector math time)
 
 add_executable(bench_find_max ${BENCH_FIND_MAX})
@@ -723,9 +730,9 @@ add_dependencies(bench_pc time vector)
 
 add_executable(bench_crc32 ${BENCH_CRC32})
 if(OpenMP_CXX_FOUND)
-    target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time stdc++fs OpenMP::OpenMP_CXX)
+    target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time OpenMP::OpenMP_CXX)
 else()
-    target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time stdc++fs)
+    target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time)
 endif()
 add_dependencies(bench_crc32 thread Threads::Threads vector my_crypto math time)
 
@@ -736,7 +743,7 @@ if(Boost_FOUND)
     add_dependencies(gta_sa_cheat string_lib time OpenMP::OpenMP_CXX)
 
     add_executable(list_all_file ${LIST_ALL_FILE})
-    target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem stdc++fs)
+    target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem)
 endif()
 
 if(OpenCL_FOUND)
@@ -764,32 +771,33 @@ add_dependencies(parse_csv string_lib)
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})
-    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} stdc++fs my_crypto OpenMP::OpenMP_CXX time)
+    target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto OpenMP::OpenMP_CXX time)
     add_dependencies(list_all_file_hash my_crypto OpenMP::OpenMP_CXX time)
 
     add_executable(crypto_AES ${CRYPTO_AES})
-    target_link_libraries(crypto_AES PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
+    target_link_libraries(crypto_AES PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem my_crypto thread time)
     add_dependencies(crypto_AES filesystem thread time)
 
     add_executable(crypto_RSA ${CRYPTO_RSA})
-    target_link_libraries(crypto_RSA PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem stdc++fs my_crypto thread time)
+    target_link_libraries(crypto_RSA PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem my_crypto thread time)
     add_dependencies(crypto_RSA my_crypto thread time filesystem)
 endif()
 
 if (OPENCV_FOUND)
     add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV})
-    target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS} stdc++fs)
+    target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS})
     add_dependencies(list_all_file_opencv filesystem ${OpenCV_LIBS})
 
     add_executable(image_diff ${IMAGE_DIFF})
-    target_link_libraries(image_diff PRIVATE filesystem ${OpenCV_LIBS} stdc++fs utils_opencv)
+    target_link_libraries(image_diff PRIVATE filesystem ${OpenCV_LIBS} utils_opencv)
 endif()
 
 #   ================================================
 #   ================    TESTING     ================
 #   ================================================
+option(ENABLE_TESTS "Enable tests" ON)
 
-if(Boost_FOUND)
+if(Boost_FOUND AND ENABLE_TESTS)
     enable_testing()
     #Test getSchwarzschild
     add_executable(test_getSchwarzschild ${lib_path}src/test/math/test_getSchwarzschild.cpp)
@@ -831,7 +839,7 @@ if(Boost_FOUND)
     add_test(NAME test_string_seq COMMAND test_string_seq)
 endif()
 
-if (OPENSSL_FOUND AND Boost_FOUND)
+if (OPENSSL_FOUND AND Boost_FOUND AND ENABLE_TESTS)
     #Test crypto
     add_executable(test_crypto ${lib_path}src/test/crypto/test_crypto.cpp)
     target_link_libraries(test_crypto PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
@@ -848,7 +856,7 @@ if (OPENSSL_FOUND AND Boost_FOUND)
 endif()
 
 #Test C string
-if(Boost_FOUND)
+if(Boost_FOUND AND ENABLE_TESTS)
     
     set(TEST_REV_STR test_rev_str)
     add_executable(${TEST_REV_STR} ${lib_path}src/test/C/string_c/test_string.cpp)
@@ -923,6 +931,7 @@ include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My funky project")
 set(CPACK_PACKAGE_VENDOR "Me, myself, and I")
 set(CPACK_PACKAGE_NAME "BenLib")
+set(CPACK_PACKAGE_CONTACT "bensuperpc@gmail.com")
 #set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
 #set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Copyright.txt")
 #set(CPACK_PACKAGE_VERSION_MAJOR "1")
@@ -938,7 +947,7 @@ if(WIN32 AND NOT UNIX)
   set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} My Famous Project")
   set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.bensuperpc.org")
   set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.bensuperpc.com")
-  set(CPACK_NSIS_CONTACT "bensuperpc@gmail.com")
+  set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
   set(CPACK_NSIS_MODIFY_PATH ON)
 else()
   set(CPACK_STRIP_FILES "bin/MyExecutable")
@@ -955,26 +964,41 @@ set(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 set(CPACK_RPM_PACKAGE_RELEASE ON)
 set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 set(CPACK_RPM_PACKAGE_AUTOREQ ON)
+
 set(CPACK_RPM_PACKAGE_REQUIRES "clang >= 10.0.0, cmake >= 3.0")
+set(CPACK_RPM_PACKAGE_SUGGESTS "")
 set(CPACK_RPM_PACKAGE_CONFLICTS "libxml2")
+
 #set(CPACK_RPM_PACKAGE_SUGGESTS "clang >= 10.0.0, cmake >= 3.0")
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home")
 list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home/vesoft")
-
-
-
 #set(CPACK_RPM_COMPRESSION_TYPE "xz")
 #set(CPACK_RPM_FILE_NAME "test.rpm")
 
+# ====== DEB ======
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Bensuperpc")
+set(CPACK_DEBIAN_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
+
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "clang (>= 10.0.0), libc6 (>= 3.0)")
+set(CPACK_DEBIAN_PACKAGE_BREAKS "")
+set(CPACK_DEBIAN_PACKAGE_CONFLICTS "")
+set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "")
+
+set(CPACK_DEBIAN_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}.deb")
+set(CPACK_DEB_COMPONENT_INSTALL OFF)
+set(CPACK_DEBIAN_COMPRESSION_TYPE "lzma")
+set(CPACK_DEBIAN_PACKAGE_CONTROL_STRICT_PERMISSION FALSE)
+
+
 # ====== LIBS ======
-install(TARGETS my_crypto
-  ARCHIVE
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS my_cuda
-  ARCHIVE
-  DESTINATION lib
-  COMPONENT libraries)
+#install(TARGETS my_crypto
+#  ARCHIVE
+#  DESTINATION lib
+#  COMPONENT libraries)
+#install(TARGETS my_cuda
+#  ARCHIVE
+#  DESTINATION lib
+#  COMPONENT libraries)
 install(TARGETS math
   ARCHIVE
   DESTINATION lib
@@ -1038,6 +1062,6 @@ install(TARGETS test_power
 #  COMPONENT headers)
 
 set(CPACK_COMPONENTS_ALL applications libraries headers tests)
-set(CPACK_GENERATOR "TZ;STGZ;TGZ;RPM")
+set(CPACK_GENERATOR "TZ;STGZ;TGZ;RPM;ZIP;7Z;DEB")
 # Section CPack
 include (CPack)

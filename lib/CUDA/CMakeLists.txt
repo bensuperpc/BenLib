@@ -36,7 +36,7 @@
 #                                                            #
 ##############################################################
 
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.12)
 #project(my_cuda LANGUAGES CUDA CXX C)
 project(my_cuda LANGUAGES CXX C)
 
@@ -114,8 +114,14 @@ set(HEADERS
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda SHARED ${SRCS} ${HEADERS})
+
+
+#set_target_properties(my_cuda PROPERTIES PUBLIC_HEADER "${EDV_INCLUDE_FILES}")
+
 include_directories("kernel/")
+
 target_compile_features(my_cuda PUBLIC cxx_std_17)
+#set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ")
 target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--threads 0 
     -O3 -Wall -Wextra -pipe --std=c++17
     -Xptxas -O2 --default-stream per-thread
@@ -221,27 +227,40 @@ endif()
 set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 
 
-install(TARGETS
-    my_cuda
+set(EDV_PUBLIC_INCLUDE_DIRECTORIES      kernel/)
+set(EDV_PRIVATE_INCLUDE_DIRECTORIES     kernel/)
+target_include_directories(${PROJECT_NAME} PUBLIC ${EDV_PUBLIC_INCLUDE_DIRECTORIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${EDV_PRIVATE_INCLUDE_DIRECTORIES})
 
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
+file(GLOB_RECURSE EDV_INCLUDE_FILES "kernel/*.hpp*")
+file(GLOB_RECURSE EDV_SOURCE_FILES "kernel/*.cpp*")
+
+set_target_properties(my_cuda PROPERTIES
+    PUBLIC_HEADER "${EDV_INCLUDE_FILES}"
 )
 
+message(STATUT "SOURCE: ${EDV_SOURCE_FILES}")
+install(TARGETS my_cuda
+    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
+    PRIVATE_HEADER DESTINATION source
+    PUBLIC_HEADER DESTINATION include
+)
+#${CMAKE_INSTALL_INCLUDEDIR}
+#install(TARGETS my_cuda
+#        CONFIGURATIONS Debug
+#        RUNTIME DESTINATION Debug/bin)
+#install(TARGETS my_cuda
+#        CONFIGURATIONS Release
+#        RUNTIME DESTINATION Release/bin)
 
-#cuda_add_executable(main main.cpp)
-#target_link_libraries(main ${CUDA_LIBRARIES})
-#target_link_libraries(main kernel_obj)
-
-#add_executable(main main.cpp kernel.cu)
-#target_compile_features(main PUBLIC cxx_std_11)
-#set_target_properties(main PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-#set_property(TARGET main PROPERTY CUDA_ARCHITECTURES 75)
-#target_link_libraries( main  PRIVATE ${CUDA_LIBRARIES})
-
-
-
-#add_library(my_crypto_static STATIC ${SRCS} ${HEADERS})
-#add_library(my_crypto SHARED ${SRCS} ${HEADERS})
-#target_link_libraries(my_crypto PRIVATE ssl crypto)
+#install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/kernel/matrix.tpp"
+#  DESTINATION include
+#  )
+#
+#install(
+#    DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+#    DESTINATION include
+#    FILES_MATCHING PATTERN "*.h*")
 
