@@ -76,7 +76,7 @@ endif()
 # If enable tests
 set(BUILD_TESTING ON)
 set(CODE_COVERAGE ON)
-set(BUILD_DOCS_DOXYGEN FALSE)
+set(BUILD_DOCS_DOXYGEN ON)
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -171,28 +171,8 @@ include(ConfigureOpenCL)
 #   ================    CUDA    ================
 include(ConfigureCUDA)
 
-#   ================    OpenACC    ===============
-# Unsupported by intel and AMD GPU
-#find_package(OpenACC QUIET)
-
-#if (OpenACC_CXX_FOUND)
-#    message(STATUS "OpenACC: FOUND")
-#else()
-#    message(STATUS "OpenACC: NOT FOUND")
-#endif()
-#${OpenACC_CXX_FLAGS}
-
 #   ================    VULKAN    ================
-# Unnecessary for now
-find_package(Vulkan QUIET)
-
-if (VULKAN_FOUND)
-    include_directories( ${Vulkan_INCLUDE_DIR})
-    link_directories(${Vulkan_LIBRARY})
-    message(STATUS "VULKAN: FOUND")
-else()
-    message(STATUS "VULKAN: NOT FOUND")
-endif()
+include(ConfigureVulkan)
 
 #   ================    OPENSSL    ================
 include(ConfigureOpenSSL)
@@ -204,26 +184,9 @@ set(CMAKE_AUTORCC ON)
 include(ConfigureQt)
 
 #   ================    cppcheck    ================
+#set(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
 
-# https://stackoverflow.com/a/63840110/10152334
-
-set(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
-message(STATUS "ENABLE_CODE_ANALYSIS: ${ENABLE_CODE_ANALYSIS}")
-
-if(ENABLE_CODE_ANALYSIS)
-    find_program(cppcheck cppcheck)
-    message(STATUS "cppcheck                   ${cppcheck}")
-    if(NOT (cppcheck MATCHES "NOTFOUND"))
-        set(CMAKE_CXX_CPPCHECK "${cppcheck}"
-            "--enable=all"
-            "--inconclusive"
-            "--inline-suppr"
-            "--quiet"
-            "--suppress=unmatchedSuppression"
-            "--suppress=unusedFunction"
-            "--template='{file}:{line}: warning: {id} ({severity}): {message}'")
-    endif()
-endif(ENABLE_CODE_ANALYSIS)
+include(ConfigureCppCheck)
 
 #   ================    Doxygen    ================
 include(ConfigureDoxygen)
