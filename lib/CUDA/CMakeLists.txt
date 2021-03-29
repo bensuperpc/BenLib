@@ -237,11 +237,41 @@ set_target_properties(my_cuda PROPERTIES
 
 install(TARGETS my_cuda 
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
+#    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR} # Nedd more 1 target
+#    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR} # Nedd more 1 target
     PRIVATE_HEADER DESTINATION source
     PUBLIC_HEADER DESTINATION include
 )
+
+install(TARGETS vec1d
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS vec2d_add
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS vec2d_mult
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS vec2d_mult2
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS vec2d_mult3
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS vec3d_mult
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS vec3d_mult2
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+
 
 #${CMAKE_INSTALL_INCLUDEDIR}
 #install(TARGETS my_cuda

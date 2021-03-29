@@ -75,7 +75,7 @@ set(CMAKE_UNITY_BUILD ON)
 endif()
 # If enable tests
 set(BUILD_TESTING ON)
-set(CODE_COVERAGE ON)
+set(CODE_COVERAGE OFF)
 set(BUILD_DOCS_DOXYGEN ON)
 
 if (CMAKE_BUILD_TYPE)
@@ -574,15 +574,22 @@ configure_file(${lib_path}lib/opencl/kernels/gta_sa.cl ${CMAKE_BINARY_DIR}/kerne
 #   ================================================
 #   =================    CPack    ==================
 #   ================================================
-
+#https://stackoverflow.com/questions/32460371/adding-files-to-archive-packages-only-in-cpack
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My funky project")
 set(CPACK_PACKAGE_VENDOR "Me, myself, and I")
 set(CPACK_PACKAGE_NAME "BenLib")
 set(CPACK_PACKAGE_CONTACT "bensuperpc@gmail.com")
-#set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
+
+#set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+#set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE ON)
+
+#set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+#install(DIRECTORY "${PROJECT_SOURCE_DIR}/examplefiles/" DESTINATION "example")
+
 #set(CPACK_PACKAGE_VERSION_MAJOR "1")
 #set(CPACK_PACKAGE_VERSION_MINOR "3")
 #set(CPACK_PACKAGE_VERSION_PATCH "2")
@@ -606,6 +613,8 @@ endif()
 set(CPACK_PACKAGE_RELEASE "${CMAKE_BUILD_TYPE}")
 set(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
+
+set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_SOURCE_DIR}/package.txt)
 
 # ====== RPM ======
 set(CPACK_RPM_PACKAGE_GROUP "vesoft")
@@ -640,6 +649,17 @@ set(CPACK_DEB_COMPONENT_INSTALL OFF)
 set(CPACK_DEBIAN_COMPRESSION_TYPE "lzma")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_STRICT_PERMISSION FALSE)
 
+# ====== DIRECTORY ======
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/lib/opencl/kernels/
+        DESTINATION kernels
+        COMPONENT ResourcesCursors)
+
+# ====== FILES ======
+install(FILES
+  ${CPACK_RESOURCE_FILE_README}
+  ${CPACK_RESOURCE_FILE_LICENSE}
+  DESTINATION Metadata
+)
 
 # ====== LIBS ======
 #install(TARGETS my_crypto
@@ -703,6 +723,10 @@ install(TARGETS list_all_file_hash
   RUNTIME
   DESTINATION bin
   COMPONENT applications)
+install(TARGETS gta_sa_cheat
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
 # ====== TESTS ======
 install(TARGETS test_power
   RUNTIME
@@ -713,6 +737,6 @@ install(TARGETS test_power
 #  COMPONENT headers)
 
 set(CPACK_COMPONENTS_ALL applications libraries headers tests)
-set(CPACK_GENERATOR "TZ;STGZ;TGZ;RPM;ZIP;7Z;DEB")
+set(CPACK_GENERATOR "TZ;STGZ;TGZ;TZST;TBZ2;RPM;ZIP;7Z;DEB")
 # Section CPack
 include (CPack)
