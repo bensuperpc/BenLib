@@ -150,11 +150,7 @@ set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(my_cuda PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 # If support unity build, improve speed on headers
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
-    set_target_properties(my_cuda PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(convert_utils PUBLIC ${HEADERS})
-    message(STATUS "CMAKE_UNITY_BUILD : 1 on ${PROJECT_NAME}")
-else()
-    message(STATUS "CMAKE_UNITY_BUILD : 0 on ${PROJECT_NAME}")
 endif()
 set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 #target_link_libraries(my_cuda PRIVATE ${CUDA_LIBRARIES})
@@ -239,13 +235,14 @@ set_target_properties(my_cuda PROPERTIES
     PUBLIC_HEADER "${EDV_INCLUDE_FILES}"
 )
 
-install(TARGETS my_cuda
+install(TARGETS my_cuda 
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
     PRIVATE_HEADER DESTINATION source
     PUBLIC_HEADER DESTINATION include
 )
+
 #${CMAKE_INSTALL_INCLUDEDIR}
 #install(TARGETS my_cuda
 #        CONFIGURATIONS Debug

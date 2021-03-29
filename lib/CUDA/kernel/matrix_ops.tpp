@@ -141,6 +141,12 @@ template <typename T> T **my::cuda::aalloc(const size_t sizeX_, const size_t siz
     return A_;
 }
 
+/// @brief metafunction for generation of a map of message types to
+/// their associated callbacks.
+/// @details
+/// Usage: Use <tt>generate_callback_map<Type>::type</tt> to ...
+/// @tparam sizeX_ the list of message types
+/// 
 template <typename T> T *my::cuda::aalloc(const size_t sizeX_)
 {
     T *A_ = new T[sizeX_];

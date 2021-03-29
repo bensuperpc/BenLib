@@ -55,14 +55,24 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort =
 }
 #endif
 
+
+
+/**
+* @namespace my
+* @brief the my namespace
+*/
 namespace my
 {
+    /**
+    * @namespace my::cuda
+    * @brief the cuda namespace
+    */
 namespace cuda
 {
 /*
  *  Kernel Functions
  */
-
+/// a truely efficient function
 void matrixAdd(const dim3 &grid, const dim3 &threads, int *a, int *b, int *c, size_t n);
 // void matrixAdd(const dim3 &grid, const dim3 &threads, cudaStream_t *streams, int *a, int *b, int *c, size_t n);
 void matrixAdd(const dim3 &grid, const dim3 &threads, cudaStream_t &stream, int *a, int *b, int *c, size_t n);

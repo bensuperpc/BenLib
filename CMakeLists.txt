@@ -9,7 +9,7 @@
 #                                                            #
 #  BenLib, 2020                                              #
 #  Created: 05, February, 2020                               #
-#  Modified: 28, March, 2021                                 #
+#  Modified: 29, March, 2021                                 #
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:  https://medium.com/@mikkelwilson/opencv-with-cuda-acceleration-test-e9f7155e1c84                                                   #
@@ -26,6 +26,9 @@
 #           https://github.com/Pseudomanifold/cmake-cpp
 #           https://cmake.org/cmake/help/v3.1/prop_tgt/C_EXTENSIONS.html#prop_tgt:C_EXTENSIONS
 #           https://stackoverflow.com/a/60203765/10152334
+#           https://github.com/StableCoder/cmake-scripts#sanitizer-builds-sanitizerscmake
+#           http://www.stablecoder.ca/2018/01/15/code-coverage.html
+#           https://down.firefliestudio.com/Linux/leveldb/cmake-3.19.0-rc3/Tests/FindDoxygen/StampFile/CMakeLists.txt
 #           
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
@@ -48,22 +51,22 @@ endif()
 #   ================    CMAKE CONF    ================
 #   ==================================================
 
-option(ENABLE_CCACHE "Whether to use ccache to speed up compiling" ON)
+set(ENABLE_CCACHE "Whether to use ccache to speed up compiling" ON)
 # Include
-option(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Increase verbose CMake
-option(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 # Have cmake create a compile database
-option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #Disable precompiled header, save space
-option(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
+set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
 # If support unity build, improve speed on headers
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
-    option(CMAKE_UNITY_BUILD ON)
+set(CMAKE_UNITY_BUILD ON)
 endif()
 # If enable tests
-option(BUILD_TESTING ON)
-
+set(BUILD_TESTING ON)
+set(CODE_COVERAGE ON)
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -101,16 +104,19 @@ set(UNIT_TEST_BIN_OUTPUT_DIR "include")
 #   ================    COMPILER    ================
 #   ================================================
 # Enable CXX standard required
-option(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Enable C standard required
-option(CMAKE_C_STANDARD_REQUIRED ON)
-option(CMAKE_CXX_EXTENSIONS OFF)
-option(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_C_EXTENSIONS OFF)
 
-option(AUTODETECT_CXX_MAX_VERSION "Detect automatically CXX standard Max supported version by compiler" ON)
-option(AUTODETECT_C_MAX_VERSION "Detect automatically C standard Max supported version by compiler" ON)
+set(AUTODETECT_CXX_MAX_VERSION "Detect automatically CXX standard Max supported version by compiler" ON)
+set(AUTODETECT_C_MAX_VERSION "Detect automatically C standard Max supported version by compiler" ON)
 # Shared libs, decrease bin size
-option(BUILD_SHARED_LIBRARIES ON)
+set(BUILD_SHARED_LIBS "Build shared (dynamic) libraries" ON)
+#option(CLANG_ENABLE_CODE_COVERAGE ON)
+set(CLANG_THREADSANIZER OFF)
+
 
 if(NOT CMAKE_C_COMPILER)
     set(CMAKE_C_COMPILER /usr/bin/clang)
@@ -225,12 +231,8 @@ set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-
 set(CMAKE_C_FLAGS                " -march=native -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_C} -pipe ")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
-set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
-endif()
+set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3") # Remove -v
+set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG}")
 
 #=== CXX FLAGS ===
 #-Wold-style-cast -Wdouble-promotion -fstack-usage -Wpadded
@@ -255,20 +257,14 @@ set(CMAKE_CXX_FLAGS                "  -ffunction-sections -fdata-sections -march
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs")
 endif()
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
-endif()
 
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
-set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
+set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3") # Remove -v -pg
+set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG}")
 
 #gcov
 set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
-endif()
 
 if (CMAKE_GENERATOR STREQUAL "Ninja")
   if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -280,11 +276,11 @@ if (CMAKE_GENERATOR STREQUAL "Ninja")
   endif()
 endif()
 
-add_compile_options(
-    "$<$<CXX_COMPILER_ID:Clang>:>"
-    "$<$<CXX_COMPILER_ID:Gnu>:>"
-    "$<$<CXX_COMPILER_ID:MSVC>:>"
-    )
+#add_compile_options(
+#    "$<$<CXX_COMPILER_ID:Clang>:>"
+#    "$<$<CXX_COMPILER_ID:Gnu>:>"
+#    "$<$<CXX_COMPILER_ID:MSVC>:>"
+#    )
 #add_compile_options(
 #    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CXX_FLAGS}>
 #    $<$<COMPILE_LANGUAGE:C>:${c_flags}>
@@ -301,6 +297,33 @@ add_compile_options(
 #      # MSVC warning flags
 #    >
 #)
+
+#CLANG_THREADSANIZER
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    #-fsanitize=address -fsanitize-memory-track-origins
+    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=thread")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
+    
+    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
+    set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
+    # Linker
+    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
+    if (CODE_COVERAGE)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -fprofile-instr-generate -fcoverage-mapping")
+    endif()
+endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    if (CODE_COVERAGE)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+    endif()
+endif()
+
+# llvm-cov
 
 
 #   ================    COMPILER DEF    ================
@@ -539,25 +562,17 @@ else()
     message(STATUS "QT: NOT FOUND")
 endif()
 
-
 #   ================    cppcheck    ================
 
 # https://stackoverflow.com/a/63840110/10152334
 
-option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
+set(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
 message(STATUS "ENABLE_CODE_ANALYSIS: ${ENABLE_CODE_ANALYSIS}")
 
 if(ENABLE_CODE_ANALYSIS)
     find_program(cppcheck cppcheck)
     message(STATUS "cppcheck                   ${cppcheck}")
     if(NOT (cppcheck MATCHES "NOTFOUND"))
-        # Notes:
-        # - unmatchedSuppression needed since not all source files are
-        #   analyzed simultaneously
-        # - unusedFunction needed since not all source files are
-        #   analyzed simultaneously
-        # - template needed to force "warning" into output string, and
-        #   to make the 'id' available for suppression
         set(CMAKE_CXX_CPPCHECK "${cppcheck}"
             "--enable=all"
             "--inconclusive"
@@ -568,6 +583,78 @@ if(ENABLE_CODE_ANALYSIS)
             "--template='{file}:{line}: warning: {id} ({severity}): {message}'")
     endif()
 endif(ENABLE_CODE_ANALYSIS)
+
+#   ================    Doxygen    ================
+set(BUILD_DOCS_DOXYGEN TRUE)
+find_package(Doxygen)
+#option(BUILD_DOCUMENTATION "Build doc" ON)
+#option(BUILD_DOCUMENTATION "DOC" ${DOXYGEN_FOUND})
+
+if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
+    set(DOXYGEN_PROJECT_NAME "${CMAKE_PROJECT_NAME}")
+    set(DOXYGEN_GENERATE_HTML YES)
+    set(DOXYGEN_GENERATE_XML NO)
+    set(DOXYGEN_GENERATE_MAN NO)
+    set(DOXYGEN_GENERATE_DOCBOOK NO)
+    
+    set(DOXYGEN_COLLABORATION_GRAPH YES)
+    set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_CLASS_DIAGRAMS YES)
+    set(DOXYGEN_HIDE_UNDOC_RELATIONS NO)
+    set(DOXYGEN_HAVE_DOT YES)
+    set(DOXYGEN_CLASS_GRAPH YES)
+    set(DOXYGEN_CALL_GRAPH YES)
+    set(DOXYGEN_CALLER_GRAPH YES)
+    set(DOXYGEN_COLLABORATION_GRAPH YES)
+    set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
+    set(DOXYGEN_EXTRACT_PRIVATE YES)
+    set(DOXYGEN_EXTRACT_PACKAGE YES)
+    set(DOXYGEN_EXTRACT_STATIC YES)
+    set(DOXYGEN_SHOW_NAMESPACES YES)
+    set(DOXYGEN_SHOW_FILES YES)
+    set(DOXYGEN_HTML_DYNAMIC_SECTIONS YES)
+    set(DOXYGEN_CREATE_SUBDIRS YES)
+    set(DOXYGEN_PDF_HYPERLINKS YES)
+    set(DOXYGEN_GENERATE_AUTOGEN_DEF YES)
+    set(DOXYGEN_SORT_GROUP_NAMES YES)
+    set(DOXYGEN_DOT_NUM_THREADS 12)
+    set(DOXYGEN_HIDE_IN_BODY_DOCS NO)
+    set(DOXYGEN_STRIP_CODE_COMMENT NO)
+    set(DOXYGEN_BRIEF_MEMBER_DESC YES)
+
+
+    set(DOXYGEN_FILE_PATTERNS *.c 
+    *.cc 
+    *.cxx 
+    *.cpp 
+    *.c++ 
+    *.java 
+    *.ii 
+    *.ixx 
+    *.ipp 
+    *.i++ 
+    *.inl 
+    *.idl 
+    *.ddl 
+    *.odl 
+    *.h 
+    *.hh 
+    *.hxx 
+    *.hpp 
+    *.tpp
+    *.cu
+    *.cuh
+    *.h++)
+
+    set(DOXYGEN_INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+    #USE_STAMP_FILE
+    doxygen_add_docs(
+        Doxygen ${DOXYGEN_INPUT_DIRECTORY} ALL COMMENT "Generate pages")
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION documentation)
+else()
+    message( "Doxygen need to be installed to generate the doxygen documentation" )
+endif()
+
 
 #   =================================================
 #   =============    INTERNAL LIBS    ===============
@@ -808,7 +895,7 @@ endif()
 #   ================================================
 #   ================    TESTING     ================
 #   ================================================
-option(ENABLE_TESTS "Enable tests" ON)
+set(ENABLE_TESTS "Enable tests" ON)
 
 if(Boost_FOUND AND ENABLE_TESTS)
     enable_testing()
@@ -899,8 +986,7 @@ if(Boost_FOUND AND ENABLE_TESTS)
     target_link_libraries(${TEST_STR_IS_NUM} PRIVATE ${Boost_LIBRARIES} string_is_c)
     set_target_properties(${TEST_STR_IS_NUM} PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME ${TEST_STR_IS_NUM} COMMAND ${TEST_STR_IS_NUM})
-
-
+    
     #Test power
     set(TEST_POWER test_power)
     add_executable(${TEST_POWER} ${lib_path}src/test/math/test_power.cpp)

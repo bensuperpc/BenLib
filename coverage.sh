@@ -25,5 +25,7 @@ cmake $@ -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
 ninja
 #make -j 12
 ctest --output-on-failure -j$(nproc) #-T Coverage #--extra-verbose
-gcovr -r . --exclude build/CMakeFiles/ --exclude src/ #--html-details -o coverage.html
+#llvm-cov show bin -instr-profile=code.profdata /path/to/source_files/*.cpp -filename-equivalence -use-color
+#cd ..
+#gcovr -r . --exclude build/CMakeFiles/ --exclude src/ --html-details -o coverage/coverage.html
 #gcovr -r . --exclude src/test/ --exclude src/game.cpp --exclude src/lib/utils/sfml/ --exclude src/bench/ --exclude build/CMakeFiles/
