@@ -29,6 +29,8 @@
 #           https://github.com/StableCoder/cmake-scripts#sanitizer-builds-sanitizerscmake
 #           http://www.stablecoder.ca/2018/01/15/code-coverage.html
 #           https://down.firefliestudio.com/Linux/leveldb/cmake-3.19.0-rc3/Tests/FindDoxygen/StampFile/CMakeLists.txt
+#           https://discourse.cmake.org/t/doxygen-add-docs-install-output-directory/2904
+#           https://antonypeacock.blog/2018/11/03/adding-doxygen-support-to-a-cmake-project/
 #           
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
@@ -46,12 +48,19 @@ if(CMAKE_CUDA_COMPILER)
     message(STATUS "CMAKE_CUDA_COMPILER: True")
 endif()
 
+#set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 #   ==================================================
 #   ================    CMAKE CONF    ================
 #   ==================================================
 
-set(ENABLE_CCACHE "Whether to use ccache to speed up compiling" ON)
+#   ================    CMAKE MODULE    ================
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${PROJECT_SOURCE_DIR}/cmake)
+
+#"Whether to use ccache to speed up compiling"
+set(ENABLE_CCACHE ON)
 # Include
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Increase verbose CMake
@@ -67,6 +76,7 @@ endif()
 # If enable tests
 set(BUILD_TESTING ON)
 set(CODE_COVERAGE ON)
+set(BUILD_DOCS_DOXYGEN FALSE)
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -81,13 +91,7 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 #set(Var1 "This is variable 1" CACHE INTERNAL "")
 #set(Var1 "This is variable 1" PARENT_SCOPE)
 
-find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND AND ENABLE_CCACHE)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) # Less useful to do it for linking, see edit2
-    set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
-    set(CMAKE_C_COMPILER_LAUNCHER ccache)
-endif()
+include(ConfigureCCache)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "lib")
@@ -100,234 +104,13 @@ set(UNIT_TEST_BIN_OUTPUT_DIR "include")
 #set(PROJECT_BINARY_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+
 #   ================================================
 #   ================    COMPILER    ================
 #   ================================================
-# Enable CXX standard required
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# Enable C standard required
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_C_EXTENSIONS OFF)
-
-set(AUTODETECT_CXX_MAX_VERSION "Detect automatically CXX standard Max supported version by compiler" ON)
-set(AUTODETECT_C_MAX_VERSION "Detect automatically C standard Max supported version by compiler" ON)
-# Shared libs, decrease bin size
-set(BUILD_SHARED_LIBS "Build shared (dynamic) libraries" ON)
-#option(CLANG_ENABLE_CODE_COVERAGE ON)
-set(CLANG_THREADSANIZER OFF)
-
-
-if(NOT CMAKE_C_COMPILER)
-    set(CMAKE_C_COMPILER /usr/bin/clang)
-#    set(CMAKE_C_COMPILER /usr/bin/gcc)
-endif()
-if(NOT CMAKE_CXX_COMPILER)
-    set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-#    set(CMAKE_CXX_COMPILER /usr/bin/g++)
-endif()
-
-#Set the highest C++ standard supported by the compiler
-#set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_C_STANDARD 11)
-
-#=== C VERSION CHECK ===
-# Set the highest C standard supported by the compiler
-
-if(NOT CMAKE_C_STANDARD AND AUTODETECT_C_MAX_VERSION)
-    include(CheckCCompilerFlag)
-    CHECK_C_COMPILER_FLAG("-std=c23" COMPILER_SUPPORTS_C23)
-    CHECK_C_COMPILER_FLAG("-std=c20" COMPILER_SUPPORTS_C20)
-    CHECK_C_COMPILER_FLAG("-std=c18" COMPILER_SUPPORTS_C18)
-    CHECK_C_COMPILER_FLAG("-std=c17" COMPILER_SUPPORTS_C17) # Not working with CMake 3.19
-    CHECK_C_COMPILER_FLAG("-std=c11" COMPILER_SUPPORTS_C11)
-    CHECK_C_COMPILER_FLAG("-std=c99" COMPILER_SUPPORTS_C99)
-    CHECK_C_COMPILER_FLAG("-std=c90" COMPILER_SUPPORTS_C90)
-    CHECK_C_COMPILER_FLAG("-std=c89" COMPILER_SUPPORTS_C89)
-    
-    if(COMPILER_SUPPORTS_C11)
-        message(STATUS "C11: OK")
-        set(CMAKE_C_STANDARD 11)
-    elseif(COMPILER_SUPPORTS_C99)
-        message(STATUS "C99: OK")
-        set(CMAKE_C_STANDARD 99)
-    elseif(COMPILER_SUPPORTS_C90)
-        message(STATUS "C90: OK")
-        set(CMAKE_C_STANDARD 90)
-    elseif(COMPILER_SUPPORTS_C89)
-        message(STATUS "C89: OK")
-        set(CMAKE_C_STANDARD 89)
-    else()
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
-    endif()
-endif()
-
-
-#=== C++ VERSION CHECK ===
-if(NOT CMAKE_CXX_STANDARD AND AUTODETECT_CXX_MAX_VERSION)
-    include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG("-std=c++23" COMPILER_SUPPORTS_CXX23)
-    CHECK_CXX_COMPILER_FLAG("-std=c++20" COMPILER_SUPPORTS_CXX20)
-    CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
-    CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
-    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-    CHECK_CXX_COMPILER_FLAG("-std=c++03" COMPILER_SUPPORTS_CXX03)
-    CHECK_CXX_COMPILER_FLAG("-std=c++98" COMPILER_SUPPORTS_CXX98)
-
-    if(COMPILER_SUPPORTS_CXX20)
-        set(CMAKE_CXX_STANDARD 20)
-        message(STATUS "C++20: OK")
-    elseif(COMPILER_SUPPORTS_CXX17)
-        set(CMAKE_CXX_STANDARD 17)
-        message(STATUS "C++17: OK")
-    elseif(COMPILER_SUPPORTS_CXX14)
-        set(CMAKE_CXX_STANDARD 14)
-        message(WARNING "C++14: Error")
-        message(FATAL_ERROR "C++14 is old, please use newer compiler.")
-    elseif(COMPILER_SUPPORTS_CXX11)
-        set(CMAKE_CXX_STANDARD 11)
-        message(WARNING "C++11: OK")
-        message(FATAL_ERROR "C++11 is old, please use newer compiler.")
-    elseif(COMPILER_SUPPORTS_CXX03)
-        set(CMAKE_CXX_STANDARD 03)
-        message(WARNING "C++03: OK")
-        message(FATAL_ERROR "C++03 is old, please use newer compiler.")
-    elseif(COMPILER_SUPPORTS_CXX98)
-        set(CMAKE_CXX_STANDARD 98)
-        message(WARNING "C++98: OK")
-        message(FATAL_ERROR "C++98 is old, please use newer compiler.")
-    else()
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 or above support. Please use a different C++ compiler.")
-    endif()
-
-    # Compiler-specific C++11 activation.
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        # require at least gcc 4.8
-        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
-            message(FATAL_ERROR "GCC version must be at least 4.8!")
-            set(CMAKE_CXX_STANDARD 14)
-        endif()
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        # require at least clang 3.2
-        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.2)
-            message(FATAL_ERROR "Clang version must be at least 3.2!")
-        endif()
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14.0")
-        message(FATAL_ERROR "Insufficient msvc version")
-        endif()
-    else()
-        message(WARNING "You are using an unsupported compiler! Compilation has only been tested with Clang and GCC.")
-    endif()
-endif()
-
-
-#=== SECURITY RELEASE FLAGS ===
-set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
-
-#=== C FLAGS ===
-set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
-
-set(CMAKE_C_FLAGS                " -march=native -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_C} -pipe ")
-set(CMAKE_C_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3") # Remove -v
-set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG}")
-
-#=== CXX FLAGS ===
-#-Wold-style-cast -Wdouble-promotion -fstack-usage -Wpadded
-
-#add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-Wall;-Wextra;-Wpedantic;-Wshadow>")
-
-
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wall -Wextra -Wpedantic -Wshadow -Wmissing-declarations -Wundef -Wstack-protector -Wno-unused-parameter")
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wmissing-include-dirs -Wmissing-noreturn -Wimport -Winit-self -Winvalid-pch -Wstrict-aliasing=2 -Wswitch-default -Wunreachable-code -Wunused")
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Woverloaded-virtual  -Wdisabled-optimization -Winline -Wredundant-decls -Wsign-conversion -Wformat-nonliteral -Wformat-security")
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wwrite-strings -Wcast-align -Wcast-qual -Wfloat-equal -Wvariadic-macros -Wpacked -Wpointer-arith -Weffc++ -Wformat=2 -Wfloat-equal")
-set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wnull-dereference")
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(WARNINGS_COMPILER_CXX "${WARNINGS_COMPILER_CXX} -Wabi=11 -Wduplicated-branches -Wduplicated-cond -Wlogical-op")
-endif()
-
-
-# Removed : -Wconversion -Wuseless-cast -rdynamic
-#-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
-
-set(CMAKE_CXX_FLAGS                "  -ffunction-sections -fdata-sections -march=native ${WARNINGS_COMPILER_CXX} -pipe")
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs")
-endif()
-
-set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3") # Remove -v -pg
-set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG}")
-
-#gcov
-set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
-
-if (CMAKE_GENERATOR STREQUAL "Ninja")
-  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
-  elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdiagnostics-color=always")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
-  endif()
-endif()
-
-#add_compile_options(
-#    "$<$<CXX_COMPILER_ID:Clang>:>"
-#    "$<$<CXX_COMPILER_ID:Gnu>:>"
-#    "$<$<CXX_COMPILER_ID:MSVC>:>"
-#    )
-#add_compile_options(
-#    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CXX_FLAGS}>
-#    $<$<COMPILE_LANGUAGE:C>:${c_flags}>
-#    )
-#target_compile_options(my-target
-#  PRIVATE
-#    $<$<CXX_COMPILER_ID:Gnu>:
-#      # g++ warning flags
-#    >
-#    $<$<CXX_COMPILER_ID:Clang>:
-#      # clang warning flags
-#    >
-#    $<$<CXX_COMPILER_ID:MSVC>:
-#      # MSVC warning flags
-#    >
-#)
-
-#CLANG_THREADSANIZER
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    #-fsanitize=address -fsanitize-memory-track-origins
-    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=thread")
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
-    
-    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
-    set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
-    # Linker
-    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
-    if (CODE_COVERAGE)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -fprofile-instr-generate -fcoverage-mapping")
-    endif()
-endif()
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    if (CODE_COVERAGE)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-    endif()
-endif()
-
-# llvm-cov
-
+include(ConfigureCompiler)
 
 #   ================    COMPILER DEF    ================
-
 add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 add_definitions(-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
 add_definitions(-DCMAKE_C_FLAGS="${CMAKE_C_FLAGS}")
@@ -360,151 +143,33 @@ endif()
 include(ExternalProject)
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
-#   ================    OpenMP    ================
+#   ================    Thread    ================
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 find_package(Threads REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 #   ================    OpenMP    ================
-# https://stackoverflow.com/a/12404666/10152334
-# https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html
-# OpenMP::OpenMP_CXX
-find_package(OpenMP QUIET)
-
-if (OPENMP_FOUND OR OpenMP_CXX_FOUND)
-    message(STATUS "OPENMP: FOUND")
-    #set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    #set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-else()
-    message(STATUS "OPENMP: NOT FOUND")
-endif()
+include(ConfigureOpenMP)
 
 #   ================    SFML    ================
-#set(SFML_USE_STATIC_STD_LIBS 0)
-#set(SFML_STATIC_LIBRARIES 0)
-
 set(SFML_ROOT "C:\\Project Files (x86)\\SFML")
-
-find_package(SFML 2.5 COMPONENTS graphics audio network system QUIET)
-
-if(SFML_FOUND)
-    message(STATUS "SFML: FOUND")
-    add_compile_definitions(SFML_VERSION="${SFML_VERSION}")
-else()
-    message(STATUS "SFML: NOT FOUND")
-    #ExternalProject_Add(sfml_lib
-    #    GIT_REPOSITORY https:#github.com/SFML/SFML.git
-    #    GIT_TAG 2.5.1
-    #    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-        #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
-    #)
-endif()
+include(ConfigureSFML)
 
 #   ================    BOOST    ================
-if (WIN32)
-    set(Boost_USE_STATIC_LIBS TRUE)
-    set(Boost_USE_MULTITHREADED TRUE)
-    set(Boost_USE_STATIC_RUNTIME FALSE)
-else ()
-    set(Boost_USE_STATIC_LIBS FALSE)
-    set(Boost_USE_MULTITHREADED TRUE)
-    set(Boost_USE_STATIC_RUNTIME FALSE)
-endif (WIN32)
-
-#find_package( Boost 1.72.0 COMPONENTS thread system fiber context program_options filesystem REQUIRED)
-find_package(Boost 1.67.0 COMPONENTS thread filesystem system unit_test_framework QUIET)
-
-if(Boost_FOUND)
-    message(STATUS "Boost FOUND")
-    include_directories( ${Boost_INCLUDE_DIRS})
-    link_directories(${Boost_LIBRARIES})
-else()
-    message(STATUS "Boost: NOT FOUND")
-endif()
+include(ConfigureBoost)
 
 #   ================    OPENCV    ================
-find_package(OpenCV REQUIRED QUIET)
-
-if (OPENCV_FOUND)
-    include_directories(${OpenCV_INCLUDE_DIRS})
-    message(STATUS "OPENCV: FOUND")
-else()
-    message(STATUS "OPENCV: NOT FOUND")
-    if (WIN64)
-        set(OpenCV_DIR "C:/Users/Benoit/Downloads/opencv-4.4.0/build")
-    endif (WIN64)
-    #ExternalProject_Add(opencv_lib
-    #    GIT_REPOSITORY https://github.com/opencv/opencv
-    #    GIT_TAG 4.4.0
-    #    SOURCE_DIR opencv
-    #    BINARY_DIR opencv-build
-    #    CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-    #    CMAKE_ARGS -D BUILD_EXAMPLES=OFF -D OPENCV_ENABLE_NONFREE=ON
-    #    CMAKE_ARGS -D INSTALL_C_EXAMPLES=OFF -D INSTALL_PYTHON_EXAMPLES=OFF
-        #CMAKE_ARGS -DOPENCV_EXTRA_MODULES_PATH=/build/opencv_contrib-4.1.1/modules
-        #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        #-D WITH_CUDA=ON
-    #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
-    #)
-endif()
-
+include(ConfigureOpenCV)
 
 #   ================    OPENGL    ================
-find_package(OpenGL REQUIRED QUIET)
-find_package(GLUT REQUIRED QUIET)
-
-if (OPENGL_FOUND)
-    include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
-    link_directories(${OPENGL_LIBRARIES})
-    message(STATUS "OPENGL: FOUND")
-else()
-    message(STATUS "OPENGL: NOT FOUND")
-endif()
+include(ConfigureOpenGL)
 
 #   ================    OPENCL    ================
-
-find_package(OpenCL REQUIRED QUIET)
-
-if (OpenCL_FOUND)
-    include_directories(${OpenCL_INCLUDE_DIRS})
-    if (UNIX)
-        include_directories(/opt/cuda/targets/x86_64-linux/include/)
-    endif()
-    #link_directories(/opt/cuda/targets/x86_64-linux/lib/)
-    link_directories(${OpenCL_LIBRARIES})
-    message(STATUS "OPENCL: FOUND")
-    
-else()
-    message(STATUS "OPENCL: NOT FOUND")
-endif()
+include(ConfigureOpenCL)
 
 #   ================    CUDA    ================
-# https://bugs.archlinux.org/task/62258
-# https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
-#export PATH=/opt/cuda/bin:$PATH
-#export LD_LIBRARY_PATH=/opt/cuda/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
-
-#set(CUTLASS_NATIVE_CUDA_INIT ON)
-find_package(CUDA 10.0 QUIET)
-#set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda")
-if (CUDA_FOUND)
-    include_directories(${CUDA_INCLUDE_DIRS})
-    link_directories(${CUDA_LIBRARIES})
-    #set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS} -Xcompiler=-Wall")
-    #set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
-    #set(CMAKE_CUDA_STANDARD 17)
-
-    message(STATUS "CUDA: FOUND")
-    message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
-else()
-    message(STATUS "CUDA: NOT FOUND")
-endif()
-
-#set_target_properties(BENLIB PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-
+include(ConfigureCUDA)
 
 #   ================    OpenACC    ===============
 # Unsupported by intel and AMD GPU
@@ -530,37 +195,13 @@ else()
 endif()
 
 #   ================    OPENSSL    ================
-
-find_package(OpenSSL QUIET)
-
-if (OPENSSL_FOUND)
-    include_directories( ${OPENSSL_INCLUDE_DIR})
-    link_directories(${OPENSSL_LIBRARIES})
-    message(STATUS "OPENSSL: FOUND")
-else()
-    message(STATUS "OPENSSL: NOT FOUND")
-endif()
+include(ConfigureOpenSSL)
 
 #   ================    Qt    ================
-
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
-find_package(Qt${QT_VERSION_MAJOR}QuickCompiler)
-#qtquick_compiler_add_resources(RESOURCES example.qrc)
-#qt5_use_modules(myapp Quick Widgets Core Gui Multimedia Network)
-
-#find_package(Qt5 COMPONENTS Quick Widgets Core Gui Multimedia Network REQUIRED)
-
-if (QT_FOUND)
-    message(STATUS "QT: FOUND")
-    include_directories( ${QT_INCLUDES})
-else()
-    message(STATUS "QT: NOT FOUND")
-endif()
+include(ConfigureQt)
 
 #   ================    cppcheck    ================
 
@@ -585,76 +226,7 @@ if(ENABLE_CODE_ANALYSIS)
 endif(ENABLE_CODE_ANALYSIS)
 
 #   ================    Doxygen    ================
-set(BUILD_DOCS_DOXYGEN TRUE)
-find_package(Doxygen)
-#option(BUILD_DOCUMENTATION "Build doc" ON)
-#option(BUILD_DOCUMENTATION "DOC" ${DOXYGEN_FOUND})
-
-if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
-    set(DOXYGEN_PROJECT_NAME "${CMAKE_PROJECT_NAME}")
-    set(DOXYGEN_GENERATE_HTML YES)
-    set(DOXYGEN_GENERATE_XML NO)
-    set(DOXYGEN_GENERATE_MAN NO)
-    set(DOXYGEN_GENERATE_DOCBOOK NO)
-    
-    set(DOXYGEN_COLLABORATION_GRAPH YES)
-    set(DOXYGEN_EXTRACT_ALL YES)
-    set(DOXYGEN_CLASS_DIAGRAMS YES)
-    set(DOXYGEN_HIDE_UNDOC_RELATIONS NO)
-    set(DOXYGEN_HAVE_DOT YES)
-    set(DOXYGEN_CLASS_GRAPH YES)
-    set(DOXYGEN_CALL_GRAPH YES)
-    set(DOXYGEN_CALLER_GRAPH YES)
-    set(DOXYGEN_COLLABORATION_GRAPH YES)
-    set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
-    set(DOXYGEN_EXTRACT_PRIVATE YES)
-    set(DOXYGEN_EXTRACT_PACKAGE YES)
-    set(DOXYGEN_EXTRACT_STATIC YES)
-    set(DOXYGEN_SHOW_NAMESPACES YES)
-    set(DOXYGEN_SHOW_FILES YES)
-    set(DOXYGEN_HTML_DYNAMIC_SECTIONS YES)
-    set(DOXYGEN_CREATE_SUBDIRS YES)
-    set(DOXYGEN_PDF_HYPERLINKS YES)
-    set(DOXYGEN_GENERATE_AUTOGEN_DEF YES)
-    set(DOXYGEN_SORT_GROUP_NAMES YES)
-    set(DOXYGEN_DOT_NUM_THREADS 12)
-    set(DOXYGEN_HIDE_IN_BODY_DOCS NO)
-    set(DOXYGEN_STRIP_CODE_COMMENT NO)
-    set(DOXYGEN_BRIEF_MEMBER_DESC YES)
-
-
-    set(DOXYGEN_FILE_PATTERNS *.c 
-    *.cc 
-    *.cxx 
-    *.cpp 
-    *.c++ 
-    *.java 
-    *.ii 
-    *.ixx 
-    *.ipp 
-    *.i++ 
-    *.inl 
-    *.idl 
-    *.ddl 
-    *.odl 
-    *.h 
-    *.hh 
-    *.hxx 
-    *.hpp 
-    *.tpp
-    *.cu
-    *.cuh
-    *.h++)
-
-    set(DOXYGEN_INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
-    #USE_STAMP_FILE
-    doxygen_add_docs(
-        Doxygen ${DOXYGEN_INPUT_DIRECTORY} ALL COMMENT "Generate pages")
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION documentation)
-else()
-    message( "Doxygen need to be installed to generate the doxygen documentation" )
-endif()
-
+include(ConfigureDoxygen)
 
 #   =================================================
 #   =============    INTERNAL LIBS    ===============
