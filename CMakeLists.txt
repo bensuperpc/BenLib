@@ -8,7 +8,7 @@
 ##############################################################
 #                                                            #
 #  BenLib, 2020                                              #
-#  Created: 19, March, 2020                                  #
+#  Created: 05, February, 2020                               #
 #  Modified: 28, March, 2021                                 #
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
@@ -25,6 +25,7 @@
 #           https://stackoverflow.com/questions/46713143/cmake-install-library-and-development-files-as-separate-components-using-public
 #           https://github.com/Pseudomanifold/cmake-cpp
 #           https://cmake.org/cmake/help/v3.1/prop_tgt/C_EXTENSIONS.html#prop_tgt:C_EXTENSIONS
+#           https://stackoverflow.com/a/60203765/10152334
 #           
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
@@ -32,7 +33,6 @@
 ##############################################################
 
 cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
-#project(BENLIB VERSION 0.0.5 LANGUAGES CUDA CXX C)
 project(BENLIB VERSION 0.0.5 DESCRIPTION "Bensuperpc's libs" LANGUAGES CXX C)
 
 #Add CUDA if it found
@@ -57,21 +57,18 @@ option(CMAKE_VERBOSE_MAKEFILE ON)
 option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #Disable precompiled header, save space
 option(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
+# If support unity build, improve speed on headers
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+    option(CMAKE_UNITY_BUILD ON)
+endif()
+# If enable tests
+option(BUILD_TESTING ON)
 
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif()
 
-
-# If support unity build, improve speed on headers
-if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
-    set(CMAKE_UNITY_BUILD 1)
-    message(STATUS "CMAKE_UNITY_BUILD : 1")
-else()
-    set(CMAKE_UNITY_BUILD 0)
-    message(STATUS "CMAKE_UNITY_BUILD : 0")
-endif()
 
 # Add Postfix for debug conf
 set(CMAKE_DEBUG_POSTFIX "_d")
@@ -89,10 +86,14 @@ if(CCACHE_FOUND AND ENABLE_CCACHE)
     set(CMAKE_C_COMPILER_LAUNCHER ccache)
 endif()
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
 set(CMAKE_INSTALL_INCLUDEDIR "include")
+set(UNIT_TEST_BIN_OUTPUT_DIR "include")
+#set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/tests)
+
+#set(AUTOGEN_BUILD_DIR "auto_gen")
 #set(PROJECT_BINARY_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -106,8 +107,8 @@ option(CMAKE_C_STANDARD_REQUIRED ON)
 option(CMAKE_CXX_EXTENSIONS OFF)
 option(CMAKE_C_EXTENSIONS OFF)
 
-option(AUTODETECT_CXX_MAX_VERSION "Detect automatically CXX Max supported version by compiler" ON)
-option(AUTODETECT_C_MAX_VERSION "Detect automatically C Max supported version by compiler" ON)
+option(AUTODETECT_CXX_MAX_VERSION "Detect automatically CXX standard Max supported version by compiler" ON)
+option(AUTODETECT_C_MAX_VERSION "Detect automatically C standard Max supported version by compiler" ON)
 # Shared libs, decrease bin size
 option(BUILD_SHARED_LIBRARIES ON)
 
@@ -224,7 +225,7 @@ set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-
 set(CMAKE_C_FLAGS                " -march=native -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_C} -pipe ")
 set(CMAKE_C_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL}")
-set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -rdynamic -ggdb3 -pg") # Remove -v
+set(CMAKE_C_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -247,7 +248,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 
-# Removed : -Wconversion -Wuseless-cast
+# Removed : -Wconversion -Wuseless-cast -rdynamic
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
 set(CMAKE_CXX_FLAGS                "  -ffunction-sections -fdata-sections -march=native ${WARNINGS_COMPILER_CXX} -pipe")
@@ -260,10 +261,10 @@ endif()
 
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 ${SEC_COMPILER_REL} -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -rdynamic -ggdb3 -pg") # Remove -v
-set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
+set(CMAKE_CXX_FLAGS_DEBUG          "-g3 -Og -ggdb3 -pg") # Remove -v
+set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} --coverage")
 
-
+#gcov
 set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
@@ -814,40 +815,48 @@ if(Boost_FOUND AND ENABLE_TESTS)
     #Test getSchwarzschild
     add_executable(test_getSchwarzschild ${lib_path}src/test/math/test_getSchwarzschild.cpp)
     target_link_libraries(test_getSchwarzschild PRIVATE ${Boost_LIBRARIES})
+    set_target_properties(test_getSchwarzschild PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_getSchwarzschild COMMAND ${CMAKE_COMMAND} --build . --target test_getSchwarzschild)
 
     #Test getGravitationalAttraction
     add_executable(test_getGravitationalAttraction ${lib_path}src/test/math/test_getGravitationalAttraction.cpp)
     target_link_libraries(test_getGravitationalAttraction PRIVATE ${Boost_LIBRARIES})
+    set_target_properties(test_getGravitationalAttraction PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_getGravitationalAttraction COMMAND test_getGravitationalAttraction)
 
     #Test sphere
     add_executable(test_sphere ${lib_path}src/test/math/test_sphere.cpp)
     target_link_libraries(test_sphere PRIVATE ${Boost_LIBRARIES} quadmath)
+    set_target_properties(test_sphere PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_sphere COMMAND test_sphere)
 
     #Test cylinder
     add_executable(test_cylinder ${lib_path}src/test/math/test_cylinder.cpp)
     target_link_libraries(test_cylinder PRIVATE ${Boost_LIBRARIES})
+    set_target_properties(test_cylinder PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_cylinder COMMAND test_cylinder)
 
     #Test vector sort
     add_executable(test_vector_sort ${lib_path}src/test/vector/test_vector_sort.cpp)
     target_link_libraries(test_vector_sort PRIVATE ${Boost_LIBRARIES} vector)
+    set_target_properties(test_vector_sort PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_vector_sort COMMAND test_vector_sort)
 
     #Test vector copy
     add_executable(test_vector_copy ${lib_path}src/test/vector/test_vector_copy.cpp)
     target_link_libraries(test_vector_copy PRIVATE ${Boost_LIBRARIES} vector)
+    set_target_properties(test_vector_copy PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_vector_copy COMMAND test_vector_copy)
 
     #Test vector copy
     add_executable(test_vector_max_simd ${lib_path}src/test/vector/test_vector_max_simd.cpp)
     target_link_libraries(test_vector_max_simd PRIVATE ${Boost_LIBRARIES} vector)
+    set_target_properties(test_vector_max_simd PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_vector_max_simd COMMAND test_vector_max_simd)
 
     add_executable(test_string_seq ${lib_path}src/test/string/test_string_seq.cpp)
     target_link_libraries(test_string_seq PRIVATE ${Boost_LIBRARIES} string_lib)
+    set_target_properties(test_string_seq PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_string_seq COMMAND test_string_seq)
 endif()
 
@@ -855,15 +864,18 @@ if (OPENSSL_FOUND AND Boost_FOUND AND ENABLE_TESTS)
     #Test crypto
     add_executable(test_crypto ${lib_path}src/test/crypto/test_crypto.cpp)
     target_link_libraries(test_crypto PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    set_target_properties(test_crypto PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_crypto COMMAND test_crypto)
 
     #Test crypto AES
     add_executable(test_crypto_aes ${lib_path}src/test/crypto/test_crypto_AES.cpp)
     target_link_libraries(test_crypto_aes PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto)
+    set_target_properties(test_crypto_aes PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_crypto_aes COMMAND test_crypto_aes)
 
     add_executable(test_crypto_CRC ${lib_path}src/test/crypto/test_crypto_CRC.cpp)
     target_link_libraries(test_crypto_CRC PRIVATE ${Boost_LIBRARIES} my_crypto)
+    set_target_properties(test_crypto_CRC PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_crypto_CRC COMMAND test_crypto_CRC)
 endif()
 
@@ -873,16 +885,19 @@ if(Boost_FOUND AND ENABLE_TESTS)
     set(TEST_REV_STR test_rev_str)
     add_executable(${TEST_REV_STR} ${lib_path}src/test/C/string_c/test_string.cpp)
     target_link_libraries(${TEST_REV_STR} PRIVATE ${Boost_LIBRARIES} string_c)
+    set_target_properties(${TEST_REV_STR} PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME ${TEST_REV_STR} COMMAND ${TEST_REV_STR})
 
     set(TEST_IS_NUM test_my_isnum)
     add_executable(${TEST_IS_NUM} ${lib_path}src/test/C/string_is/test_my_isnum.cpp)
     target_link_libraries(${TEST_IS_NUM} PRIVATE ${Boost_LIBRARIES} string_is_c)
+    set_target_properties(${TEST_IS_NUM} PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME ${TEST_IS_NUM} COMMAND ${TEST_IS_NUM})
 
     set(TEST_STR_IS_NUM test_my_str_isnum)
     add_executable(${TEST_STR_IS_NUM} ${lib_path}src/test/C/string_is/test_my_str_isnum.cpp)
     target_link_libraries(${TEST_STR_IS_NUM} PRIVATE ${Boost_LIBRARIES} string_is_c)
+    set_target_properties(${TEST_STR_IS_NUM} PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME ${TEST_STR_IS_NUM} COMMAND ${TEST_STR_IS_NUM})
 
 
@@ -890,6 +905,7 @@ if(Boost_FOUND AND ENABLE_TESTS)
     set(TEST_POWER test_power)
     add_executable(${TEST_POWER} ${lib_path}src/test/math/test_power.cpp)
     target_link_libraries(${TEST_POWER} PRIVATE ${Boost_LIBRARIES})
+    set_target_properties(${TEST_POWER} PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME ${TEST_POWER} COMMAND ${TEST_POWER})
 endif()
 #add_test(NAME ${TEST_POWER} COMMAND ${CMAKE_COMMAND} --build . --target ${TEST_POWER})
@@ -945,7 +961,7 @@ set(CPACK_PACKAGE_VENDOR "Me, myself, and I")
 set(CPACK_PACKAGE_NAME "BenLib")
 set(CPACK_PACKAGE_CONTACT "bensuperpc@gmail.com")
 #set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
-#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Copyright.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 #set(CPACK_PACKAGE_VERSION_MAJOR "1")
 #set(CPACK_PACKAGE_VERSION_MINOR "3")
 #set(CPACK_PACKAGE_VERSION_PATCH "2")

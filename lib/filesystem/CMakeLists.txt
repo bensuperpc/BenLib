@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.11)
-
 project(filesystem VERSION 0.0.2 LANGUAGES CXX C)
 
 if (WIN32)
