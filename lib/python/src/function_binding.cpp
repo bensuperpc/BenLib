@@ -31,7 +31,7 @@ std::string set(std::string str)
    return str;
 }
 
-BOOST_PYTHON_MODULE(class_binding)
+BOOST_PYTHON_MODULE(function_binding)
 {
     using namespace boost::python;
     def("get", get);

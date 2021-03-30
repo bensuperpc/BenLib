@@ -12,7 +12,7 @@
 //  Modified: 20, March, 2021                               //
 //  file: function_binding.h                                //
 //  python                                                  //
-//  Source:                                                 //
+//  Source:     https://www.boost.org/doc/libs/1_75_0/libs/python/doc/html/tutorial/tutorial/exposing.html#tutorial.exposing.inheritance                                                 //
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
@@ -34,7 +34,33 @@ public:
     //Getter and Setter
     void set_msg(std::string msg) { this->m_msg = msg; }
     std::string get_msg() const { return m_msg; }
+
+    bool f(int a)
+    {
+        return true;
+    }
+
+    bool f(int a, double b)
+    {
+        return true;
+    }
+
+    bool f(int a, double b, char c)
+    {
+        return true;
+    }
+
+    int f(int a, int b, int c)
+    {
+        return a + b + c;
+    };
 };
+
+bool    (Hello::*fx1)(int)              = &Hello::f;
+bool    (Hello::*fx2)(int, double)      = &Hello::f;
+bool    (Hello::*fx3)(int, double, char)= &Hello::f;
+int     (Hello::*fx4)(int, int, int)    = &Hello::f;
+
 
 using namespace boost::python;
 
@@ -44,5 +70,9 @@ BOOST_PYTHON_MODULE(class_binding)
     .def(init<std::string>())
     .def(init<>())
     .def("greet", &Hello::greet)
+    .def("f", fx1)
+    .def("f", fx2)
+    .def("f", fx3)
+    .def("f", fx4)
     .add_property("msg", &Hello::get_msg, &Hello::set_msg);
 }

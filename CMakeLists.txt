@@ -346,26 +346,32 @@ endif()
 add_executable(bench_isprime ${BENCH_ISPRIME})
 target_link_libraries(bench_isprime PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_isprime vector math time thread)
+set_target_properties(bench_isprime PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(bench_vector_copy ${BENCH_VECTOR_COPY})
 target_link_libraries(bench_vector_copy PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_vector_copy thread vector math time)
+set_target_properties(bench_vector_copy PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(bench_vector_sort ${BENCH_VECTOR_SORT})
 target_link_libraries(bench_vector_sort PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_vector_sort thread vector math time)
+set_target_properties(bench_vector_sort PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(bench_digits_count ${BENCH_DIGITS_COUNT})
 target_link_libraries(bench_digits_count PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_digits_count thread vector math time)
+set_target_properties(bench_digits_count PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(bench_find_max ${BENCH_FIND_MAX})
 target_link_libraries(bench_find_max PRIVATE thread Threads::Threads vector math time)
 add_dependencies(bench_find_max thread vector math time)
+set_target_properties(bench_find_max PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc time vector)
+set_target_properties(bench_pc PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(bench_crc32 ${BENCH_CRC32})
 if(OpenMP_CXX_FOUND)
@@ -374,61 +380,75 @@ else()
     target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time)
 endif()
 add_dependencies(bench_crc32 thread Threads::Threads vector my_crypto math time)
+set_target_properties(bench_crc32 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 
 if(Boost_FOUND)
     add_executable(gta_sa_cheat ${GTA_SA_CHEAT})
     target_link_libraries(gta_sa_cheat PRIVATE string_lib time OpenMP::OpenMP_CXX)
     add_dependencies(gta_sa_cheat string_lib time OpenMP::OpenMP_CXX)
+    set_target_properties(gta_sa_cheat PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     add_executable(list_all_file ${LIST_ALL_FILE})
     target_link_libraries(list_all_file PRIVATE ${Boost_LIBRARIES} filesystem)
+    set_target_properties(list_all_file PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 endif()
 
 if(OpenCL_FOUND)
     add_executable(opencl_test ${OPENCL_TEST})
     target_link_libraries(opencl_test PRIVATE ${OpenCL_LIBRARY})
+    set_target_properties(opencl_test PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     add_executable(opencl_test2 ${OPENCL_TEST2})
     target_link_libraries(opencl_test2 PRIVATE ${OpenCL_LIBRARY})
+    set_target_properties(opencl_test2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     add_executable(opencl_findstringinv ${OPENCL_FINDSTRINGINV})
     target_link_libraries(opencl_findstringinv PRIVATE ${OpenCL_LIBRARY} string_lib)
+    set_target_properties(opencl_findstringinv PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     add_executable(opencl_gta_sa_gpu ${OPENCL_GTA_SA_GPU})
     target_link_libraries(opencl_gta_sa_gpu PRIVATE ${OpenCL_LIBRARY} string_lib)
+    set_target_properties(opencl_gta_sa_gpu PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     if (OPENSSL_FOUND)
         add_executable(opencl_crc32 ${OPENCL_CRC32})
         target_link_libraries(opencl_crc32 PRIVATE ${OpenCL_LIBRARY} my_crypto time)
+        set_target_properties(opencl_crc32 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     endif()
 endif()
 
 add_executable(parse_csv ${PARSE_CSV})
 target_link_libraries(parse_csv PRIVATE string_lib)
 add_dependencies(parse_csv string_lib)
+set_target_properties(parse_csv PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})
     target_link_libraries(list_all_file_hash PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} my_crypto OpenMP::OpenMP_CXX time)
     add_dependencies(list_all_file_hash my_crypto OpenMP::OpenMP_CXX time)
+    set_target_properties(list_all_file_hash PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     add_executable(crypto_AES ${CRYPTO_AES})
     target_link_libraries(crypto_AES PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem my_crypto thread time)
     add_dependencies(crypto_AES filesystem thread time)
+    set_target_properties(crypto_AES PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     add_executable(crypto_RSA ${CRYPTO_RSA})
     target_link_libraries(crypto_RSA PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} filesystem my_crypto thread time)
     add_dependencies(crypto_RSA my_crypto thread time filesystem)
+    set_target_properties(crypto_RSA PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 endif()
 
 if (OPENCV_FOUND)
     add_executable(list_all_file_opencv ${LIST_ALL_FILE_OPENCV})
     target_link_libraries(list_all_file_opencv PRIVATE filesystem ${OpenCV_LIBS})
     add_dependencies(list_all_file_opencv filesystem ${OpenCV_LIBS})
+    set_target_properties(list_all_file_opencv PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
     add_executable(image_diff ${IMAGE_DIFF})
     target_link_libraries(image_diff PRIVATE filesystem ${OpenCV_LIBS} utils_opencv)
+    set_target_properties(image_diff PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 endif()
 
 #   ================================================
