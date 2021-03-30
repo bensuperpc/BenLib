@@ -29,6 +29,7 @@ cmake $@ -G Ninja .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAU
 #-d explain 
 ninja
 ctest --output-on-failure -j$(nproc) #--extra-verbose
+#valgrind --tool=callgrind --collect-systime=msec --trace-children=no
 #cmake .. --graphviz=foo.dot
 #dot -Tpng -Gdpi=120 foo.dot -o foo.png
 #make install 

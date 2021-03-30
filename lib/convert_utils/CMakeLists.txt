@@ -56,3 +56,15 @@ if (QT_FOUND)
 	target_link_libraries(convert_utils PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia)
 endif()
 #export(TARGETS testLib FILE testLib-exports.cmake)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    PUBLIC_HEADER "${HEADERS}"
+)
+
+install(TARGETS ${PROJECT_NAME} 
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # Nedd more 1 target
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # Nedd more 1 target
+#    PRIVATE_HEADER DESTINATION source
+    PUBLIC_HEADER DESTINATION "include/${PROJECT_NAME}"
+)

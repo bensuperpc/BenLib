@@ -23,5 +23,14 @@ set(HEADERS
 #add_library(integer_c_static STATIC ${SRCS} ${HEADERS})
 add_library(integer_c SHARED ${SRCS} ${HEADERS})
 
-#install (TARGETS hello DESTINATION bin)
-#install (FILES hello.h DESTINATION include)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    PUBLIC_HEADER "${HEADERS}"
+)
+
+install(TARGETS ${PROJECT_NAME} 
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # Nedd more 1 target
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # Nedd more 1 target
+#    PRIVATE_HEADER DESTINATION source
+    PUBLIC_HEADER DESTINATION "include/${PROJECT_NAME}"
+)

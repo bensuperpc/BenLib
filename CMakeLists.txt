@@ -578,25 +578,51 @@ configure_file(${lib_path}lib/opencl/kernels/gta_sa.cl ${CMAKE_BINARY_DIR}/kerne
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My funky project")
-set(CPACK_PACKAGE_VENDOR "Me, myself, and I")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_PACKAGE_VENDOR "Ben")
 set(CPACK_PACKAGE_NAME "BenLib")
 set(CPACK_PACKAGE_CONTACT "bensuperpc@gmail.com")
 
 #set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 #set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE ON)
 
-#set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 #install(DIRECTORY "${PROJECT_SOURCE_DIR}/examplefiles/" DESTINATION "example")
 
-#set(CPACK_PACKAGE_VERSION_MAJOR "1")
-#set(CPACK_PACKAGE_VERSION_MINOR "3")
-#set(CPACK_PACKAGE_VERSION_PATCH "2")
+set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "MyLib Application")
+set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries")
+set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "C/C++ Headers")
+
+set(CPACK_COMPONENT_APPLICATIONS_DESCRIPTION
+  "An useful applications")
+set(CPACK_COMPONENT_LIBRARIES_DESCRIPTION
+  "Shared libraries")
+set(CPACK_COMPONENT_HEADERS_DESCRIPTION
+  "C/C++ header files for use with BenLib")
+
+set(CPACK_COMPONENT_APPLICATIONS_GROUP "Runtime")
+set(CPACK_COMPONENT_LIBRARIES_GROUP "Development")
+set(CPACK_COMPONENT_HEADERS_GROUP "Development")  
+
+set(CPACK_COMPONENT_GROUP_DEVELOPMENT_DESCRIPTION
+  "All of the tools you'll need to develop")
+
+
+#set(CPACK_COMPONENT_HEADERS_DEPENDS libraries)
+
 set(CPACK_PACKAGE_VERSION "1.0.0")
-set(CPACK_PACKAGE_DIRECTORY "Package")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+
+set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/package")
+set(CPACK_PACKAGE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
+
 if(WIN32 AND NOT UNIX)
   set(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
   set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
@@ -615,9 +641,19 @@ set(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
 
 set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_SOURCE_DIR}/package.txt)
+#set(CPACK_VERBATIM_VARIABLES true)
+set(CPACK_COMPONENTS_ALL applications libraries headers tests)
+set(CPACK_GENERATOR "External;TZ;STGZ;TGZ;TZST;TBZ2;RPM;ZIP;7Z;DEB")
+set(CPACK_CMAKE_GENERATOR Ninja)
+
+set(CPACK_SOURCE_IGNORE_FILE "")
+
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18.0")
+    set(CPACK_ARCHIVE_THREADS 16)
+endif()
 
 # ====== RPM ======
-set(CPACK_RPM_PACKAGE_GROUP "vesoft")
+set(CPACK_RPM_PACKAGE_GROUP "Bensuperpc")
 set(CPACK_RPM_PACKAGE_LICENSE "MIT")
 set(CPACK_RPM_PACKAGE_RELOCATABLE ON)
 set(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
@@ -631,14 +667,16 @@ set(CPACK_RPM_PACKAGE_CONFLICTS "libxml2")
 
 #set(CPACK_RPM_PACKAGE_SUGGESTS "clang >= 10.0.0, cmake >= 3.0")
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home")
-list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home/vesoft")
+list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home/bensuperpc")
 #set(CPACK_RPM_COMPRESSION_TYPE "xz")
 set(CPACK_RPM_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}.rpm")
+
 
 # ====== DEB ======
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Bensuperpc")
 set(CPACK_DEBIAN_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 
+set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "clang (>= 10.0.0), libc6 (>= 3.0)")
 set(CPACK_DEBIAN_PACKAGE_BREAKS "")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "")
@@ -666,58 +704,7 @@ install(FILES
 #  ARCHIVE
 #  DESTINATION lib
 #  COMPONENT libraries)
-#install(TARGETS my_cuda
-#  ARCHIVE
-#  DESTINATION lib
-#  COMPONENT libraries)
-install(TARGETS math
-  ARCHIVE
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS string_lib
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS convert_utils
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS texture
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS utils_opencv
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS utils_opengl
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS time
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS cpu
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS vector
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS thread
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS filesystem
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
-install(TARGETS std
-  RUNTIME
-  DESTINATION lib
-  COMPONENT libraries)
+
 # ====== BIN ======
 install(TARGETS list_all_file_hash
   RUNTIME
@@ -727,16 +714,129 @@ install(TARGETS gta_sa_cheat
   RUNTIME
   DESTINATION bin
   COMPONENT applications)
-# ====== TESTS ======
-install(TARGETS test_power
+install(TARGETS bench_isprime
   RUNTIME
-  DESTINATION tests
-  COMPONENT tests)
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS bench_vector_copy
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS bench_vector_sort
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS bench_digits_count
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS bench_find_max
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS bench_pc
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+install(TARGETS bench_crc32
+  RUNTIME
+  DESTINATION bin
+  COMPONENT applications)
+if(OpenCL_FOUND)
+    install(TARGETS opencl_test
+        RUNTIME
+        DESTINATION bin
+        COMPONENT applications)
+    install(TARGETS opencl_test2
+        RUNTIME
+        DESTINATION bin
+        COMPONENT applications)
+    install(TARGETS opencl_findstringinv
+        RUNTIME
+        DESTINATION bin
+        COMPONENT applications)
+    install(TARGETS opencl_gta_sa_gpu
+        RUNTIME
+        DESTINATION bin
+        COMPONENT applications)
+    if (OPENSSL_FOUND)
+        install(TARGETS opencl_crc32
+            RUNTIME
+            DESTINATION bin
+            COMPONENT applications)
+  endif()
+endif()
+# ====== TESTS ======
+if(ENABLE_TESTS)
+    install(TARGETS test_power
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_my_str_isnum
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_my_isnum
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_rev_str
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_vector_copy
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_vector_max_simd
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_string_seq
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_vector_sort
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_cylinder
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_sphere
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_getGravitationalAttraction
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+    install(TARGETS test_getSchwarzschild
+        RUNTIME
+        DESTINATION tests
+        COMPONENT tests)
+
+    if (OPENSSL_FOUND)
+        install(TARGETS test_crypto_CRC
+            RUNTIME
+            DESTINATION tests
+            COMPONENT tests)
+        install(TARGETS test_crypto_aes
+            RUNTIME
+            DESTINATION tests
+            COMPONENT tests)
+        install(TARGETS test_crypto
+            RUNTIME
+            DESTINATION tests
+            COMPONENT tests)
+    endif()
+
+endif()
+
 #install(FILES mylib.h
 #  DESTINATION include
 #  COMPONENT headers)
 
-set(CPACK_COMPONENTS_ALL applications libraries headers tests)
-set(CPACK_GENERATOR "TZ;STGZ;TGZ;TZST;TBZ2;RPM;ZIP;7Z;DEB")
 # Section CPack
 include (CPack)

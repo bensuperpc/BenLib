@@ -54,6 +54,7 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     set(DOXYGEN_STRIP_CODE_COMMENT NO)
     set(DOXYGEN_BRIEF_MEMBER_DESC YES)
 
+    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs")
 
     set(DOXYGEN_FILE_PATTERNS *.c 
     *.cc 
@@ -82,7 +83,7 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     #USE_STAMP_FILE
     doxygen_add_docs(
         Doxygen ${DOXYGEN_INPUT_DIRECTORY} ALL COMMENT "Generate pages")
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION documentation)
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/html DESTINATION documentation)
 else()
     message( "Doxygen need to be installed to generate the doxygen documentation" )
 endif()
