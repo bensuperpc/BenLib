@@ -17,21 +17,14 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-#include "function_binding.h"
 
-char const* get_c(void)
-{
-   return "hello, world";
-}
+#ifndef FUNCTION_BINDING_H
+#define FUNCTION_BINDING_H
 
-char const* set_c(char const* str)
-{
-   return str;
-}
+#include <stdio.h>
 
-float cmult(int int_param, float float_param) {
-    float return_value = int_param * float_param;
-    printf("    In cmult : int: %d float %.1f returning  %.1f\n", int_param,
-            float_param, return_value);
-    return return_value;
-}
+char const* set_c(char const* str);
+char const* get_c(void);
+float cmult(int int_param, float float_param);
+
+#endif
