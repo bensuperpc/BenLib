@@ -245,6 +245,8 @@ if (CUDA_FOUND)
     add_subdirectory(${lib_path}lib/CUDA "src/lib/lib/CUDA")
 endif()
 
+add_subdirectory(${lib_path}lib/python)
+
 #add_dependencies(hello ${EXTERNAL_LIB})
 
 
@@ -698,6 +700,9 @@ install(FILES
   ${CPACK_RESOURCE_FILE_LICENSE}
   DESTINATION Metadata
 )
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/tools/graph.py
+  DESTINATION tools)
 
 # ====== LIBS ======
 #install(TARGETS my_crypto
