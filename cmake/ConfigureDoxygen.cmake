@@ -83,7 +83,7 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     #USE_STAMP_FILE
     doxygen_add_docs(
         Doxygen ${DOXYGEN_INPUT_DIRECTORY} ALL COMMENT "Generate pages")
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/html DESTINATION documentation)
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/html DESTINATION docs)
 else()
     message( "Doxygen need to be installed to generate the doxygen documentation" )
 endif()

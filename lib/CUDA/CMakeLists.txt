@@ -38,15 +38,33 @@
 
 cmake_minimum_required(VERSION 3.12)
 #project(my_cuda LANGUAGES CUDA CXX C)
-project(my_cuda LANGUAGES CXX C)
+project(my_cuda LANGUAGES CUDA CXX C)
 
 
-include(CheckLanguage)
-check_language(CUDA)
-if(CMAKE_CUDA_COMPILER)
-	enable_language(CUDA)
-    message(STATUS "CMAKE_CUDA_COMPILER: True")
+#include(CheckLanguage)
+#check_language(CUDA)
+#if(CMAKE_CUDA_COMPILER)
+#	enable_language(CUDA)
+#    message(STATUS "CMAKE_CUDA_COMPILER: True")
+#endif()
+
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    # Top-level project
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_C_STANDARD 11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -march=native")
+    set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -g3 -Og -ggdb3")
+
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -march=native -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+    set(CMAKE_C_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -g3 -Og -ggdb3")
+else()
+    # Sub-level project
 endif()
+
+
 
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/

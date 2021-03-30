@@ -14,7 +14,32 @@
 # ==============================================================================
 
 cmake_minimum_required (VERSION 3.10)
+
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+# Top-level project
+else()
+# Sub-level project
+endif()
+
 project(python_binding LANGUAGES CXX C)
+
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    # Top-level project
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_C_STANDARD 11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -march=native")
+    set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -g3 -Og -ggdb3")
+
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -march=native -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+    set(CMAKE_C_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -g3 -Og -ggdb3")
+else()
+# Sub-level project
+endif()
+
 
 #Find boost lib
 find_package(Boost REQUIRED COMPONENTS python)
@@ -23,7 +48,7 @@ include_directories(${Boost_INCLUDE_DIR})
 #Find python
 #set(PYTHON_LIBRARY "\\usr\\lib\\python2.7")
 #set(PYTHON_INCLUDE_DIR "\\usr\\include\\python2.7")
-find_package(PythonLibs 3.8 REQUIRED)
+find_package(PythonLibs 3.7 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIR})
 
 # Include header directory
@@ -83,6 +108,7 @@ install(TARGETS class_binding
 #    PUBLIC_HEADER DESTINATION "include/${PROJECT_NAME}"
 )
 
+# Copy script
 install(FILES
     python/class_binding.py
     python/function_binding.py
