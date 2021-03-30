@@ -12,7 +12,7 @@
 #  Modified: 29, March, 2021                                 #
 #  file: ConfigureBoost.cmake                                #
 #  CMake                                                     #
-#  Source:                                                   #
+#  Source:  https://mirkokiefer.com/cmake-by-example-f95eb47d45b1                                                   #
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -39,11 +39,15 @@ else()
     #    SOURCE_DIR opencv
     #    BINARY_DIR opencv-build
     #    CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-    #    CMAKE_ARGS -D BUILD_EXAMPLES=OFF -D OPENCV_ENABLE_NONFREE=ON
-    #    CMAKE_ARGS -D INSTALL_C_EXAMPLES=OFF -D INSTALL_PYTHON_EXAMPLES=OFF
-        #CMAKE_ARGS -DOPENCV_EXTRA_MODULES_PATH=/build/opencv_contrib-4.1.1/modules
-        #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    #    CMAKE_ARGS -D BUILD_EXAMPLES:BOOL=OFF -D OPENCV_ENABLE_NONFREE:BOOL=ON -D BUILD_TESTS:BOOL=OFF
+    #    CMAKE_ARGS -D INSTALL_C_EXAMPLES:BOOL=OFF -D INSTALL_PYTHON_EXAMPLES=OFF
+        #CMAKE_ARGS -D OPENCV_EXTRA_MODULES_PATH=/build/opencv_contrib-4.1.1/modules
+        #CMAKE_ARGS -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         #-D WITH_CUDA=ON
-    #    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
     #)
+    #set( OPENCV_ROOT_DIR ${EXTERNAL_INSTALL_LOCATION})
+    #set( OPENCV_DIR ${EXTERNAL_INSTALL_LOCATION})
+    #set(CPACK_INSTALL_CMAKE_PROJECTS "${CPACK_INSTALL_CMAKE_PROJECTS};${Dep_DIR};Dep;ALL;/")
+
+    #ExternalProject_Get_Property(opencv_lib install_dir)
 endif() 

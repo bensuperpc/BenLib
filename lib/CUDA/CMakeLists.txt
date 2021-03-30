@@ -235,42 +235,18 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"
 )
 
-install(TARGETS ${PROJECT_NAME} 
+install(TARGETS ${PROJECT_NAME} vec1d vec2d_add vec2d_mult vec2d_mult2 vec2d_mult3 vec3d_mult vec3d_mult2
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # Nedd more 1 target
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # Nedd more 1 target
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 #    PRIVATE_HEADER DESTINATION source
     PUBLIC_HEADER DESTINATION "include/${PROJECT_NAME}"
 )
 
-install(TARGETS vec1d
-  RUNTIME
-  DESTINATION bin
-  COMPONENT applications)
-install(TARGETS vec2d_add
-  RUNTIME
-  DESTINATION bin
-  COMPONENT applications)
-install(TARGETS vec2d_mult
-  RUNTIME
-  DESTINATION bin
-  COMPONENT applications)
-install(TARGETS vec2d_mult2
-  RUNTIME
-  DESTINATION bin
-  COMPONENT applications)
-install(TARGETS vec2d_mult3
-  RUNTIME
-  DESTINATION bin
-  COMPONENT applications)
-install(TARGETS vec3d_mult
-  RUNTIME
-  DESTINATION bin
-  COMPONENT applications)
-install(TARGETS vec3d_mult2
-  RUNTIME
-  DESTINATION bin
-  COMPONENT applications)
+#install(TARGETS vec1d
+#  RUNTIME
+#  DESTINATION bin
+#  COMPONENT applications)
 
 
 #${CMAKE_INSTALL_INCLUDEDIR}
