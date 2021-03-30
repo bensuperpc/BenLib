@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(string_c C)
+project(pointer_c C)
 
 set(SRCS
 	my_strcpy_ptr.c

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(string_c C)
+project(display_c C)
 
 set(SRCS
 	my_putstr.c

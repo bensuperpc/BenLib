@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(string_c C)
+project(integer_c C)
 
 set(SRCS
 	my_compute_square_root.c
