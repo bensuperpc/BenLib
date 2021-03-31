@@ -27,15 +27,70 @@ namespace my
 {
 namespace crypto
 {
+
+/**
+ * @brief 
+ *
+ * @ingroup Crypto_AES
+ *
+ * @param ciphertext 
+ * @param ciphertext_len 
+ * @param aad 
+ * @param aad_len 
+ * @param tag 
+ * @param key 
+ * @param iv 
+ * @param plaintext 
+ * @return int 
+ */
 int Decrypt_AES(unsigned char *ciphertext, int ciphertext_len, unsigned char *aad, int aad_len, unsigned char *tag, unsigned char *key, unsigned char *iv,
     unsigned char *plaintext);
 
+
+/**
+ * @brief 
+ *
+ * @ingroup Crypto_AES
+ *
+ * @param plaintext 
+ * @param plaintext_len 
+ * @param aad 
+ * @param aad_len 
+ * @param key 
+ * @param iv 
+ * @param ciphertext 
+ * @param tag 
+ * @return int 
+ */
 int Encrypt_AES(unsigned char *plaintext, int plaintext_len, unsigned char *aad, int aad_len, unsigned char *key, unsigned char *iv, unsigned char *ciphertext,
     unsigned char *tag);
 
+/**
+ * @brief 
+ *
+ * @ingroup Crypto_AES
+ *
+ * @param key 
+ * @return int 
+ */
 int Rand_Key_AES(unsigned char *key);
+
+/**
+ * @brief 
+ *
+ * @ingroup Crypto_AES
+ *
+ * @param iv 
+ * @return int 
+ */
 int Rand_IV_AES(unsigned char *iv);
 
+/**
+ * @brief 
+ *
+ * @ingroup Crypto_AES
+ *
+ */
 __attribute__((__noreturn__)) void handleErrors();
 
 } // namespace crypto

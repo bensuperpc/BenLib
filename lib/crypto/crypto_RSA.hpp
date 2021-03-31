@@ -34,12 +34,55 @@ namespace my
 {
 namespace crypto
 {
+/**
+ * @brief 
+ * 
+ * @ingroup Crypto_RSA
+ *
+ * @param keypair 
+ * @param pem_type 
+ * @param file_name 
+ * @return RSA* 
+ */
 RSA *create_RSA(RSA *keypair, int pem_type, char *file_name);
 
+/**
+ * @brief 
+ * 
+ * @ingroup Crypto_RSA
+ *
+ * @param flen 
+ * @param from 
+ * @param to 
+ * @param key 
+ * @param padding 
+ * @return int 
+ */
 int public_encrypt(int flen, unsigned char *from, unsigned char *to, RSA *key, int padding);
 
+/**
+ * @brief 
+ * 
+ * @ingroup Crypto_RSA
+ *
+ * @param flen 
+ * @param from 
+ * @param to 
+ * @param key 
+ * @param padding 
+ * @return int 
+ */
 int private_decrypt(int flen, unsigned char *from, unsigned char *to, RSA *key, int padding);
 
+/**
+ * @brief Create a encrypted file object
+ * 
+ * @ingroup Crypto_RSA
+ *
+ * @param encrypted 
+ * @param key_pair 
+ * @param filename 
+ */
 void create_encrypted_file(char *encrypted, RSA *key_pair, char *filename);
 
 } // namespace crypto

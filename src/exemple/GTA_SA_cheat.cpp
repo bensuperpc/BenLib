@@ -61,14 +61,17 @@
  *  The main group
  */
  /** @defgroup Crypto_RSA Crypto RSA
+ *  @brief The cryptography RSA group
  *  @ingroup Crypto
  *  @sa @link Crypto The main group Crypto@endlink
  */
 /** @defgroup Crypto_AES Crypto AES
+ *  @brief The cryptography AES group
  *  @ingroup Crypto
  *  @sa @link Crypto The main group Crypto@endlink
  */
 /** @defgroup Crypto_CRC Crypto CRC
+ *  @brief The cryptography CRC group (With CRC32 and JAMCRC)
  *  @ingroup Crypto
  *  @sa @link Crypto The main group Crypto@endlink
  */
