@@ -45,7 +45,7 @@
  */
 
  /**
- *  @ingroup GTA_SA_CPU
+ *  @addtogroup GTA_SA_CPU
  *  GTA SA Alternate cheat
  *  @brief GTA SA Alternate cheat with CPU
  *  @author Bensuperpc 
