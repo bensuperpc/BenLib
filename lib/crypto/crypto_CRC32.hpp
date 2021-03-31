@@ -51,51 +51,204 @@ namespace crypto
 
 /**
  * This function process CRC32 hash from string
- *
+ * @ingroup Crypto_CRC32
  * @param my_string String text need to be calculate
  * @return uint32_t with CRC32 value
  * @see see also JAMCRC_Boost()
  */
 uint32_t CRC32_Boost(std::string_view my_string);
 
+
 /**
  * This function process JAMCRC hash from string
- *
+ * @ingroup Crypto_JAMCRC
  * @param String my_string text to process
  * @return uint32_t with JAMCRC value
  * @see see also CRC32_Boost()
  */
 uint32_t JAMCRC_Boost(std::string_view my_string);
 
+
 /**
  * This function process CRC32 hash from void * const
- *
+ * 
+ * @ingroup Crypto_CRC32
  * @param buf void* text need to be calculate
- * @param len < b>size_t< /b> text size
- * @param crc < b>uint32_t< /b> least crc (0x0 if is empty)
- * @return < b>uint32_t< /b> with CRC32 value
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
  * @see see also JAMCRC_Boost()
  */
 uint32_t CRC32_Boost(const void *buf, size_t len, uint32_t crc);
+
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_JAMCRC
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also CRC32_Boost()
+ */
 uint32_t JAMCRC_Boost(const void *buf, size_t len, uint32_t crc);
 
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_CRC32
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also JAMCRC_StackOverflow()
+ */
 uint32_t CRC32_StackOverflow(const void *buf, size_t len, uint32_t crc);
+
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_JAMCRC
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also CRC32_StackOverflow()
+ */
 uint32_t JAMCRC_StackOverflow(const void *buf, size_t len, uint32_t crc);
 
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_CRC32
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also JAMCRC_1byte_tableless()
+ */
 uint32_t CRC32_1byte_tableless(const void *data, size_t length, uint32_t previousCrc32);
+
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_JAMCRC
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also CRC32_1byte_tableless()
+ */
 uint32_t JAMCRC_1byte_tableless(const void *data, size_t length, uint32_t previousCrc32);
 
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_CRC32
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also JAMCRC_1byte_tableless2()
+ */
 uint32_t CRC32_1byte_tableless2(const void *data, size_t length, uint32_t previousCrc32);
+
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_JAMCRC
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also CRC32_1byte_tableless2()
+ */
 uint32_t JAMCRC_1byte_tableless2(const void *data, size_t length, uint32_t previousCrc32);
 
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_CRC32
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also JAMCRC_bitwise()
+ */
 uint32_t CRC32_bitwise(const void *data, size_t length, uint32_t previousCrc32);
+
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_JAMCRC
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also CRC32_bitwise()
+ */
 uint32_t JAMCRC_bitwise(const void *data, size_t length, uint32_t previousCrc32);
 
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_CRC32
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also JAMCRC_halfbyte()
+ */
 uint32_t CRC32_halfbyte(const void *data, size_t length, uint32_t previousCrc32);
+
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_JAMCRC
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also CRC32_halfbyte()
+ */
 uint32_t JAMCRC_halfbyte(const void *data, size_t length, uint32_t previousCrc32);
 
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_CRC32
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also JAMCRC_1byte()
+ */
 #ifdef CRC32_USE_LOOKUP_TABLE_BYTE
 uint32_t CRC32_1byte(const void *data, size_t length, uint32_t previousCrc32);
+
+
+/**
+ * This function process CRC32 hash from void * const
+ * 
+ * @ingroup Crypto_JAMCRC
+ * @param buf void* text need to be calculate
+ * @param len size_t text size
+ * @param crc uint32_t least crc (0x0 if is empty)
+ * @return uint32_t with CRC32 value
+ * @see see also CRC32_1byte()
+ */
 uint32_t JAMCRC_1byte(const void *data, size_t length, uint32_t previousCrc32);
 #endif
 
