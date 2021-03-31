@@ -15,6 +15,10 @@
 #include <sstream>
 namespace my
 {
+/**
+ * @namespace my::date
+ * @brief the date namespace, Get week day with date
+ */
 namespace date
 {
 const std::string weekday[7] = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};

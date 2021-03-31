@@ -91,7 +91,7 @@ template <typename T> int mMatAlloc(T **matA, T **matB, T **matC, const dim3 &di
 
 template <typename T>
 int mMatAlloc(T **matC, const dim3 &dimsA, const dim3 &dimsB, dim3 &dimsC, const bool Unified_memory, const bool Pinned_memory, const bool set_memset);
-}
+} // namespace cuda
 } // namespace my
 
 #endif

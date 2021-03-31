@@ -55,18 +55,16 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort =
 }
 #endif
 
-
-
 /**
-* @namespace my
-* @brief the my namespace
-*/
+ * @namespace my
+ * @brief the my namespace
+ */
 namespace my
 {
-    /**
-    * @namespace my::cuda
-    * @brief the cuda namespace
-    */
+/**
+ * @namespace my::cuda
+ * @brief the cuda namespace, Use gpgpu computing with Nvidia graphics cards only
+ */
 namespace cuda
 {
 /*

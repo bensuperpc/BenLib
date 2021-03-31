@@ -23,12 +23,12 @@
 
 std::string get()
 {
-   return "hello, world";
+    return "hello, world";
 }
 
 std::string set(std::string str)
 {
-   return str;
+    return str;
 }
 
 BOOST_PYTHON_MODULE(function_binding)

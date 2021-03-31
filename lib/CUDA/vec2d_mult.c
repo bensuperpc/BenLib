@@ -29,7 +29,6 @@
 const int TILE_WIDTH = 16;
 #define THREADS_PER_BLOCK 1024
 
-
 void matrixMultiplyCPU(float *a, float *b, float *c, size_t width);
 void matrixMultiplyCPU(float *a, float *b, float *c, size_t width)
 {

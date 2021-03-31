@@ -56,10 +56,25 @@ public:
     };
 };
 
-bool    (Hello::*fx1)(int)              = &Hello::f;
-bool    (Hello::*fx2)(int, double)      = &Hello::f;
-bool    (Hello::*fx3)(int, double, char)= &Hello::f;
-int     (Hello::*fx4)(int, int, int)    = &Hello::f;
+/// Python function 1
+bool (Hello::*fx1)(int) = &Hello::f;
+/// Brief description.
+/** Detailed description. */
+bool (Hello::*fx2)(int, double) = &Hello::f;
+//! Brief description.
+
+//! Detailed description 
+//! starts here.
+bool (Hello::*fx3)(int, double, char) = &Hello::f;
+/***************************************************************************//**
+ * A brief history of Doxygen-style banner comments.
+ *
+ *
+ *
+ *
+ * @param t1 test 
+ ******************************************************************************/
+int (Hello::*fx4)(int, int, int) = &Hello::f;
 
 
 using namespace boost::python;

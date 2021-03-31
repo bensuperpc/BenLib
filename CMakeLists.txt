@@ -31,6 +31,7 @@
 #           https://down.firefliestudio.com/Linux/leveldb/cmake-3.19.0-rc3/Tests/FindDoxygen/StampFile/CMakeLists.txt
 #           https://discourse.cmake.org/t/doxygen-add-docs-install-output-directory/2904
 #           https://antonypeacock.blog/2018/11/03/adding-doxygen-support-to-a-cmake-project/
+#           https://github.com/nCine/nCine/blob/master/cmake/ncine_installation.cmake
 #           
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
@@ -71,7 +72,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
 # If support unity build, improve speed on headers
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
-set(CMAKE_UNITY_BUILD ON)
+    set(CMAKE_UNITY_BUILD ON)
 endif()
 # If enable tests
 set(BUILD_TESTING ON)
@@ -606,6 +607,7 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_VENDOR "Ben")
 set(CPACK_PACKAGE_NAME "BenLib")
 set(CPACK_PACKAGE_CONTACT "bensuperpc@gmail.com")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/Bensuperpc/BenLib")
 
 #set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 #set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE ON)
@@ -614,7 +616,6 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-#install(DIRECTORY "${PROJECT_SOURCE_DIR}/examplefiles/" DESTINATION "example")
 
 set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "MyLib Application")
 set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries")
@@ -642,6 +643,9 @@ set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 
+set(CPACK_PRE_BUILD_SCRIPTS "")
+set(CPACK_POST_BUILD_SCRIPTS "")
+
 set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/package")
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -668,9 +672,14 @@ set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_SOURCE_DIR}/package.txt)
 #set(CPACK_VERBATIM_VARIABLES true)
 set(CPACK_COMPONENTS_ALL applications libraries headers tests)
 set(CPACK_GENERATOR "External;TZ;STGZ;TGZ;TZST;TBZ2;RPM;ZIP;7Z;DEB")
+set(CPACK_PACKAGE_CHECKSUM "SHA3_512")
 set(CPACK_CMAKE_GENERATOR Ninja)
 
 set(CPACK_SOURCE_IGNORE_FILE "")
+
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.20.0")
+    set(CPACK_THREADS 0)
+endif()
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18.0")
     set(CPACK_ARCHIVE_THREADS 16)
@@ -694,6 +703,9 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home")
 list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/home/bensuperpc")
 #set(CPACK_RPM_COMPRESSION_TYPE "xz")
 set(CPACK_RPM_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}.rpm")
+set (CPACK_RPM_POST_INSTALL_SCRIPT_FILE "")
+set (CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE "")
+
 
 
 # ====== DEB ======
@@ -705,6 +717,8 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "clang (>= 10.0.0), libc6 (>= 3.0)")
 set(CPACK_DEBIAN_PACKAGE_BREAKS "")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "")
 set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "")
+set(CPACK_DEBIAN_PACKAGE_SECTION "dev")
+set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64") #or i386
 
 set(CPACK_DEBIAN_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}.deb")
 set(CPACK_DEB_COMPONENT_INSTALL OFF)

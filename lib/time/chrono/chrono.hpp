@@ -14,6 +14,10 @@
 
 typedef std::chrono::high_resolution_clock Clock;
 
+/**
+ * @class my_chrono
+ * @brief the my_chrono class, To calculate time between to line of code
+ */
 class my_chrono {
   public:
     // Fonctions

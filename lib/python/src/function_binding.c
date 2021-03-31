@@ -19,19 +19,19 @@
 
 #include "function_binding.h"
 
-char const* get_c(void)
+char const *get_c(void)
 {
-   return "hello, world";
+    return "hello, world";
 }
 
-char const* set_c(char const* str)
+char const *set_c(char const *str)
 {
-   return str;
+    return str;
 }
 
-float cmult(int int_param, float float_param) {
+float cmult(int int_param, float float_param)
+{
     float return_value = int_param * float_param;
-    printf("    In cmult : int: %d float %.1f returning  %.1f\n", int_param,
-            float_param, return_value);
+    printf("    In cmult : int: %d float %.1f returning  %.1f\n", int_param, float_param, return_value);
     return return_value;
 }

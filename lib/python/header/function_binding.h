@@ -17,14 +17,13 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-
 #ifndef FUNCTION_BINDING_H
 #define FUNCTION_BINDING_H
 
 #include <stdio.h>
 
-char const* set_c(char const* str);
-char const* get_c(void);
+char const *set_c(char const *str);
+char const *get_c(void);
 float cmult(int int_param, float float_param);
 
 #endif

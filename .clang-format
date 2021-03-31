@@ -84,4 +84,4 @@ AllowShortFunctionsOnASingleLine: None
 AlwaysBreakAfterReturnType: None
 
 # Prevent comment formatting
-CommentPragmas:  '^\* .*'
+CommentPragmas:  '^\\.+'

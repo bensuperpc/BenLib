@@ -18,6 +18,10 @@
 
 namespace my
 {
+/**
+ * @namespace my::string
+ * @brief the string namespace, To do string ops
+ */
 namespace string
 {
 std::vector<std::string> split(const std::string &s, const std::string &);
