@@ -32,9 +32,8 @@
 //////////////////////////////////////////////////////////////
 
 /** @defgroup GTA_SA GTA SA software
- *  The main group
+ *  @brief The main GTA_SA group who contain all software to brute force GTA SA password
  */
-
 /** @defgroup GTA_SA_CPU CPU version
  *  @ingroup GTA_SA
  *  @sa @link GTA_SA The first group GTA_SA@endlink
@@ -44,9 +43,35 @@
  *  @sa @link GTA_SA The first group GTA_SA@endlink
  */
 
+
+ /** @defgroup Crypto Cryptography
+ *  @brief The main cryptography group
+ *  The main group
+ */
+ /** @defgroup Crypto_RSA Crypto RSA
+ *  @ingroup Crypto
+ *  @sa @link Crypto The main group Crypto@endlink
+ */
+/** @defgroup Crypto_AES Crypto RSA
+ *  @ingroup Crypto
+ *  @sa @link Crypto The main group Crypto@endlink
+ */
+/** @defgroup Crypto_CRC Crypto CRC
+ *  @ingroup Crypto
+ *  @sa @link Crypto The main group Crypto@endlink
+ */
+ /** @defgroup Crypto_CRC32 Crypto CRC32
+ *  @ingroup Crypto_CRC
+ *  @sa @link Crypto The main group Crypto@endlink
+ */
+  /** @defgroup Crypto_JAMCRC Crypto JAMCRC
+ *  @ingroup Crypto_CRC
+ *  @sa @link Crypto The main group Crypto@endlink
+ */
+ 
+
  /**
  *  @addtogroup GTA_SA_CPU
- *  GTA SA Alternate cheat
  *  @brief GTA SA Alternate cheat with CPU
  *  @author Bensuperpc 
  *
@@ -68,19 +93,19 @@
 //#include "thread/Pool.hpp"        // Threadpool
 #include "time/chrono/chrono.hpp" // Chrono
 
-/// If you want display less informations, comment it
+/** @brief If you want display less informations, comment it */
 #define MORE_INFO
 
-/// For debug mode
+/** @brief For debug mode */
 //#define DNDEBUG
 
-// Define alphabetic seq with upercase
+/** @brief Define alphabetic seq with upercase */
 #define alphabetUp "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-/// Size of alphabet
+/** @brief Size of alphabet */
 constexpr std::uint32_t alphabetSize {26};
 
-/// List of CRC32/JAMCRC hash of cheats codes
+/** @brief List of CRC32/JAMCRC hash of cheats codes */
 const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345, 0xE1EF01EA, 0x771B83FC,
     0x5BF12848, 0x44453A17, 0xFCFF1D08, 0xB69E8532, 0x8B828076, 0xDD6ED9E9, 0xA290FD8C, 0x3484B5A7, 0x43DB914E, 0xDBC0DD65, 0xD08A30FE, 0x37BF1B4E, 0xB5D40866,
     0xE63B0D99, 0x675B8945, 0x4987D5EE, 0x2E8F84E8, 0x1A9AA3D6, 0xE842F3BC, 0x0D5C6A4E, 0x74D4FCB1, 0xB01D13B8, 0x66516EBC, 0x4B137E45, 0x78520E33, 0x3A577325,
@@ -103,6 +128,7 @@ const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon
     "L3 Bunny Hop", "N°82", "N°83", "N°84", "Spawn Quad", "Spawn Tanker Truck", "Spawn Dozer", "pawn Stunt Plane", "Spawn Monster"};
 #endif
 
+std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {}; // Stock results after calculations
 
 /**
  * @brief To get CRC32 with boost libs
