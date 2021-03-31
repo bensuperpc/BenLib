@@ -7,7 +7,11 @@
 
 #ifndef MY_REVSTR_PT_H
 #define MY_REVSTR_PT_H
-
+/**
+ * @brief 
+ * 
+ * @param str 
+ */
 void my_revstr_pt(char **str);
 
 #endif

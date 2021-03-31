@@ -9,7 +9,10 @@
 #define MY_PUTSTR_H
 
 #include "my_putchar.h"
-
+/**
+ * @brief 
+ * 
+ */
 void my_putstr(char const *);
 
 #endif

@@ -7,7 +7,13 @@
 
 #ifndef MY_STRCPY_H
 #define MY_STRCPY_H
-
-char *my_strcpy(char *, char const *);
+/**
+ * @brief 
+ * 
+ * @param dest 
+ * @param src 
+ * @return char* 
+ */
+char *my_strcpy(char * dest, char const *src);
 
 #endif

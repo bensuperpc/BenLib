@@ -9,5 +9,10 @@
         b ^= a;                                                                                                                                                \
         a ^= b;                                                                                                                                                \
     } while (0)
-void my_revstr(char *);
+/**
+ * @brief 
+ * 
+ * @param str 
+ */
+void my_revstr(char *str);
 #endif

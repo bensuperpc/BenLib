@@ -9,7 +9,12 @@
 #define MY_PUTCHAR_H
 
 #include <unistd.h>
-
+/**
+ * @brief 
+ * 
+ * @param c 
+ * @return int 
+ */
 int my_putchar(char c);
 
 #endif

@@ -33,34 +33,104 @@ namespace my
 {
 namespace crypto
 {
-// MD5
-std::string get_md5hash(const std::string &);
+/**
+ * @brief Get the md5hash object
+ * 
+ * @param str 
+ * @return std::string 
+ */
+std::string get_md5hash(const std::string &str);
 // void get_md5hash_from_string(const unsigned char *, size_t &);
+/**
+ * @brief Get the md5hash from string object
+ * 
+ * @param str 
+ * @return std::string 
+ */
 std::string get_md5hash_from_string(const std::string &str);
 
-// SHA1
-std::string get_sha1hash(const std::string &);
+/**
+ * @brief Get the sha1hash object
+ * 
+ * @param str 
+ * @return std::string 
+ */
+std::string get_sha1hash(const std::string &str);
 // void get_sha1hash_from_string(const unsigned char *, size_t &);
+
+/**
+ * @brief Get the sha1hash from string object
+ * 
+ * @param str 
+ * @return std::string 
+ */
 std::string get_sha1hash_from_string(const std::string &str);
 
-// SHA224
-std::string get_sha224hash(const std::string &);
+/**
+ * @brief Get the sha224hash object
+ * 
+ * @param str 
+ * @return std::string 
+ */
+std::string get_sha224hash(const std::string &str);
 // void get_sha224hash_from_string(const unsigned char *, size_t &);
+
+/**
+ * @brief Get the sha224hash from string object
+ * 
+ * @param str 
+ * @return std::string 
+ */
 std::string get_sha224hash_from_string(const std::string &str);
 
-// SHA256
-std::string get_sha256hash(const std::string &);
+/**
+ * @brief Get the sha256hash object
+ * 
+ * @param str 
+ * @return std::string 
+ */
+std::string get_sha256hash(const std::string &str);
 // void get_sha256hash_from_string(const unsigned char *, size_t &);
+
+/**
+ * @brief Get the sha256hash from string object
+ * 
+ * @param str 
+ * @return std::string 
+ */
 std::string get_sha256hash_from_string(const std::string &str);
 
-// SHA384
-std::string get_sha384hash(const std::string &);
+/**
+ * @brief Get the sha384hash object
+ * 
+ * @param str 
+ * @return std::string 
+ */
+std::string get_sha384hash(const std::string &str);
 // void get_sha384hash_from_string(const unsigned char *, size_t &);
+
+/**
+ * @brief Get the sha384hash from string object
+ * 
+ * @param str 
+ * @return std::string 
+ */
 std::string get_sha384hash_from_string(const std::string &str);
 
-// SHA512
-std::string get_sha512hash(const std::string &);
+/**
+ * @brief Get the sha512hash object
+ * 
+ * @param str 
+ * @return std::string 
+ */
+std::string get_sha512hash(const std::string &str);
 // void get_sha512hash_from_string(const unsigned char *, size_t &);
+/**
+ * @brief Get the sha512hash from string object
+ * 
+ * @param str 
+ * @return std::string 
+ */
 std::string get_sha512hash_from_string(const std::string &str);
 } // namespace crypto
 } // namespace my

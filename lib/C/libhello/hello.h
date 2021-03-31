@@ -8,7 +8,10 @@
 #ifndef HELLO_H
 #define HELLO_H
 #include <stdio.h>
-
+/**
+ * @brief 
+ * 
+ */
 void sayHello(void);
 
 #endif

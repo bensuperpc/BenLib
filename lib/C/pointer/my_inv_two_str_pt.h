@@ -10,7 +10,12 @@
 
 #include <stdlib.h>
 #include "string_c/my_strdup.h"
-
-void my_inv_two_str_pt(char **, char **);
+/**
+ * @brief 
+ * 
+ * @param str1 
+ * @param str2 
+ */
+void my_inv_two_str_pt(char ** str1, char ** str2);
 
 #endif

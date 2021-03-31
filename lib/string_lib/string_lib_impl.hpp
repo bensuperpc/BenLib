@@ -1,3 +1,13 @@
+/**
+ * @file string_lib_impl.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2021-03-03
+ * 
+ * MIT License
+ * 
+ */
 //////////////////////////////////////////////////////////////
 //   ____                                                   //
 //  | __ )  ___ _ __  ___ _   _ _ __   ___ _ __ _ __   ___  //
@@ -23,6 +33,13 @@
 
 #include "string_lib.hpp"
 
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param n 
+ * @return std::string 
+ */
 template <class T> std::string my::string::findString(T n)
 {
 #ifdef DNDEBUG
@@ -44,10 +61,11 @@ template <class T> std::string my::string::findString(T n)
 }
 
 /**
- * \brief Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
- * \tparam T
- * \param n
- * \param array
+ * @brief 
+ * 
+ * @tparam T 
+ * @param n 
+ * @param array 
  */
 template <class T> void my::string::findStringInv(T n, char *array)
 {
@@ -68,6 +86,13 @@ template <class T> void my::string::findStringInv(T n, char *array)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param n 
+ * @param array 
+ */
 template <class T> void my::string::findString(T n, char *array)
 {
 #ifdef DNDEBUG

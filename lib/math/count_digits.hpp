@@ -16,10 +16,41 @@ namespace math
 {
 namespace count_digits
 {
-template <typename T> T count_digits_1(T);
-template <typename T> T count_digits_2(T);
-template <typename T> T count_digits_3(T);
-template <typename T> T count_digits_4(T);
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param n 
+ * @return T 
+ */
+template <typename T> T count_digits_1(T n);
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param n 
+ * @return T 
+ */
+template <typename T> T count_digits_2(T n);
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param n 
+ * @return T 
+ */
+template <typename T> T count_digits_3(T n);
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param n 
+ * @return T 
+ */
+template <typename T> T count_digits_4(T n);
 } // namespace count_digits
 } // namespace math
 } // namespace my

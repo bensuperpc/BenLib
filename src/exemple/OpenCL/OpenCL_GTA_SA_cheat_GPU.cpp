@@ -71,12 +71,12 @@ int main(int argc, char **argv)
     try {
 
         if constexpr (NBRS > 26) { // Need to be more than 26
-            N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
+            N_ELEMENTS = (uint64_t)ceil(log(NBRS) / log(26));
         } else {
             N_ELEMENTS = 1;
         }
         if constexpr (NBRS > 26) { // Need to be more than 26
-            N_ELEMENTS = (int)ceil(log(NBRS) / log(26));
+            N_ELEMENTS = (uint64_t)ceil(log(NBRS) / log(26));
         } else {
             N_ELEMENTS = 1;
         }
