@@ -52,7 +52,7 @@
  *  @ingroup Crypto
  *  @sa @link Crypto The main group Crypto@endlink
  */
-/** @defgroup Crypto_AES Crypto RSA
+/** @defgroup Crypto_AES Crypto AES
  *  @ingroup Crypto
  *  @sa @link Crypto The main group Crypto@endlink
  */
