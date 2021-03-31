@@ -12,7 +12,8 @@
 #  Modified: 29, March, 2021                                 #
 #  file: ConfigureBoost.cmake                                #
 #  CMake                                                     #
-#  Source:                                                   #
+#  Source:      https://stackoverflow.com/a/30156250/10152334                                                   #
+#               https://github.com/alfonsoros88/ScaRF/blob/master/doc/Doxyfile.in
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -67,36 +68,17 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     set(DOXYGEN_QUIET YES)
 
     set(DOXYGEN_RECURSIVE YES)
+    set(DOXYGEN_HTML_TIMESTAMP YES)
     
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs")
-    #set(DOXYGEN_INPUT "${CMAKE_CURRENT_BINARY_DIR}/README.md")
-    #set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_BINARY_DIR}/README.md")
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_BINARY_DIR}/README.md")
 
-    set(DOXYGEN_FILE_PATTERNS *.c 
-    *.cc 
-    *.cxx 
-    *.cpp 
-    *.c++ 
-    *.java 
-    *.ii 
-    *.ixx 
-    *.ipp 
-    *.i++ 
-    *.inl 
-    *.idl 
-    *.ddl 
-    *.odl 
-    *.h 
-    *.hh 
-    *.hxx 
-    *.hpp 
-    *.tpp
-    *.cu
-    *.cuh
-    *.cl   
-    *.h++)
-
-    set(DOXYGEN_INPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib;${PROJECT_SOURCE_DIR}/src")
+    set(DOXYGEN_FILE_PATTERNS "*.c;*.cc;*.cxx;*.cpp;*.c++;*.java;*.ii;*.ixx*.ipp;*.i++;*.inl;*.idl;*.ddl;*.odl;*.h;*.hh;*.hxx;*.hpp;*.tpp;*.cu;*.cuh;*.cl;*.h++")
+    set(DOXYGEN_INPUT_MDFILE "${CMAKE_CURRENT_BINARY_DIR}/README.md")
+    #configure_file(${lib_path}lib/opencl/kernels/gta_sa.cl ${CMAKE_BINARY_DIR}/kernels/gta_sa.cl COPYONLY)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/README.md" "${CMAKE_BINARY_DIR}/README.md" COPYONLY)
+    #install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/html DESTINATION docs)
+    set(DOXYGEN_INPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib;${PROJECT_SOURCE_DIR}/src;${DOXYGEN_INPUT_MDFILE}")
 
     #USE_STAMP_FILE
     doxygen_add_docs(
