@@ -30,7 +30,10 @@ extern "C"
 
 using namespace std;
 
-int main()
+/**@example crypto_RSA.cpp
+ * Crypto
+ */
+int main(int arc, char *argv[])
 {
 
     LOG("OpenSSL_RSA has been started.");

@@ -29,6 +29,9 @@ extern "C"
 }
 #include "crypto/crypto_AES.hpp"
 
+/**@example count_all_file.cpp
+ * Crypto
+ */
 int main(int arc, char *argv[])
 {
     OpenSSL_add_all_algorithms();

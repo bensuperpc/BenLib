@@ -23,6 +23,9 @@
 #include <opencv2/imgproc.hpp>
 #include "utils/opencv/opencv_utils.hpp"
 
+/**@example image_diff.cpp
+ * Show diff between two image
+ */
 int main(int argc, char *argv[], char *envp[])
 {
     if (argc < 2) {

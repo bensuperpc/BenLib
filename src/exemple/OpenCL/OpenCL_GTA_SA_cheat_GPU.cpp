@@ -21,6 +21,13 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
+ /**
+ *  @ingroup GTA_SA_GPU
+ *  GTA SA Alternate cheat
+ *  @brief GTA SA Alternate cheat with OpenCL 1.2
+ *  @author Bensuperpc
+ * @{
+ */
 #include <fstream>
 #include <iostream>
 #include <math.h> // ceil and log
@@ -167,3 +174,4 @@ int main(int argc, char **argv)
     std::cout << "Done.\n";
     return (EXIT_SUCCESS);
 }
+/** @} */ // end of group2

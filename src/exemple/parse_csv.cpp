@@ -22,6 +22,9 @@
 #include <vector>
 #include "string_lib/parsing.hpp"
 
+/**@example parse_csv.cpp
+ * Parsing CSV
+ */
 int main(int argc, char *argv[], char *envp[])
 {
     if (argc >= 2) {

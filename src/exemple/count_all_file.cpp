@@ -25,6 +25,9 @@
 
 // https://bastian.rieck.me/blog/posts/2017/simple_unit_tests/
 
+/**@example count_all_file.cpp
+ * Count all file
+ */
 int main(int argc, char *argv[], char *envp[])
 {
     // Return files count

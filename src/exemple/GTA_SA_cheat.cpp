@@ -31,6 +31,28 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
+/** @defgroup GTA_SA GTA SA software
+ *  This is the third group
+ */
+
+/** @defgroup GTA_SA_CPU CPU version
+ *  @ingroup GTA_SA
+ *  Group 4 is a subgroup of group 3
+ */
+/** @defgroup GTA_SA_GPU GPU version
+ *  @ingroup GTA_SA
+ *  Group 3 is a subgroup of group 1
+ */
+
+ /**
+ *  @ingroup GTA_SA_CPU
+ *  GTA SA Alternate cheat
+ *  @brief GTA SA Alternate cheat with CPU
+ *  @author Bensuperpc 
+ *
+ * @{
+ */
+
 #include <algorithm> // for std::find
 #include <boost/crc.hpp>
 #include <cmath> // pow
@@ -46,19 +68,19 @@
 //#include "thread/Pool.hpp"        // Threadpool
 #include "time/chrono/chrono.hpp" // Chrono
 
-// If you want display less informations, comment it
+/// If you want display less informations, comment it
 #define MORE_INFO
 
-// For debug mode
+/// For debug mode
 //#define DNDEBUG
 
 // Define alphabetic seq with upercase
 #define alphabetUp "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-// Size of alphabet
+/// Size of alphabet
 constexpr std::uint32_t alphabetSize {26};
 
-// List of CRC32/JAMCRC hash of cheats codes
+/// List of CRC32/JAMCRC hash of cheats codes
 const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FAE, 0xEECCEA2B, 0x42AF1E28, 0x555FC201, 0x2A845345, 0xE1EF01EA, 0x771B83FC,
     0x5BF12848, 0x44453A17, 0xFCFF1D08, 0xB69E8532, 0x8B828076, 0xDD6ED9E9, 0xA290FD8C, 0x3484B5A7, 0x43DB914E, 0xDBC0DD65, 0xD08A30FE, 0x37BF1B4E, 0xB5D40866,
     0xE63B0D99, 0x675B8945, 0x4987D5EE, 0x2E8F84E8, 0x1A9AA3D6, 0xE842F3BC, 0x0D5C6A4E, 0x74D4FCB1, 0xB01D13B8, 0x66516EBC, 0x4B137E45, 0x78520E33, 0x3A577325,
@@ -68,7 +90,7 @@ const std::array<unsigned int, 87> cheat_list {0xDE4B237D, 0xB22A28D1, 0x5A783FA
     0xC25CDBFF, 0xD5CF4EFF, 0x680416B1, 0xCF5FDA18, 0xF01286E9, 0xA841CC0A, 0x31EA09CF, 0xE958788A, 0x02C83A7C, 0xE49C3ED4, 0x171BA8CC, 0x86988DAE, 0x2BDD2FA1};
 
 #ifdef MORE_INFO
-// List of cheats codes names
+/// List of cheats codes names
 const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon Set 2", "Weapon Set 3", "Health, Armor, $250k, Repairs car",
     "Increase Wanted Level +2", "Clear Wanted Level", "Sunny Weather", "Very Sunny Weather", "Overcast Weather", "Rainy Weather", "Foggy Weather",
     "Faster Clock", "N°12", "N°13", "People attack each other with golf clubs", "Have a bounty on your head", "Everyone is armed", "Spawn Rhino",
@@ -81,14 +103,11 @@ const std::array<const std::string, 87> cheat_list_name {"Weapon Set 1", "Weapon
     "L3 Bunny Hop", "N°82", "N°83", "N°84", "Spawn Quad", "Spawn Tanker Truck", "Spawn Dozer", "pawn Stunt Plane", "Spawn Monster"};
 #endif
 
-std::mutex mutex; // To avoid data race on results
-
-std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {}; // Stock results after calculations
 
 /**
- * \brief To get CRC32 with boost libs
- * \tparam T
- * \param my_string
+ * @brief To get CRC32 with boost libs
+ * @param T d
+ * @param my_string d
  */
 unsigned int GetCrc32(const std::string_view my_string);
 unsigned int GetCrc32(const std::string_view my_string)
@@ -123,7 +142,7 @@ template <class T> void findStringInv(T n, char *array)
     }
 }
 
-int main()
+int main(int arc, char *argv[])
 {
     std::ios_base::sync_with_stdio(false);
 
@@ -179,130 +198,4 @@ int main()
 
     return EXIT_SUCCESS;
 }
-
-/**
- * \brief Task structure for threadpool
- * \tparam T
- * \param x Range from
- * \param y Range to
- */
-/*
-struct Task
-{
-   template <class T = std::size_t> T operator()(T x, T y)
-   {
-       char tmp[29] = {0}; // Temp array
-       uint32_t crc = 0;   // CRC value
-       for (T i = x; i < y + x; i++) {
-           findStringInv<T>(i, tmp); // Generate Alphabetic sequence from size_t value, A=1, Z=27, AA = 28, AB = 29
-           crc = ~(GetCrc32(tmp));   // Get CRC32 and apply bitwise not, to convert CRC32 to JAMCRC
-           if (std::find(std::begin(cheat_list), std::end(cheat_list), crc) != std::end(cheat_list)) { // If crc is present in Array
-               std::reverse(tmp, tmp + strlen(tmp));                                                   // Invert char array
-               mutex.lock();                                                                           // Block threads
-#ifdef DNDEBUG
-               std::cout << std::dec << i << ":" << std::string(tmp) << ":0x" << std::hex << crc << std::endl;
-#endif
-               results.emplace_back(std::make_tuple(i, std::string(tmp), crc)); // Save result: calculation position, Alphabetic sequence, CRC
-               mutex.unlock();                                                  // UnBlock threads
-           }
-       }
-       return 0;
-   }
-};
-
-
-int main()
-{
-   auto &&t1 = my::chrono::now();
-   std::ios_base::sync_with_stdio(false);                 // Improve std::cout and std::cin speed
-   std::vector<std::future<std::size_t>> results_pool {}; // Threadpool vector
-
-   const size_t from_range = 1; // Alphabetic sequence range min, change it only if you want begin on higer range, 1 = A
-   // 141167095653376 = ~17 days on I7 9750H
-   // 5429503678976 = ~14h on I7 9750H
-   // 208827064576 = ~28 min on I7 9750H
-   // 8031810176 = ~1 min on I7 9750H
-   // 1544578880 = ~11 sec on I7 9750H
-   // 308915776 = 2 sec on I7 9750H
-   const size_t to_range = 1544578880; // Alphabetic sequence range max, must be > from_range !
-
-#ifdef DNDEBUG
-   assert(from_range < to_range); // Test if begining value is highter than end value
-   assert(from_range > 0);        // Test forbiden value
-#endif
-
-   const size_t nbrcal = to_range - from_range + 1;                    // Number of calculations to do
-   const std::size_t hardthread = std::thread::hardware_concurrency(); // Number of threads in the threadpool
-   const std::size_t threadmult = 16;                                  // Thread Multiplier (So that each pool has multiple operations available)
-
-   thread::Pool thread_pool(hardthread); // Config threadpool with nbr threads
-
-   const size_t nbrtask = hardthread * threadmult; // Total number of tasks created on the threadpool
-
-   const size_t nbrcalperthread = nbrcal / nbrtask; // Number of calculations per task (100K mini to 100M max recommended)
-
-#ifdef MORE_INFO
-   std::cout << "Threadpool with: " << hardthread << " threads" << std::endl;
-   std::cout << "Thread multiplier: x" << threadmult << " (Nbr tasks per thread)" << std::endl;
-   std::cout << "Threadpool with: " << nbrtask << " tasks" << std::endl;
-   std::cout << "Number of calculations: " << nbrcal << std::endl;
-   std::cout << "Number of calculations per tasks: " << nbrcalperthread << std::endl;
-   std::cout << "" << std::endl;
-   // Display Alphabetic sequence range
-   char tmp1[29] = {0};
-   char tmp2[29] = {0};
-   findStringInv<size_t>(from_range, tmp1);
-   findStringInv<size_t>(to_range, tmp2);
-   std::cout << "From: " << tmp1 << " to: " << tmp2 << " Alphabetic sequence" << std::endl;
-   std::cout << "" << std::endl;
-#endif
-   results_pool.reserve(nbrtask); // Vectors reservation
-
-   for (std::size_t i = from_range - 1; i < nbrtask; i++) {
-       results_pool.emplace_back(thread_pool.enqueue(Task(), i * nbrcalperthread, nbrcalperthread)); // Send work to be done to the threadpool
-#ifdef DNDEBUG
-       std::cout << "From: " << i * nbrcalperthread << " To: " << i * nbrcalperthread + nbrcalperthread << std::endl;
-#endif
-   }
-
-#ifdef MORE_INFO
-   std::size_t count = 0; // Count tasks done
-#endif
-   std::size_t t __attribute__((unused)); // Unused value
-   for (auto &&result_pool : results_pool) {
-       t = result_pool.get(); // Get result from threadpool
-#ifdef MORE_INFO
-       // Calculate work %
-       if (count % (std::size_t)((nbrtask / 50) + 1) == 0) {
-           std::cout << double(count) / double(nbrtask) * 100.0f << " %" << std::endl; // Display % of work
-       }
-       count++;
-#endif
-   }
-
-   // Sort result, due multi-threading, sometimes results can be differents every exec.
-   sort(results.begin(), results.end());
-
-#ifdef MORE_INFO
-   std::cout << "" << std::endl;
-   std::cout << std::left << std::setw(13) << "Calc N°" << std::left << std::setw(12) << "Cheat Code" << std::left << std::setw(16) << "CRC32/JAMCRC"
-             << "Cheat code name" << std::endl;
-#endif
-   for (auto &&result : results) {
-       std::cout << std::left << std::setw(14) << std::dec << std::get<0>(result) << std::left << std::setw(12) << std::get<1>(result) << "0x" << std::hex
-                 << std::left << std::setw(12) << std::get<2>(result);
-#ifdef MORE_INFO
-       auto it = std::find(cheat_list.begin(), cheat_list.end(), std::get<2>(result));
-       if (it != cheat_list.end()) {
-           std::cout << cheat_list_name[it - cheat_list.begin()] << std::endl;
-       }
-#else
-       std::cout << std::endl;
-#endif
-   }
-   auto &&t2 = my::chrono::now();
-   std::cout << "Time: " << my::chrono::duration(t1, t2).count() << " sec" << std::endl;
-   std::cout << "This program execute: " << std::fixed << (nbrcal / my::chrono::duration(t1, t2).count()) / 1000000 << " MOps/sec" << std::endl;
-   return EXIT_SUCCESS;
-}
-*/
+/** @} */ // end of group2
