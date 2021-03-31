@@ -32,16 +32,16 @@
 //////////////////////////////////////////////////////////////
 
 /** @defgroup GTA_SA GTA SA software
- *  This is the third group
+ *  The main group
  */
 
 /** @defgroup GTA_SA_CPU CPU version
  *  @ingroup GTA_SA
- *  Group 4 is a subgroup of group 3
+ *  @sa @link GTA_SA The first group GTA_SA@endlink
  */
 /** @defgroup GTA_SA_GPU GPU version
  *  @ingroup GTA_SA
- *  Group 3 is a subgroup of group 1
+ *  @sa @link GTA_SA The first group GTA_SA@endlink
  */
 
  /**
