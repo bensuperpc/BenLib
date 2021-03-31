@@ -44,6 +44,18 @@
  */
 
 
+/** @defgroup GTA_SA_GPU_CUDA GPU CUDA version
+ *  @ingroup GTA_SA
+ *  @sa @link GTA_SA The first group GTA_SA@endlink
+ */
+/** @defgroup GTA_SA_GPU_OPENCL GPU OpenCL version
+ *  @ingroup GTA_SA
+ *  @sa @link GTA_SA The first group GTA_SA@endlink
+ */
+
+
+
+
  /** @defgroup Crypto Cryptography
  *  @brief The main cryptography group
  *  The main group
@@ -134,8 +146,8 @@ std::vector<std::tuple<std::size_t, std::string, unsigned int>> results = {}; //
 
 /**
  * @brief To get CRC32 with boost libs
- * @param T d
- * @param my_string d
+ * @param my_string String input
+ * @return uint32_t with CRC32 value
  */
 unsigned int GetCrc32(const std::string_view my_string);
 unsigned int GetCrc32(const std::string_view my_string)

@@ -28,7 +28,7 @@ RSA *my::crypto::create_RSA(RSA *keypair, int pem_type, char *file_name)
     } else if (pem_type == PRIVATE_KEY_PEM) {
 
         fp = fopen(file_name, "w");
-        PEM_write_RSAPrivateKey(fp, keypair, NULL, NULL, NULL, NULL, NULL);
+        PEM_write_RSAPrivateKey(fp, keypair, NULL, NULL, 0, NULL, NULL);
         fclose(fp);
 
         fp = fopen(file_name, "rb");
