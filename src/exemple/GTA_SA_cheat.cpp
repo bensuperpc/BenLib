@@ -62,10 +62,12 @@
  */
  /** @defgroup Crypto_CRC32 Crypto CRC32
  *  @ingroup Crypto_CRC
+ *  @brief Calculate CRC32
  *  @sa @link Crypto The main group Crypto@endlink
  */
   /** @defgroup Crypto_JAMCRC Crypto JAMCRC
  *  @ingroup Crypto_CRC
+ *  @brief Calculate JAMCRC
  *  @sa @link Crypto The main group Crypto@endlink
  */
  
