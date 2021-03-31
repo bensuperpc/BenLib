@@ -8,8 +8,9 @@
 **          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm_add_sd&expand=154
 **          https://stackoverflow.com/questions/41144668/how-to-efficiently-perform-double-int64-conversions-with-sse-avx
 **          https://godbolt.org/z/OLgHUs
-**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,3576,5194&techs=SSE,SSE2,SSE3,SSSE3,SSE4_1,SSE4_2&text=Shuffle%25252525252525252520
-**          https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,5153,5144,4174,4179&text=_mm256_permute4x64_epi64&techs=AVX,AVX2,FMA
+**
+*https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,3576,5194&techs=SSE,SSE2,SSE3,SSSE3,SSE4_1,SSE4_2&text=Shuffle%25252525252525252520
+** https://software.intel.com/sites/landingpage/IntrinsicsGuide/#expand=3327,4174,4174,5153,5144,4174,4179&text=_mm256_permute4x64_epi64&techs=AVX,AVX2,FMA
 **          https://www.programmersought.com/article/85712182324/
 **          https://db.in.tum.de/~finis/x86-intrin-cheatsheet-v2.1.pdf
 **          https://stackoverflow.com/questions/56033329/sse-shuffle-permutevar-4x32-integers
