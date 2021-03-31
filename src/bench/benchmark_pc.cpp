@@ -33,10 +33,10 @@
 #include "time/chrono/chrono.hpp"
 #include "vector/vector_imp.hpp"
 
-// Define nbr calculations
+/// Define nbr calculations
 #define NBRS 33554432 // 16777216
 
-// Optimize devide for interger
+/// Optimize devide for interger
 template <typename Type> Type divide(Type a, Type b)
 {
     double da = (double)a;
@@ -115,6 +115,7 @@ template <typename Type> void /*__attribute__((optimize("O3")))*/ my_test(const 
     }
 }
 
+/// Main function for benchmark_pc.cpp
 int main(int argc, char *argv[], char *envp[])
 {
     // Integer variables

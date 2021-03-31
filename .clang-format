@@ -85,3 +85,4 @@ AlwaysBreakAfterReturnType: None
 
 # Prevent comment formatting
 CommentPragmas:  '^\\.+'
+ReflowComments: false

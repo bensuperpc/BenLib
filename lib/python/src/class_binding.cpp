@@ -86,6 +86,8 @@ bool (Hello::*fx3)(int, double, char) = &Hello::f;
  *
  * @param theory Even if there is only one possible unified theory. it is just a
  *               set of rules and equations.
+ * @see publicVar()
+ * @return void
  */
 int (Hello::*fx4)(int, int, int) = &Hello::f;
 

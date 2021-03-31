@@ -28,6 +28,9 @@
 //  CPU: ALL                                                //
 //                                                          //
 //////////////////////////////////////////////////////////////
+
+/** @file ALL CRC32 and JAMCRC function */
+
 #ifndef CRYPTO_CRC32_HPP_
 #define CRYPTO_CRC32_HPP_
 
@@ -48,9 +51,33 @@ namespace my
 namespace crypto
 {
 
+/**
+ * This function process CRC32 hash from string
+ *
+ * @param my_string String text need to be calculate
+ * @return uint32_t with CRC32 value
+ * @see see also JAMCRC_Boost()
+ */
 uint32_t CRC32_Boost(std::string_view my_string);
+
+/**
+ * This function process JAMCRC hash from string
+ *
+ * @param String my_string text to process
+ * @return uint32_t with JAMCRC value
+ * @see see also CRC32_Boost()
+ */
 uint32_t JAMCRC_Boost(std::string_view my_string);
 
+/**
+ * This function process CRC32 hash from void * const
+ *
+ * @param buf void* text need to be calculate
+ * @param len < b>size_t< /b> text size
+ * @param crc < b>uint32_t< /b> least crc (0x0 if is empty)
+ * @return < b>uint32_t< /b> with CRC32 value
+ * @see see also JAMCRC_Boost()
+ */
 uint32_t CRC32_Boost(const void *buf, size_t len, uint32_t crc);
 uint32_t JAMCRC_Boost(const void *buf, size_t len, uint32_t crc);
 
