@@ -29,8 +29,6 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
-/** @file ALL CRC32 and JAMCRC function */
-
 #ifndef CRYPTO_CRC32_HPP_
 #define CRYPTO_CRC32_HPP_
 

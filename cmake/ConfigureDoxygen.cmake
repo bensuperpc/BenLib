@@ -14,6 +14,7 @@
 #  CMake                                                     #
 #  Source:      https://stackoverflow.com/a/30156250/10152334                                                   #
 #               https://github.com/alfonsoros88/ScaRF/blob/master/doc/Doxyfile.in
+#               https://stackoverflow.com/a/46328607/10152334
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -34,15 +35,27 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     set(DOXYGEN_EXTRACT_ALL YES)
     set(DOXYGEN_CLASS_DIAGRAMS YES)
     set(DOXYGEN_HIDE_UNDOC_RELATIONS NO)
+
     set(DOXYGEN_HAVE_DOT YES)
+    set(DOXYGEN_INTERACTIVE_SVG YES)
+    set(DOXYGEN_DOT_IMAGE_FORMAT "svg")
+    
     set(DOXYGEN_CLASS_GRAPH YES)
     set(DOXYGEN_CALL_GRAPH YES)
     set(DOXYGEN_CALLER_GRAPH YES)
     set(DOXYGEN_COLLABORATION_GRAPH YES)
     set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
+
+    set(DOXYGEN_INLINE_GROUPED_CLASSES YES)
+    set(DOXYGEN_INLINE_SIMPLE_STRUCTS YES)
+
+    set(DOXYGEN_EXTRACT_LOCAL_METHODS YES)
     set(DOXYGEN_EXTRACT_PRIVATE YES)
     set(DOXYGEN_EXTRACT_PACKAGE YES)
     set(DOXYGEN_EXTRACT_STATIC YES)
+    set(DOXYGEN_EXTRACT_ANON_NSPACES YES)
+    set(DOXYGEN_EXTRACT_PRIV_VIRTUAL YES)
+    
     set(DOXYGEN_SHOW_NAMESPACES YES)
     set(DOXYGEN_SHOW_FILES YES)
     set(DOXYGEN_SHOW_INCLUDE_FILES YES)
@@ -55,7 +68,11 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     set(DOXYGEN_PDF_HYPERLINKS YES)
     set(DOXYGEN_GENERATE_AUTOGEN_DEF YES)
     set(DOXYGEN_SORT_GROUP_NAMES YES)
-    set(DOXYGEN_DOT_NUM_THREADS 12)
+
+    # Use All CPU to gen doc
+    set(DOXYGEN_DOT_NUM_THREADS 0)
+    set(DOXYGEN_NUM_PROC_THREADS 0)
+
     set(DOXYGEN_HIDE_IN_BODY_DOCS NO)
     set(DOXYGEN_STRIP_CODE_COMMENTS NO)
     set(DOXYGEN_BRIEF_MEMBER_DESC YES)
@@ -69,15 +86,29 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
 
     set(DOXYGEN_RECURSIVE YES)
     set(DOXYGEN_HTML_TIMESTAMP YES)
+
+    # Display source under function
+    set(DOXYGEN_INLINE_SOURCES YES)
+    set(DOXYGEN_SOURCE_BROWSER YES)
     
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs")
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_BINARY_DIR}/README.md")
 
-    set(DOXYGEN_FILE_PATTERNS "*.c;*.cc;*.cxx;*.cpp;*.c++;*.java;*.ii;*.ixx*.ipp;*.i++;*.inl;*.idl;*.ddl;*.odl;*.h;*.hh;*.hxx;*.hpp;*.tpp;*.cu;*.cuh;*.cl;*.h++")
+    set(DOXYGEN_FILE_PATTERNS "*.c;*.cc;*.cxx;*.cpp;*.c++;*.java;*.ii;*.ixx*.ipp;*.i++;*.inl;*.idl;*.ddl;*.odl;*.h;*.hh;*.hxx;*.hpp;*.tpp;*.cu;*.cuh;*.cl;*.h++;*.py")
+
+
+    # Set logo Image path
+    #set(DOXYGEN_IMAGE_PATH "${CMAKE_CURRENT_BINARY_DIR}/")
+
+    # Copy image logo
+    #configure_file("${CMAKE_CURRENT_SOURCE_DIR}/" "${CMAKE_BINARY_DIR}/" COPYONLY)
+
+    # Set README.md path (Unofficial value)
     set(DOXYGEN_INPUT_MDFILE "${CMAKE_CURRENT_BINARY_DIR}/README.md")
-    #configure_file(${lib_path}lib/opencl/kernels/gta_sa.cl ${CMAKE_BINARY_DIR}/kernels/gta_sa.cl COPYONLY)
+
+    # Copy README.md to Build dir
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/README.md" "${CMAKE_BINARY_DIR}/README.md" COPYONLY)
-    #install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/html DESTINATION docs)
+
     set(DOXYGEN_INPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib;${PROJECT_SOURCE_DIR}/src;${DOXYGEN_INPUT_MDFILE}")
 
     #USE_STAMP_FILE
