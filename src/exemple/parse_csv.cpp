@@ -32,8 +32,15 @@
  * @return int 
  */
 
+#define PROJECT_NAME "@PROJECT_NAME@"
+#define PROJECT_VER "@PROJECT_VERSION@"
+#define PROJECT_VER_MAJOR "@PROJECT_VERSION_MAJOR@"
+#define PROJECT_VER_MINOR "@PROJECT_VERSION_MINOR@"
+#define PTOJECT_VER_PATCH "@PROJECT_VERSION_PATCH@"
+
 int main(int argc, char *argv[], char *envp[])
 {
+    //std::cout << "project name: " << PROJECT_NAME << " version: " << PROJECT_VER << std::endl;
     if (argc >= 2) {
         std::vector<std::vector<std::string>> file;
         // Open CSV file and parse it

@@ -77,7 +77,7 @@ endif()
 # If enable tests
 set(BUILD_TESTING ON)
 set(CODE_COVERAGE OFF)
-set(BUILD_DOCS_DOXYGEN ON)
+set(BUILD_DOCS_DOXYGEN OFF)
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")

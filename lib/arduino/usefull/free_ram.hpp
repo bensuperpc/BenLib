@@ -20,5 +20,5 @@
  * 
  * @return int 
  */
-int freeRam();
+unsigned int freeRam();
 #endif

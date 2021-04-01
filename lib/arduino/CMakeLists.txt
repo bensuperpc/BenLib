@@ -68,15 +68,19 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # https://github.com/awakecoding/cmake/blob/master/Tests/Complex/Executable/CMakeLists.txt
-set_source_files_properties(tests/basic.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
-#set_target_properties(tests/basic.ino PROPERTIES LINKER_LANGUAGE CXX)
-
-add_executable(test_arduino tests/basic.cpp tests/basic.ino)
 #target_link_libraries(test1 PRIVATE )
 #set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-set_target_properties(test_arduino PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
-target_compile_definitions(test_arduino PRIVATE FILE_ARG=tests/basic.ino)
 
+set_source_files_properties(tests/basic.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+#set_source_files_properties(tests/basic.ino PROPERTIES COMPILE_FLAGS "-include \"arduino_compatibility.hpp\"")
+add_executable(test_arduino tests/basic.cpp tests/basic.ino) #arduino_compatibility.hpp
+set_target_properties(test_arduino PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+#https://stackoverflow.com/a/40109487/10152334
+target_compile_options(test_arduino PRIVATE -include "arduino_compatibility.hpp")
+
+target_compile_definitions(test_arduino PRIVATE FILE_ARG=tests/basic.ino)
+target_link_libraries(test_arduino my_arduino)
+#add_dependencies(test_arduino my_arduino)
 
 
 install(TARGETS ${PROJECT_NAME} 

@@ -17,6 +17,9 @@
 #include <thread>
 #include "arduino_serial.hpp"
 
+extern unsigned int __bss_end;
+extern unsigned int __heap_start;
+
 #define HIGH 1
 #define LOW 0
 
@@ -27,6 +30,10 @@
 
 using byte = char;
 //#define digitalWrite(pin, value) digitalWrite_standard(pin, value)
+static int pin1 = 0;
+
+//static int varGlobal = 7;
+//extern int varGlobal;
 
 void pinMode(const int pin_value, const int inout);
 void pinMode(const int pin_value, const int inout)

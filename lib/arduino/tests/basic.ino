@@ -9,15 +9,18 @@
  * 
  */
 
+//#include "arduino_compatibility.hpp"
+
 /// Use C++ function but later replace it with arduino functions
-#include <iostream>
 void setup()
 {
-    std::cout << "OK" << std::endl;
+    pinMode(1, OUTPUT);
 }
 
 void loop()
 {
-    std::cout << "Loop" << std::endl;
-    return;
+    digitalWrite(1, HIGH);
+    delay(500);
+    digitalWrite(1, LOW);
+    delay(500);
 }

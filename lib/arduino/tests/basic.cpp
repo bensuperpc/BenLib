@@ -9,7 +9,7 @@
  * 
  */
 
- // g++ -D FILE_ARG=test2.ino test1.cpp -x test2.ino
+// g++ -D FILE_ARG=test2.ino test1.cpp -x test2.ino
 // g++ -D FILE_ARG=test2.ino test1.cpp -xc++-header test2.ino
 // clang++ -D FILE_ARG=test2.ino test1.cpp -xc++-header test2.ino
 
@@ -20,13 +20,15 @@
 #define QUOTE(x) Q(x)
 
 #ifdef FILE_ARG
-#include QUOTE(FILE_ARG)
+#    include QUOTE(FILE_ARG)
 #endif
 
-int main() {
+#include "arduino_compatibility.hpp"
+
+int main()
+{
     setup();
-    while(1)
-    {
+    while (1) {
         loop();
     }
     return 0;

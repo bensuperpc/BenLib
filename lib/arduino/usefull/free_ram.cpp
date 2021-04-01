@@ -12,9 +12,10 @@
 
 #include "free_ram.hpp"
 
-int freeRam()
+unsigned int freeRam()
 {
-    extern int __heap_start, *__brkval;
-    int v;
+    //extern unsigned int __heap_start, *__brkval;
+    unsigned int __heap_start, *__brkval;
+    unsigned int v;
     return &v - (__brkval == 0 ? &__heap_start : __brkval);
 }
