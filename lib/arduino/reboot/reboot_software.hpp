@@ -10,10 +10,17 @@
  * 
  */
 
-#include <avr/wdt.h>
 
 #ifndef REBOOT_SOFTWARE_H
 #    define REBOOT_SOFTWARE_H
+
+/// If use GCC-AVR for ARDUINO
+#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || \
+    defined(__AVR_ATmega32U4__) || defined(__SAM3X8E__)
+#include <avr/wdt.h>
+#endif 
+
+#include "arduino_compatibility.hpp"
 
 /**
  * @brief 

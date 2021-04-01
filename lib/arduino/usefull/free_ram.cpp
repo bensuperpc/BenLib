@@ -1,5 +1,5 @@
 /**
- * @file free_ram.h
+ * @file free_ram.c
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief Servolent 2016 and Jeu de réflexe 2017
  *        BAC project 2016-2017
@@ -11,13 +11,11 @@
  */
 
 
-#ifndef ARDUINO_FREE_RAM_H
-#define ARDUINO_FREE_RAM_H
+#include "free_ram.hpp"
 
-/**
- * @brief 
- * 
- * @return int 
- */
-int freeRam();
-#endif
+int freeRam()
+{
+    extern int __heap_start, *__brkval;
+    int v;
+    return &v - (__brkval == 0 ? &__heap_start : __brkval);
+}

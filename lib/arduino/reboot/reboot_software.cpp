@@ -1,5 +1,5 @@
 /**
- * @file free_ram.c
+ * @file reboot_software.c
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief Servolent 2016 and Jeu de réflexe 2017
  *        BAC project 2016-2017
@@ -11,11 +11,9 @@
  */
 
 
-#include "free_ram.h"
+#include "reboot_software.hpp"
 
-int freeRam()
+void reboot_software(void)
 {
-    extern int __heap_start, *__brkval;
-    int v;
-    return (int)&v - (__brkval == 0 ? (int)&__heap_start : (int)__brkval);
+    wdt_enable(WDTO_15MS);
 }

@@ -10,7 +10,7 @@
  * 
  */
 
-#include "blink_number.h"
+#include "blink_number.hpp"
 
 void blink_led(byte pin_address, int num_blinks, int blink_delay)
 {

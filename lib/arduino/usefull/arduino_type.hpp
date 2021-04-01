@@ -1,5 +1,5 @@
 /**
- * @file blink_number.h
+ * @file arduino_type.h
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief Servolent 2016 and Jeu de réflexe 2017
  *        BAC project 2016-2017
@@ -10,15 +10,21 @@
  * 
  */
 
-#ifndef BLINK_NUMBER_H
-#define BLINK_NUMBER_H
+#ifndef ARDUINO_TYPE_H
+#define ARDUINO_TYPE_H
+
+#include "arduino_compatibility.hpp"
+
 /**
  * @brief 
  * 
- * @param targetPin 
- * @param numBlinks 
- * @param blinkRate 
+ * @return int 
  */
-void blink_led(byte targetPin, int numBlinks, int blinkRate);
+int arduino_type();
 
+/**
+ * @brief 
+ * 
+ */
+void arduino_type_serial();
 #endif

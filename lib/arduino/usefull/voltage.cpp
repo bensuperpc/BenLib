@@ -6,7 +6,7 @@
 ** >voltage.c
 */
 
-#include "voltage.h"
+#include "voltage.hpp"
 
 int GetVccMiliVolts()
 {

@@ -1,5 +1,5 @@
 /**
- * @file arduino_type.h
+ * @file free_ram.h
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief Servolent 2016 and Jeu de réflexe 2017
  *        BAC project 2016-2017
@@ -10,19 +10,16 @@
  * 
  */
 
-#ifndef ARDUINO_TYPE_H
-#define ARDUINO_TYPE_H
+
+#ifndef ARDUINO_FREE_RAM_H
+#define ARDUINO_FREE_RAM_H
+
+#include "arduino_compatibility.hpp"
 
 /**
  * @brief 
  * 
  * @return int 
  */
-int arduino_type();
-
-/**
- * @brief 
- * 
- */
-void arduino_type_serial();
+int freeRam();
 #endif

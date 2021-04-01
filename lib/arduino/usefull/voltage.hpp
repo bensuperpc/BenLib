@@ -8,6 +8,7 @@
 
 #ifndef ARDUINO_VOLTAGE_H
 #define ARDUINO_VOLTAGE_H
+#include "arduino_compatibility.hpp"
 
 /**
  * @brief Get the Vcc Mili Volts object

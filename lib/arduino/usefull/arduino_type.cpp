@@ -10,7 +10,7 @@
  * 
  */
 
-#include "arduino_type.h"
+#include "arduino_type.hpp"
 
 int arduino_type()
 {
@@ -34,15 +34,16 @@ int arduino_type()
 
 void arduino_type_serial()
 {
+    Serial serial;
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
-    Serial.println("Regular Arduino");
+    serial.println("Regular Arduino");
 #elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__)
-    Serial.println("Arduino Mega");
+    serial.println("Arduino Mega");
 #elif defined(__AVR_ATmega32U4__)
-    Serial.println("Arduino Leonardo");
+    serial.println("Arduino Leonardo");
 #elif defined(__SAM3X8E__)
-    Serial.println("Arduino Due");
+    serial.println("Arduino Due");
 #else
-    Serial.println("Unknown");
+    serial.println("Unknown");
 #endif
 }

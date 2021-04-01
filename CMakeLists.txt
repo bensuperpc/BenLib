@@ -214,48 +214,50 @@ include_directories("${lib_path}lib/C/") #To avoid to use full path in headers
 
 
 # C libs
-add_subdirectory(${lib_path}lib/C/libhello "src/lib/lib/C/libhello")
-add_subdirectory(${lib_path}lib/C/string_c "src/lib/lib/C/string_c")
+add_subdirectory(${lib_path}lib/C/libhello "src/lib/C/libhello")
+add_subdirectory(${lib_path}lib/C/string_c "src/lib/C/string_c")
 
-add_subdirectory(${lib_path}lib/C/string_is "src/lib/lib/C/string_is_c")
-add_subdirectory(${lib_path}lib/C/pointer "src/lib/lib/C/pointer_c")
-add_subdirectory(${lib_path}lib/C/display "src/lib/lib/C/display_c")
-add_subdirectory(${lib_path}lib/C/integer "src/lib/lib/C/integer_c")
+add_subdirectory(${lib_path}lib/C/string_is "src/lib/C/string_is_c")
+add_subdirectory(${lib_path}lib/C/pointer "src/lib/C/pointer_c")
+add_subdirectory(${lib_path}lib/C/display "src/lib/C/display_c")
+add_subdirectory(${lib_path}lib/C/integer "src/lib/C/integer_c")
 
 # C++ libs
-add_subdirectory(${lib_path}lib/convert_utils "src/lib/lib/convert_utils")
+add_subdirectory(${lib_path}lib/convert_utils "src/lib/convert_utils")
 
-add_subdirectory(${lib_path}lib/texture "src/lib/lib/texture")
+add_subdirectory(${lib_path}lib/texture "src/lib/texture")
 
-add_subdirectory(${lib_path}lib/math "src/lib/lib/math")
+add_subdirectory(${lib_path}lib/math "src/lib/math")
 
-add_subdirectory(${lib_path}lib/utils/opencv "src/lib/lib/utils/opencv")
+add_subdirectory(${lib_path}lib/utils/opencv "src/lib/utils/opencv")
 
-add_subdirectory(${lib_path}lib/utils/opengl "src/lib/lib/utils/opengl")
+add_subdirectory(${lib_path}lib/utils/opengl "src/lib/utils/opengl")
 
-#add_subdirectory(src/lib/utils/sfml "src/lib/lib/utils/sfml")
+#add_subdirectory(src/lib/utils/sfml "src/lib/utils/sfml")
 
-add_subdirectory(${lib_path}lib/time "src/lib/lib/time")
+add_subdirectory(${lib_path}lib/time "src/lib/time")
 
-add_subdirectory(${lib_path}lib/cpu "src/lib/lib/cpu")
+add_subdirectory(${lib_path}lib/cpu "src/lib/cpu")
 
-add_subdirectory(${lib_path}lib/vector "src/lib/lib/vector")
+add_subdirectory(${lib_path}lib/vector "src/lib/vector")
 
-add_subdirectory(${lib_path}lib/thread "src/lib/lib/thread")
+add_subdirectory(${lib_path}lib/thread "src/lib/thread")
 
-add_subdirectory(${lib_path}lib/filesystem "src/lib/lib/filesystem")
+add_subdirectory(${lib_path}lib/filesystem "src/lib/filesystem")
 
-add_subdirectory(${lib_path}lib/string_lib "src/lib/lib/string_lib")
+add_subdirectory(${lib_path}lib/string_lib "src/lib/string_lib")
 if (OPENSSL_FOUND)
-    add_subdirectory(${lib_path}lib/crypto "src/lib/lib/crypto")
+    add_subdirectory(${lib_path}lib/crypto "src/lib/crypto")
 endif()
-add_subdirectory(${lib_path}lib/std "src/lib/lib/std")
+add_subdirectory(${lib_path}lib/std "src/lib/std")
 
 if (CUDA_FOUND)
-    add_subdirectory(${lib_path}lib/CUDA "src/lib/lib/CUDA")
+    add_subdirectory(${lib_path}lib/CUDA "src/lib/CUDA")
 endif()
 
-add_subdirectory(${lib_path}lib/python)
+add_subdirectory(${lib_path}lib/python "src/lib/python")
+
+add_subdirectory(${lib_path}lib/arduino "src/lib/arduino")
 
 #add_dependencies(hello ${EXTERNAL_LIB})
 
