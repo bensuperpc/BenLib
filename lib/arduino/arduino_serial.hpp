@@ -8,68 +8,82 @@
  * MIT License
  * 
  */
- #ifndef ARDUINO_SERIAL_HPP
-#    define ARDUINO_SERIAL_HPP
+#ifndef ARDUINO_SERIAL_HPP
+#define ARDUINO_SERIAL_HPP
+#include <bitset>
 #include <iostream>
 #include <string>
-#include <bitset>
 
-enum CODAGE { BYTE, DEC, HEX, OCT, BIN };
-
-class Serial
+/**
+ * @brief enum : For println codage
+ * @enum enum
+ */
+enum CODAGE
 {
-    public :
-        /**
-        * @brief 
+    BYTE,
+    DEC,
+    HEX,
+    OCT,
+    BIN
+};
+
+/**
+ * @class Serial
+ * @brief Need to simulate Serial on arduino
+ */
+class Serial {
+  public:
+    /**
+        * @brief Write char[] or string on serial port
         * 
         * @param str 
         */
-        static void println(const std::string &str);
+    static void println(const std::string &str);
 
-        /**
-         * @brief 
+    /**
+         * @brief Write char[] or string on serial port with specific codage
          * 
          * @param str 
          * @param codage 
          */
-        static void println(const std::string &str, const CODAGE codage);
+    static void println(const std::string &str, const CODAGE codage);
 
-        /**
+    /**
          * @brief 
          * 
          * @param str 
          * @param baud 
          * @return int 
          */
-        static int openDevice(const std::string &str, const int baud);
+    static int openDevice(const std::string &str, const int baud);
 
-        /**
+    /**
          * @brief 
          * 
          * @param baud 
          */
-        static void begin(const int baud);
+    static void begin(const int baud);
 
-        /**
+    /**
          * @brief 
          * 
          * @param c 
          */
-        static void writeChar(const char c);
+    static void writeChar(const char c);
 
-        /**
-         * @brief 
+    /**
+         * @brief Write char on serial port
          * 
          */
-        static void closeDevice();
+    static void closeDevice();
 
-        /**
+    /**
          * @brief 
          * 
          * @return true 
          * @return false 
          */
-        static bool available();
+    static bool available();
 };
 
 #endif

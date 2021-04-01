@@ -48,7 +48,7 @@ namespace filesystem
  * 
  * @param path 
  */
-void filename_from_str(std::string & path);
+void filename_from_str(std::string &path);
 
 /**
  * @brief 
@@ -56,7 +56,7 @@ void filename_from_str(std::string & path);
  * @param path 
  * @return std::string 
  */
-std::string filename_from_str(const std::string & path);
+std::string filename_from_str(const std::string &path);
 
 #if (__cplusplus == 201103L || __cplusplus == 201402L)
 /**
@@ -65,7 +65,7 @@ std::string filename_from_str(const std::string & path);
  * @param path 
  * @return size_t 
  */
-size_t count_files(const std::string & path);
+size_t count_files(const std::string &path);
 
 /**
  * @brief 
@@ -73,7 +73,7 @@ size_t count_files(const std::string & path);
  * @param list 
  * @param path 
  */
-void list_all_files(std::vector<std::string> &list, const std::string & path);
+void list_all_files(std::vector<std::string> &list, const std::string &path);
 
 /**
  * @brief 

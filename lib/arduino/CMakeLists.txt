@@ -56,6 +56,10 @@ set(HEADERS
     arduino_serial.hpp
     )
 
+ #set_source_files_properties(foo.bar PROPERTIES LANGUAGE CXX)
+ #add_executable(foo foo.bar)
+ #set_target_properties(foo PROPERTIES LINKER_LANGUAGE CXX)
+
 #set_target_properties(my_cuda PROPERTIES PUBLIC_HEADER "${EDV_INCLUDE_FILES}")
 
 include_directories("${PROJECT_SOURCE_DIR}")

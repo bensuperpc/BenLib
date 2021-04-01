@@ -10,7 +10,6 @@
  * 
  */
 
-
 #include "reboot_software.hpp"
 
 void reboot_software(void)

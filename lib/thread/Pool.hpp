@@ -26,12 +26,11 @@ namespace thread
  */
 class Pool {
   public:
-
     Pool(std::size_t numberOfThreads);
 
     // joins all threads
     ~Pool();
-/**
+    /**
  * @brief 
  * 
  * @tparam F 

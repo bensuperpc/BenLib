@@ -81,7 +81,7 @@ void my::filesystem::search_by_ext_and_name(std::vector<std::string> &list, cons
 size_t my::filesystem::count_files(std::string_view path)
 {
     size_t i = 0;
-    for (const auto &entry __attribute__((unused)): fs::recursive_directory_iterator(path)) {
+    for (const auto &entry __attribute__((unused)) : fs::recursive_directory_iterator(path)) {
         i++;
     }
     return i;

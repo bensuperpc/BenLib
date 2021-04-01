@@ -39,14 +39,14 @@ namespace sfc
  * @param img 
  * @return cv::Mat 
  */
-cv::Mat SFML2Mat(const sf::Image & img);
+cv::Mat SFML2Mat(const sf::Image &img);
 /**
  * @brief 
  * 
  * @param img 
  * @param mat 
  */
-void SFML2Mat(const sf::Image & img, cv::Mat &mat);
+void SFML2Mat(const sf::Image &img, cv::Mat &mat);
 
 /**
  * @brief 
@@ -54,7 +54,7 @@ void SFML2Mat(const sf::Image & img, cv::Mat &mat);
  * @param src 
  * @return sf::Image 
  */
-sf::Image Mat2SFML(const cv::Mat & src);
+sf::Image Mat2SFML(const cv::Mat &src);
 
 /**
  * @brief 
@@ -62,7 +62,7 @@ sf::Image Mat2SFML(const cv::Mat & src);
  * @param src 
  * @param img 
  */
-void Mat2SFML(const cv::Mat & src, sf::Image & img);
+void Mat2SFML(const cv::Mat &src, sf::Image &img);
 } // namespace sfc
 } // namespace my
 #endif

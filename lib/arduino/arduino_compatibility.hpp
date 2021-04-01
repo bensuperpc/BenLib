@@ -9,12 +9,12 @@
  * 
  */
 
- #ifndef ARDUINO_COMPATIBILITY_HPP
-#    define ARDUINO_COMPATIBILITY_HPP
+#ifndef ARDUINO_COMPATIBILITY_HPP
+#define ARDUINO_COMPATIBILITY_HPP
 
 #include <chrono>
-#include <thread>
 #include <iostream>
+#include <thread>
 #include "arduino_serial.hpp"
 
 #define HIGH 1
@@ -31,7 +31,6 @@ using byte = char;
 void pinMode(const int pin_value, const int inout);
 void pinMode(const int pin_value, const int inout)
 {
-
 }
 
 void digitalWrite(const int pin, const int value);
@@ -40,11 +39,10 @@ void digitalWrite(const int pin, const int value)
     std::cout << "Pin N°" << pin << " Value: " << value << "\n";
 }
 
-
 int digitalRead(const int pin);
 int digitalRead(const int pin)
 {
-    return 0; 
+    return 0;
 }
 
 void analogWrite(const int pin, const int value);
@@ -56,9 +54,8 @@ void analogWrite(const int pin, const int value)
 int analogRead(const int pin);
 int analogRead(const int pin)
 {
-    return 0; 
+    return 0;
 }
-
 
 void delay(const int value);
 void delay(const int value)

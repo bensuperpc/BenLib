@@ -10,7 +10,6 @@
  * 
  */
 
-
 #include "free_ram.hpp"
 
 int freeRam()

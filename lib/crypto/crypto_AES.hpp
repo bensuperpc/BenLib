@@ -9,7 +9,6 @@
  * 
  */
 
-
 /*
 ** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
 https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
@@ -53,7 +52,6 @@ namespace crypto
  */
 int Decrypt_AES(unsigned char *ciphertext, int ciphertext_len, unsigned char *aad, int aad_len, unsigned char *tag, unsigned char *key, unsigned char *iv,
     unsigned char *plaintext);
-
 
 /**
  * @brief 

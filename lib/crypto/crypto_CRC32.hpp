@@ -61,7 +61,6 @@ namespace crypto
  */
 uint32_t CRC32_Boost(std::string_view my_string);
 
-
 /**
  * This function process JAMCRC hash from string
  * @ingroup Crypto_JAMCRC
@@ -73,7 +72,6 @@ uint32_t CRC32_Boost(std::string_view my_string);
  * @see see also CRC32_Boost()
  */
 uint32_t JAMCRC_Boost(std::string_view my_string);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -90,7 +88,6 @@ uint32_t JAMCRC_Boost(std::string_view my_string);
  */
 uint32_t CRC32_Boost(const void *buf, size_t len, uint32_t crc);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -105,7 +102,6 @@ uint32_t CRC32_Boost(const void *buf, size_t len, uint32_t crc);
  * @see see also CRC32_Boost()
  */
 uint32_t JAMCRC_Boost(const void *buf, size_t len, uint32_t crc);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -122,7 +118,6 @@ uint32_t JAMCRC_Boost(const void *buf, size_t len, uint32_t crc);
  */
 uint32_t CRC32_StackOverflow(const void *buf, size_t len, uint32_t crc);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -137,7 +132,6 @@ uint32_t CRC32_StackOverflow(const void *buf, size_t len, uint32_t crc);
  * @see see also CRC32_StackOverflow()
  */
 uint32_t JAMCRC_StackOverflow(const void *buf, size_t len, uint32_t crc);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -154,7 +148,6 @@ uint32_t JAMCRC_StackOverflow(const void *buf, size_t len, uint32_t crc);
  */
 uint32_t CRC32_1byte_tableless(const void *data, size_t length, uint32_t previousCrc32);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -169,7 +162,6 @@ uint32_t CRC32_1byte_tableless(const void *data, size_t length, uint32_t previou
  * @see see also CRC32_1byte_tableless()
  */
 uint32_t JAMCRC_1byte_tableless(const void *data, size_t length, uint32_t previousCrc32);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -186,7 +178,6 @@ uint32_t JAMCRC_1byte_tableless(const void *data, size_t length, uint32_t previo
  */
 uint32_t CRC32_1byte_tableless2(const void *data, size_t length, uint32_t previousCrc32);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -201,7 +192,6 @@ uint32_t CRC32_1byte_tableless2(const void *data, size_t length, uint32_t previo
  * @see see also CRC32_1byte_tableless2()
  */
 uint32_t JAMCRC_1byte_tableless2(const void *data, size_t length, uint32_t previousCrc32);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -218,7 +208,6 @@ uint32_t JAMCRC_1byte_tableless2(const void *data, size_t length, uint32_t previ
  */
 uint32_t CRC32_bitwise(const void *data, size_t length, uint32_t previousCrc32);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -233,7 +222,6 @@ uint32_t CRC32_bitwise(const void *data, size_t length, uint32_t previousCrc32);
  * @see see also CRC32_bitwise()
  */
 uint32_t JAMCRC_bitwise(const void *data, size_t length, uint32_t previousCrc32);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -250,7 +238,6 @@ uint32_t JAMCRC_bitwise(const void *data, size_t length, uint32_t previousCrc32)
  */
 uint32_t CRC32_halfbyte(const void *data, size_t length, uint32_t previousCrc32);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -265,7 +252,6 @@ uint32_t CRC32_halfbyte(const void *data, size_t length, uint32_t previousCrc32)
  * @see see also CRC32_halfbyte()
  */
 uint32_t JAMCRC_halfbyte(const void *data, size_t length, uint32_t previousCrc32);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -282,7 +268,6 @@ uint32_t JAMCRC_halfbyte(const void *data, size_t length, uint32_t previousCrc32
  */
 #ifdef CRC32_USE_LOOKUP_TABLE_BYTE
 uint32_t CRC32_1byte(const void *data, size_t length, uint32_t previousCrc32);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -317,7 +302,6 @@ uint32_t JAMCRC_1byte(const void *data, size_t length, uint32_t previousCrc32);
  */
 uint32_t CRC32_4bytes(const void *data, size_t length, uint32_t previousCrc32 = 0);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -351,7 +335,6 @@ uint32_t JAMCRC_4bytes(const void *data, size_t length, uint32_t previousCrc32 =
  */
 uint32_t CRC32_8bytes(const void *data, size_t length, uint32_t previousCrc32 = 0);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -367,7 +350,6 @@ uint32_t CRC32_8bytes(const void *data, size_t length, uint32_t previousCrc32 = 
  */
 uint32_t CRC32_4x8bytes(const void *data, size_t length, uint32_t previousCrc32 = 0);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -382,7 +364,6 @@ uint32_t CRC32_4x8bytes(const void *data, size_t length, uint32_t previousCrc32 
  * @see see also CRC32_4x8bytes()
  */
 uint32_t JAMCRC_8bytes(const void *data, size_t length, uint32_t previousCrc32 = 0);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -416,7 +397,6 @@ uint32_t JAMCRC_4x8bytes(const void *data, size_t length, uint32_t previousCrc32
  */
 uint32_t CRC32_16bytes(const void *data, size_t length, uint32_t previousCrc32 = 0);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -433,7 +413,6 @@ uint32_t CRC32_16bytes(const void *data, size_t length, uint32_t previousCrc32 =
  */
 uint32_t CRC32_16bytes_prefetch(const void *data, size_t length, uint32_t previousCrc32 = 0, size_t prefetchAhead = 256);
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -448,7 +427,6 @@ uint32_t CRC32_16bytes_prefetch(const void *data, size_t length, uint32_t previo
  * @see see also CRC32_16bytes()
  */
 uint32_t JAMCRC_16bytes(const void *data, size_t length, uint32_t previousCrc32 = 0);
-
 
 /**
  * This function process CRC32 hash from void * const
@@ -468,7 +446,6 @@ uint32_t JAMCRC_16bytes(const void *data, size_t length, uint32_t previousCrc32 
 uint32_t JAMCRC_16bytes_prefetch(const void *data, size_t length, uint32_t previousCrc32 = 0, size_t prefetchAhead = 256);
 #endif
 
-
 /**
  * This function process CRC32 hash from void * const
  * 
@@ -483,7 +460,6 @@ uint32_t JAMCRC_16bytes_prefetch(const void *data, size_t length, uint32_t previ
  * @see see also JAMCRC_fast()
  */
 uint32_t CRC32_fast(const void *data, size_t length, uint32_t previousCrc32);
-
 
 /**
  * This function process CRC32 hash from void * const

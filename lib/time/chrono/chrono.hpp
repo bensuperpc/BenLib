@@ -64,7 +64,7 @@ Clock::time_point now();
  * @param t2 
  * @return std::chrono::duration<long double> 
  */
-std::chrono::duration<long double> duration(Clock::time_point & t1, Clock::time_point & t2);
+std::chrono::duration<long double> duration(Clock::time_point &t1, Clock::time_point &t2);
 } // namespace chrono
 } // namespace my
 #endif

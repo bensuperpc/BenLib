@@ -73,7 +73,7 @@ bool (Hello::*fx1)(int) = &Hello::f;
 /// Brief description.
 /** Detailed description. */
 bool (Hello::*fx2)(int, double) = &Hello::f;
- /**
+/**
  * OK
  *
  *@attention Not working
@@ -85,7 +85,7 @@ bool (Hello::*fx2)(int, double) = &Hello::f;
  *    - FOO 
  *    - BAR
  */
- /**@post poste :D. */
+/**@post poste :D. */
 bool (Hello::*fx3)(int, double, char) = &Hello::f;
 /**
  * A brief history of JavaDoc-style (C-style) comments.

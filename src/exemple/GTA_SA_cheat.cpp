@@ -47,14 +47,11 @@
  *  @sa @link GTA_SA The first group GTA_SA@endlink
  */
 
-
-
-
- /** @defgroup Crypto Cryptography
+/** @defgroup Crypto Cryptography
  *  @brief The main cryptography group
  *  The main group
  */
- /** @defgroup Crypto_RSA Crypto RSA
+/** @defgroup Crypto_RSA Crypto RSA
  *  @brief The cryptography RSA group
  *  @ingroup Crypto
  *  @sa @link Crypto The main group Crypto@endlink
@@ -69,19 +66,18 @@
  *  @ingroup Crypto
  *  @sa @link Crypto The main group Crypto@endlink
  */
- /** @defgroup Crypto_CRC32 Crypto CRC32
+/** @defgroup Crypto_CRC32 Crypto CRC32
  *  @ingroup Crypto_CRC
  *  @brief Calculate CRC32
  *  @sa @link Crypto The main group Crypto@endlink
  */
-  /** @defgroup Crypto_JAMCRC Crypto JAMCRC
+/** @defgroup Crypto_JAMCRC Crypto JAMCRC
  *  @ingroup Crypto_CRC
  *  @brief Calculate JAMCRC
  *  @sa @link Crypto The main group Crypto@endlink
  */
- 
 
- /**
+/**
  *  @addtogroup GTA_SA_CPU
  *  @brief GTA SA Alternate cheat with CPU
  *  @author Bensuperpc 

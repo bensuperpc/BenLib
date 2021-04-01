@@ -21,7 +21,7 @@
 //                                                          //
 //////////////////////////////////////////////////////////////
 
- /**
+/**
  *  @addtogroup GTA_SA_GPU_OPENCL
  *  GTA SA Alternate cheat
  *  @brief GTA SA Alternate cheat with OpenCL 1.2
