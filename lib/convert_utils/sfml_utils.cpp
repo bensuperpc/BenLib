@@ -45,10 +45,10 @@ inline sf::Image my::sfc::Mat2SFML(const cv::Mat &src)
     return image;
 }
 
-inline void my::sfc::Mat2SFML(const cv::Mat &src, sf::Image &image)
+inline void my::sfc::Mat2SFML(const cv::Mat &src, sf::Image &img)
 {
     cv::Mat tmp;
     cv::cvtColor(src, tmp, cv::COLOR_BGR2RGBA);
-    image.create(static_cast<unsigned int>(tmp.cols), static_cast<unsigned int>(tmp.rows), tmp.ptr());
+    img.create(static_cast<unsigned int>(tmp.cols), static_cast<unsigned int>(tmp.rows), tmp.ptr());
     tmp.release();
 }
