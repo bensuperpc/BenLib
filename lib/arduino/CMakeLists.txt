@@ -56,9 +56,6 @@ set(HEADERS
     arduino_serial.hpp
     )
 
- #set_source_files_properties(foo.bar PROPERTIES LANGUAGE CXX)
- #add_executable(foo foo.bar)
- #set_target_properties(foo PROPERTIES LINKER_LANGUAGE CXX)
 
 #set_target_properties(my_cuda PROPERTIES PUBLIC_HEADER "${EDV_INCLUDE_FILES}")
 
@@ -66,18 +63,21 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 add_library(my_arduino SHARED ${SRCS} ${HEADERS})
 set_target_properties(my_arduino PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
-
-#set(EDV_PUBLIC_INCLUDE_DIRECTORIES      kernel/)
-#set(EDV_PRIVATE_INCLUDE_DIRECTORIES     kernel/)
-#target_include_directories(${PROJECT_NAME} PUBLIC ${EDV_PUBLIC_INCLUDE_DIRECTORIES})
-#target_include_directories(${PROJECT_NAME} PRIVATE ${EDV_PRIVATE_INCLUDE_DIRECTORIES})
-
-#file(GLOB_RECURSE EDV_INCLUDE_FILES "kernel/*.hpp*")
-#file(GLOB_RECURSE EDV_SOURCE_FILES "kernel/*.cpp*")
-
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"
 )
+
+# https://github.com/awakecoding/cmake/blob/master/Tests/Complex/Executable/CMakeLists.txt
+set_source_files_properties(tests/basic.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+#set_target_properties(tests/basic.ino PROPERTIES LINKER_LANGUAGE CXX)
+
+add_executable(test_arduino tests/basic.cpp tests/basic.ino)
+#target_link_libraries(test1 PRIVATE )
+#set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(test_arduino PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_definitions(test_arduino PRIVATE FILE_ARG=tests/basic.ino)
+
+
 
 install(TARGETS ${PROJECT_NAME} 
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

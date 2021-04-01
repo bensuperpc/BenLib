@@ -21,7 +21,7 @@
 //          https://developer.nvidia.com/blog/how-query-device-properties-and-handle-errors-cuda-cc/
 //          https://developer.nvidia.com/blog/unified-memory-cuda-beginners/
 //          https://docs.nvidia.com/cuda/pdf/CUDA_C_Programming_Guide.pdf
-//          https://github.com/evlasblom/cuda-opencv-examples
+//          https://githgitub.com/evlasblom/cuda-opencv-examples
 //          https://github.com/NVIDIA/cuda-samples/blob/master/Samples/matrixMul/matrixMul.cu
 //  CPU: ALL                                                //
 //                                                          //
