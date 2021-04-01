@@ -7,7 +7,8 @@
 # New Features !
 
   - AES and RSA encryption functions
-  - New linker (Gold linker Instead default linker)
+  - Add Doxygen doc
+  - New linker
   - Add OpenCL and CUDA programs
   - New CRC32 and JAMCRC algo
   - GTA SA alternate cheats codes finder, via Brute 
@@ -18,6 +19,8 @@
 
 BenLib uses a number of open source projects to work properly:
 
+* [Clang] - Clang 10.0 compiler (or GCC 10 min)
+* [CUDA] - Nvidia CUDA libs and NVCC compiler
 * [SFML] - Graphic lib
 * [OpenCV] - Load and image processing
 * [Boost] - Make units tests and others things :)
@@ -27,7 +30,7 @@ BenLib uses a number of open source projects to work properly:
 * [OpenMP] - Multi-threading lib. (Not mandatory but really recommended !)
 * [OpenCL] - Is a framework for GPGUP
 * [Docker] - Container system (if you use it).
-* [LLD] - Linker (To replace gold linker)
+* [TLO] - Linker (To replace gold linker)
 
 You can see my [public repository][ben_github] on GitHub, and can see my [public repository][ben_gitlab] on GitLab.
 
@@ -103,6 +106,9 @@ License
    [CMake]: <https://cmake.org/>
    [OpenCL]: <https://www.khronos.org/opencl/>
    [Docker]: <https://www.docker.com/>
+   [TLO]: <https://gcc.gnu.org/wiki/LinkTimeOptimization>
+   [Clang]: <https://clang.llvm.org/>
+   [CUDA]: <https://developer.nvidia.com/cuda-downloads>
    [ben_github]: <https://github.com/Bensuperpc>
    [ben_gitlab]: <https://gitlab.com/Bensuperpc>
    [MIT]: LICENSE
