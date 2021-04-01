@@ -1,9 +1,14 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Lib
-** Source: https://github.com/progschj/ThreadPool.git
-** ThreadPool.h
-*/
+/**
+ * @file ThreadPool.h
+ * @author progschj (https://github.com/progschj/ThreadPool)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 
 #ifndef THREAD_POOL_H
 #define THREAD_POOL_H

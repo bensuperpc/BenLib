@@ -1,10 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** File description:
-** getSchwarzschild.cpp
-*/
-
+/**
+ * @file getSchwarzschild.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 #ifndef GETSCHWARZCHILD_HPP_
 #define GETSCHWARZCHILD_HPP_
 

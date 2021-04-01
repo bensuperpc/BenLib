@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Filesystem
-** File description:
-** filesystem.cpp
-*/
+/**
+ * @file filesystem.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "filesystem.hpp"
 
@@ -77,7 +81,7 @@ void my::filesystem::search_by_ext_and_name(std::vector<std::string> &list, cons
 size_t my::filesystem::count_files(std::string_view path)
 {
     size_t i = 0;
-    for (const auto &entry : fs::recursive_directory_iterator(path)) {
+    for (const auto &entry __attribute__((unused)): fs::recursive_directory_iterator(path)) {
         i++;
     }
     return i;

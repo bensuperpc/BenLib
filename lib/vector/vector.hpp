@@ -1,8 +1,16 @@
+/**
+ * @file vector.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 /*
-** BENSUPERPC PROJECT, 2020
-** Math
 ** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
-** vector.hpp
 */
 
 #ifndef VECTOR_HPP_
@@ -28,6 +36,13 @@ void fill_matrix_1(std::vector<std::vector<int>> &);
 void fill_matrix_2(std::vector<std::vector<int>> &);
 void fill_matrix_2(std::vector<std::vector<int>> &, int, int);
 
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param vec 
+ * @return double 
+ */
 template <typename T> double everage(const T &vec);
 template <typename T> void rnd_fill(std::vector<T> &, const T, const T, const uint64_t);
 template <typename T> void rnd_fill(std::vector<T> &, const T, const T);

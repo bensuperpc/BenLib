@@ -49,6 +49,14 @@
 #define KERNEL_FILE "../kernels/findStringInv.cl"
 #define FUNCTION_NAME "findStringInv" // findStringInv_MT
 
+/**
+ * @brief 
+ * 
+ * @example OpenCL_findStringInv.cpp
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char **argv)
 {
     const uint64_t NBRS = 2000000;

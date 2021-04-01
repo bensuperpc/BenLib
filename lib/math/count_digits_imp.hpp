@@ -1,10 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** File description:
-** count_digits.hpp
-*/
-
+/**
+ * @file count_digits_imp.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 #include "count_digits.hpp"
 
 template <typename T> T my::math::count_digits::count_digits_1(T n)

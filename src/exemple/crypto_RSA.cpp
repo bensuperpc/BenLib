@@ -30,9 +30,15 @@ extern "C"
 
 using namespace std;
 
-/**@example crypto_RSA.cpp
- * Crypto
+/**
+ * @brief 
+ *
+ * @example crypto_RSA.cpp
+ * @param arc 
+ * @param argv 
+ * @return int 
  */
+
 int main(int arc, char *argv[])
 {
 

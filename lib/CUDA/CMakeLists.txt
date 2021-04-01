@@ -171,6 +171,7 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
 	#target_precompile_headers(convert_utils PUBLIC ${HEADERS})
 endif()
 set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(my_cuda PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 #target_link_libraries(my_cuda PRIVATE ${CUDA_LIBRARIES})
 
 if(APPLE)
@@ -190,6 +191,7 @@ endif()
 add_executable(vec1d vec1d.c)
 target_link_libraries(vec1d PRIVATE ${CUDA_LIBRARIES} my_cuda m)
 set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec1d PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult vec2d_mult.c)
 if (OPENMP_FOUND)
@@ -198,7 +200,7 @@ else()
     target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-
+set_target_properties(vec2d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_add vec2d_add.c)
 if (OPENMP_FOUND)
@@ -207,6 +209,7 @@ else()
     target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec2d_add PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult2 vec2d_mult.cpp)
 if (OPENMP_FOUND)
@@ -215,6 +218,7 @@ else()
     target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec2d_mult2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult3 vec2d_mult3.cpp)
 if (OPENMP_FOUND)
@@ -223,6 +227,7 @@ else()
     target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec2d_mult3 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec2d_mult3 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec3d_mult vec3d_mult.cpp)
 if (OPENMP_FOUND)
@@ -231,6 +236,7 @@ else()
     target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec3d_mult PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec3d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec3d_mult2 vec3d_mult2.cpp)
 if (OPENMP_FOUND)
@@ -239,6 +245,7 @@ else()
     target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec3d_mult2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 
 set(EDV_PUBLIC_INCLUDE_DIRECTORIES      kernel/)
@@ -254,6 +261,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 install(TARGETS ${PROJECT_NAME} vec1d vec2d_add vec2d_mult vec2d_mult2 vec2d_mult3 vec3d_mult vec3d_mult2
+#   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
+#    CONFIGURATIONS Release
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

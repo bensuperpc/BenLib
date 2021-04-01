@@ -39,7 +39,7 @@
 ##############################################################
 
 cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
-project(BENLIB VERSION 0.0.5 DESCRIPTION "Bensuperpc's libs" LANGUAGES CXX C)
+project(BENLIB VERSION 0.0.5 DESCRIPTION "Bensuperpc's libs" LANGUAGES CXX C HOMEPAGE_URL "https://github.com/Bensuperpc/BenLib")
 
 #Add CUDA if it found
 include(CheckLanguage)
@@ -106,6 +106,13 @@ set(UNIT_TEST_BIN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/include")
 #set(AUTOGEN_BUILD_DIR "auto_gen")
 #set(PROJECT_BINARY_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #set(CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+set(CMAKE_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
+     OWNER_READ
+     OWNER_WRITE
+     OWNER_EXECUTE
+     GROUP_READ
+   )
 
 
 #   ================================================

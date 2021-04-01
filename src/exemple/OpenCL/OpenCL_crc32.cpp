@@ -49,6 +49,14 @@
 #define FUNCTION_NAME "CRC32_16bytes"
 //__kernel void CRC32_1byte_tableless(__global const void *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 
+/**
+ * @brief 
+ * 
+ * @example OpenCL_crc32.cpp
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char **argv)
 {
     // std::cout << crc32Lookup[0][1] << std::endl;

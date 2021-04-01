@@ -1,8 +1,16 @@
+/**
+ * @file cpu.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 /*
-** BENSUPERPC PROJECT, 2020
-** Math
 ** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
-** cpu.cpp
 */
 
 #ifndef CPU_HPP_
@@ -29,6 +37,11 @@ namespace cpu
 {
 #if (__i386__ || __x86_64__ || _M_AMD64)
 
+/**
+ * @brief Return nbrs cycle cpu
+ * 
+ * @return uint64_t 
+ */
 uint64_t rdtsc();
 
 #endif

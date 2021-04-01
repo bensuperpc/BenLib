@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** desc.
-** vector_imp.hpp
-*/
+/**
+ * @file vector_imp.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "vector.hpp"
 

@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Lib
-** Source: https://github.com/aphenriques/thread.git
-** printer.cpp
-*/
+/**
+ * @file printer.cpp
+ * @author aphenriques (https://github.com/aphenriques/thread)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #if __cplusplus >= 201703L
 #    include "printer.hpp"

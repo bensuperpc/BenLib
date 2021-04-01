@@ -1,10 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** File description:
-** getSchwarzschild.hpp
-*/
-
+/**
+ * @file getSchwarzschild_imp.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 #include "getSchwarzschild.hpp"
 
 template <typename T> T my::math::schwarzschild::getSchwarzschild(const T &masse)

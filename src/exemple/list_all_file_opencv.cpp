@@ -24,6 +24,16 @@
 #include <vector>
 #include "filesystem/filesystem.hpp"
 
+
+/**
+ * @brief 
+ * 
+ * @example list_all_file_opencv.cpp
+ * @param argc 
+ * @param argv 
+ * @param envp 
+ * @return int 
+ */
 int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::string> list_files = {};

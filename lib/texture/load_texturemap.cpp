@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Texture
-** File description:
-** load_titlemap.cpp
-*/
+/**
+ * @file load_texturemap.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "load_texturemap.hpp"
 

@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** F
-** float.cpp
-*/
+/**
+ * @file float.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef FLOAT_HPP_
 #define FLOAT_HPP_
@@ -21,7 +25,16 @@ namespace math
 {
 namespace fp
 {
-bool are_aqual(double &, double &);
+
+/**
+ * @brief 
+ * 
+ * @param x 
+ * @param y 
+ * @return true 
+ * @return false 
+ */
+bool are_aqual(double &x, double &y);
 
 } // namespace fp
 } // namespace math

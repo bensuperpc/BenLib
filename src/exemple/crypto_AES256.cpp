@@ -29,8 +29,13 @@ extern "C"
 }
 #include "crypto/crypto_AES.hpp"
 
-/**@example count_all_file.cpp
- * Crypto
+/**
+ * @brief 
+ * 
+ * @example count_all_file.cpp
+ * @param arc 
+ * @param argv 
+ * @return int 
  */
 int main(int arc, char *argv[])
 {

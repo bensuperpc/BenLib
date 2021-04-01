@@ -46,6 +46,14 @@ extern "C"
 #include <stdio.h>
 }
 
+/**
+ * @brief 
+ * 
+ * @example OpenCL_test.cpp
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char **argv)
 {
     std::string platform_ver;

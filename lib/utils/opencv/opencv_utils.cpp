@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** File description:
-** opencv_utils.cpp
-*/
+/**
+ * @file opencv_utils.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "opencv_utils.hpp"
 

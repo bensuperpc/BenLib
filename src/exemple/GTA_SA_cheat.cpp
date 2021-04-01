@@ -38,12 +38,6 @@
  *  @ingroup GTA_SA
  *  @sa @link GTA_SA The first group GTA_SA@endlink
  */
-/** @defgroup GTA_SA_GPU GPU version
- *  @ingroup GTA_SA
- *  @sa @link GTA_SA The first group GTA_SA@endlink
- */
-
-
 /** @defgroup GTA_SA_GPU_CUDA GPU CUDA version
  *  @ingroup GTA_SA
  *  @sa @link GTA_SA The first group GTA_SA@endlink

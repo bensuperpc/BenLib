@@ -1,13 +1,17 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** F
-** prime_imp.hpp.cpp
-*/
+/**
+ * @file prime_imp.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "prime.hpp"
 
-template <typename T> inline T my::math::prime::PowerMod(T a, T n, T mod)
+template <typename T> T my::math::prime::PowerMod(T a, T n, T mod)
 { // computes a^n % mod
     T r = 1;
     while (n) {
@@ -18,7 +22,7 @@ template <typename T> inline T my::math::prime::PowerMod(T a, T n, T mod)
     return r;
 }
 
-template <typename T> inline T my::math::prime::MultiplyMod(T a, T b, T mod)
+template <typename T> T my::math::prime::MultiplyMod(T a, T b, T mod)
 { // computes a * b % mod
     T r = 0;
     a %= mod, b %= mod;

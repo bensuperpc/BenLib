@@ -31,8 +31,30 @@ namespace my
 {
 namespace texture
 {
-sf::Texture uniform_32(int &, int &, uint8_t, uint8_t, uint8_t, uint8_t);
-sf::Texture uniform_24(int &, int &, uint8_t, uint8_t, uint8_t);
+/**
+ * @brief 
+ * 
+ * @param xx Pos X
+ * @param yy Pos y
+ * @param a Alpha value
+ * @param r Red value
+ * @param g Green value
+ * @param b Bleu value
+ * @return sf::Texture 
+ */
+sf::Texture uniform_32(int &xx, int &yy, uint8_t a, uint8_t r, uint8_t g, uint8_t b);
+
+/**
+ * @brief 
+ * 
+ * @param xx Pos X
+ * @param yy Pos y
+ * @param r Red value
+ * @param g Green value
+ * @param b Bleu value
+ * @return sf::Texture 
+ */
+sf::Texture uniform_24(int &xx, int &yy, uint8_t r, uint8_t g, uint8_t b);
 } // namespace texture
 } // namespace my
 #endif

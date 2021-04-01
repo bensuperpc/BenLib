@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Crypto
-** File description:
-** crypto.cpp
-*/
+/**
+ * @file crypto.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 // Source https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C
 // https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA

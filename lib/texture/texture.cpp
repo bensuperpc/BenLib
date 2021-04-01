@@ -24,7 +24,7 @@ sf::Texture my::texture::uniform_32(int &xx, int &yy, uint8_t a, uint8_t r, uint
 {
     sf::Texture texture;
     texture.create((unsigned int)xx, (unsigned int)yy);
-    sf::Uint8 *pixels = new sf::Uint8[xx * yy * 4];
+    sf::Uint8 *pixels = new sf::Uint8[(unsigned int)xx * (unsigned int)yy * 4];
 
     for (int x = 0; x < xx; x++) {
         for (int y = 0; y < yy; y++) {
@@ -43,7 +43,7 @@ sf::Texture my::texture::uniform_24(int &xx, int &yy, uint8_t r, uint8_t g, uint
 {
     sf::Texture texture;
     texture.create((unsigned int)xx, (unsigned int)yy);
-    sf::Uint8 *pixels = new sf::Uint8[xx * yy * 3];
+    sf::Uint8 *pixels = new sf::Uint8[(unsigned int)xx * (unsigned int)yy * 3];
 
     for (int x = 0; x < xx; x++) {
         for (int y = 0; y < yy; y++) {

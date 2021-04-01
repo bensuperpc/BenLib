@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Texture
-** File description:
-** sfml_screenshot.hpp
-*/
+/**
+ * @file sfml_screenshot.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef SFML_SCREENSHOT_HPP_
 #define SFML_SCREENSHOT_HPP_

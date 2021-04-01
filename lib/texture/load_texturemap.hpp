@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Texture
-** File description:
-** load_texturemap.hpp
-*/
+/**
+ * @file load_texturemap.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef LOAD_TEXTUREMAP_HPP_
 #define LOAD_TEXTUREMAP_HPP_

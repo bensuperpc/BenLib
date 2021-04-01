@@ -1,10 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** File description:
-** sphere.hpp
-*/
-
+/**
+ * @file sphere_imp.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 #include "sphere.hpp"
 template <typename T> T my::math::sphere::sphereVolume(const T &r)
 {

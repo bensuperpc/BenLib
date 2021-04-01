@@ -1,11 +1,19 @@
+/**
+ * @file crypto_AES.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
+
 /*
-** BENSUPERPC PROJECT, 2020
-** Crypto
 ** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
 https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 https://stackoverflow.com/a/5580881/10152334
-
-** crypto.cpp
 */
 
 #ifndef CRYPTO_AES_HPP_

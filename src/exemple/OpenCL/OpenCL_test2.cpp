@@ -45,6 +45,14 @@ extern "C"
 #endif
 #pragma GCC diagnostic pop
 
+/**
+ * @brief 
+ * 
+ * @example OpenCL_test2.cpp
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char **argv)
 {
 

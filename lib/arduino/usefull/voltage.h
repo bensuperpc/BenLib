@@ -9,5 +9,10 @@
 #ifndef ARDUINO_VOLTAGE_H
 #define ARDUINO_VOLTAGE_H
 
+/**
+ * @brief Get the Vcc Mili Volts object
+ * 
+ * @return int 
+ */
 int GetVccMiliVolts();
 #endif

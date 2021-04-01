@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** File description:
-** chrono.cpp
-*/
+/**
+ * @file chrono.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef _CHRONO_HPP_
 #define _CHRONO_HPP_
@@ -53,7 +57,14 @@ namespace my
 namespace chrono
 {
 Clock::time_point now();
-std::chrono::duration<long double> duration(Clock::time_point &, Clock::time_point &);
+/**
+ * @brief 
+ * 
+ * @param t1 
+ * @param t2 
+ * @return std::chrono::duration<long double> 
+ */
+std::chrono::duration<long double> duration(Clock::time_point & t1, Clock::time_point & t2);
 } // namespace chrono
 } // namespace my
 #endif

@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** File description:
-** date.cpp
-*/
+/**
+ * @file date.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.1.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "date.hpp"
 

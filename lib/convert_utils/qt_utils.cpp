@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** Source: https://stackoverflow.com/questions/32410186/convert-bool-array-to-int32-unsigned-int-and-double
-** qt_utils.cpp
-*/
+/**
+ * @file qt_utils.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief https://stackoverflow.com/questions/32410186/convert-bool-array-to-int32-unsigned-int-and-double
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "qt_utils.hpp"
 

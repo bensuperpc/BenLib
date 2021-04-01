@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** File description:
-** count_digits.cpp
-*/
+/**
+ * @file count_digits.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef COUNT_DIGITS_HPP_
 #define COUNT_DIGITS_HPP_

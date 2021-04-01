@@ -1,8 +1,16 @@
+/**
+ * @file random.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 /*
-** BENSUPERPC PROJECT, 2020
-** Math
 ** Source: https://stackoverflow.com/questions/14638739/generating-a-random-double-between-a-range-of-values
-** float.cpp
 */
 
 #ifndef RANDOM_HPP_
@@ -20,7 +28,14 @@ namespace math
 {
 namespace rand
 {
-double rand(double, double);
+/**
+ * @brief 
+ * 
+ * @param fMin 
+ * @param fMax 
+ * @return double 
+ */
+double rand(double fMin, double fMax);
 } // namespace rand
 } // namespace math
 } // namespace my

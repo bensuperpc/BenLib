@@ -424,6 +424,7 @@ uint32_t CRC32_16bytes(const void *data, size_t length, uint32_t previousCrc32 =
  * @param data void* text need to be calculate
  * @param length size_t text size
  * @param previousCrc32 uint32_t least crc (0x0 if is empty)
+ * @param prefetchAhead 256 by default
  * @return uint32_t with CRC32 value
  *
  * @author stephan brumme
@@ -456,12 +457,14 @@ uint32_t JAMCRC_16bytes(const void *data, size_t length, uint32_t previousCrc32 
  * @param data void* text need to be calculate
  * @param length size_t text size
  * @param previousCrc32 uint32_t least crc (0x0 if is empty)
+ * @param prefetchAhead 256 by default
  * @return uint32_t with JAMCRC value
  *
  * @author stephan brumme
  *
  * @see see also CRC32_16bytes_prefetch()
  */
+
 uint32_t JAMCRC_16bytes_prefetch(const void *data, size_t length, uint32_t previousCrc32 = 0, size_t prefetchAhead = 256);
 #endif
 

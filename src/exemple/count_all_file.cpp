@@ -25,8 +25,15 @@
 
 // https://bastian.rieck.me/blog/posts/2017/simple_unit_tests/
 
-/**@example count_all_file.cpp
- * Count all file
+
+/**
+ * @brief 
+ * 
+ * @example count_all_file.cpp
+ * @param argc 
+ * @param argv 
+ * @param envp 
+ * @return int 
  */
 int main(int argc, char *argv[], char *envp[])
 {

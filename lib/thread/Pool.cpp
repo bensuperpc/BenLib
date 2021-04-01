@@ -1,3 +1,14 @@
+/**
+ * @file Pool.cpp
+ * @author aphenriques (https://github.com/aphenriques/thread)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 #if __cplusplus >= 201703L
 
 #    include "Pool.hpp"

@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Math
-** File description:
-** power.hpp
-*/
+/**
+ * @file pair.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef _PAIR_HPP_
 #define _PAIR_HPP_
@@ -12,8 +16,26 @@ namespace my
 {
 namespace math
 {
-template <typename T> bool is_odd(T);
-template <typename T> bool is_even(T);
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param nbr 
+ * @return true 
+ * @return false 
+ */
+template <typename T> bool is_odd(T nbr);
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param nbr 
+ * @return true 
+ * @return false 
+ */
+template <typename T> bool is_even(T nbr);
 } // namespace math
 } // namespace my
 #endif

@@ -1,7 +1,15 @@
+/**
+ * @file prime.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 /*
-** BENSUPERPC PROJECT, 2020
-** Math
-** Sources:
 ** https://github.com/niklasb/tcr/blob/master/zahlentheorie/NumberTheory.cpp
 ** https://stackoverflow.com/questions/4424374/determining-if-a-number-is-prime
 ** https://www.geeksforgeeks.org/c-program-to-check-prime-number/
@@ -19,25 +27,99 @@ namespace math
 {
 namespace prime
 {
-bool isPrime_opti_0(const long long int &);
-bool isPrime_opti_1(const long long int &);
-bool isPrime_opti_2(const long long int &);
-bool isPrime_opti_3(const long long int &);
-bool isPrime_opti_4(const long long int &);
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_0(const long long int &n);
 
-bool isPrime_opti_5(const long long int &);
-inline long long int PowerMod(long long int, long long int, long long int);
-inline long long int MultiplyMod(long long int, long long int, long long int);
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_1(const long long int &n);
 
-template <typename T> inline bool isPrime_opti_5(const T &);
-template <typename T> inline T PowerMod(T, T, T);
-template <typename T> inline T MultiplyMod(T, T, T);
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_2(const long long int &n);
 
-bool isPrime_opti_6(const long long int &);
-bool isPrime_opti_7(const long long int &);
-bool isPrime_opti_8(const long long int &);
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_3(const long long int &n);
 
-#include "prime_imp.hpp"
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_4(const long long int &n);
+
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_5(const long long int &n);
+long long int PowerMod(long long int, long long int, long long int);
+long long int MultiplyMod(long long int, long long int, long long int);
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @return true 
+ * @return false 
+ */
+template <typename T> bool isPrime_opti_5(const T &);
+template <typename T> T PowerMod(T, T, T);
+template <typename T> T MultiplyMod(T, T, T);
+
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_6(const long long int &n);
+
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_7(const long long int &n);
+
+/**
+ * @brief 
+ * 
+ * @param n 
+ * @return true 
+ * @return false 
+ */
+bool isPrime_opti_8(const long long int &n);
 } // namespace prime
 } // namespace math
 } // namespace my

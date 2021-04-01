@@ -24,8 +24,14 @@
 #include <vector>
 #include "crypto/crypto.hpp"
 
-/**@example list_all_file_hash.cpp
- * List all file with hash
+/**
+ * @brief 
+ * 
+ * @example list_all_file_hash.cpp
+ * @param argc 
+ * @param argv 
+ * @param envp 
+ * @return int 
  */
 int main(int argc, char *argv[], char *envp[])
 {

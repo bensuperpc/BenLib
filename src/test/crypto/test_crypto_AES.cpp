@@ -1,3 +1,14 @@
+/**
+ * @file test_crypto_AES.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE crypto_AES
 
@@ -12,6 +23,10 @@ extern "C"
 }
 #include "crypto/crypto_AES.hpp"
 
+/**
+ * @brief Construct a new boost auto test case object
+ * 
+ */
 BOOST_AUTO_TEST_CASE(test_crypto_aes_1)
 {
     OpenSSL_add_all_algorithms();

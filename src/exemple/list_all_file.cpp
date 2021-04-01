@@ -22,6 +22,15 @@
 #include <vector>
 #include "filesystem/filesystem.hpp"
 
+/**
+ * @brief 
+ * 
+ * @example list_all_file.cpp
+ * @param argc 
+ * @param argv 
+ * @param envp 
+ * @return int 
+ */
 int main(int argc, char *argv[], char *envp[])
 {
     std::vector<std::string> list_files = {};

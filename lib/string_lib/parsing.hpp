@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Filesystem
-** File description:
-** filesystem.hpp
-*/
+/**
+ * @file parsing.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 // https://stackoverflow.com/a/46931770/10152334
 

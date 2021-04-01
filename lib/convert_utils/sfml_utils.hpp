@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** File description:
-** sfml_utils.hpp
-*/
+/**
+ * @file sfml_utils.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef SFML_UTILS_HPP
 #define SFML_UTILS_HPP
@@ -29,11 +33,36 @@ namespace my
 {
 namespace sfc
 {
-cv::Mat SFML2Mat(const sf::Image &);
-void SFML2Mat(const sf::Image &, cv::Mat &);
+/**
+ * @brief 
+ * 
+ * @param img 
+ * @return cv::Mat 
+ */
+cv::Mat SFML2Mat(const sf::Image & img);
+/**
+ * @brief 
+ * 
+ * @param img 
+ * @param mat 
+ */
+void SFML2Mat(const sf::Image & img, cv::Mat &mat);
 
-sf::Image Mat2SFML(const cv::Mat &);
-void Mat2SFML(const cv::Mat &, sf::Image &);
+/**
+ * @brief 
+ * 
+ * @param src 
+ * @return sf::Image 
+ */
+sf::Image Mat2SFML(const cv::Mat & src);
+
+/**
+ * @brief 
+ * 
+ * @param src 
+ * @param img 
+ */
+void Mat2SFML(const cv::Mat & src, sf::Image & img);
 } // namespace sfc
 } // namespace my
 #endif

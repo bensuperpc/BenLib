@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** Lib
-** Source: https://github.com/aphenriques/thread.git
-** Pool.hpp
-*/
+/**
+ * @file Pool.hpp
+ * @author aphenriques (https://github.com/aphenriques/thread)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #if __cplusplus >= 201703L
 #    ifndef thread_Pool_hpp
@@ -16,13 +20,26 @@
 namespace thread
 {
 #        pragma GCC diagnostic ignored "-Wpadded"
+/**
+ * @brief 
+ * @class Pool
+ */
 class Pool {
   public:
+
     Pool(std::size_t numberOfThreads);
 
     // joins all threads
     ~Pool();
-
+/**
+ * @brief 
+ * 
+ * @tparam F 
+ * @tparam A 
+ * @param callable 
+ * @param arguments 
+ * @return decltype(auto) 
+ */
     template <class F, class... A> decltype(auto) enqueue(F &&callable, A &&...arguments);
 
   private:
@@ -33,6 +50,15 @@ class Pool {
     bool stopped_;
 };
 
+/**
+ * @brief 
+ * 
+ * @tparam F 
+ * @tparam A 
+ * @param callable 
+ * @param arguments 
+ * @return decltype(auto) 
+ */
 template <class F, class... A> decltype(auto) Pool::enqueue(F &&callable, A &&...arguments)
 {
     // using ReturnType = std::invoke_result_t<F, A...>;

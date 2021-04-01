@@ -1,3 +1,14 @@
+/**
+ * @file test_getSchwarzschild.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE getSchwarzschild
 #include <boost/test/unit_test.hpp>

@@ -1,17 +1,25 @@
+/**
+ * @file square_root.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
+
 /*
-** BENSUPERPC PROJECT, 2020
-** Math
 ** Source: https://stackoverflow.com/questions/178265/what-is-the-most-hard-to-understand-piece-of-c-code-you-know
 ** https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
 ** https://en.wikibooks.org/wiki/Optimizing_C%2B%2B/Code_optimization/Faster_operations
-** square_root.cpp
 */
 
 #ifndef SQUARE_ROOT_HPP_
 #define SQUARE_ROOT_HPP_
 
 #ifdef __FAST_MATH__
-#    error "-ffast-math is broken, don't use it"
+#    warning "-ffast-math is broken, don't use it"
 #endif
 
 #include <cmath>
@@ -27,12 +35,47 @@ namespace math
 
 namespace square_root
 {
+/**
+ * @brief 
+ * 
+ * @param x 
+ * @return float 
+ */
 float invsqrt(float x);
+
+/**
+ * @brief 
+ * 
+ * @param x 
+ * @return double 
+ */
 double invsqrt(double x);
 
+/**
+ * @brief 
+ * 
+ * @param x 
+ * @return float 
+ */
 float sqrt(float x);
+
+/**
+ * @brief 
+ * 
+ * @param x 
+ * @return double 
+ */
 double sqrt(double x);
-template <typename T, char iterations = 2> inline T invsqrt(T);
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @tparam iterations 
+ * @param nbr 
+ * @return T 
+ */
+template <typename T, char iterations = 2> inline T invsqrt(T nbr);
 } // namespace square_root
 } // namespace math
 #endif

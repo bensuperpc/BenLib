@@ -1,9 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** File description:
-** getGravitationalAttraction.cpp
-*/
+/**
+ * @file getGravitationalAttraction.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #ifndef GETGRAVITATIONATTRACTION_HPP
 #define GETGRAVITATIONATTRACTION_HPP

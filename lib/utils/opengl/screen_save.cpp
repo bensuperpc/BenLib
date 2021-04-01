@@ -1,26 +1,16 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** File description:
-** screen_save.cpp
-*/
+/**
+ * @file screen_save.cpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief 
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 
 #include "screen_save.hpp"
 
-////////////////////////////////////////////////////////////
-/// \brief set the position of the object
-///
-/// This function can save screenshot from openGL to file.
-/// It use OpenCV or fwrite
-/// OK :)
-///
-/// \param filename File name, if use .tga, you use fwrite, other OpenCV
-/// \param windowWidth Window size X
-/// \param windowHeight Window size Y
-///
-/// \see ?
-///
-////////////////////////////////////////////////////////////
 void Screen_save_gl::saveScreenshotToFile(const std::string &filename, const size_t &windowWidth, const size_t &windowHeight)
 {
     // Thank https://stackoverflow.com/a/53110929/10152334

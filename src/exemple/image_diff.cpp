@@ -23,8 +23,14 @@
 #include <opencv2/imgproc.hpp>
 #include "utils/opencv/opencv_utils.hpp"
 
-/**@example image_diff.cpp
- * Show diff between two image
+/**
+ * @brief Show diff between two image
+ * 
+ * @example image_diff.cpp
+ * @param argc 
+ * @param argv 
+ * @param envp 
+ * @return int 
  */
 int main(int argc, char *argv[], char *envp[])
 {

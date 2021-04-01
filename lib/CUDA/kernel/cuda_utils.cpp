@@ -53,18 +53,18 @@ void my::cuda::device()
         printf("    Memory Bus Width (bits): %d\n", prop.memoryBusWidth);
         printf("    Peak Memory Bandwidth (GB/s): %f\n", 2.0 * prop.memoryClockRate * (prop.memoryBusWidth / 8) / 1.0e6);
         printf("    totalGlobablMem (GB): %lu\n", (unsigned long)prop.totalGlobalMem);
-        printf("    sharedMemPerBlock: %i\n", prop.sharedMemPerBlock);
+        printf("    sharedMemPerBlock: %zu\n", prop.sharedMemPerBlock);
         printf("    regsPerBlock: %i\n", prop.regsPerBlock);
         printf("    warpSize: %i\n", prop.warpSize);
-        printf("    memPitch: %i\n", prop.memPitch);
+        printf("    memPitch: %zu\n", prop.memPitch);
         printf("    maxThreadsPerBlock: %i\n", prop.maxThreadsPerBlock);
         printf("    maxThreadsDim: %i, %i, %i\n", prop.maxThreadsDim[0], prop.maxThreadsDim[1], prop.maxThreadsDim[2]);
         printf("    maxGridSize: %i, %i, %i\n", prop.maxGridSize[0], prop.maxGridSize[1], prop.maxGridSize[2]);
         printf("    clockRate (MHz): %i\n", prop.clockRate / 1000);
-        printf("    totalConstMem: %i\n", prop.totalConstMem);
+        printf("    totalConstMem: %zu\n", prop.totalConstMem);
         printf("    major: %i\n", prop.major);
         printf("    minor: %i\n", prop.minor);
-        printf("    textureAlignment: %i\n", prop.textureAlignment);
+        printf("    textureAlignment: %zu\n", prop.textureAlignment);
         printf("    deviceOverlap: %i\n", prop.deviceOverlap);
         printf("    multiProcessorCount: %i\n", prop.multiProcessorCount);
     }

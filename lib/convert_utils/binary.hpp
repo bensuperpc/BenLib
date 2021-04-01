@@ -1,10 +1,13 @@
-/*
-** BENSUPERPC PROJECT, 2020
-** RPG
-** Source: https://stackoverflow.com/questions/32410186/convert-bool-array-to-int32-unsigned-int-and-double
-** binary.hpp
-*/
-
+/**
+ * @file binary.hpp
+ * @author Bensuperpc (bensuperpc@gmail.com)
+ * @brief https://stackoverflow.com/questions/32410186/convert-bool-array-to-int32-unsigned-int-and-double
+ * @version 1.0.0
+ * @date 2021-04-01
+ * 
+ * MIT License
+ * 
+ */
 #ifndef BINARY_HPP
 #define BINARY_HPP
 
