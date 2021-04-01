@@ -39,6 +39,12 @@ class Serial_arduino {
     /**
      * @brief 
      * 
+     */
+    void println();
+
+    /**
+     * @brief 
+     * 
      * @param str 
      */
     void println(const std::string &str);
@@ -153,6 +159,8 @@ class Serial_arduino {
 
     void write(const int w);
     void write(const char w);
+
+    int read();
 
     /**
      * @brief 

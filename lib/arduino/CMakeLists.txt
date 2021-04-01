@@ -44,9 +44,11 @@ set(SRCS
     usefull/arduino_type.cpp
     usefull/free_ram.cpp
     usefull/voltage.cpp
-    arduino_serial.cpp
-    arduino_time.cpp
-    arduino_io.cpp
+    lib/arduino_serial.cpp
+    lib/arduino_time.cpp
+    lib/arduino_io.cpp
+    lib/arduino_math.cpp
+    lib/arduino_is.cpp
 	)
 	
 set(HEADERS
@@ -56,15 +58,18 @@ set(HEADERS
     usefull/free_ram.hpp
     usefull/voltage.hpp
     arduino_compatibility.hpp
-    arduino_serial.hpp
-    arduino_time.hpp
-    arduino_io.hpp
+    lib/arduino_serial.hpp
+    lib/arduino_time.hpp
+    lib/arduino_io.hpp
+    lib/arduino_math.hpp
+    lib/arduino_is.hpp
     )
 
 
 #set_target_properties(my_cuda PROPERTIES PUBLIC_HEADER "${EDV_INCLUDE_FILES}")
 
 include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/lib")
 
 add_library(my_arduino SHARED ${SRCS} ${HEADERS})
 set_target_properties(my_arduino PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
@@ -107,36 +112,61 @@ target_compile_definitions(AnalogReadSerial PRIVATE FILE_ARG=tests/AnalogReadSer
 target_link_libraries(AnalogReadSerial my_arduino)
 
 # ======== ASCIITable ========
-set_source_files_properties(tests/ASCIITable.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
-add_executable(ASCIITable tests/main_arduino.cpp tests/ASCIITable.ino)
+set_source_files_properties(tests/Communication/ASCIITable.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(ASCIITable tests/main_arduino.cpp tests/Communication/ASCIITable.ino)
 set_target_properties(ASCIITable PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 target_compile_options(ASCIITable PRIVATE -include "arduino_compatibility.hpp")
-target_compile_definitions(ASCIITable PRIVATE FILE_ARG=tests/ASCIITable.ino)
+target_compile_definitions(ASCIITable PRIVATE FILE_ARG=tests/Communication/ASCIITable.ino)
 target_link_libraries(ASCIITable my_arduino)
 
 # ======== Arrays ========
-set_source_files_properties(tests/Arrays.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
-add_executable(Arrays tests/main_arduino.cpp tests/Arrays.ino)
+set_source_files_properties(tests/Control_Structures/Arrays.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(Arrays tests/main_arduino.cpp tests/Control_Structures/Arrays.ino)
 set_target_properties(Arrays PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 target_compile_options(Arrays PRIVATE -include "arduino_compatibility.hpp")
-target_compile_definitions(Arrays PRIVATE FILE_ARG=tests/Arrays.ino)
+target_compile_definitions(Arrays PRIVATE FILE_ARG=tests/Control_Structures/Arrays.ino)
 target_link_libraries(Arrays my_arduino)
 
 # ======== For_Loop_Iteration ========
-set_source_files_properties(tests/For_Loop_Iteration.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
-add_executable(For_Loop_Iteration tests/main_arduino.cpp tests/For_Loop_Iteration.ino)
+set_source_files_properties(tests/Control_Structures/For_Loop_Iteration.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(For_Loop_Iteration tests/main_arduino.cpp tests/Control_Structures/For_Loop_Iteration.ino)
 set_target_properties(For_Loop_Iteration PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 target_compile_options(For_Loop_Iteration PRIVATE -include "arduino_compatibility.hpp")
-target_compile_definitions(For_Loop_Iteration PRIVATE FILE_ARG=tests/For_Loop_Iteration.ino)
+target_compile_definitions(For_Loop_Iteration PRIVATE FILE_ARG=tests/Control_Structures/For_Loop_Iteration.ino)
 target_link_libraries(For_Loop_Iteration my_arduino)
 
 # ======== SwitchCase ========
-set_source_files_properties(tests/SwitchCase.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
-add_executable(SwitchCase tests/main_arduino.cpp tests/SwitchCase.ino)
+set_source_files_properties(tests/Control_Structures/SwitchCase.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(SwitchCase tests/main_arduino.cpp tests/Control_Structures/SwitchCase.ino)
 set_target_properties(SwitchCase PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 target_compile_options(SwitchCase PRIVATE -include "arduino_compatibility.hpp")
-target_compile_definitions(SwitchCase PRIVATE FILE_ARG=tests/SwitchCase.ino)
+target_compile_definitions(SwitchCase PRIVATE FILE_ARG=tests/Control_Structures/SwitchCase.ino)
 target_link_libraries(SwitchCase my_arduino)
+
+# ======== SwitchCase2 ========
+set_source_files_properties(tests/Control_Structures/SwitchCase2.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(SwitchCase2 tests/main_arduino.cpp tests/Control_Structures/SwitchCase2.ino)
+set_target_properties(SwitchCase2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(SwitchCase2 PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(SwitchCase2 PRIVATE FILE_ARG=tests/Control_Structures/SwitchCase2.ino)
+target_link_libraries(SwitchCase2 my_arduino)
+
+# ======== WhileStatementConditional ========
+set_source_files_properties(tests/Control_Structures/WhileStatementConditional.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(WhileStatementConditional tests/main_arduino.cpp tests/Control_Structures/WhileStatementConditional.ino)
+set_target_properties(WhileStatementConditional PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(WhileStatementConditional PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(WhileStatementConditional PRIVATE FILE_ARG=tests/Control_Structures/WhileStatementConditional.ino)
+target_link_libraries(WhileStatementConditional my_arduino)
+
+
+# ======== CharacterAnalysis ========
+set_source_files_properties(tests/Strings/CharacterAnalysis.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(CharacterAnalysis tests/main_arduino.cpp tests/Strings/CharacterAnalysis.ino)
+set_target_properties(CharacterAnalysis PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(CharacterAnalysis PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(CharacterAnalysis PRIVATE FILE_ARG=tests/Strings/CharacterAnalysis.ino)
+target_link_libraries(CharacterAnalysis my_arduino)
 
 
 #   ================================================

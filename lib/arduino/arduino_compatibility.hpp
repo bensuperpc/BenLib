@@ -9,15 +9,42 @@
  * 
  */
 
+/** @defgroup Arduino_software Arduino software
+ *  @brief The main Arduino_software group who contain all software to Arduino card
+ */
+/** @defgroup Arduino_io Arduino io software
+ *  @ingroup Arduino_software
+ *  @brief io software
+ *  @sa @link Arduino_software The first group Arduino_software@endlink
+ */
+/** @defgroup Arduino_math Arduino math software
+ *  @ingroup Arduino_software
+ *  @brief math software
+ *  @sa @link Arduino_software The first group Arduino_software@endlink
+ */
+/** @defgroup Arduino_time Arduino time software
+ *  @ingroup Arduino_software
+ *  @brief time software
+ *  @sa @link Arduino_software The first group Arduino_software@endlink
+ */
+/** @defgroup Arduino_is Arduino is software
+ *  @ingroup Arduino_software
+ *  @brief is software
+ *  @sa @link Arduino_software The first group Arduino_software@endlink
+ */
+
+
+
 #ifndef ARDUINO_COMPATIBILITY_HPP
 #define ARDUINO_COMPATIBILITY_HPP
 
 #include <chrono>
 #include <iostream>
-
+#include "arduino_io.hpp"
+#include "arduino_is.hpp"
+#include "arduino_math.hpp"
 #include "arduino_serial.hpp"
 #include "arduino_time.hpp"
-#include "arduino_io.hpp"
 
 extern unsigned int __bss_end;
 extern unsigned int __heap_start;
@@ -34,26 +61,10 @@ static int pin1 = 0;
  */
 Serial_arduino Serial;
 
-
-
 void wdt_enable(const int value);
 void wdt_enable(const int value)
 {
 }
-
-long map(long x, long in_min, long in_max, long out_min, long out_max);
-long map(long x, long in_min, long in_max, long out_min, long out_max) 
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-int map(int x, int in_min, int in_max, int out_min, int out_max);
-int map(int x, int in_min, int in_max, int out_min, int out_max) 
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-
 struct EEPROM
 {
     void write(const int adress, const int valuie);

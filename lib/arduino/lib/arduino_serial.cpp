@@ -11,6 +11,11 @@
 
 #include "arduino_serial.hpp"
 
+void Serial_arduino::println()
+{
+    std::cout << "\n";
+}
+
 void Serial_arduino::println(const std::string &str)
 {
     std::cout << str << "\n";
@@ -121,6 +126,16 @@ void Serial_arduino::write(const int w)
 void Serial_arduino::write(const char w)
 {
     std::cout << (char)w;
+}
+
+int Serial_arduino::read()
+{
+    return 0;
+}
+
+bool Serial_arduino::available()
+{
+    return true;
 }
 
 bool Serial_arduino::operator!()

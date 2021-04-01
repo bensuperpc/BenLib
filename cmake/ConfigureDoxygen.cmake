@@ -107,7 +107,7 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs")
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_BINARY_DIR}/README.md")
 
-    set(DOXYGEN_FILE_PATTERNS "*.c;*.cc;*.cxx;*.cpp;*.c++;*.java;*.ii;*.ixx*.ipp;*.i++;*.inl;*.idl;*.ddl;*.odl;*.h;*.hh;*.hxx;*.hpp;*.tpp;*.cu;*.cuh;*.cl;*.h++;*.py")
+    set(DOXYGEN_FILE_PATTERNS "*.c;*.cc;*.cxx;*.cpp;*.c++;*.java;*.ii;*.ixx*.ipp;*.i++;*.inl;*.idl;*.ddl;*.odl;*.h;*.hh;*.hxx;*.hpp;*.tpp;*.cu;*.cuh;*.cl;*.h++;*.py;*.ino")
 
 
     # Set logo Image path

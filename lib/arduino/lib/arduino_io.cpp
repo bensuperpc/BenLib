@@ -11,7 +11,6 @@
 
 #include "arduino_io.hpp"
 
-
 void pinMode(const int pin_value, const int inout)
 {
     if (inout == OUTPUT) {
@@ -21,24 +20,20 @@ void pinMode(const int pin_value, const int inout)
     }
 }
 
-
 void digitalWrite(const int pin, const int value)
 {
     std::cout << "Pin N°" << pin << " Value: " << value << "\n";
 }
-
 
 int digitalRead(const int pin)
 {
     return 0;
 }
 
-
 void analogWrite(const int pin, const int value)
 {
     std::cout << "Pin N°" << pin << " Value: " << value << "\n";
 }
-
 
 int analogRead(const int pin)
 {

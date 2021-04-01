@@ -17,7 +17,9 @@
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Arduino_io
+ *  
  * @param targetPin 
  * @param numBlinks 
  * @param blinkRate 

@@ -22,14 +22,54 @@
 #define INPUT 0
 #define OUTPUT 1
 
+/**
+ * @brief 
+ *
+ * @ingroup Arduino_io
+ * 
+ * @param pin_value 
+ * @param inout 
+ */
 void pinMode(const int pin_value, const int inout);
 
+/**
+ * @brief 
+ *
+ * @ingroup Arduino_io
+ * 
+ * @param pin 
+ * @param value 
+ */
 void digitalWrite(const int pin, const int value);
 
+/**
+ * @brief 
+ *
+ * @ingroup Arduino_io
+ *  
+ * @param pin 
+ * @param value 
+ */
 void analogWrite(const int pin, const int value);
 
+/**
+ * @brief 
+ *
+ * @ingroup Arduino_io
+ * 
+ * @param pin 
+ * @return int 
+ */
 int digitalRead(const int pin);
 
+/**
+ * @brief 
+ *
+ * @ingroup Arduino_io
+ * 
+ * @param pin 
+ * @return int 
+ */
 int analogRead(const int pin);
 
 #endif

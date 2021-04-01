@@ -19,6 +19,8 @@ std::chrono::steady_clock::time_point time_start_since_launch = std::chrono::ste
 
 /**
  * @brief 
+ *
+ * @ingroup Arduino_time
  * 
  * @return unsigned int 
  */
@@ -26,6 +28,8 @@ unsigned int millis();
 
 /**
  * @brief 
+ *
+ * @ingroup Arduino_time
  * 
  * @param value 
  */
@@ -33,13 +37,17 @@ void delay(const unsigned int value);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Arduino_time
+ *  
  * @param value 
  */
 void delay(const int value);
 
 /**
  * @brief 
+ *
+ * @ingroup Arduino_time
  * 
  * @param value 
  */
