@@ -11,12 +11,12 @@
 
 #include "arduino_serial.hpp"
 
-void Serial::println(const std::string &str)
+void Serial_arduino::println(const std::string &str)
 {
     std::cout << str << "\n";
 }
 
-void Serial::println(const std::string &str, const CODAGE codage)
+void Serial_arduino::println(const std::string &str, const CODAGE codage)
 {
     if (codage == HEX) {
         std::cout << std::hex << str << "\n";
@@ -35,12 +35,32 @@ void Serial::println(const std::string &str, const CODAGE codage)
     }
 }
 
-void Serial::writeChar(const char c)
+void Serial_arduino::println(const int i)
+{
+    std::cout << i << "\n";
+}
+
+void Serial_arduino::writeChar(const char c)
 {
     std::cout << c;
 }
 
-int Serial::openDevice(const std::string &str, const int baud)
+int Serial_arduino::openDevice(const std::string &str, const int baud)
 {
     return 0;
+}
+
+void Serial_arduino::begin(const int baud)
+{
+    std::cout << "Start with:" << baud << "Baud/s" << "\n";
+}
+
+Serial_arduino::Serial_arduino()
+{
+
+}
+
+Serial_arduino::~Serial_arduino()
+{
+
 }

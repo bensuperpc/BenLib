@@ -33,8 +33,17 @@ using byte = char;
 //#define digitalWrite(pin, value) digitalWrite_standard(pin, value)
 static int pin1 = 0;
 
-//static int varGlobal = 7;
-//extern int varGlobal;
+
+/**
+ * @brief Init Serial
+ * 
+ */
+Serial_arduino Serial;
+
+
+#define A0 0
+#define A1 1
+#define A3 3
 
 void pinMode(const int pin_value, const int inout);
 void pinMode(const int pin_value, const int inout)

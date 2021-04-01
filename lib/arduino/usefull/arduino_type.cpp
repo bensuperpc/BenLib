@@ -32,18 +32,17 @@ int arduino_type()
 #endif
 }
 
-void arduino_type_serial()
+void arduino_type_Serial()
 {
-    Serial serial;
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
-    serial.println("Regular Arduino");
+    Serial.println("Regular Arduino");
 #elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__)
-    serial.println("Arduino Mega");
+    Serial.println("Arduino Mega");
 #elif defined(__AVR_ATmega32U4__)
-    serial.println("Arduino Leonardo");
+    Serial.println("Arduino Leonardo");
 #elif defined(__SAM3X8E__)
-    serial.println("Arduino Due");
+    Serial.println("Arduino Due");
 #else
-    serial.println("Unknown");
+    Serial.println("Unknown");
 #endif
 }

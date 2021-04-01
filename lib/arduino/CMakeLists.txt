@@ -37,6 +37,7 @@ else()
     # Sub-level project
 endif()
 
+
 set(SRCS
     led/blink_number.cpp
     reboot/reboot_software.cpp
@@ -69,6 +70,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"
 )
 
+#   ==================================================
+#   ===============    EXECUTABLE    =================
+#   ==================================================
+
 # https://github.com/awakecoding/cmake/blob/master/Tests/Complex/Executable/CMakeLists.txt
 #https://stackoverflow.com/a/40109487/10152334
 #target_link_libraries(test1 PRIVATE )
@@ -91,9 +96,18 @@ target_compile_options(BlinkWithoutDelay PRIVATE -include "arduino_compatibility
 target_compile_definitions(BlinkWithoutDelay PRIVATE FILE_ARG=tests/BlinkWithoutDelay.ino LED_BUILTIN=1)
 target_link_libraries(BlinkWithoutDelay my_arduino)
 
+# ======== AnalogReadSerial ========
+set_source_files_properties(tests/AnalogReadSerial.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(AnalogReadSerial tests/main_arduino.cpp tests/AnalogReadSerial.ino) #arduino_compatibility.hpp
+set_target_properties(AnalogReadSerial PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(AnalogReadSerial PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(AnalogReadSerial PRIVATE FILE_ARG=tests/AnalogReadSerial.ino)
+target_link_libraries(AnalogReadSerial my_arduino)
 
-#BlinkWithoutDelay.ino
-#OUTPUT
+
+#   ================================================
+#   ================    INSTALL    =================
+#   ================================================
 
 install(TARGETS ${PROJECT_NAME} 
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

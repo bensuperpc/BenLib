@@ -28,17 +28,24 @@ enum CODAGE
 };
 
 /**
- * @class Serial
- * @brief Need to simulate Serial on arduino
+ * @class Serial_arduino
+ * @brief Need to simulate Serial_arduino on arduino
  */
-class Serial {
+class Serial_arduino {
   public:
     /**
         * @brief Write char[] or string on serial port
         * 
         * @param str 
         */
-    static void println(const std::string &str);
+    void println(const std::string &str);
+
+    /**
+     * @brief 
+     * 
+     * @param i 
+     */
+    void println(const int i);
 
     /**
          * @brief Write char[] or string on serial port with specific codage
@@ -46,7 +53,7 @@ class Serial {
          * @param str 
          * @param codage 
          */
-    static void println(const std::string &str, const CODAGE codage);
+    void println(const std::string &str, const CODAGE codage);
 
     /**
          * @brief 
@@ -55,27 +62,27 @@ class Serial {
          * @param baud 
          * @return int 
          */
-    static int openDevice(const std::string &str, const int baud);
+    int openDevice(const std::string &str, const int baud);
 
     /**
          * @brief 
          * 
          * @param baud 
          */
-    static void begin(const int baud);
+    void begin(const int baud);
 
     /**
          * @brief 
          * 
          * @param c 
          */
-    static void writeChar(const char c);
+    void writeChar(const char c);
 
     /**
          * @brief Write char on serial port
          * 
          */
-    static void closeDevice();
+    void closeDevice();
 
     /**
          * @brief 
@@ -83,7 +90,10 @@ class Serial {
          * @return true 
          * @return false 
          */
-    static bool available();
+    bool available();
+    Serial_arduino();
+    ~Serial_arduino();
+    private:
 };
 
 #endif
