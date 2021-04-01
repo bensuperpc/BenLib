@@ -17,22 +17,16 @@
 
 #include "arduino_serial.hpp"
 #include "arduino_time.hpp"
+#include "arduino_io.hpp"
 
 extern unsigned int __bss_end;
 extern unsigned int __heap_start;
-
-#define HIGH 1
-#define LOW 0
-
-#define INPUT 0
-#define OUTPUT 1
 
 #define WDTO_15MS 1
 
 using byte = char;
 //#define digitalWrite(pin, value) digitalWrite_standard(pin, value)
 static int pin1 = 0;
-
 
 /**
  * @brief Init Serial
@@ -41,43 +35,24 @@ static int pin1 = 0;
 Serial_arduino Serial;
 
 
-#define A0 0
-#define A1 1
-#define A3 3
-
-void pinMode(const int pin_value, const int inout);
-void pinMode(const int pin_value, const int inout)
-{
-}
-
-void digitalWrite(const int pin, const int value);
-void digitalWrite(const int pin, const int value)
-{
-    std::cout << "Pin N°" << pin << " Value: " << value << "\n";
-}
-
-int digitalRead(const int pin);
-int digitalRead(const int pin)
-{
-    return 0;
-}
-
-void analogWrite(const int pin, const int value);
-void analogWrite(const int pin, const int value)
-{
-    std::cout << "Pin N°" << pin << " Value: " << value << "\n";
-}
-
-int analogRead(const int pin);
-int analogRead(const int pin)
-{
-    return 0;
-}
 
 void wdt_enable(const int value);
 void wdt_enable(const int value)
 {
 }
+
+long map(long x, long in_min, long in_max, long out_min, long out_max);
+long map(long x, long in_min, long in_max, long out_min, long out_max) 
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+int map(int x, int in_min, int in_max, int out_min, int out_max);
+int map(int x, int in_min, int in_max, int out_min, int out_max) 
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 
 struct EEPROM
 {

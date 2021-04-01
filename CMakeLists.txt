@@ -76,8 +76,10 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
 endif()
 # If enable tests
 set(BUILD_TESTING ON)
+# If enable coverage
 set(CODE_COVERAGE OFF)
 set(BUILD_DOCS_DOXYGEN OFF)
+set(BUILD_ARDUINO ON)
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -257,7 +259,9 @@ endif()
 
 add_subdirectory(${lib_path}lib/python "src/lib/python")
 
-add_subdirectory(${lib_path}lib/arduino "src/lib/arduino")
+if(BUILD_ARDUINO)
+    add_subdirectory(${lib_path}lib/arduino "src/lib/arduino")
+endif(BUILD_ARDUINO)
 
 #add_dependencies(hello ${EXTERNAL_LIB})
 

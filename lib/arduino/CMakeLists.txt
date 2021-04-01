@@ -46,6 +46,7 @@ set(SRCS
     usefull/voltage.cpp
     arduino_serial.cpp
     arduino_time.cpp
+    arduino_io.cpp
 	)
 	
 set(HEADERS
@@ -57,6 +58,7 @@ set(HEADERS
     arduino_compatibility.hpp
     arduino_serial.hpp
     arduino_time.hpp
+    arduino_io.hpp
     )
 
 
@@ -90,7 +92,7 @@ target_link_libraries(Blink my_arduino) # Optional
 
 # ======== BlinkWithoutDelay ========
 set_source_files_properties(tests/BlinkWithoutDelay.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
-add_executable(BlinkWithoutDelay tests/main_arduino.cpp tests/BlinkWithoutDelay.ino) #arduino_compatibility.hpp
+add_executable(BlinkWithoutDelay tests/main_arduino.cpp tests/BlinkWithoutDelay.ino)
 set_target_properties(BlinkWithoutDelay PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 target_compile_options(BlinkWithoutDelay PRIVATE -include "arduino_compatibility.hpp")
 target_compile_definitions(BlinkWithoutDelay PRIVATE FILE_ARG=tests/BlinkWithoutDelay.ino LED_BUILTIN=1)
@@ -98,11 +100,43 @@ target_link_libraries(BlinkWithoutDelay my_arduino)
 
 # ======== AnalogReadSerial ========
 set_source_files_properties(tests/AnalogReadSerial.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
-add_executable(AnalogReadSerial tests/main_arduino.cpp tests/AnalogReadSerial.ino) #arduino_compatibility.hpp
+add_executable(AnalogReadSerial tests/main_arduino.cpp tests/AnalogReadSerial.ino)
 set_target_properties(AnalogReadSerial PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 target_compile_options(AnalogReadSerial PRIVATE -include "arduino_compatibility.hpp")
 target_compile_definitions(AnalogReadSerial PRIVATE FILE_ARG=tests/AnalogReadSerial.ino)
 target_link_libraries(AnalogReadSerial my_arduino)
+
+# ======== ASCIITable ========
+set_source_files_properties(tests/ASCIITable.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(ASCIITable tests/main_arduino.cpp tests/ASCIITable.ino)
+set_target_properties(ASCIITable PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(ASCIITable PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(ASCIITable PRIVATE FILE_ARG=tests/ASCIITable.ino)
+target_link_libraries(ASCIITable my_arduino)
+
+# ======== Arrays ========
+set_source_files_properties(tests/Arrays.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(Arrays tests/main_arduino.cpp tests/Arrays.ino)
+set_target_properties(Arrays PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(Arrays PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(Arrays PRIVATE FILE_ARG=tests/Arrays.ino)
+target_link_libraries(Arrays my_arduino)
+
+# ======== For_Loop_Iteration ========
+set_source_files_properties(tests/For_Loop_Iteration.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(For_Loop_Iteration tests/main_arduino.cpp tests/For_Loop_Iteration.ino)
+set_target_properties(For_Loop_Iteration PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(For_Loop_Iteration PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(For_Loop_Iteration PRIVATE FILE_ARG=tests/For_Loop_Iteration.ino)
+target_link_libraries(For_Loop_Iteration my_arduino)
+
+# ======== SwitchCase ========
+set_source_files_properties(tests/SwitchCase.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(SwitchCase tests/main_arduino.cpp tests/SwitchCase.ino)
+set_target_properties(SwitchCase PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(SwitchCase PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(SwitchCase PRIVATE FILE_ARG=tests/SwitchCase.ino)
+target_link_libraries(SwitchCase my_arduino)
 
 
 #   ================================================

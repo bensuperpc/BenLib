@@ -24,13 +24,19 @@ std::chrono::steady_clock::time_point time_start_since_launch = std::chrono::ste
  */
 unsigned int millis();
 
-
 /**
  * @brief 
  * 
  * @param value 
  */
 void delay(const unsigned int value);
+
+/**
+ * @brief 
+ * 
+ * @param value 
+ */
+void delay(const int value);
 
 /**
  * @brief 

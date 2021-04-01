@@ -8,11 +8,14 @@
  * MIT License
  * 
  */
+
 #ifndef ARDUINO_SERIAL_HPP
 #define ARDUINO_SERIAL_HPP
+
 #include <bitset>
 #include <iostream>
 #include <string>
+#include <type_traits>
 
 /**
  * @brief enum : For println codage
@@ -34,11 +37,18 @@ enum CODAGE
 class Serial_arduino {
   public:
     /**
-        * @brief Write char[] or string on serial port
-        * 
-        * @param str 
-        */
+     * @brief 
+     * 
+     * @param str 
+     */
     void println(const std::string &str);
+
+    /**
+     * @brief 
+     * 
+     * @param str 
+     */
+    void print(const std::string &str);
 
     /**
      * @brief 
@@ -48,52 +58,115 @@ class Serial_arduino {
     void println(const int i);
 
     /**
-         * @brief Write char[] or string on serial port with specific codage
-         * 
-         * @param str 
-         * @param codage 
-         */
+     * @brief 
+     * 
+     * @param i 
+     */
+    void print(const int i);
+
+    /**
+     * @brief 
+     * 
+     * @param str 
+     * @param codage 
+     */
     void println(const std::string &str, const CODAGE codage);
 
     /**
-         * @brief 
-         * 
-         * @param str 
-         * @param baud 
-         * @return int 
-         */
+     * @brief 
+     * 
+     * @tparam T 
+     * @param value 
+     * @param codage 
+     */
+    template <typename T> void println(const T &value, const CODAGE codage);
+
+    /**
+     * @brief 
+     * 
+     * @tparam T 
+     * @param value 
+     * @param codage 
+     */
+    template <typename T> void print(const T &value, const CODAGE codage);
+
+    /**
+     * @brief 
+     * 
+     * @param str 
+     * @param codage 
+     */
+    void print(const std::string &str, const CODAGE codage);
+
+    /**
+     * @brief 
+     * 
+     * @param str 
+     * @param codage 
+     */
+    void print(const int i, const CODAGE codage);
+
+    /**
+     * @brief 
+     * 
+     * @param i 
+     * @param codage 
+     */
+    void println(const int i, const CODAGE codage);
+
+    /**
+     * @brief 
+     * 
+     * @param str 
+     * @param baud 
+     * @return int 
+     */
     int openDevice(const std::string &str, const int baud);
 
     /**
-         * @brief 
-         * 
-         * @param baud 
-         */
+     * @brief 
+     * 
+     * @param baud 
+     */
     void begin(const int baud);
 
     /**
-         * @brief 
-         * 
-         * @param c 
-         */
+     * @brief 
+     * 
+     * @param c 
+     */
     void writeChar(const char c);
 
     /**
-         * @brief Write char on serial port
-         * 
-         */
+     * @brief 
+     * 
+     */
     void closeDevice();
 
     /**
-         * @brief 
-         * 
-         * @return true 
-         * @return false 
-         */
+     * @brief 
+     * 
+     * @return true 
+     * @return false 
+     */
     bool available();
+
+    void write(const int w);
+    void write(const char w);
+
+    /**
+     * @brief 
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool operator!();
+
     Serial_arduino();
     ~Serial_arduino();
-    private:
+
+  private:
+    bool was_launch = true;
 };
 
 #endif

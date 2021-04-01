@@ -16,28 +16,84 @@ void Serial_arduino::println(const std::string &str)
     std::cout << str << "\n";
 }
 
+void Serial_arduino::println(const int i)
+{
+    std::cout << i << "\n";
+}
+
+void Serial_arduino::print(const int i)
+{
+    std::cout << i;
+}
+
+void Serial_arduino::print(const std::string &str)
+{
+    std::cout << str;
+}
+
 void Serial_arduino::println(const std::string &str, const CODAGE codage)
 {
+    println<std::string>(str, codage);
+}
+
+void Serial_arduino::println(const int i, const CODAGE codage)
+{
+    println<int>(i, codage);
+}
+
+template <typename T> void Serial_arduino::println(const T &value, const CODAGE codage)
+{
     if (codage == HEX) {
-        std::cout << std::hex << str << "\n";
+        std::cout << std::hex << value << "\n";
     } else if (codage == DEC) {
-        std::cout << std::dec << str << "\n";
+        std::cout << std::dec << value << "\n";
     } else if (codage == OCT) {
-        std::cout << std::oct << str << "\n";
+        std::cout << std::oct << value << "\n";
     } else if (codage == BIN) {
-        for (std::size_t i = 0; i < str.size(); ++i) {
-            std::cout << std::bitset<8>(str.c_str()[i]);
+        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T>) {
+            std::cout << std::bitset<8>((uint64_t)value) << "\n";
+        } else {
+            for (std::size_t i = 0; i < value.size(); ++i) {
+                std::cout << std::bitset<8>((uint64_t)value.c_str()[i]);
+            }
+            std::cout << "\n";
         }
-        std::cout << std::endl;
     } else if (codage == BYTE) {
         //std::cout << std::byte << str << "\n";
     } else {
     }
 }
 
-void Serial_arduino::println(const int i)
+void Serial_arduino::print(const std::string &str, const CODAGE codage)
 {
-    std::cout << i << "\n";
+    print<std::string>(str, codage);
+}
+
+void Serial_arduino::print(const int i, const CODAGE codage)
+{
+    print<int>(i, codage);
+}
+
+template <typename T> void Serial_arduino::print(const T &value, const CODAGE codage)
+{
+    if (codage == HEX) {
+        std::cout << std::hex << value;
+    } else if (codage == DEC) {
+        std::cout << std::dec << value;
+    } else if (codage == OCT) {
+        std::cout << std::oct << value;
+    } else if (codage == BIN) {
+        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T>) {
+            std::cout << std::bitset<8>((uint64_t)value);
+        } else {
+            for (std::size_t i = 0; i < value.size(); ++i) {
+                std::cout << std::bitset<8>((uint64_t)value.c_str()[i]);
+            }
+        }
+    } else if (codage == BYTE) {
+        //std::cout << std::byte << str << "\n";
+    } else {
+    }
 }
 
 void Serial_arduino::writeChar(const char c)
@@ -52,15 +108,30 @@ int Serial_arduino::openDevice(const std::string &str, const int baud)
 
 void Serial_arduino::begin(const int baud)
 {
-    std::cout << "Start with:" << baud << "Baud/s" << "\n";
+    std::cout << "Start with:" << baud << " Baud/s"
+              << "\n";
+    this->was_launch = false;
+}
+
+void Serial_arduino::write(const int w)
+{
+    std::cout << (char)w;
+}
+
+void Serial_arduino::write(const char w)
+{
+    std::cout << (char)w;
+}
+
+bool Serial_arduino::operator!()
+{
+    return this->was_launch;
 }
 
 Serial_arduino::Serial_arduino()
 {
-
 }
 
 Serial_arduino::~Serial_arduino()
 {
-
 }

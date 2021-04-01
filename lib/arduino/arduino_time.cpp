@@ -22,6 +22,11 @@ void delay(const unsigned int value)
     std::this_thread::sleep_for(std::chrono::milliseconds(value));
 }
 
+void delay(const int value)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(value));
+}
+
 void delayMicroseconds(const unsigned int value)
 {
     std::this_thread::sleep_for(std::chrono::microseconds(value));
