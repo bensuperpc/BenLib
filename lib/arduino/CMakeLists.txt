@@ -44,6 +44,7 @@ set(SRCS
     usefull/free_ram.cpp
     usefull/voltage.cpp
     arduino_serial.cpp
+    arduino_time.cpp
 	)
 	
 set(HEADERS
@@ -54,6 +55,7 @@ set(HEADERS
     usefull/voltage.hpp
     arduino_compatibility.hpp
     arduino_serial.hpp
+    arduino_time.hpp
     )
 
 
@@ -68,20 +70,30 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # https://github.com/awakecoding/cmake/blob/master/Tests/Complex/Executable/CMakeLists.txt
+#https://stackoverflow.com/a/40109487/10152334
 #target_link_libraries(test1 PRIVATE )
 #set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-
-set_source_files_properties(tests/basic.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
 #set_source_files_properties(tests/basic.ino PROPERTIES COMPILE_FLAGS "-include \"arduino_compatibility.hpp\"")
-add_executable(test_arduino tests/basic.cpp tests/basic.ino) #arduino_compatibility.hpp
-set_target_properties(test_arduino PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
-#https://stackoverflow.com/a/40109487/10152334
-target_compile_options(test_arduino PRIVATE -include "arduino_compatibility.hpp")
 
-target_compile_definitions(test_arduino PRIVATE FILE_ARG=tests/basic.ino)
-target_link_libraries(test_arduino my_arduino)
-#add_dependencies(test_arduino my_arduino)
+# ======== Blink ========
+set_source_files_properties(tests/Blink.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(Blink tests/main_arduino.cpp tests/Blink.ino) #arduino_compatibility.hpp
+set_target_properties(Blink PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(Blink PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(Blink PRIVATE FILE_ARG=tests/Blink.ino LED_BUILTIN=1)
+target_link_libraries(Blink my_arduino) # Optional
 
+# ======== BlinkWithoutDelay ========
+set_source_files_properties(tests/BlinkWithoutDelay.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(BlinkWithoutDelay tests/main_arduino.cpp tests/BlinkWithoutDelay.ino) #arduino_compatibility.hpp
+set_target_properties(BlinkWithoutDelay PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(BlinkWithoutDelay PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(BlinkWithoutDelay PRIVATE FILE_ARG=tests/BlinkWithoutDelay.ino LED_BUILTIN=1)
+target_link_libraries(BlinkWithoutDelay my_arduino)
+
+
+#BlinkWithoutDelay.ino
+#OUTPUT
 
 install(TARGETS ${PROJECT_NAME} 
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -23,7 +23,7 @@
 #    include QUOTE(FILE_ARG)
 #endif
 
-#include "arduino_compatibility.hpp"
+//#include "arduino_compatibility.hpp"
 
 int main()
 {

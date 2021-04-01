@@ -14,8 +14,9 @@
 
 #include <chrono>
 #include <iostream>
-#include <thread>
+
 #include "arduino_serial.hpp"
+#include "arduino_time.hpp"
 
 extern unsigned int __bss_end;
 extern unsigned int __heap_start;
@@ -62,12 +63,6 @@ int analogRead(const int pin);
 int analogRead(const int pin)
 {
     return 0;
-}
-
-void delay(const int value);
-void delay(const int value)
-{
-    std::this_thread::sleep_for(std::chrono::milliseconds(value));
 }
 
 void wdt_enable(const int value);
