@@ -63,6 +63,7 @@ namespace string
  * 
  */
 constexpr std::uint32_t alphabetSize {26};
+
 /**
  * @brief 
  * 
@@ -71,6 +72,7 @@ constexpr std::uint32_t alphabetSize {26};
  * @return std::string 
  */
 template <class T> std::string findString(T n);
+
 /**
  * @brief 
  * 
@@ -79,6 +81,7 @@ template <class T> std::string findString(T n);
  * @param array 
  */
 template <class T> void findStringInv(T n, char *array);
+
 /**
  * @brief 
  * 
@@ -87,6 +90,7 @@ template <class T> void findStringInv(T n, char *array);
  * @param array 
  */
 template <class T> void findString(T n, char *array);
+
 /**
  * @brief 
  * 

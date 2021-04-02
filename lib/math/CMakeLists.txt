@@ -4,14 +4,7 @@ project(math VERSION 0.0.5 LANGUAGES CXX C)
 
 
 set(SRCS
-	getGravitationalAttraction_imp.hpp
-	getSchwarzschild_imp.hpp
-	sphere_imp.hpp
-	cylinder_imp.hpp
-	power_imp.hpp
 	power.c
-	pair.cpp
-	sphere_imp.hpp
 	square_root.cpp
 	prime.cpp
 	float.cpp
@@ -19,8 +12,14 @@ set(SRCS
 	)
 	
 set(HEADERS
+	getGravitationalAttraction_imp.hpp
+	getSchwarzschild_imp.hpp
+	sphere_imp.hpp
+	cylinder_imp.hpp
+	power_imp.hpp
 	getGravitationalAttraction.hpp
 	getSchwarzschild.hpp
+	pair_imp.hpp
 	sphere.hpp
 	cylinder.hpp
 	constant.hpp

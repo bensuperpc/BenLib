@@ -1,7 +1,7 @@
 /**
  * @file square_root.cpp
  * @author Bensuperpc (bensuperpc@gmail.com)
- * @brief 
+ * @brief square root source
  * @version 1.0.0
  * @date 2021-04-01
  * 

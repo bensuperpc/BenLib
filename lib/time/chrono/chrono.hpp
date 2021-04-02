@@ -25,7 +25,16 @@ typedef std::chrono::high_resolution_clock Clock;
 class my_chrono {
   public:
     // Fonctions
+    /**
+     * @brief 
+     * 
+     */
     void reset();
+    
+    /**
+     * @brief 
+     * 
+     */
     void start();
     void stop();
     void add_step();
@@ -35,15 +44,29 @@ class my_chrono {
 
     // void generate_leafs();
 
-    // Constructeurs
+    /**
+     * @brief Construct a new my chrono object
+     * 
+     */
     my_chrono();
 
-    // Destructeurs
+    /**
+     * @brief Destroy the my chrono object
+     * 
+     */
     ~my_chrono();
 
   private:
-    // Variables
+    /**
+     * @brief start time
+     * 
+     */
     Clock::time_point start_time = Clock::now();
+
+    /**
+     * @brief stop time
+     * 
+     */
     Clock::time_point stop_time = Clock::now();
 
     // For vector step by step
@@ -56,9 +79,14 @@ namespace my
 {
 namespace chrono
 {
+/**
+ * @brief Get current time
+ * 
+ * @return Clock::time_point 
+ */
 Clock::time_point now();
 /**
- * @brief 
+ * @brief Calc duration between two times
  * 
  * @param t1 
  * @param t2 

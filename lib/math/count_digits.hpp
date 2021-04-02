@@ -2,9 +2,7 @@
  * @file count_digits.hpp
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief 
- *
- * @ingroup Math_count_digits
- *  @version 0.1
+ * @version 0.1
  * @date 2021-04-01
  * 
  * MIT License

@@ -19,7 +19,9 @@ namespace math
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_pair
+ *  
  * @tparam T 
  * @param nbr 
  * @return true 
@@ -29,7 +31,9 @@ template <typename T> bool is_odd(T nbr);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_pair
+ *  
  * @tparam T 
  * @param nbr 
  * @return true 

@@ -10,13 +10,7 @@
  */
 
 #include "parsing.hpp"
-/**
- * @brief 
- * 
- * @param s 
- * @param delimiter 
- * @return std::vector<std::string> 
- */
+
 std::vector<std::string> my::string::split(const std::string &s, const std::string &delimiter)
 {
     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
@@ -32,13 +26,6 @@ std::vector<std::string> my::string::split(const std::string &s, const std::stri
     return res;
 }
 
-/**
- * @brief 
- * 
- * @param res 
- * @param s 
- * @param delimiter 
- */
 void my::string::split(std::vector<std::string> &res, const std::string &s, const std::string &delimiter)
 {
     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
@@ -52,13 +39,6 @@ void my::string::split(std::vector<std::string> &res, const std::string &s, cons
     res.emplace_back(s.substr(pos_start));
 }
 
-/**
- * @brief 
- * 
- * @param s 
- * @param delim 
- * @return std::vector<std::string> 
- */
 std::vector<std::string> my::string::split(const std::string &s, const char delim)
 {
     std::vector<std::string> result;
@@ -71,13 +51,7 @@ std::vector<std::string> my::string::split(const std::string &s, const char deli
     return result;
 }
 
-/**
- * @brief 
- * 
- * @param result 
- * @param s 
- * @param delim 
- */
+
 void my::string::split(std::vector<std::string> &result, const std::string &s, const char delim)
 {
     std::stringstream ss(s);
@@ -88,13 +62,6 @@ void my::string::split(std::vector<std::string> &result, const std::string &s, c
     }
 }
 
-/**
- * @brief 
- * 
- * @param file 
- * @param filename 
- * @param delimiter 
- */
 void my::string::csv_parse(std::vector<std::vector<std::string>> &file, const std::string &filename, const char delimiter)
 {
     std::ifstream input_from_file(filename);

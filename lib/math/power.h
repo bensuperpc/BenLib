@@ -15,7 +15,9 @@
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_power
+ *  
  * @param nb 
  * @param p 
  * @return long int 
@@ -24,7 +26,9 @@ long int power(long int nb, long int p);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_power
+ *  
  * @param x 
  * @return true 
  * @return false 

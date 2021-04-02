@@ -1,7 +1,7 @@
 /**
  * @file square_root.hpp
  * @author Bensuperpc (bensuperpc@gmail.com)
- * @brief 
+ * @brief square root template header
  * @version 1.0.0
  * @date 2021-04-01
  * 
@@ -37,7 +37,9 @@ namespace square_root
 {
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_square_root
+ *  
  * @param x 
  * @return float 
  */
@@ -45,7 +47,9 @@ float invsqrt(float x);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_square_root
+ *  
  * @param x 
  * @return double 
  */
@@ -53,7 +57,9 @@ double invsqrt(double x);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_square_root
+ *  
  * @param x 
  * @return float 
  */
@@ -61,7 +67,9 @@ float sqrt(float x);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_square_root
+ *  
  * @param x 
  * @return double 
  */
@@ -69,7 +77,9 @@ double sqrt(double x);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_square_root
+ *  
  * @tparam T 
  * @tparam iterations 
  * @param nbr 

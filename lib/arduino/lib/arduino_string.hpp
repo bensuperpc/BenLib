@@ -359,7 +359,7 @@ class String : public std::string {
      */
     std::ostream &operator>>(std::ostream &os);
 
-    private:
+  private:
     /**
      * @brief 
      *

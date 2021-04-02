@@ -18,8 +18,23 @@ namespace my
 {
 namespace math
 {
+/**
+ * @brief Math_GravitationalAttraction
+ * @namespace ga
+ */
 namespace ga
 {
+/**
+ * @brief Get the Gravitational Attraction object
+ * 
+ * @ingroup Math_GravitationalAttraction
+ *
+ * @tparam T 
+ * @param m1 
+ * @param m2 
+ * @param d 
+ * @return T 
+ */
 template <typename T> T getGravitationalAttraction(const T &m1, const T &m2, const T &d);
 } // namespace ga
 } // namespace math

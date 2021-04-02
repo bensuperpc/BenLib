@@ -1,7 +1,7 @@
 /**
  * @file sphere.hpp
  * @author Bensuperpc (bensuperpc@gmail.com)
- * @brief 
+ * @brief sphere header
  * @version 1.0.0
  * @date 2021-04-01
  * 
@@ -26,7 +26,9 @@ namespace sphere
 {
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_sphere
+ *  
  * @tparam T 
  * @param r 
  * @return T 
@@ -35,7 +37,9 @@ template <typename T> T sphereSurface(const T &r);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_sphere
+ *  
  * @tparam T 
  * @param r 
  * @return T 
@@ -44,7 +48,9 @@ template <typename T> T sphereVolume(const T &r);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_sphere
+ *  
  * @tparam T 
  * @param r 
  * @return T 
@@ -53,7 +59,9 @@ template <typename T> T sphereSurface_Q(const T &r);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_sphere
+ *  
  * @tparam T 
  * @param r 
  * @return T 

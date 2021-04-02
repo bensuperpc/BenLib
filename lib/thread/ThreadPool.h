@@ -26,6 +26,10 @@
 #include <thread>
 #include <vector>
 
+/**
+ * @brief ThreadPool
+ * @class ThreadPool
+ */
 class ThreadPool {
   public:
     ThreadPool(size_t);

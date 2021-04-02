@@ -28,12 +28,50 @@ namespace my
  */
 namespace string
 {
-std::vector<std::string> split(const std::string &s, const std::string &);
-void split(std::vector<std::string> &, const std::string &, const std::string &);
-std::vector<std::string> split(const std::string &s, const char);
-void split(std::vector<std::string> &, const std::string &, const char);
+/**
+ * @brief 
+ * 
+ * @param s 
+ * @param delimiter 
+ * @return std::vector<std::string> 
+ */
+std::vector<std::string> split(const std::string &s, const std::string & delimiter);
 
-void csv_parse(std::vector<std::vector<std::string>> &, const std::string &, const char);
+/**
+ * @brief 
+ * 
+ * @param res 
+ * @param s 
+ * @param delimiter 
+ */
+void split(std::vector<std::string> & res, const std::string & s, const std::string & delimiter);
+
+/**
+ * @brief 
+ * 
+ * @param s 
+ * @param delim 
+ * @return std::vector<std::string> 
+ */
+std::vector<std::string> split(const std::string &s, const char delim);
+
+/**
+ * @brief 
+ * 
+ * @param s 
+ * @param delim 
+ * @return std::vector<std::string> 
+ */
+void split(std::vector<std::string> &, const std::string & s, const char  );
+
+/**
+ * @brief 
+ * 
+ * @param file 
+ * @param filename 
+ * @param delimiter 
+ */
+void csv_parse(std::vector<std::vector<std::string>> & file, const std::string & filename, const char delimiter);
 } // namespace string
 } // namespace my
 #endif

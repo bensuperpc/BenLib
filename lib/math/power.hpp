@@ -2,9 +2,7 @@
  * @file power.hpp
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief 
- *
- * @ingroup Math_power
- *  @version 1.0.0
+ * @version 1.0.0
  * @date 2021-04-01
  * 
  * MIT License

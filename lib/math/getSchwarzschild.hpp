@@ -19,6 +19,15 @@ namespace math
 {
 namespace schwarzschild
 {
+/**
+ * @brief Get the Schwarzschild object
+ * 
+ * @ingroup Math_Schwarzschild
+ *
+ * @tparam T 
+ * @param masse 
+ * @return T 
+ */
 template <typename T> T getSchwarzschild(const T &masse);
 } // namespace schwarzschild
 } // namespace math

@@ -16,7 +16,10 @@
 #        include <functional>
 #        include <future>
 #        include <queue>
-
+/**
+ * @brief thread
+ * @namespace thread
+ */
 namespace thread
 {
 #        pragma GCC diagnostic ignored "-Wpadded"
@@ -30,7 +33,7 @@ class Pool {
 
     // joins all threads
     ~Pool();
-    /**
+ /**
  * @brief 
  * 
  * @tparam F 

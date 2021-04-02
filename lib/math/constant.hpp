@@ -27,9 +27,36 @@
  *  @brief count digits in variable
  *  @sa @link Math The first group Math@endlink
  */
-
-
-
+/** @defgroup Math_Schwarzschild Math get Schwarzschild
+ *  @ingroup Math
+ *  @brief get Schwarzschild
+ *  @sa @link Math The first group Math@endlink
+ */
+/** @defgroup Math_GravitationalAttraction Math get Gravitational Attraction
+ *  @ingroup Math
+ *  @brief get Gravitational Attraction
+ *  @sa @link Math The first group Math@endlink
+ */
+/** @defgroup Math_sphere Math get sphere infos
+ *  @ingroup Math
+ *  @brief get sphere infos
+ *  @sa @link Math The first group Math@endlink
+ */
+/** @defgroup Math_cylinder Math get cylinder infos
+ *  @ingroup Math
+ *  @brief get cylinder infos
+ *  @sa @link Math The first group Math@endlink
+ */
+/** @defgroup Math_square_root Math calc square_root
+ *  @ingroup Math
+ *  @brief calc square_root (like in Quake)
+ *  @sa @link Math The first group Math@endlink
+ */
+/** @defgroup Math_pair Math calc pair
+ *  @ingroup Math
+ *  @brief calc pair (is_odd or is_even)
+ *  @sa @link Math The first group Math@endlink
+ */
 
 #ifndef CONSTANT_HPP_
 #define CONSTANT_HPP_

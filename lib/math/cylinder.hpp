@@ -28,7 +28,9 @@ namespace cylinder
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_cylinder
+ *  
  * @tparam T 
  * @param r 
  * @param h 
@@ -38,7 +40,9 @@ template <typename T> T cylinderSurface(const T &r, const T &h);
 
 /**
  * @brief 
- * 
+ *
+ * @ingroup Math_cylinder
+ *  
  * @tparam T 
  * @param r 
  * @param h 
