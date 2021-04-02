@@ -80,6 +80,24 @@ my::String &my::String::operator+(const char &rhs)
     return *this;
 }
 
+my::String &my::String::operator+(const std::string &rhs)
+{
+    this->data += rhs;
+    return *this;
+}
+
+my::String &my::String::operator+(const char *rhs)
+{
+    this->data += rhs;
+    return *this;
+}
+
+my::String &my::String::operator+(const my::String &rhs)
+{
+    this->data += rhs.get_data();
+    return *this;
+}
+
 my::String &my::String::operator=(const std::string &rhs)
 {
     this->set_data(rhs);
@@ -164,6 +182,18 @@ void my::String::toLowerCase()
 void my::String::toUpperCase()
 {
     std::transform(this->data.begin(), this->data.end(), this->data.begin(), [](unsigned char c) { return std::toupper(c); });
+}
+
+std::ostream &my::String::operator<<(std::ostream &os)
+{
+    os << this->get_data();
+    return os;
+}
+
+std::ostream &my::String::operator>>(std::ostream &os)
+{
+    os << this->get_data();
+    return os;
 }
 
 //#define digitalWrite(pin, value) digitalWrite_standard(pin, value)

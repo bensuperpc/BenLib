@@ -29,7 +29,7 @@ namespace my
 /**
  * @class String
  * 
- * @brief 
+ * @brief String
  * 
  */
 class String : public std::string {
@@ -154,8 +154,6 @@ class String : public std::string {
 
     /**
      * @brief 
-     *
-     * @ingroup Arduino_string
      * 
      * @param i 
      */
@@ -163,33 +161,51 @@ class String : public std::string {
 
     /**
      * @brief 
-     *
-     * @ingroup Arduino_string
      * 
      * @param rhs 
-     * @return String 
+     * @return my::String& 
      */
-    String &operator+(const int &rhs);
+    my::String &operator+(const int &rhs);
 
     /**
      * @brief 
-     *
-     * @ingroup Arduino_string
      * 
      * @param rhs 
-     * @return String 
+     * @return my::String& 
      */
-    String &operator+(const unsigned int &rhs);
+    my::String &operator+(const unsigned int &rhs);
 
     /**
      * @brief 
-     *
-     * @ingroup Arduino_string
      * 
      * @param rhs 
-     * @return String 
+     * @return my::String& 
      */
-    String &operator+(const char &rhs);
+    my::String &operator+(const char &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return my::String& 
+     */
+    my::String &operator+(const std::string &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return my::String& 
+     */
+    my::String &operator+(const char *rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return my::String& 
+     */
+    my::String &operator+(const my::String &rhs);
 
     /**
      * @brief 
@@ -199,7 +215,7 @@ class String : public std::string {
      * @param rhs 
      * @return String& 
      */
-    String &operator=(const std::string &rhs);
+    my::String &operator=(const std::string &rhs);
 
     /**
      * @brief 
@@ -327,6 +343,9 @@ class String : public std::string {
      * 
      */
     std::string data;
+
+    std::ostream &operator<<(std::ostream &os);
+    std::ostream &operator>>(std::ostream &os);
 };
 } // namespace my
 #endif

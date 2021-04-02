@@ -89,7 +89,7 @@ void Serial_arduino::println(const my::String &value, const CODAGE codage)
     } else if (codage == OCT) {
         std::cout << std::oct << value << "\n";
     } else if (codage == BIN) {
-        for (std::size_t i = 0; i < value.size(); ++i) {
+        for (std::size_t i = 0; i < value.get_data().size(); ++i) {
             std::cout << std::bitset<8>((uint64_t)value.get_data().c_str()[i]);
         }
         std::cout << "\n";
@@ -140,7 +140,7 @@ void Serial_arduino::print(const my::String &value, const CODAGE codage)
     } else if (codage == OCT) {
         std::cout << std::oct << value;
     } else if (codage == BIN) {
-        for (std::size_t i = 0; i < value.size(); ++i) {
+        for (std::size_t i = 0; i < value.get_data().size(); ++i) {
             std::cout << std::bitset<8>((uint64_t)value.get_data().c_str()[i]);
         }
     } else if (codage == BYTE) {
