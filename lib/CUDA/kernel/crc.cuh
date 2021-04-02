@@ -30,11 +30,48 @@ using ulong = unsigned long;
 
 #include <cuda.h>
 #include <cuda_runtime.h>
-
+/**
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __global__ 
+ */
 __global__ void CRC32_byte_tableless_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+
+/**
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __global__ 
+ */
 __global__ void JAMCRC_byte_tableless_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
 
+/**
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __global__ 
+ */
 __global__ void CRC32_byte_tableless2_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
+
+/**
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __global__ 
+ */
 __global__ void JAMCRC_byte_tableless2_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32);
 
 #endif

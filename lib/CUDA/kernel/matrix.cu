@@ -33,13 +33,6 @@ extern "C"
 #include "matrix.cuh"
 #include "matrix.hpp"
 
-/**
- * \brief To mult 2D flat Matrix
- * \param int* matA 2D flat matrix
- * \param int* matB 2D flat matrix
- * \param int* matC 2D flat matrix
- * \param size_t size of matrix
- */
 __global__ void matrixAdd_kernel(int *matA, int *matB, int *matC, size_t N)
 {
     size_t col = threadIdx.x + blockIdx.x * blockDim.x;
@@ -306,13 +299,6 @@ void my::cuda::matrixMut3D(dim3 grid, dim3 threads, int mat[][DATAYSIZE][DATAXSI
     set<<<grid, threads>>>(mat);
 }
 
-/**
- * \brief To fill 2D flat Matrix with value
- * \param int* matA 2D flat matrix
- * \param int value
- * \param const size_t sizeAX size of matrix
- * \param const size_t sizeAY size of matrix
- */
 __global__ void matFill_kernel(int *matA, int value, const size_t sizeAX, const size_t sizeAY)
 {
 #warning "To do: test my::cuda::matFill_kernel"
@@ -339,13 +325,6 @@ extern "C" void matFill(const dim3 *grid, const dim3 *threads, int *matA, int va
     matFill_kernel<<<*grid, *threads>>>(matA, value, sizeAX, sizeAY);
 }
 
-/**
- * \brief To copy 2D flat Matrix to other matrix
- * \param int* matA 2D flat matrix
- * \param int* matB 2D flat matrix
- * \param const size_t sizeAX size of matrix
- * \param const size_t sizeAY size of matrix
- */
 __global__ void matCopy_kernel(int *matB, int *matA, int width, int height)
 {
 #warning "To do: test my::cuda::matCopy_kernel"

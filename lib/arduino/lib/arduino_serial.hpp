@@ -127,7 +127,7 @@ class Serial_arduino {
     /**
      * @brief 
      * 
-     * @param str 
+     * @param i 
      * @param codage 
      */
     void print(const int i, const CODAGE codage);

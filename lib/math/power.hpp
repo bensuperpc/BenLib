@@ -17,25 +17,23 @@ namespace math
 {
 /**
  * @brief 
- *
- * @ingroup Math_power
- *  
+ * 
  * @tparam T 
- * @param int 
+ * @param nbr 
+ * @param pow 
  * @return T 
  */
-template <typename T> T power(T, long int);
+template <typename T> T power(T nbr, long int pow);
 
 /**
  * @brief 
- *
- * @ingroup Math_power
- *  
+ * 
  * @tparam T 
+ * @param nbr 
  * @return true 
  * @return false 
  */
-template <typename T> bool isPowerOfTwo(T);
+template <typename T> bool isPowerOfTwo(T nbr);
 } // namespace math
 } // namespace my
 #endif

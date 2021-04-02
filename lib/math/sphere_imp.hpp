@@ -1,7 +1,7 @@
 /**
  * @file sphere_imp.hpp
  * @author Bensuperpc (bensuperpc@gmail.com)
- * @brief 
+ * @brief sphere template implementation
  * @version 1.0.0
  * @date 2021-04-01
  * 

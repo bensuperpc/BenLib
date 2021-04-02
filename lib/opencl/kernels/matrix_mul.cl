@@ -20,14 +20,15 @@
 //////////////////////////////////////////////////////////////
 
 /**
- * \brief Mult 2D matrix
- * \param A 2D Matrix 1
- * \param B 2D Matrix 2
- * \param C Return result
- * \param 2D Matrix size A
- * \param 2D Matrix size B
+ * @brief 
+ * 
+ * @param C 
+ * @param A 
+ * @param B 
+ * @param wA 
+ * @param wB 
+ * @return __kernel 
  */
-
 __kernel void matrixMul(__global float *C, __global float *A, __global float *B, int wA, int wB)
 {
     // 2D Thread ID
@@ -47,14 +48,14 @@ __kernel void matrixMul(__global float *C, __global float *A, __global float *B,
 }
 
 /**
- * \brief Mult 2D matrix
- * \param A 2D Matrix 1
- * \param B 2D Matrix 2
- * \param C Return result
- * \param 2D Matrix size A
- * \param 2D Matrix size B
+ * @brief 
+ * 
+ * @param A 
+ * @param B 
+ * @param C 
+ * @param N 
+ * @return __kernel 
  */
-
 __kernel void simpleMultiply(__global float *A, __global float *B, __global float *C, int N)
 {
     int row = get_global_id(1);

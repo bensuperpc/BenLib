@@ -97,36 +97,37 @@ bool isPrime_opti_5(const long long int &n);
  * @brief 
  *
  * @ingroup Math_prime
- *  
- * @param int 
- * @param int 
- * @param int 
+ *
+ * @param a 
+ * @param b 
+ * @param c 
  * @return long long int 
  */
-long long int PowerMod(long long int, long long int, long long int);
+long long int PowerMod(long long int a, long long int b, long long int c);
 
 /**
  * @brief 
  *
  * @ingroup Math_prime
- *  
- * @param int 
- * @param int 
- * @param int 
+ *
+ * @param a 
+ * @param b 
+ * @param c 
  * @return long long int 
  */
-long long int MultiplyMod(long long int, long long int, long long int);
+long long int MultiplyMod(long long int a, long long int b, long long int c);
 
 /**
  * @brief 
  *
  * @ingroup Math_prime
- *  
+ * 
  * @tparam T 
+ * @param nbr 
  * @return true 
  * @return false 
  */
-template <typename T> bool isPrime_opti_5(const T &);
+template <typename T> bool isPrime_opti_5(const T &nbr);
 
 /**
  * @brief 

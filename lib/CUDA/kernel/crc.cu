@@ -29,14 +29,6 @@ extern "C"
 #include "crc.cuh"
 #include "crc.hpp"
 
-/**
- * \brief To get CRC32 hash
- * \param __global const uchar *data : data
- * \param ulong length : Size of data
- * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
- * \param __global uint *resultCrc32 : Return result
- */
-
 __global__ void CRC32_byte_tableless_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
     uint crc = ~previousCrc32; // same as previousCrc32 ^ 0xFFFFFFFF
@@ -66,14 +58,6 @@ extern "C" void CRC32_byte_tableless(const dim3 &grid, const dim3 &threads, ucha
 {
     CRC32_byte_tableless_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
-
-/**
- * \brief To get JAMCRC hash
- * \param __global const uchar *data : data
- * \param ulong length : Size of data
- * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
- * \param __global uint *resultCrc32 : Return result
- */
 
 __global__ void JAMCRC_byte_tableless_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
@@ -105,14 +89,6 @@ extern "C" void JAMCRC_byte_tableless(const dim3 &grid, const dim3 &threads, uch
     JAMCRC_byte_tableless_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
 
-/**
- * \brief To get CRC32 hash
- * \param char *data : data
- * \param length : Size of data
- * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
- * \param uint *resultCrc32 : Return result
- */
-
 __global__ void CRC32_byte_tableless2_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {
     uint crc = ~previousCrc32;
@@ -142,14 +118,6 @@ extern "C" void CRC32_byte_tableless2(const dim3 &grid, const dim3 &threads, uch
 {
     CRC32_byte_tableless2_kernel<<<grid, threads>>>(data, length, previousCrc32, resultCrc32);
 }
-
-/**
- * \brief To get JAMCRC hash
- * \param char *data : data
- * \param length : Size of data
- * \param uint previousCrc32 : if you have previous CRC32, set 0 if not
- * \param uint *resultCrc32 : Return result
- */
 
 __global__ void JAMCRC_byte_tableless2_kernel(uchar *data, ulong length, uint previousCrc32, uint *resultCrc32)
 {

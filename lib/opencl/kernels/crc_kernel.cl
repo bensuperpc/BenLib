@@ -25,11 +25,13 @@
 #define POLY 0xEDB88320
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void CRC32_1byte_tableless(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -47,11 +49,13 @@ __kernel void CRC32_1byte_tableless(__global const uchar *data, ulong length, ui
 }
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void JAMCRC_1byte_tableless(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -69,13 +73,14 @@ __kernel void JAMCRC_1byte_tableless(__global const uchar *data, ulong length, u
 }
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param reviousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
-
 __kernel void CRC32_1byte_tableless2(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 {
 	__private uint crc = ~previousCrc32;
@@ -91,11 +96,13 @@ __kernel void CRC32_1byte_tableless2(__global const uchar *data, ulong length, u
 }
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void JAMCRC_1byte_tableless2(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -113,11 +120,13 @@ __kernel void JAMCRC_1byte_tableless2(__global const uchar *data, ulong length, 
 }
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void CRC32_bitwise(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -134,11 +143,13 @@ __kernel void CRC32_bitwise(__global const uchar *data, ulong length, uint previ
 }
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void JAMCRC_bitwise(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -155,11 +166,13 @@ __kernel void JAMCRC_bitwise(__global const uchar *data, ulong length, uint prev
 }
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void CRC32_StackOverflow(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -176,11 +189,13 @@ __kernel void CRC32_StackOverflow(__global const uchar *data, ulong length, uint
 }
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void JAMCRC_StackOverflow(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -197,11 +212,13 @@ __kernel void JAMCRC_StackOverflow(__global const uchar *data, ulong length, uin
 }
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void CRC32_halfbyte(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -221,13 +238,14 @@ __kernel void CRC32_halfbyte(__global const uchar *data, ulong length, uint prev
 
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
-
 __kernel void JAMCRC_halfbyte(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
 {
 	__private uint crc = ~previousCrc32;
@@ -776,11 +794,13 @@ __constant const uint Crc32Lookup[8][256] =
   }};
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void CRC32_8bytes(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -804,11 +824,13 @@ __kernel void CRC32_8bytes(__global const uchar *data, ulong length, uint previo
 }
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void JAMCRC_8bytes(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -835,11 +857,13 @@ __kernel void JAMCRC_8bytes(__global const uchar *data, ulong length, uint previ
 }
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void CRC32_4bytes(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -862,11 +886,13 @@ __kernel void CRC32_4bytes(__global const uchar *data, ulong length, uint previo
 }
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void JAMCRC_4bytes(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -890,11 +916,13 @@ __kernel void JAMCRC_4bytes(__global const uchar *data, ulong length, uint previ
 
 
 /**
- * \brief To get CRC32 hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
 
 __kernel void CRC32_16bytes(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)
@@ -931,11 +959,13 @@ __kernel void CRC32_16bytes(__global const uchar *data, ulong length, uint previ
 
 
 /**
- * \brief To get JAMCRC hash
- * \param data : data
- * \param length : Size of data
- * \param previousCrc32 : if you have previous CRC32, set 0 if not
- * \param resultCrc32 : Return result
+ * @brief 
+ * 
+ * @param data 
+ * @param length 
+ * @param previousCrc32 
+ * @param resultCrc32 
+ * @return __kernel 
  */
  
 __kernel void JAMCRC_16bytes(__global const uchar *data, ulong length, uint previousCrc32, __global uint *resultCrc32)

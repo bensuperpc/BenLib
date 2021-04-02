@@ -62,7 +62,7 @@ std::vector<std::string> split(const std::string &s, const char delim);
  * @param delim 
  * @return std::vector<std::string> 
  */
-void split(std::vector<std::string> &, const std::string &s, const char);
+void split(std::vector<std::string> &, const std::string &s, const char delim);
 
 /**
  * @brief 
