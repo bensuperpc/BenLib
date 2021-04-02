@@ -80,6 +80,8 @@ class String : public std::string {
 
     /**
      * @brief 
+     *
+     * @ingroup Arduino_string
      * 
      * @param rhs 
      * @return String& 
@@ -88,30 +90,39 @@ class String : public std::string {
 
     /**
      * @brief 
+     *
+     * @ingroup Arduino_string
      * 
      * @param rhs 
+     * @return my::String& 
      */
-    void operator+=(const unsigned int &rhs);
+    my::String & operator+=(const unsigned int &rhs);
 
     /**
      * @brief 
      *
      * @ingroup Arduino_string
-     * 
+     *  
      * @param rhs 
+     * @return my::String& 
      */
-    void operator+=(const std::string &rhs);
+    my::String & operator+=(const std::string &rhs);
 
     /**
      * @brief 
-     * 
+     *
+     * @ingroup Arduino_string
+     *  
      * @param rhs 
+     * @return my::String& 
      */
-    void operator+=(const my::String &rhs);
+    my::String & operator+=(const my::String &rhs);
 
     /**
      * @brief 
-     * 
+     *
+     * @ingroup Arduino_string
+     *  
      * @param rhs 
      * @return my::String& 
      */
@@ -119,7 +130,9 @@ class String : public std::string {
 
     /**
      * @brief 
-     * 
+     *
+     * @ingroup Arduino_string
+     *  
      * @param rhs 
      * @return my::String 
      */
@@ -179,7 +192,9 @@ class String : public std::string {
 
     /**
      * @brief Set the data object
-     * 
+     *
+     * @ingroup Arduino_string
+     *  
      * @param str 
      */
     void set_data(const std::string &str);

@@ -48,19 +48,22 @@ void my::String::operator+=(const int &rhs)
 }
 */
 
-void my::String::operator+=(const unsigned int &rhs)
+my::String & my::String::operator+=(const unsigned int &rhs)
 {
-    this->data += std::to_string(rhs);
+    this->set_data(this->get_data() + std::to_string(rhs));
+    return *this;
 }
 
-void my::String::operator+=(const std::string &rhs)
+my::String & my::String::operator+=(const std::string &rhs)
 {
-    this->data = this->data + rhs;
+    this->set_data(this->get_data() + rhs);
+    return *this;
 }
 
-void my::String::operator+=(const my::String &rhs)
+my::String & my::String::operator+=(const my::String &rhs)
 {
-    this->data = this->data + rhs.get_data();
+    this->set_data(this->get_data() + rhs.get_data());
+    return *this;
 }
 
 my::String &my::String::operator+=(const int &rhs)
