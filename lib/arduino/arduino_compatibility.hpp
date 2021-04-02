@@ -33,17 +33,17 @@
  *  @sa @link Arduino_software The first group Arduino_software@endlink
  */
 
-
-
 #ifndef ARDUINO_COMPATIBILITY_HPP
 #define ARDUINO_COMPATIBILITY_HPP
 
 #include <chrono>
 #include <iostream>
+//#include "arduino/lib/arduino_string.hpp"
 #include "arduino_io.hpp"
 #include "arduino_is.hpp"
 #include "arduino_math.hpp"
 #include "arduino_serial.hpp"
+#include "arduino_string.hpp"
 #include "arduino_time.hpp"
 
 extern unsigned int __bss_end;
@@ -52,8 +52,10 @@ extern unsigned int __heap_start;
 #define WDTO_15MS 1
 
 using byte = char;
-//#define digitalWrite(pin, value) digitalWrite_standard(pin, value)
-static int pin1 = 0;
+
+using String = my::String;
+
+///using String = std::string;
 
 /**
  * @brief Init Serial

@@ -25,9 +25,18 @@
 
 //#include "arduino_compatibility.hpp"
 
+/**
+ * @brief The main function who start arduino program
+ * 
+ * @return int 
+ */
 int main()
 {
+    //int argc, char *argv[]
+
+    /// call setup in *.ino
     setup();
+    /// call loop
     while (1) {
         loop();
     }

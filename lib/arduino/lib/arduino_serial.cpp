@@ -10,6 +10,7 @@
  */
 
 #include "arduino_serial.hpp"
+#include "arduino/lib/arduino_string.hpp"
 
 void Serial_arduino::println()
 {
@@ -19,6 +20,11 @@ void Serial_arduino::println()
 void Serial_arduino::println(const std::string &str)
 {
     std::cout << str << "\n";
+}
+
+void Serial_arduino::println(my::String &str)
+{
+    std::cout << str.get_data() << "\n";
 }
 
 void Serial_arduino::println(const int i)
@@ -34,6 +40,11 @@ void Serial_arduino::print(const int i)
 void Serial_arduino::print(const std::string &str)
 {
     std::cout << str;
+}
+
+void Serial_arduino::print(my::String &str)
+{
+    std::cout << str.get_data();
 }
 
 void Serial_arduino::println(const std::string &str, const CODAGE codage)

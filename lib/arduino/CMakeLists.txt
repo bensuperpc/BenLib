@@ -49,6 +49,7 @@ set(SRCS
     lib/arduino_io.cpp
     lib/arduino_math.cpp
     lib/arduino_is.cpp
+    lib/arduino_string.cpp
 	)
 	
 set(HEADERS
@@ -63,6 +64,7 @@ set(HEADERS
     lib/arduino_io.hpp
     lib/arduino_math.hpp
     lib/arduino_is.hpp
+    lib/arduino_string.hpp
     )
 
 
@@ -167,6 +169,22 @@ set_target_properties(CharacterAnalysis PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTOR
 target_compile_options(CharacterAnalysis PRIVATE -include "arduino_compatibility.hpp")
 target_compile_definitions(CharacterAnalysis PRIVATE FILE_ARG=tests/Strings/CharacterAnalysis.ino)
 target_link_libraries(CharacterAnalysis my_arduino)
+
+# ======== StringAdditionOperator ========
+set_source_files_properties(tests/Strings/StringAdditionOperator.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(StringAdditionOperator tests/main_arduino.cpp tests/Strings/StringAdditionOperator.ino)
+set_target_properties(StringAdditionOperator PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(StringAdditionOperator PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(StringAdditionOperator PRIVATE FILE_ARG=tests/Strings/StringAdditionOperator.ino)
+target_link_libraries(StringAdditionOperator my_arduino)
+
+# ======== StringAppendOperator ========
+set_source_files_properties(tests/Strings/StringAppendOperator.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(StringAppendOperator tests/main_arduino.cpp tests/Strings/StringAppendOperator.ino)
+set_target_properties(StringAppendOperator PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(StringAppendOperator PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(StringAppendOperator PRIVATE FILE_ARG=tests/Strings/StringAppendOperator.ino)
+target_link_libraries(StringAppendOperator my_arduino)
 
 
 #   ================================================

@@ -17,6 +17,10 @@
 #include <string>
 #include <type_traits>
 
+#include <typeinfo>
+
+#include "arduino_string.hpp"
+
 /**
  * @brief enum : For println codage
  * @enum enum
@@ -54,7 +58,16 @@ class Serial_arduino {
      * 
      * @param str 
      */
+    void println(my::String &str);
+
+    /**
+     * @brief 
+     * 
+     * @param str 
+     */
     void print(const std::string &str);
+
+    void print(my::String &str);
 
     /**
      * @brief 
