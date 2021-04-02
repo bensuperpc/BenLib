@@ -33,7 +33,7 @@ class Pool {
 
     // joins all threads
     ~Pool();
- /**
+    /**
  * @brief 
  * 
  * @tparam F 

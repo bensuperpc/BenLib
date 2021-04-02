@@ -35,7 +35,7 @@ namespace string
  * @param delimiter 
  * @return std::vector<std::string> 
  */
-std::vector<std::string> split(const std::string &s, const std::string & delimiter);
+std::vector<std::string> split(const std::string &s, const std::string &delimiter);
 
 /**
  * @brief 
@@ -44,7 +44,7 @@ std::vector<std::string> split(const std::string &s, const std::string & delimit
  * @param s 
  * @param delimiter 
  */
-void split(std::vector<std::string> & res, const std::string & s, const std::string & delimiter);
+void split(std::vector<std::string> &res, const std::string &s, const std::string &delimiter);
 
 /**
  * @brief 
@@ -62,7 +62,7 @@ std::vector<std::string> split(const std::string &s, const char delim);
  * @param delim 
  * @return std::vector<std::string> 
  */
-void split(std::vector<std::string> &, const std::string & s, const char  );
+void split(std::vector<std::string> &, const std::string &s, const char);
 
 /**
  * @brief 
@@ -71,7 +71,7 @@ void split(std::vector<std::string> &, const std::string & s, const char  );
  * @param filename 
  * @param delimiter 
  */
-void csv_parse(std::vector<std::vector<std::string>> & file, const std::string & filename, const char delimiter);
+void csv_parse(std::vector<std::vector<std::string>> &file, const std::string &filename, const char delimiter);
 } // namespace string
 } // namespace my
 #endif

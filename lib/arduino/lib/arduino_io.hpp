@@ -15,6 +15,8 @@
 #define A0 0
 #define A1 1
 #define A3 3
+#define A4 4
+#define A5 5
 
 #define HIGH 1
 #define LOW 0

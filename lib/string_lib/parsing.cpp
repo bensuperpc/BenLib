@@ -51,7 +51,6 @@ std::vector<std::string> my::string::split(const std::string &s, const char deli
     return result;
 }
 
-
 void my::string::split(std::vector<std::string> &result, const std::string &s, const char delim)
 {
     std::stringstream ss(s);

@@ -29,6 +29,10 @@
 #include <string>
 namespace my
 {
+/**
+ * @brief texture
+ * @namespace texture
+ */
 namespace texture
 {
 /**

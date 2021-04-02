@@ -20,7 +20,13 @@
 
 namespace title
 {
-void load_titlemap(std::vector<std::vector<size_t>> &, const std::string &);
+/**
+ * @brief 
+ * 
+ * @param title_map 
+ * @param file 
+ */
+void load_titlemap(std::vector<std::vector<size_t>> &title_map, const std::string &file);
 
 } // namespace title
 

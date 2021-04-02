@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 #include <string>
 #include "arduino_string.hpp"
@@ -194,6 +195,92 @@ std::ostream &my::String::operator>>(std::ostream &os)
 {
     os << this->get_data();
     return os;
+}
+
+bool my::String::equals(const my::String &rhs)
+{
+    if (this->data.length() == rhs.get_data().length()) {
+        if (this->data == rhs.get_data()) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+bool my::String::equalsIgnoreCase(const my::String &rhs)
+{
+    return this->data.size() == rhs.get_data().size()
+           && std::equal(this->data.begin(), this->data.end(), rhs.get_data().begin(), [](char cA, char cB) { return toupper(cA) == toupper(cB); });
+}
+
+int my::String::toInt()
+{
+    return std::stoi(this->data);
+}
+
+int my::String::compareTo(const my::String &rhs)
+{
+    return this->data.compare(rhs.get_data());
+}
+
+bool my::String::operator==(const my::String &rhs)
+{
+    return this->equals(rhs);
+}
+
+bool my::String::operator==(const char *rhs)
+{
+    if (this->data == rhs) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool my::String::operator!=(const my::String &rhs)
+{
+    return !this->equals(rhs);
+}
+
+bool my::String::operator>=(const my::String &rhs)
+{
+    if (compareTo(rhs) >= 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool my::String::operator<=(const my::String &rhs)
+{
+    if (compareTo(rhs) <= 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+#warning WIP
+bool my::String::operator>=(const char *rhs)
+{
+    if (this->data.size() >= std::strlen(rhs)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+#warning WIP
+bool my::String::operator<=(const char *rhs)
+{
+    if (this->data.size() <= std::strlen(rhs)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //#define digitalWrite(pin, value) digitalWrite_standard(pin, value)

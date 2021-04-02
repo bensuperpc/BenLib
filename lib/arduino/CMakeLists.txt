@@ -203,6 +203,13 @@ target_compile_options(StringCharacters PRIVATE -include "arduino_compatibility.
 target_compile_definitions(StringCharacters PRIVATE FILE_ARG=tests/Strings/StringCharacters.ino)
 target_link_libraries(StringCharacters my_arduino)
 
+# ======== StringComparisonOperators ========
+set_source_files_properties(tests/Strings/StringComparisonOperators.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(StringComparisonOperators tests/main_arduino.cpp tests/Strings/StringComparisonOperators.ino)
+set_target_properties(StringComparisonOperators PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(StringComparisonOperators PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(StringComparisonOperators PRIVATE FILE_ARG=tests/Strings/StringComparisonOperators.ino)
+target_link_libraries(StringComparisonOperators my_arduino)
 
 #   ================================================
 #   ================    INSTALL    =================

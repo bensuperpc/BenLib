@@ -30,7 +30,7 @@ class my_chrono {
      * 
      */
     void reset();
-    
+
     /**
      * @brief 
      * 

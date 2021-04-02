@@ -15,10 +15,28 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+/**
+ * @brief ssfml namespace
+ * @namespace ssfml
+ */
 namespace ssfml
 {
-sf::Image take_screenshot(const sf::RenderWindow *, const std::string &);
-sf::Image take_screenshot(const sf::RenderWindow *);
+/**
+ * @brief 
+ * 
+ * @param window 
+ * @param filename 
+ * @return sf::Image 
+ */
+sf::Image take_screenshot(const sf::RenderWindow *window, const std::string &filename);
+
+/**
+ * @brief 
+ * 
+ * @param window 
+ * @return sf::Image 
+ */
+sf::Image take_screenshot(const sf::RenderWindow *window);
 } // namespace ssfml
 
 #endif

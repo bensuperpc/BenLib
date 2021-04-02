@@ -359,6 +359,103 @@ class String : public std::string {
      */
     std::ostream &operator>>(std::ostream &os);
 
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool equals(const my::String &rhs);
+    /// https://stackoverflow.com/a/12568475/10152334
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool equalsIgnoreCase(const my::String &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return int 
+     */
+    int compareTo(const my::String &rhs);
+
+    /**
+     * @brief Convert valide string to int
+     * 
+     * @return int 
+     */
+    int toInt();
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool operator==(const my::String &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool operator==(const char *rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool operator>=(const my::String &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool operator<=(const my::String &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool operator!=(const my::String &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool operator>=(const char *rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
+    bool operator<=(const char *rhs);
+
   private:
     /**
      * @brief 
