@@ -96,7 +96,7 @@ class String : public std::string {
      * @param rhs 
      * @return my::String& 
      */
-    my::String & operator+=(const unsigned int &rhs);
+    my::String &operator+=(const unsigned int &rhs);
 
     /**
      * @brief 
@@ -106,7 +106,7 @@ class String : public std::string {
      * @param rhs 
      * @return my::String& 
      */
-    my::String & operator+=(const std::string &rhs);
+    my::String &operator+=(const std::string &rhs);
 
     /**
      * @brief 
@@ -116,7 +116,7 @@ class String : public std::string {
      * @param rhs 
      * @return my::String& 
      */
-    my::String & operator+=(const my::String &rhs);
+    my::String &operator+=(const my::String &rhs);
 
     /**
      * @brief 
