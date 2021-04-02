@@ -325,17 +325,41 @@ class String : public std::string {
 
     /**
      * @brief 
-     * 
+     *
+     * @ingroup Arduino_string
+     *   
      */
     void toUpperCase();
 
     /**
      * @brief 
-     * 
+     *
+     * @ingroup Arduino_string
+     *   
      */
     void toLowerCase();
 
-  private:
+    /**
+     * @brief 
+     *
+     * @ingroup Arduino_string
+     *   
+     * @param os 
+     * @return std::ostream& 
+     */
+    std::ostream &operator<<(std::ostream &os);
+
+    /**
+     * @brief 
+     *
+     * @ingroup Arduino_string
+     *   
+     * @param os 
+     * @return std::ostream& 
+     */
+    std::ostream &operator>>(std::ostream &os);
+
+    private:
     /**
      * @brief 
      *
@@ -343,9 +367,6 @@ class String : public std::string {
      * 
      */
     std::string data;
-
-    std::ostream &operator<<(std::ostream &os);
-    std::ostream &operator>>(std::ostream &os);
 };
 } // namespace my
 #endif

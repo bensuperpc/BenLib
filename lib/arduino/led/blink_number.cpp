@@ -1,10 +1,9 @@
 /**
- * @file blink_number.c
+ * @file blink_number.cpp
  * @author Bensuperpc (bensuperpc@gmail.com)
- * @brief Servolent 2016 and Jeu de réflexe 2017
- *        BAC project 2016-2017
+ * @brief 
  * @version 1.0.0
- * @date 2021-04-01
+ * @date 2021-04-02
  * 
  * MIT License
  * 

@@ -1,5 +1,5 @@
 /**
- * @file reboot_software.h
+ * @file reboot_software.hpp
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief Servolent 2016 and Jeu de réflexe 2017
  *        BAC project 2016-2017

@@ -9,6 +9,28 @@
  * 
  */
 
+/** @defgroup Math Mathematic
+ *  @brief The main Math group who contain all software to do math :)
+ */
+/** @defgroup Math_prime Math prime
+ *  @ingroup Math
+ *  @brief All you need for calc and test prime numbers
+ *  @sa @link Math The first group Math@endlink
+ */
+/** @defgroup Math_power Math power
+ *  @ingroup Math
+ *  @brief Math power calculation
+ *  @sa @link Math The first group Math@endlink
+ */
+/** @defgroup Math_count_digits Math count digits
+ *  @ingroup Math
+ *  @brief count digits in variable
+ *  @sa @link Math The first group Math@endlink
+ */
+
+
+
+
 #ifndef CONSTANT_HPP_
 #define CONSTANT_HPP_
 //#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
