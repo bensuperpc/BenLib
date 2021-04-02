@@ -40,6 +40,9 @@ You need to install SFML, OpenCV, BoostLib, OpenGL lib, Qt 5.12 or newer, GCC an
 ```sh
 git clone https://github.com/Bensuperpc/BenLib.git
 ```
+```sh
+git submodule update --init --recursive
+```
 
 ```sh
 cd BenLib
@@ -47,7 +50,7 @@ cd BenLib
 
 For production release:
 ```sh
-./make.sh -DCMAKE_BUILD_TYPE=Release
+./make.sh -DCMAKE_BUILD_TYPE=Release -DBUILD_DOCS_DOXYGEN=ON
 ```
 
 For minisize release:
@@ -57,12 +60,12 @@ For minisize release:
 
 For debug release:
 ```sh
-./make.sh -DCMAKE_BUILD_TYPE=Release
+./make.sh -DCMAKE_BUILD_TYPE=Debug -DBUILD_DOCS_DOXYGEN=OFF
 ```
 
 For converage release:
 ```sh
-./make.sh -DCMAKE_BUILD_TYPE=Coverage
+./make.sh -DCMAKE_BUILD_TYPE=Coverage -DBUILD_DOCS_DOXYGEN=ON
 ```
 ```sh
 ./coverage.sh

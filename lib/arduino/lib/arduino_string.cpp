@@ -191,6 +191,7 @@ std::ostream &my::String::operator<<(std::ostream &os)
     return os;
 }
 
+#warning To do
 std::ostream &my::String::operator>>(std::ostream &os)
 {
     os << this->get_data();
@@ -233,7 +234,8 @@ bool my::String::operator==(const my::String &rhs)
 
 bool my::String::operator==(const char *rhs)
 {
-    if (this->data == rhs) {
+    if(this->data == rhs)
+    {
         return true;
     } else {
         return false;
@@ -247,7 +249,7 @@ bool my::String::operator!=(const my::String &rhs)
 
 bool my::String::operator>=(const my::String &rhs)
 {
-    if (compareTo(rhs) >= 0) {
+    if(compareTo(rhs) >= 0) {
         return true;
     } else {
         return false;
@@ -256,14 +258,14 @@ bool my::String::operator>=(const my::String &rhs)
 
 bool my::String::operator<=(const my::String &rhs)
 {
-    if (compareTo(rhs) <= 0) {
+    if(compareTo(rhs) <= 0) {
         return true;
     } else {
         return false;
     }
 }
 
-#warning WIP
+#warning Not
 bool my::String::operator>=(const char *rhs)
 {
     if (this->data.size() >= std::strlen(rhs)) {
@@ -273,7 +275,6 @@ bool my::String::operator>=(const char *rhs)
     }
 }
 
-#warning WIP
 bool my::String::operator<=(const char *rhs)
 {
     if (this->data.size() <= std::strlen(rhs)) {

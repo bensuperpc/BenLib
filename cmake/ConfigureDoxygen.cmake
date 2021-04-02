@@ -108,7 +108,11 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_BINARY_DIR}/README.md")
 
     set(DOXYGEN_FILE_PATTERNS "*.c;*.cc;*.cxx;*.cpp;*.c++;*.java;*.ii;*.ixx*.ipp;*.i++;*.inl;*.idl;*.ddl;*.odl;*.h;*.hh;*.hxx;*.hpp;*.tpp;*.cu;*.cuh;*.cl;*.h++;*.py;*.ino")
-
+    #https://jothepro.github.io/doxygen-awesome-css/index.html#autotoc_md10
+    
+    # Configure theme
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/theme/doxygen-awesome-css/doxygen-awesome.css" "${CMAKE_BINARY_DIR}/theme/doxygen-awesome-css/doxygen-awesome.css" COPYONLY)
+    set(DOXYGEN_HTML_EXTRA_STYLESHEET "${CMAKE_CURRENT_BINARY_DIR}/theme/doxygen-awesome-css/doxygen-awesome.css")
 
     # Set logo Image path
     #set(DOXYGEN_PROJECT_LOGO "${CMAKE_CURRENT_BINARY_DIR}/RcCpRMiQ_400x400.jpg")

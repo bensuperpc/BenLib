@@ -32,7 +32,7 @@
  *  @brief is software
  *  @sa @link Arduino_software The first group Arduino_software@endlink
  */
-/** @defgroup Arduino_string Arduino is software
+/** @defgroup Arduino_string Arduino string software
  *  @ingroup Arduino_software
  *  @brief string software (like std::string)
  *  @sa @link Arduino_software The first group Arduino_software@endlink
