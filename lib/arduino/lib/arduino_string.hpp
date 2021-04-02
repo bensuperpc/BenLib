@@ -12,7 +12,9 @@
 #ifndef ARDUINO_STRING_HPP
 #define ARDUINO_STRING_HPP
 
+#include <algorithm>
 #include <array>
+#include <cctype>
 #include <iostream>
 #include <string>
 
@@ -90,6 +92,14 @@ class String : public std::string {
 
     /**
      * @brief 
+     * 
+     * @param rhs 
+     * @return my::String& 
+     */
+    my::String &operator=(const char *rhs);
+
+    /**
+     * @brief 
      *
      * @ingroup Arduino_string
      * 
@@ -117,6 +127,16 @@ class String : public std::string {
      * @return my::String& 
      */
     my::String &operator+=(const my::String &rhs);
+
+    /**
+     * @brief 
+     *
+     * @ingroup Arduino_string
+     *   
+     * @param rhs 
+     * @return my::String& 
+     */
+    my::String &operator+=(const char *rhs);
 
     /**
      * @brief 
@@ -176,8 +196,19 @@ class String : public std::string {
     String(const std::string &str);
 
     /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param str 
+     */
+    String(const char *str);
+
+    /**
      * @brief Destroy the String object
-     * 
+     *
+     * @ingroup Arduino_string
+     *  
      */
     ~String();
 
@@ -198,6 +229,18 @@ class String : public std::string {
      * @param str 
      */
     void set_data(const std::string &str);
+
+    /**
+     * @brief 
+     * 
+     */
+    void toUpperCase();
+
+    /**
+     * @brief 
+     * 
+     */
+    void toLowerCase();
 
   private:
     /**

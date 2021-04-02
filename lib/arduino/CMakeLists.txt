@@ -186,6 +186,14 @@ target_compile_options(StringAppendOperator PRIVATE -include "arduino_compatibil
 target_compile_definitions(StringAppendOperator PRIVATE FILE_ARG=tests/Strings/StringAppendOperator.ino)
 target_link_libraries(StringAppendOperator my_arduino)
 
+# ======== StringCaseChanges ========
+set_source_files_properties(tests/Strings/StringCaseChanges.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(StringCaseChanges tests/main_arduino.cpp tests/Strings/StringCaseChanges.ino)
+set_target_properties(StringCaseChanges PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(StringCaseChanges PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(StringCaseChanges PRIVATE FILE_ARG=tests/Strings/StringCaseChanges.ino)
+target_link_libraries(StringCaseChanges my_arduino)
+
 
 #   ================================================
 #   ================    INSTALL    =================

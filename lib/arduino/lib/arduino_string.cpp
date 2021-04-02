@@ -15,6 +15,11 @@ my::String::String(const std::string &str)
     this->data = str;
 }
 
+my::String::String(const char *str)
+{
+    this->data = std::string(str);
+}
+
 my::String my::String::operator+(const int &rhs)
 {
     my::String lhs(data);
@@ -41,12 +46,11 @@ my::String &my::String::operator=(const std::string &rhs)
     return *this;
 }
 
-/*
-void my::String::operator+=(const int &rhs)
+my::String &my::String::operator=(const char *rhs)
 {
-    this->data += std::to_string(rhs);
+    this->set_data(std::string(rhs));
+    return *this;
 }
-*/
 
 my::String &my::String::operator+=(const unsigned int &rhs)
 {
@@ -63,6 +67,12 @@ my::String &my::String::operator+=(const std::string &rhs)
 my::String &my::String::operator+=(const my::String &rhs)
 {
     this->set_data(this->get_data() + rhs.get_data());
+    return *this;
+}
+
+my::String &my::String::operator+=(const char *rhs)
+{
+    this->set_data(this->get_data() + std::string(rhs));
     return *this;
 }
 
@@ -104,26 +114,18 @@ void my::String::set_data(const std::string &str)
     this->data = str;
 }
 
-/*
-std::ostream& operator<<(std::ostream& os, const myclass& obj)
+// https://stackoverflow.com/a/313990/10152334
+void my::String::toLowerCase()
 {
-      os << obj.somevalue;
-      return os;
+    std::transform(this->data.begin(), this->data.end(), this->data.begin(), [](unsigned char c) { return std::tolower(c); });
 }
-*/
 
-/*
-std::ostream &my::String::operator<<(std::ostream &os) 
-{ 
-    return os << this->data;
+// https://stackoverflow.com/a/313990/10152334
+void my::String::toUpperCase()
+{
+    std::transform(this->data.begin(), this->data.end(), this->data.begin(), [](unsigned char c) { return std::toupper(c); });
 }
-*/
-/*
-my::String::operator std::string() const 
-{ 
-    return this->data;
-}
-*/
+
 //#define digitalWrite(pin, value) digitalWrite_standard(pin, value)
 
 /*
