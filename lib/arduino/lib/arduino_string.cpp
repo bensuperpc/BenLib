@@ -35,32 +35,23 @@ my::String my::String::operator+(const char &rhs)
     return lhs;
 }
 
-my::String my::String::operator=(const std::string &rhs)
+my::String &my::String::operator=(const std::string &rhs)
 {
-    return my::String(rhs);
+    this->set_data(rhs);
+    return *this;
 }
 
 /*
-my::String my::String::operator=(const my::String &rhs)
-{
-    return my::String(rhs.get_data());
-}
-
-my::String my::String::operator=(const int &rhs)
-{
-    return my::String(to_string(rhs));
-}*/
-
 void my::String::operator+=(const int &rhs)
 {
     this->data += std::to_string(rhs);
 }
+*/
 
 void my::String::operator+=(const unsigned int &rhs)
 {
     this->data += std::to_string(rhs);
 }
-
 
 void my::String::operator+=(const std::string &rhs)
 {
@@ -72,9 +63,10 @@ void my::String::operator+=(const my::String &rhs)
     this->data = this->data + rhs.get_data();
 }
 
-my::String my::String::operator+=(const int &rhs) const
+my::String &my::String::operator+=(const int &rhs)
 {
-    return my::String(this->get_data() + std::to_string(rhs));
+    this->set_data(this->get_data() + std::to_string(rhs));
+    return *this;
 }
 
 my::String my::String::to_string(const int &rhs)
@@ -102,6 +94,11 @@ void my::String::concat(const unsigned int &i)
 std::string my::String::get_data() const
 {
     return this->data;
+}
+
+void my::String::set_data(const std::string &str)
+{
+    this->data = str;
 }
 
 /*

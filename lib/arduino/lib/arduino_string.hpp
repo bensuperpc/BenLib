@@ -13,8 +13,8 @@
 #define ARDUINO_STRING_HPP
 
 #include <array>
-#include <string>
 #include <iostream>
+#include <string>
 
 /**
  * @brief 
@@ -80,23 +80,11 @@ class String : public std::string {
 
     /**
      * @brief 
-     *
-     * @ingroup Arduino_string
      * 
      * @param rhs 
-     * @return String 
+     * @return String& 
      */
-    String operator=(const std::string &rhs);
-
-
-    /**
-     * @brief 
-     *
-     * @ingroup Arduino_string
-     * 
-     * @param rhs 
-     */
-    void operator+=(const int &rhs);
+    String &operator=(const std::string &rhs);
 
     /**
      * @brief 
@@ -125,9 +113,9 @@ class String : public std::string {
      * @brief 
      * 
      * @param rhs 
-     * @return my::String 
+     * @return my::String& 
      */
-    my::String operator+=(const int &rhs) const;
+    my::String &operator+=(const int &rhs);
 
     /**
      * @brief 
@@ -188,6 +176,13 @@ class String : public std::string {
      * @return std::string 
      */
     std::string get_data() const;
+
+    /**
+     * @brief Set the data object
+     * 
+     * @param str 
+     */
+    void set_data(const std::string &str);
 
   private:
     /**
