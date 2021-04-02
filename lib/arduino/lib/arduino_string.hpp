@@ -16,7 +16,9 @@
 #include <array>
 #include <cctype>
 #include <iostream>
+#include <sstream>
 #include <string>
+#include "arduino_type.hpp"
 
 /**
  * @brief 
@@ -32,6 +34,115 @@ namespace my
  */
 class String : public std::string {
   public:
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     * 
+     */
+    String();
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     * 
+     * @param str 
+     */
+    String(const my::String &str);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     * 
+     * @param str 
+     */
+    String(const std::string &str);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param str 
+     */
+    String(const char *str);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param str 
+     */
+    String(const char str);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param str 
+     */
+    String(const char str, CODAGE);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param nbr 
+     * @param i 
+     */
+    String(const float nbr, const int i);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param i 
+     */
+    String(const int i);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param i 
+     */
+    String(const int i, CODAGE);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     *  
+     * @param i 
+     */
+    String(const unsigned int i);
+
+    /**
+     * @brief Construct a new String object
+     *
+     * @ingroup Arduino_string
+     * 
+     * @param i 
+     */
+    String(const unsigned int i, CODAGE);
+
+    /**
+     * @brief Destroy the String object
+     *
+     * @ingroup Arduino_string
+     * 
+     * @ingroup Arduino_string
+     *  
+     */
+    ~String();
+
     /**
      * @brief 
      *
@@ -58,7 +169,7 @@ class String : public std::string {
      * @param rhs 
      * @return String 
      */
-    String operator+(const int &rhs);
+    String &operator+(const int &rhs);
 
     /**
      * @brief 
@@ -68,7 +179,7 @@ class String : public std::string {
      * @param rhs 
      * @return String 
      */
-    String operator+(const unsigned int &rhs);
+    String &operator+(const unsigned int &rhs);
 
     /**
      * @brief 
@@ -78,7 +189,7 @@ class String : public std::string {
      * @param rhs 
      * @return String 
      */
-    String operator+(const char &rhs);
+    String &operator+(const char &rhs);
 
     /**
      * @brief 
@@ -177,40 +288,6 @@ class String : public std::string {
      * @return String 
      */
     String to_string(const unsigned int &rhs);
-
-    /**
-     * @brief Construct a new String object
-     *
-     * @ingroup Arduino_string
-     * 
-     */
-    String();
-
-    /**
-     * @brief Construct a new String object
-     *
-     * @ingroup Arduino_string
-     * 
-     * @param str 
-     */
-    String(const std::string &str);
-
-    /**
-     * @brief Construct a new String object
-     *
-     * @ingroup Arduino_string
-     *  
-     * @param str 
-     */
-    String(const char *str);
-
-    /**
-     * @brief Destroy the String object
-     *
-     * @ingroup Arduino_string
-     *  
-     */
-    ~String();
 
     /**
      * @brief Get the data object

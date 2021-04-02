@@ -18,19 +18,7 @@
 #include <type_traits>
 #include <typeinfo>
 #include "arduino_string.hpp"
-
-/**
- * @brief enum : For println codage
- * @enum enum
- */
-enum CODAGE
-{
-    BYTE,
-    DEC,
-    HEX,
-    OCT,
-    BIN
-};
+#include "arduino_type.hpp"
 
 /**
  * @class Serial_arduino

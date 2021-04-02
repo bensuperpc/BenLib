@@ -11,6 +11,11 @@
 
 #include "arduino_time.hpp"
 
+void start_program()
+{
+    time_start_since_launch = std::chrono::steady_clock::now();
+}
+
 unsigned int millis()
 {
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();

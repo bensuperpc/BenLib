@@ -33,7 +33,7 @@
 int main()
 {
     //int argc, char *argv[]
-
+    start_program();
     /// call setup in *.ino
     setup();
     /// call loop

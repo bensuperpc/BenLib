@@ -13,9 +13,18 @@
 #define ARDUINO_TIME_HPP
 
 #include <chrono>
+#include <iostream>
 #include <thread>
 
-std::chrono::steady_clock::time_point time_start_since_launch = std::chrono::steady_clock::now();
+std::chrono::steady_clock::time_point time_start_since_launch;
+
+/**
+ * @brief 
+ *
+ * @ingroup Arduino_time
+ * 
+ */
+void start_program();
 
 /**
  * @brief 

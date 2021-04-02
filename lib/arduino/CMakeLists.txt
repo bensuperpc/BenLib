@@ -65,6 +65,7 @@ set(HEADERS
     lib/arduino_math.hpp
     lib/arduino_is.hpp
     lib/arduino_string.hpp
+    lib/arduino_type.hpp
     )
 
 
@@ -193,6 +194,14 @@ set_target_properties(StringCaseChanges PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTOR
 target_compile_options(StringCaseChanges PRIVATE -include "arduino_compatibility.hpp")
 target_compile_definitions(StringCaseChanges PRIVATE FILE_ARG=tests/Strings/StringCaseChanges.ino)
 target_link_libraries(StringCaseChanges my_arduino)
+
+# ======== StringCharacters ========
+set_source_files_properties(tests/Strings/StringCharacters.ino PROPERTIES LANGUAGE CXX HEADER_FILE_ONLY 1)
+add_executable(StringCharacters tests/main_arduino.cpp tests/Strings/StringCharacters.ino)
+set_target_properties(StringCharacters PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+target_compile_options(StringCharacters PRIVATE -include "arduino_compatibility.hpp")
+target_compile_definitions(StringCharacters PRIVATE FILE_ARG=tests/Strings/StringCharacters.ino)
+target_link_libraries(StringCharacters my_arduino)
 
 
 #   ================================================

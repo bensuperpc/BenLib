@@ -12,32 +12,72 @@ my::String::~String()
 
 my::String::String(const std::string &str)
 {
-    this->data = str;
+    this->data += str;
+}
+
+my::String::String(const my::String &str)
+{
+    this->data += str.get_data();
 }
 
 my::String::String(const char *str)
 {
-    this->data = std::string(str);
+    this->data += std::string(str);
 }
 
-my::String my::String::operator+(const int &rhs)
+my::String::String(const char str)
 {
-    my::String lhs(data);
-    lhs += this->to_string(rhs);
-    return lhs;
+    this->data = std::string(1, str);
 }
 
-my::String my::String::operator+(const unsigned int &rhs)
+my::String::String(const char str, CODAGE)
 {
-    my::String lhs(this->data);
-    lhs += this->to_string(rhs);
-    return lhs;
+    this->data = std::string(1, str);
 }
 
-my::String my::String::operator+(const char &rhs)
+my::String::String(const float nbr, const int i)
 {
-    my::String lhs(this->data + rhs);
-    return lhs;
+    std::ostringstream ss;
+    ss << nbr;
+    this->data = ss.str();
+}
+
+my::String::String(const int i)
+{
+    this->data = std::to_string(i);
+}
+
+my::String::String(const int i, CODAGE)
+{
+    this->data = std::to_string(i);
+}
+
+my::String::String(const unsigned int i)
+{
+    this->data = std::to_string(i);
+}
+
+my::String::String(const unsigned int i, CODAGE)
+{
+    this->data = std::to_string(i);
+}
+
+my::String &my::String::operator+(const int &rhs)
+{
+    this->data += this->to_string(rhs);
+    return *this;
+}
+
+my::String &my::String::operator+(const unsigned int &rhs)
+{
+    this->data += this->to_string(rhs);
+    return *this;
+}
+
+my::String &my::String::operator+(const char &rhs)
+{
+    this->data += rhs;
+    return *this;
 }
 
 my::String &my::String::operator=(const std::string &rhs)
