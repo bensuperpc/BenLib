@@ -84,7 +84,6 @@ std::ostream& operator<<(std::ostream& os, const myclass& obj)
 }
 */
 
-
 /*
 std::ostream &my::String::operator<<(std::ostream &os) 
 { 
@@ -98,7 +97,6 @@ my::String::operator std::string() const
 }
 */
 //#define digitalWrite(pin, value) digitalWrite_standard(pin, value)
-
 
 /*
 template<typename _CharT, typename _Traits, typename _Alloc> void std::__cxx11::basic_string<_CharT, _Traits, _Alloc>::concat(int v)

@@ -16,9 +16,7 @@
 #include <iostream>
 #include <string>
 #include <type_traits>
-
 #include <typeinfo>
-
 #include "arduino_string.hpp"
 
 /**
