@@ -14,6 +14,8 @@
 
 #include <array>
 #include <string>
+#include <iostream>
+
 /**
  * @brief 
  * @namespace my
@@ -86,6 +88,7 @@ class String : public std::string {
      */
     String operator=(const std::string &rhs);
 
+
     /**
      * @brief 
      *
@@ -97,12 +100,42 @@ class String : public std::string {
 
     /**
      * @brief 
+     * 
+     * @param rhs 
+     */
+    void operator+=(const unsigned int &rhs);
+
+    /**
+     * @brief 
      *
      * @ingroup Arduino_string
      * 
      * @param rhs 
      */
     void operator+=(const std::string &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     */
+    void operator+=(const my::String &rhs);
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return my::String 
+     */
+    my::String operator+=(const int &rhs) const;
+
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return my::String 
+     */
+    my::String operator+=(const unsigned int &rhs) const;
 
     /**
      * @brief 
@@ -154,7 +187,7 @@ class String : public std::string {
      * 
      * @return std::string 
      */
-    std::string get_data();
+    std::string get_data() const;
 
   private:
     /**

@@ -80,6 +80,25 @@ template <typename T> void Serial_arduino::println(const T &value, const CODAGE 
     }
 }
 
+void Serial_arduino::println(const my::String &value, const CODAGE codage)
+{
+    if (codage == HEX) {
+        std::cout << std::hex << value << "\n";
+    } else if (codage == DEC) {
+        std::cout << std::dec << value << "\n";
+    } else if (codage == OCT) {
+        std::cout << std::oct << value << "\n";
+    } else if (codage == BIN) {
+        for (std::size_t i = 0; i < value.size(); ++i) {
+            std::cout << std::bitset<8>((uint64_t)value.get_data().c_str()[i]);
+        }
+        std::cout << "\n";
+    } else if (codage == BYTE) {
+        //std::cout << std::byte << str << "\n";
+    } else {
+    }
+}
+
 void Serial_arduino::print(const std::string &str, const CODAGE codage)
 {
     print<std::string>(str, codage);
@@ -105,6 +124,24 @@ template <typename T> void Serial_arduino::print(const T &value, const CODAGE co
             for (std::size_t i = 0; i < value.size(); ++i) {
                 std::cout << std::bitset<8>((uint64_t)value.c_str()[i]);
             }
+        }
+    } else if (codage == BYTE) {
+        //std::cout << std::byte << str << "\n";
+    } else {
+    }
+}
+
+void Serial_arduino::print(const my::String &value, const CODAGE codage)
+{
+    if (codage == HEX) {
+        std::cout << std::hex << value;
+    } else if (codage == DEC) {
+        std::cout << std::dec << value;
+    } else if (codage == OCT) {
+        std::cout << std::oct << value;
+    } else if (codage == BIN) {
+        for (std::size_t i = 0; i < value.size(); ++i) {
+            std::cout << std::bitset<8>((uint64_t)value.get_data().c_str()[i]);
         }
     } else if (codage == BYTE) {
         //std::cout << std::byte << str << "\n";

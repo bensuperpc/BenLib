@@ -65,6 +65,11 @@ class Serial_arduino {
      */
     void print(const std::string &str);
 
+    /**
+     * @brief 
+     * 
+     * @param str 
+     */
     void print(my::String &str);
 
     /**
@@ -92,6 +97,14 @@ class Serial_arduino {
     /**
      * @brief 
      * 
+     * @param str 
+     * @param codage 
+     */
+    void println(const my::String &str, const CODAGE codage);
+
+    /**
+     * @brief 
+     * 
      * @tparam T 
      * @param value 
      * @param codage 
@@ -106,6 +119,14 @@ class Serial_arduino {
      * @param codage 
      */
     template <typename T> void print(const T &value, const CODAGE codage);
+
+    /**
+     * @brief 
+     * 
+     * @param value 
+     * @param codage 
+     */
+    void print(const my::String &value, const CODAGE codage);
 
     /**
      * @brief 
