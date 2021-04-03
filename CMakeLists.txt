@@ -267,7 +267,8 @@ endif()
 add_subdirectory(${lib_path}lib/python "src/lib/python")
 
 if(BUILD_ARDUINO)
-    add_subdirectory(${lib_path}lib/arduino "src/lib/arduino")
+    #add_subdirectory(${lib_path}lib/arduino "src/lib/arduino")
+    add_subdirectory(${lib_path}lib/ArduinoLinux "src/lib/ArduinoLinux")
 endif(BUILD_ARDUINO)
 
 #add_dependencies(hello ${EXTERNAL_LIB})
