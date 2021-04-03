@@ -136,5 +136,7 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
 
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/html DESTINATION docs)
 else()
-    message( "Doxygen need to be installed to generate the doxygen documentation" )
+    if(BUILD_DOCS_DOXYGEN)
+        message(STATUS "Doxygen need to be installed to generate the doxygen documentation")
+    endif()
 endif()

@@ -116,6 +116,12 @@ set(CMAKE_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
      GROUP_READ
    )
 
+#   ===================================================
+#   ===============    Git submodule    ===============
+#   ===================================================
+
+#   ================    Git submodule    ================
+include(ConfigureGit)
 
 #   ================================================
 #   ================    COMPILER    ================
@@ -147,6 +153,7 @@ elseif(CMAKE_SIZEOF_VOID_P EQUAL 32)
 else()
     message(STATUS "unknow size")
 endif()
+
 
 #   =================================================
 #   ==============    EXTERNAL LIBS    ==============
