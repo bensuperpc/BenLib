@@ -61,7 +61,7 @@ set(CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake)
 
 #"Whether to use ccache to speed up compiling"
-set(ENABLE_CCACHE ON CACHE BOOL "If you want enable CCACHE, default: ON")
+option(ENABLE_CCACHE ON "If you want enable CCACHE, default: ON")
 # Include
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Increase verbose CMake
@@ -75,11 +75,11 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set(CMAKE_UNITY_BUILD ON)
 endif()
 # If enable tests
-set(BUILD_TESTING ON CACHE BOOL "If you want enable test, default: ON")
+option(BUILD_TESTING ON "If you want enable test, default: ON")
 # If enable coverage
-set(CODE_COVERAGE OFF CACHE BOOL "If you want enable coverage, default: OFF")
-set(BUILD_DOCS_DOXYGEN ON CACHE BOOL "If you want build Doc with Doxygen, default: ON")
-set(BUILD_ARDUINO ON CACHE BOOL "If you want build arduino lib, default: ON")
+option(CODE_COVERAGE OFF "If you want enable coverage, default: OFF")
+option(BUILD_DOCS_DOXYGEN ON "If you want build Doc with Doxygen, default: ON")
+option(BUILD_ARDUINO ON "If you want build arduino lib, default: ON")
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -212,9 +212,9 @@ include(ConfigureVulkan)
 include(ConfigureOpenSSL)
 
 #   ================    Qt    ================
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+option(CMAKE_AUTOUIC ON)
+option(CMAKE_AUTOMOC ON)
+option(CMAKE_AUTORCC ON)
 include(ConfigureQt)
 
 #   ================    cppcheck    ================
