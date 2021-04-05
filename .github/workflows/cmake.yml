@@ -1,6 +1,10 @@
 name: CMake
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -52,13 +56,13 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-      run: cmake $GITHUB_WORKSPACE
+      run: cmake -G Ninja $GITHUB_WORKSPACE
 
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>" --config $BUILD_TYPE
-      run: cmake --build . --parallel
+      run: ninja #cmake --build . --parallel
 
     - name: Test
       working-directory: ${{github.workspace}}/build
