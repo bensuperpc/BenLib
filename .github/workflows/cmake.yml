@@ -26,9 +26,7 @@ jobs:
         #- { name: Windows VS2017, os: windows-2016   }
         #- { name: Windows VS2019, os: windows-latest }
         - { name: Linux GCC,      os: ubuntu-latest  }
-        - { name: Linux GCC ARM,      os: ARM64  }
         - { name: Linux Clang,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
-        - { name: Linux Clang ARM,    os: ARM, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
         #- { name: MacOS XCode,    os: macos-latest   }
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
