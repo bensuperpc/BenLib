@@ -5,7 +5,7 @@
 [![N|Solid](https://forthebadge.com/images/badges/made-with-c-plus-plus.svg)](https://isocpp.org/) [![N|Solid](https://forthebadge.com/images/badges/made-with-c.svg)](https://isocpp.org/) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![N|Solid](https://forthebadge.com/images/badges/powered-by-qt.svg)](https://www.qt.io/) 
 
 
-[![CMake](https://github.com/Bensuperpc/BenLib/actions/workflows/cmake.yml/badge.svg?branch=master&event=push)](https://github.com/Bensuperpc/BenLib/actions/workflows/cmake.yml)
+[![CMake](https://github.com/Bensuperpc/BenLib/actions/workflows/cmake.yml/badge.svg?branch=master&event=workflow_run)](https://github.com/Bensuperpc/BenLib/actions/workflows/cmake.yml)
 # New Features !
 
   - AES and RSA encryption functions
