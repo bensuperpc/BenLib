@@ -32,6 +32,9 @@ jobs:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
         - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
         - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
+        include:
+          - arch: aarch64
+            distro: ubuntu-latest
         #- { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
         #- { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
