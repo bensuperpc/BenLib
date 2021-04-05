@@ -174,9 +174,8 @@ target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
     -gencode=arch=compute_75,code=compute_75
     # Ampere 80 and 86
     >)
-endif()
 target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
-
+endif()
 
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
