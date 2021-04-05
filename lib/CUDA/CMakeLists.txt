@@ -149,32 +149,29 @@ else()
 endif()
 
 #set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ")
-set(CMAKE_CUDA_FLAGS_LOC " ${CMAKE_CUDA_FLAGS_LOC}")
-
-
     
 if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
-target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-    --threads 0 -Wall -Wextra -pipe #--std=c++14
-    -Xptxas -O2 --default-stream per-thread
-    -Xcompiler=-Wall -Xcompiler=-fopenmp -Xcompiler=-Wextra
-    -Xcompiler -flto
-    #--resource-usage
-    # Maxwell
-    -arch=sm_52
-    -gencode=arch=compute_52,code=sm_52
-    -gencode arch=compute_53,code=sm_53
-    # Pascale
-    -gencode=arch=compute_60,code=sm_60
-    -gencode=arch=compute_61,code=sm_61
-    -gencode=arch=compute_62,code=sm_62
-    # Turing
-    -gencode=arch=compute_70,code=sm_70
-    -gencode=arch=compute_72,code=sm_72
-    -gencode=arch=compute_75,code=compute_75
-    # Ampere 80 and 86
-    >)
-target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
+    target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
+        --threads 0 -Wall -Wextra -pipe #--std=c++14
+        -Xptxas -O2 --default-stream per-thread
+        -Xcompiler=-Wall -Xcompiler=-fopenmp -Xcompiler=-Wextra
+        -Xcompiler -flto
+        #--resource-usage
+        # Maxwell
+        -arch=sm_52
+        -gencode=arch=compute_52,code=sm_52
+        -gencode arch=compute_53,code=sm_53
+        # Pascale
+        -gencode=arch=compute_60,code=sm_60
+        -gencode=arch=compute_61,code=sm_61
+        -gencode=arch=compute_62,code=sm_62
+        # Turing
+        -gencode=arch=compute_70,code=sm_70
+        -gencode=arch=compute_72,code=sm_72
+        -gencode=arch=compute_75,code=compute_75
+        # Ampere 80 and 86
+        >)
+    target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
 
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
