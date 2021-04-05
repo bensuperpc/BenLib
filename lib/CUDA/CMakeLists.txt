@@ -151,13 +151,11 @@ endif()
 #set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ")
 set(CMAKE_CUDA_FLAGS_LOC " ${CMAKE_CUDA_FLAGS_LOC}")
 
-#if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
-#    --threads 0
-#endif()
 
-
+    
+if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
 target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-    -Wall -Wextra -pipe #--std=c++14
+    --threads 0 -Wall -Wextra -pipe #--std=c++14
     -Xptxas -O2 --default-stream per-thread
     -Xcompiler=-Wall -Xcompiler=-fopenmp -Xcompiler=-Wextra
     -Xcompiler -flto
@@ -176,6 +174,7 @@ target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
     -gencode=arch=compute_75,code=compute_75
     # Ampere 80 and 86
     >)
+endif()
 target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 
 
