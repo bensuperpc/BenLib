@@ -157,7 +157,7 @@ set(CMAKE_CUDA_FLAGS_LOC " ${CMAKE_CUDA_FLAGS_LOC}")
 
 
 target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-    -O3 -Wall -Wextra -pipe #--std=c++14
+    -Wall -Wextra -pipe #--std=c++14
     -Xptxas -O2 --default-stream per-thread
     -Xcompiler=-Wall -Xcompiler=-fopenmp -Xcompiler=-Wextra
     -Xcompiler -flto
