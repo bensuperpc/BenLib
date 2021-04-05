@@ -66,3 +66,8 @@ jobs:
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C $BUILD_TYPE
+    - name: CPack
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # Execute cpack to build packages
+      run: cpack
