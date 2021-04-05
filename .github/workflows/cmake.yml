@@ -6,11 +6,15 @@ on:
       - master
     paths-ignore:
       - 'build/**'
+      - '**.md'
+      - '**.yml'
   pull_request:
     branches:
       - master
     paths-ignore:
       - 'build/**'
+      - '**.md'
+      - '**.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
