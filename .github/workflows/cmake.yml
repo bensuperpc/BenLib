@@ -4,15 +4,11 @@ on:
   push:
     branches: 
       - master
-    branches-ignore:
-      - dev
     paths-ignore:
       - 'build/**'
   pull_request:
     branches:
       - master
-    branches-ignore:
-      - dev
     paths-ignore:
       - 'build/**'
 
