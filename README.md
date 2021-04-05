@@ -44,12 +44,13 @@ You need to install SFML, OpenCV, BoostLib, OpenGL lib, Qt 5.12 or newer, GCC an
 git clone https://github.com/Bensuperpc/BenLib.git
 ```
 ```sh
-git submodule update --init --recursive
+cd BenLib
 ```
 
 ```sh
-cd BenLib
+git submodule update --init --recursive
 ```
+
 
 For production release:
 ```sh
