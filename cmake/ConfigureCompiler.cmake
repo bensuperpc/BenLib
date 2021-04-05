@@ -217,6 +217,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
     # Linker
     set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
+
     if (CODE_COVERAGE OR CMAKE_BUILD_TYPE STREQUAL "Coverage")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
@@ -225,6 +226,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto")
+    set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto")
+    # Linker
+    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto")
+
     if (CODE_COVERAGE OR CMAKE_BUILD_TYPE STREQUAL "Coverage")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
