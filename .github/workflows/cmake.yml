@@ -7,14 +7,14 @@ on:
     paths-ignore:
       - 'build/**'
       - '**.md'
-      - '**.yml'
+      - 'appveyor.yml'
   pull_request:
     branches:
       - master
     paths-ignore:
       - 'build/**'
       - '**.md'
-      - '**.yml'
+      - 'appveyor.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
