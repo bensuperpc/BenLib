@@ -26,15 +26,13 @@ jobs:
         #- { name: Windows VS2017, os: windows-2016   }
         #- { name: Windows VS2019, os: windows-latest }
         - { name: Linux GCC,      os: ubuntu-latest  }
+        - { name: Linux GCC,      os: ARM64  }
         - { name: Linux Clang,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
         #- { name: MacOS XCode,    os: macos-latest   }
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
         - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
         - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
-        include:
-          - arch: aarch64
-            distro: ubuntu-latest
         #- { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
         #- { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
