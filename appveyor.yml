@@ -1,0 +1,6 @@
+image: Ubuntu2004
+
+build_script:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - dir
+  - ./make.sh -DCMAKE_BUILD_TYPE=Release -DBUILD_DOCS_DOXYGEN=OFF
