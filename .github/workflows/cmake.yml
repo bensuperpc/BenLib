@@ -34,7 +34,7 @@ jobs:
 
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
+      run: sudo apt-get update && sudo apt-get install libboost-all-dev openssl libomp-dev libopencv-dev libssl-dev openssl libomp-dev libsfml-dev nvidia-cuda-dev
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -55,7 +55,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE 
+      run: cmake --build . --config $BUILD_TYPE --parallel
 
     - name: Test
       working-directory: ${{github.workspace}}/build
