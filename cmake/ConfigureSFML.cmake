@@ -18,7 +18,7 @@
 #                                                            #
 ##############################################################
 
-if(NOT DEFINED SFML_ROOT)
+if(NOT DEFINED SFML_ROOT AND WIN32)
     set(SFML_ROOT "C:\\Project Files (x86)\\SFML")
 endif()
 #set(SFML_USE_STATIC_STD_LIBS 0)

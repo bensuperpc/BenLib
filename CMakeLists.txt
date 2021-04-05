@@ -164,7 +164,6 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
 #   ================    Thread    ================
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-set(CMAKE_THREAD_PREFER_PTHREAD ON)
 find_package(Threads REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
@@ -172,8 +171,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 include(ConfigureOpenMP)
 
 #   ================    SFML    ================
-set(SFML_ROOT "C:\\Project Files (x86)\\SFML")
+#set(SFML_ROOT "C:\\Project Files (x86)\\SFML")
 include(ConfigureSFML)
+
+#   ================    OGRE3D    ================
+#include(ConfigureOGRE)
+#setupOgre( OGRE_SOURCE, OGRE_BINARIES, OGRE_LIBRARIES, FALSE, FALSE )
+#find_package(OGRE 2.1 REQUIRED)
+#include_directories(${OGRE_INCLUDE_DIRS})
+
+#${OGRE_LIBRARIES}
+
+
+#   ================    Thread    ================
+
 
 #   ================    BOOST    ================
 include(ConfigureBoost)
