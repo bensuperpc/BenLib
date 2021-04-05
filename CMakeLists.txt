@@ -507,25 +507,25 @@ if(Boost_FOUND AND ENABLE_TESTS)
     enable_testing()
     #Test getSchwarzschild
     add_executable(test_getSchwarzschild ${lib_path}src/test/math/test_getSchwarzschild.cpp)
-    target_link_libraries(test_getSchwarzschild PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(test_getSchwarzschild PRIVATE ${Boost_LIBRARIES} math)
     set_target_properties(test_getSchwarzschild PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_getSchwarzschild COMMAND ${CMAKE_COMMAND} --build . --target test_getSchwarzschild)
 
     #Test getGravitationalAttraction
     add_executable(test_getGravitationalAttraction ${lib_path}src/test/math/test_getGravitationalAttraction.cpp)
-    target_link_libraries(test_getGravitationalAttraction PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(test_getGravitationalAttraction PRIVATE ${Boost_LIBRARIES} math)
     set_target_properties(test_getGravitationalAttraction PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_getGravitationalAttraction COMMAND test_getGravitationalAttraction)
 
     #Test sphere
     add_executable(test_sphere ${lib_path}src/test/math/test_sphere.cpp)
-    target_link_libraries(test_sphere PRIVATE ${Boost_LIBRARIES} quadmath)
+    target_link_libraries(test_sphere PRIVATE ${Boost_LIBRARIES} quadmath math)
     set_target_properties(test_sphere PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_sphere COMMAND test_sphere)
 
     #Test cylinder
     add_executable(test_cylinder ${lib_path}src/test/math/test_cylinder.cpp)
-    target_link_libraries(test_cylinder PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(test_cylinder PRIVATE ${Boost_LIBRARIES} math)
     set_target_properties(test_cylinder PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME test_cylinder COMMAND test_cylinder)
 
@@ -596,7 +596,7 @@ if(Boost_FOUND AND ENABLE_TESTS)
     #Test power
     set(TEST_POWER test_power)
     add_executable(${TEST_POWER} ${lib_path}src/test/math/test_power.cpp)
-    target_link_libraries(${TEST_POWER} PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(${TEST_POWER} PRIVATE ${Boost_LIBRARIES} math)
     set_target_properties(${TEST_POWER} PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME ${TEST_POWER} COMMAND ${TEST_POWER})
 endif()
