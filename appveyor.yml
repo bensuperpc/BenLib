@@ -11,6 +11,10 @@ branches:
 
 image: Ubuntu2004
 
+install:
+- ls -al
+- sh: sudo apt-get update -y && sudo apt-get install ninja-build libboost-all-dev openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers -y
+
 platform: Any CPU
 
 configuration: Release
