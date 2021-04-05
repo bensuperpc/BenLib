@@ -51,7 +51,7 @@ project(my_cuda LANGUAGES CUDA CXX C)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     # Top-level project
-    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD 14)
     set(CMAKE_C_STANDARD 11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -march=native")
     set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
@@ -73,7 +73,11 @@ find_package(CUDA 10.0 QUIET)
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
     link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})
-    set(CMAKE_CUDA_STANDARD 17)
+    if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
+        set(CMAKE_CUDA_STANDARD 17)
+    else()
+        set(CMAKE_CUDA_STANDARD 14)
+    endif()
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
     #set(CMAKE_CUDA_FLAGS	"${CMAKE_CUDA_FLAGS}	-Xcompiler=-Wall")
     #set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
@@ -138,10 +142,15 @@ add_library(my_cuda SHARED ${SRCS} ${HEADERS})
 
 include_directories("kernel/")
 
-target_compile_features(my_cuda PUBLIC cxx_std_17)
+if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
+    target_compile_features(my_cuda PUBLIC cxx_std_17)
+else()
+    target_compile_features(my_cuda PUBLIC cxx_std_14)
+endif()
+
 #set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ")
 target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--threads 0 
-    -O3 -Wall -Wextra -pipe --std=c++17
+    -O3 -Wall -Wextra -pipe #--std=c++14
     -Xptxas -O2 --default-stream per-thread
     -Xcompiler=-Wall -Xcompiler=-fopenmp -Xcompiler=-Wextra
     -Xcompiler -flto
