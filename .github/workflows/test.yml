@@ -36,7 +36,7 @@ jobs:
         platform:
         #- { name: Windows VS2017, os: windows-2016   }
         #- { name: Windows VS2019, os: windows-latest }
-        - { name: Linux GCC x86_64,      os: ubuntu-latest, flags: -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -march=haswell" -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -march=haswell"
+        - { name: Linux GCC x86_64,      os: ubuntu-latest, flags: -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -march=haswell" -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -march=haswell"}
         - { name: Linux Clang x86_64,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -march=haswell" -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -march=haswell"}
         #- { name: MacOS XCode,    os: macos-latest   }
         config:
