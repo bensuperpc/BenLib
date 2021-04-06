@@ -91,7 +91,7 @@ jobs:
       run: cpack
 
     - name: Bump version and push tag
-      if: matrix.config.name == 'Release' && contains(matrix.platform.flags, 'clang') &&  contains(${{ github.event.head_commit.message }}, 'Release')
+      if: (matrix.config.name == 'Release') && (contains(matrix.platform.flags, 'clang')) &&  (contains(${{ github.event.head_commit.message }}, 'Release'))
       id: tag_version
       uses: mathieudutour/github-tag-action@v5.4
       with:
