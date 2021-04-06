@@ -50,6 +50,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
 
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
