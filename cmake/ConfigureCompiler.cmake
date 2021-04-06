@@ -43,6 +43,13 @@ if(NOT CMAKE_CXX_COMPILER)
 #    set(CMAKE_CXX_COMPILER /usr/bin/g++)
 endif()
 
+option(BASE_X86_ARCH OFF)
+
+if(NATIVE_ARCH)
+    set(CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -march=haswell")
+    set(CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -march=haswell")
+endif()
+
 #Set the highest C++ standard supported by the compiler
 #set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_C_STANDARD 11)
