@@ -42,8 +42,8 @@ endif()
 
 
 #Find boost lib
-find_package(Boost COMPONENTS python REQUIRED)
-include_directories(${Boost_INCLUDE_DIR})
+#find_package(Boost COMPONENTS python REQUIRED)
+#include_directories(${Boost_INCLUDE_DIR})
 
 #Find python
 #set(PYTHON_LIBRARY "\\usr\\lib\\python2.7")
@@ -62,7 +62,8 @@ set(HEADERS
     header/function_binding.h
     )
 
-
+message(${PYTHON_LIBRARIES})
+message(${Boost_LIBRARIES})
 #Build libs
 add_library(class_binding SHARED src/class_binding.cpp)
 set_target_properties(class_binding PROPERTIES PREFIX "") #Remove lib prefix
