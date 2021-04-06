@@ -27,7 +27,7 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }}
+    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} #${{ matrix.arch.name }}
     runs-on: ${{ matrix.platform.os }}
 
     strategy:
@@ -46,9 +46,12 @@ jobs:
         - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
         #- { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
         #- { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
+
+        #arch:
+        #- { name: ARM64, flags: -DCMAKE_BUILD_TYPE=Coverage }
         include:
         - platform: { name: ARM, os: ubuntu-latest } #aarch64-linux-gnu-gcc -march=native
-          config: { name: ARM64 GCC, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++}
+          config: { name: ARM64 GCC, flags: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++}
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
@@ -76,7 +79,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-      run: cmake -G Ninja $GITHUB_WORKSPACE ${{matrix.platform.flags}} ${{matrix.config.flags}}
+      run: cmake -G Ninja $GITHUB_WORKSPACE ${{matrix.platform.flags}} ${{matrix.config.flags}} #${{matrix.arch.flags}}
 
     - name: Build
       working-directory: ${{github.workspace}}/build
