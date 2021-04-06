@@ -100,7 +100,7 @@ jobs:
 
       # Create Draft Release
     - name: Create Draft Release
-      if: matrix.config.name == 'Release' && contains(matrix.platform.flags, 'clang') &&  contains(${{ github.event.head_commit.message }}, 'Release')
+      if: (matrix.config.name == 'Release') && (contains(matrix.platform.flags, 'clang')) &&  (contains(${{ github.event.head_commit.message }}, 'Release'))
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -112,7 +112,7 @@ jobs:
         draft: false
         prerelease: false
     - name: Upload Release Assets
-      if: matrix.config.name == 'Release' && contains(matrix.platform.flags, 'clang') &&  contains(${{ github.event.head_commit.message }}, 'Release')
+      if: (matrix.config.name == 'Release') && (contains(matrix.platform.flags, 'clang')) &&  (contains(${{ github.event.head_commit.message }}, 'Release'))
       id: upload-release-assets
       uses: dwenegar/upload-release-assets@v1
       env:
