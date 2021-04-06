@@ -29,7 +29,7 @@ else ()
 endif (WIN32)
 
 #find_package( Boost 1.72.0 COMPONENTS thread system fiber context program_options filesystem REQUIRED)
-find_package(Boost 1.67.0 COMPONENTS thread filesystem system unit_test_framework REQUIRED QUIET)
+find_package(Boost 1.67.0 COMPONENTS thread filesystem system unit_test_framework python REQUIRED QUIET)
 
 if(Boost_FOUND)
     message(STATUS "Boost FOUND")

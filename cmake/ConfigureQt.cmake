@@ -32,6 +32,7 @@ endif()
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Multimedia)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Multimedia)
 find_package(Qt${QT_VERSION_MAJOR}QuickCompiler)
+
 #qtquick_compiler_add_resources(RESOURCES example.qrc)
 #qt5_use_modules(myapp Quick Widgets Core Gui Multimedia Network)
 

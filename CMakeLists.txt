@@ -39,6 +39,7 @@
 ##############################################################
 
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
+
 project(BENLIB VERSION 0.0.5 DESCRIPTION "Bensuperpc's libs" LANGUAGES CXX C HOMEPAGE_URL "https://github.com/Bensuperpc/BenLib")
 
 #Add CUDA if it found

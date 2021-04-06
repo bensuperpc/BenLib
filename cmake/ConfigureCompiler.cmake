@@ -26,6 +26,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_EXTENSIONS OFF)
 
+message(STATUS "Using toolchain file: ${CMAKE_TOOLCHAIN_FILE}.")
+
 set(AUTODETECT_CXX_MAX_VERSION "Detect automatically CXX standard Max supported version by compiler" ON)
 set(AUTODETECT_C_MAX_VERSION "Detect automatically C standard Max supported version by compiler" ON)
 # Shared libs, decrease bin size
@@ -44,11 +46,6 @@ if(NOT CMAKE_CXX_COMPILER)
 endif()
 
 option(BASE_X86_ARCH OFF)
-
-if(NATIVE_ARCH)
-    set(CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -march=haswell")
-    set(CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -march=haswell")
-endif()
 
 #Set the highest C++ standard supported by the compiler
 #set(CMAKE_CXX_STANDARD 17)
