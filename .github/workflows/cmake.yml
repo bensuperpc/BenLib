@@ -81,8 +81,38 @@ jobs:
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C $BUILD_TYPE
+      if: matrix.config.name == 'Release'
+
+      # Build packages
     - name: CPack
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute cpack to build packages
       run: cpack
+
+      # Create Draft Release
+    - name: Create Draft Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: $(basename "${{ github.ref }}")
+        release_name: $(basename "${{ github.ref }}")
+        draft: true
+        prerelease: false
+
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{github.workspace}}/build/package/BenLib-1.0.0-Release.x86_64.zip
+        asset_name: BenLib-1.0.0-Release.x86_64.zip
+        asset_content_type: application/zip
+
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
