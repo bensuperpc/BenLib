@@ -42,7 +42,7 @@ jobs:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
         - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
         - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
-        - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
+        #- { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
         #- { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
         #- { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
@@ -67,7 +67,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-      run: cmake -G Ninja $GITHUB_WORKSPACE
+      run: cmake -G Ninja $GITHUB_WORKSPACE ${{matrix.platform.flags}} ${{matrix.config.flags}}
 
     - name: Build
       working-directory: ${{github.workspace}}/build
@@ -103,6 +103,7 @@ jobs:
         prerelease: false
 
     - uses: actions/upload-release-asset@v1.0.1
+      if: matrix.config.name == 'Release'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -112,6 +113,7 @@ jobs:
         asset_content_type: application/zip
 
     - uses: eregon/publish-release@v1
+      if: matrix.config.name == 'Release'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
