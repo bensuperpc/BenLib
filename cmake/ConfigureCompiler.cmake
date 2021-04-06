@@ -216,15 +216,16 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     #-fsanitize=address -fsanitize-memory-track-origins
     #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=thread")
     #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
-    
-    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
-    set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
-    # Linker
-    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
-        #set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} ")
-    else()
-        set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -Wl,--thinlto-jobs=all")
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
+        set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
+        # Linker
+        set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
+            #set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} ")
+        else()
+            set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -Wl,--thinlto-jobs=all")
+        endif()
     endif()
 
     if (CODE_COVERAGE OR CMAKE_BUILD_TYPE STREQUAL "Coverage")
