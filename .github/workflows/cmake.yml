@@ -91,7 +91,7 @@ jobs:
       run: cpack
 
     - name: Bump version and push tag
-      if: matrix.config.name == 'Release' && contains(matrix.platform.flags, 'clang')
+      if: matrix.config.name == 'Release' && contains(matrix.platform.flags, 'clang') &&  contains(${{ github.event.head_commit.message }}, 'Release')
       id: tag_version
       uses: mathieudutour/github-tag-action@v5.4
       with:
@@ -100,7 +100,7 @@ jobs:
 
       # Create Draft Release
     - name: Create Draft Release
-      if: matrix.config.name == 'Release' && contains(matrix.platform.flags, 'clang')
+      need: tag_version
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -112,7 +112,7 @@ jobs:
         draft: false
         prerelease: false
     - name: Upload Release Assets
-      if: matrix.config.name == 'Release' && contains(matrix.platform.flags, 'clang')
+      need: create_release
       id: upload-release-assets
       uses: dwenegar/upload-release-assets@v1
       env:
