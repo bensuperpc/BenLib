@@ -85,14 +85,14 @@ jobs:
 
       # Build packages
     - name: CPack
-      if: matrix.config.name == 'Release'
+      if: ${{matrix.config.name}} == Release
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute cpack to build packages
       run: cpack
 
     - name: Bump version and push tag
-      if: matrix.config.name == 'Release'
+      if: ${{matrix.config.name}} == Release
       id: tag_version
       uses: mathieudutour/github-tag-action@v5.4
       with:
@@ -101,7 +101,7 @@ jobs:
 
       # Create Draft Release
     - name: Create Draft Release
-      if: matrix.config.name == 'Release' #&& (contains(matrix.platform.flags, 'clang')) &&  (contains(${{ github.event.head_commit.message }}, 'Release'))
+      if: ${{matrix.config.name}} == Release #&& (contains(matrix.platform.flags, 'clang')) &&  (contains(${{ github.event.head_commit.message }}, 'Release'))
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -113,7 +113,7 @@ jobs:
         draft: false
         prerelease: false
     - name: Upload Release Assets
-      if: matrix.config.name == 'Release' # && (contains(matrix.platform.flags, 'clang')) &&  (contains(${{ github.event.head_commit.message }}, 'Release'))
+      if: ${{matrix.config.name}} == Release # && (contains(matrix.platform.flags, 'clang')) &&  (contains(${{ github.event.head_commit.message }}, 'Release'))
       id: upload-release-assets
       uses: dwenegar/upload-release-assets@v1
       env:
