@@ -43,7 +43,7 @@ jobs:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
         - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
         - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
-        #- { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
+        - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
         #- { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
         #- { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
