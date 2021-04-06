@@ -108,7 +108,7 @@ jobs:
       with:
         tag_name:  ${{ steps.tag_version.outputs.new_tag }} #${{ github.ref }} #${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
         release_name: Release ${{ steps.tag_version.outputs.new_tag }} #Release ${{ github.ref }} #Release ${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
-        #body: ${{ steps.tag_version.outputs.changelog }}
+        body: ${{ steps.tag_version.outputs.changelog }}
         draft: false
         prerelease: false
     - name: Upload Release Assets
