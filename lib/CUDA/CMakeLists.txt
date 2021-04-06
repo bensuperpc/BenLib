@@ -174,6 +174,11 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
     target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(my_cuda PRIVATE "-fno-lto")
+endif()
+
+
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(my_cuda PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
