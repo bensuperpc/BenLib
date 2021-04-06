@@ -92,13 +92,14 @@ jobs:
       # Create Draft Release
     - name: Create Draft Release
       if: matrix.config.name == 'Release'
+      needs: [CPack]
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: test #$(basename "${{ github.ref }}")
-        release_name: test #$(basename "${{ github.ref }}")
+        tag_name: build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
+        release_name: build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
         draft: true
         prerelease: false
 
