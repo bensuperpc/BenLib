@@ -42,13 +42,13 @@ endif()
 
 
 #Find boost lib
-find_package(Boost REQUIRED COMPONENTS python)
+find_package(Boost COMPONENTS python REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 #Find python
 #set(PYTHON_LIBRARY "\\usr\\lib\\python2.7")
 #set(PYTHON_INCLUDE_DIR "\\usr\\include\\python2.7")
-find_package(PythonLibs 3.7 REQUIRED)
+find_package(PythonLibs 3.8 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIR})
 
 # Include header directory
