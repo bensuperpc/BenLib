@@ -220,7 +220,12 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto=thin")
     set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto=thin")
     # Linker
-    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin -Wl,--thinlto-jobs=all")
+    set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto=thin")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
+        #set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} ")
+    else()
+        set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -Wl,--thinlto-jobs=all")
+    endif()
 
     if (CODE_COVERAGE OR CMAKE_BUILD_TYPE STREQUAL "Coverage")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
