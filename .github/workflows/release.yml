@@ -9,9 +9,12 @@ on:
       - '**.md'
       - 'appveyor.yml'
 
-#env:
+env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  #BUILD_TYPE: Release
+  BUILD_TYPE: Release
+  CXX_COMPILER: clang++
+  C_COMPILER: clang
+
 
 jobs:
   build:
@@ -43,7 +46,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-      run: cmake -G Ninja $GITHUB_WORKSPACE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release
+      run: cmake -G Ninja $GITHUB_WORKSPACE -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build
       working-directory: ${{github.workspace}}/build
