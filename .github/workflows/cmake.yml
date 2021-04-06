@@ -81,7 +81,6 @@ jobs:
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C $BUILD_TYPE
-      if: matrix.config.name == 'Release'
 
       # Build packages
     - name: CPack
@@ -92,6 +91,7 @@ jobs:
 
       # Create Draft Release
     - name: Create Draft Release
+      if: matrix.config.name == 'Release'
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -107,7 +107,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/build/package/BenLib-1.0.0-Release.x86_64.zip
+        asset_path: ${{github.workspace}}/build/Package/BenLib-1.0.0-Release.x86_64.zip
         asset_name: BenLib-1.0.0-Release.x86_64.zip
         asset_content_type: application/zip
 
