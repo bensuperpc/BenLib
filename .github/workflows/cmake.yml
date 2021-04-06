@@ -85,6 +85,7 @@ jobs:
 
       # Build packages
     - name: CPack
+      if: matrix.config.name == 'Release'
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute cpack to build packages
