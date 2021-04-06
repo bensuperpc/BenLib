@@ -148,7 +148,7 @@ set(SEC_COMPILER_REL " ${SEC_COMPILER_REL} -fstack-protector-all -Werror=format-
 #=== C FLAGS ===
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
 
-set(CMAKE_C_FLAGS                "${CMAKE_C_FLAGS} -march=native -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_C} -pipe ")
+set(CMAKE_C_FLAGS                "${CMAKE_C_FLAGS} -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_C} -pipe ")
 set(CMAKE_C_FLAGS_RELEASE        "${CMAKE_C_FLAGS_RELEASE} -O3 ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_MINSIZEREL     "${CMAKE_C_FLAGS_MINSIZEREL} -Os ${SEC_COMPILER_REL}")
 set(CMAKE_C_FLAGS_DEBUG          "${CMAKE_C_FLAGS_DEBUG} -g3 -Og -ggdb3") # Remove -v
@@ -173,7 +173,7 @@ endif()
 # Removed : -Wconversion -Wuseless-cast -rdynamic
 #-ftime-report -static -lrt -pthread -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -flto
 
-set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections -march=native ${WARNINGS_COMPILER_CXX} -pipe")
+set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_CXX} -pipe")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs")
 endif()

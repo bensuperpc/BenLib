@@ -25,7 +25,7 @@ cd build
 #cmake build --trace-source="CMakeLists.txt"
 
 cmake $@ -G Ninja .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache \
--DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_C_COMPILER=/usr/bin/clang
+-DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -march=haswell" -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -march=haswell"
 #-d explain 
 ninja
 ctest --output-on-failure -j$(nproc) #--extra-verbose
