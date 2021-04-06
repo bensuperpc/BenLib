@@ -104,25 +104,16 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
-        release_name: Release ${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
+        tag_name:  ${{ github.ref }} #${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
+        release_name: Release ${{ github.ref }} #Release ${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
         #body: ${{ steps.tag_version.outputs.changelog }}
-        draft: true
+        draft: false
         prerelease: false
-
-    - uses: actions/upload-release-asset@v1.0.1
-      if: matrix.config.name == 'Release'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/build/package/BenLib-1.0.0-Release.x86_64.zip
-        asset_name: BenLib-1.0.0-Release.x86_64.zip
-        asset_content_type: application/zip
-
-    - uses: eregon/publish-release@v1
-      if: matrix.config.name == 'Release'
+    - name: Upload Release Assets
+      id: upload-release-assets
+      uses: dwenegar/upload-release-assets@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         release_id: ${{ steps.create_release.outputs.id }}
+        assets_path: ${{github.workspace}}/build/package
