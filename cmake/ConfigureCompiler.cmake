@@ -137,9 +137,13 @@ if(NOT CMAKE_CXX_STANDARD AND AUTODETECT_CXX_MAX_VERSION)
     endif()
 endif()
 
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
+    set(SEC_COMPILER_REL " ${SEC_COMPILER_REL} -fstack-clash-protection")
+endif()
+
 
 #=== SECURITY RELEASE FLAGS ===
-set(SEC_COMPILER_REL "-fstack-clash-protection -fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
+set(SEC_COMPILER_REL " ${SEC_COMPILER_REL} -fstack-protector-all -Werror=format-security -fstack-protector-strong -fexceptions -D_FORTIFY_SOURCE=2 -fPIE")
 
 #=== C FLAGS ===
 set(WARNINGS_COMPILER_C "-Wall -Wpedantic -Wextra -Wstrict-prototypes -Wmissing-prototypes -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wstrict-overflow=5 -Wswitch-default -Wunreachable-code -Wcast-align")
