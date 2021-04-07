@@ -281,8 +281,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${EDV_PRIVATE_INCLUDE_DIRECTO
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"
 )
-
-install(TARGETS ${PROJECT_NAME} vec1d vec2d_add vec2d_mult vec2d_mult2 vec2d_mult3 vec3d_mult vec3d_mult2
+#vec2d_add
+install(TARGETS ${PROJECT_NAME} vec1d vec2d_mult vec2d_mult2 vec2d_mult3 vec3d_mult vec3d_mult2
 #   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
 #    CONFIGURATIONS Release
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
