@@ -70,3 +70,7 @@ jobs:
       shell: bash
       # Execute cpack to build packages
       run: cpack
+
+      # Create Draft Release
+    - name: Create Draft Release
+      id: create_release
