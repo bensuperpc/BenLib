@@ -64,8 +64,6 @@ else()
     # Sub-level project
 endif()
 
-
-
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 
