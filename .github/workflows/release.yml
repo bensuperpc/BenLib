@@ -69,29 +69,13 @@ jobs:
       # Execute cpack to build packages
       run: cpack
 
-    - name: Bump version and push tag
-      id: tag_version
-      uses: mathieudutour/github-tag-action@v5.4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-
       # Create Draft Release
     - name: Create Draft Release
       id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v1
+    - uses: ncipollo/release-action@v1
       with:
-        tag_name:  ${{ steps.tag_version.outputs.previous_tag }} #${{ github.ref }} #${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
-        release_name: Release Clang ${{ steps.tag_version.outputs.previous_tag }} #Release ${{ github.ref }} #Release ${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
-        body: ${{ steps.tag_version.outputs.changelog }}
-        draft: false
-        prerelease: false
-    - name: Upload Release Assets
-      id: upload-release-assets
-      uses: dwenegar/upload-release-assets@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        release_id: ${{ steps.create_release.outputs.id }}
-        assets_path: ${{github.workspace}}/build/package
+        artifacts: "${{github.workspace}}/build/package/*"
+        body: "OK"
+        #tag: build-$(date +%Y%m%d-%H%M%S)
+        token: ${{ secrets.GITHUB_TOKEN }}
