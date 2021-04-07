@@ -69,10 +69,11 @@ endif()
 
 # Can fix some issues
 if(NOT CUDA_TOOLKIT_ROOT_DIR)
-    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
+    set(CUDA_TOOLKIT_ROOT_DIR "/usr") #;/opt/cuda;/usr/local/cuda")
 endif()
 
 find_package(CUDA 10.0 QUIET)
+message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
