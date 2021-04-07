@@ -28,9 +28,11 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.2.0
+      #with:
+      #  submodules: 'recursive'
       with:
-        submodules: 'recursive'
+        fetch-depth: 0
 
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
@@ -70,10 +72,6 @@ jobs:
       shell: bash
       # Execute cpack to build packages
       run: cpack
-
-    - uses: actions/checkout@v2.2.0
-      with:
-        fetch-depth: 0
 
     - name: Get previous tag
       id: previoustag
