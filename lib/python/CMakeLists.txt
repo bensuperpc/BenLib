@@ -42,8 +42,8 @@ endif()
 
 
 #Find boost lib
-#find_package(Boost COMPONENTS python REQUIRED)
-#include_directories(${Boost_INCLUDE_DIR})
+find_package(Boost COMPONENTS python REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
 
 #Find python
 #set(PYTHON_LIBRARY "\\usr\\lib\\python2.7")
