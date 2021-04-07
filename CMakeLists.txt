@@ -543,10 +543,10 @@ if(Boost_FOUND AND ENABLE_TESTS)
     add_test(NAME test_vector_copy COMMAND test_vector_copy)
 
     #Test vector copy
-    add_executable(test_vector_max_simd ${lib_path}src/test/vector/test_vector_max_simd.cpp)
-    target_link_libraries(test_vector_max_simd PRIVATE ${Boost_LIBRARIES} vector)
-    set_target_properties(test_vector_max_simd PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
-    add_test(NAME test_vector_max_simd COMMAND test_vector_max_simd)
+    #add_executable(test_vector_max_simd ${lib_path}src/test/vector/test_vector_max_simd.cpp)
+    #target_link_libraries(test_vector_max_simd PRIVATE ${Boost_LIBRARIES} vector)
+    #set_target_properties(test_vector_max_simd PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+    #add_test(NAME test_vector_max_simd COMMAND test_vector_max_simd)
 
     add_executable(test_string_seq ${lib_path}src/test/string/test_string_seq.cpp)
     target_link_libraries(test_string_seq PRIVATE ${Boost_LIBRARIES} string_lib)
