@@ -13,6 +13,8 @@
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:      https://stackoverflow.com/questions/15036909/clang-how-to-list-supported-target-architectures                                                   #
+#               https://cmake.org/pipermail/cmake/2012-January/048429.html
+#               https://stackoverflow.com/questions/11423313/cmake-cross-compiling-c-flags-from-toolchain-file-ignored
 #                                                            #
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
@@ -25,7 +27,7 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 set(TOOLCHAIN "x86_64-linux-gnu")
 
-set(CMAKE_ASM_COMPILER gcc)
+set(CMAKE_ASM_COMPILER "gcc")
 set(CMAKE_ASM_COMPILER_TARGET ${TOOLCHAIN})
 
 set(CMAKE_C_COMPILER "gcc")
@@ -34,10 +36,10 @@ set(CMAKE_C_COMPILER_TARGET ${TOOLCHAIN})
 set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_COMPILER_TARGET ${TOOLCHAIN})
 
-
-set(CMAKE_ASM_FLAGS " ${CMAKE_ASM_FLAGS} -march=skylake")
-set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -march=skylake")
-set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -march=skylake")
+# If you change these flags, CMake will not rebuild with these flags
+set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=skylake")
+set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=skylake")
+set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=skylake")
 
 
 #set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES )
