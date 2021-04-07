@@ -2,12 +2,6 @@ name: Release Maker
 
 on:
   push:
-    branches: 
-      - master
-    paths-ignore:
-      - 'build/**'
-      - '**.md'
-      - 'appveyor.yml'
     tags:
       - '*'
 #https://github.community/t/start-a-github-workflow-on-a-tag-name-and-build-based-on-that-specific-tag/16992/2
