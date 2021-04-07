@@ -876,10 +876,10 @@ if(ENABLE_TESTS)
         RUNTIME
         DESTINATION tests
         COMPONENT tests)
-    install(TARGETS test_vector_max_simd
-        RUNTIME
-        DESTINATION tests
-        COMPONENT tests)
+    #install(TARGETS test_vector_max_simd
+    #    RUNTIME
+    #    DESTINATION tests
+    #    COMPONENT tests)
     install(TARGETS test_string_seq
         RUNTIME
         DESTINATION tests
