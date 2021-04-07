@@ -5,12 +5,7 @@
 [![N|Solid](https://forthebadge.com/images/badges/made-with-c-plus-plus.svg)](https://isocpp.org/) [![N|Solid](https://forthebadge.com/images/badges/made-with-c.svg)](https://isocpp.org/) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![N|Solid](https://forthebadge.com/images/badges/powered-by-qt.svg)](https://www.qt.io/) 
 
 
-[![Build test](https://github.com/Bensuperpc/BenLib/actions/workflows/test.yml/badge.svg)](https://github.com/Bensuperpc/BenLib/actions/workflows/test.yml)
-
-[![Release Maker](https://github.com/Bensuperpc/BenLib/actions/workflows/release.yml/badge.svg)](https://github.com/Bensuperpc/BenLib/actions/workflows/release.yml)
-
-
-[![GitHub license](https://img.shields.io/github/license/Bensuperpc/BenLib)](https://github.com/Bensuperpc/BenLib/blob/master/LICENSE)
+[![Build test](https://github.com/Bensuperpc/BenLib/actions/workflows/test.yml/badge.svg)](https://github.com/Bensuperpc/BenLib/actions/workflows/test.yml)[![Release Maker](https://github.com/Bensuperpc/BenLib/actions/workflows/release.yml/badge.svg)](https://github.com/Bensuperpc/BenLib/actions/workflows/release.yml)[![GitHub license](https://img.shields.io/github/license/Bensuperpc/BenLib)](https://github.com/Bensuperpc/BenLib/blob/master/LICENSE)
 
 
 # New Features !
