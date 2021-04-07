@@ -69,11 +69,11 @@ endif()
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 
 # Can fix some issues
-if(NOT CUDA_TOOLKIT_ROOT_DIR)
-    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
-endif()
+#if(NOT CUDA_TOOLKIT_ROOT_DIR)
+#    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
+#endif()
 
-find_package(CUDA 10.0 QUIET)
+find_package(CUDA 10.0)
 
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
