@@ -52,16 +52,17 @@ jobs:
         #include:
         #- platform: { name: ARM, os: ubuntu-latest } #aarch64-linux-gnu-gcc -march=native
         #  config: { name: ARM64 GCC, flags: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++}
+
     steps:
-    - name: Checkout Code
+    - name: "📥 Checkout Code"
       uses: actions/checkout@v2.2.0
       with:
         submodules: 'recursive'
         fetch-depth: 0
 
-    - name: Install Linux Dependencies
+    - name: "📥 Install Linux Dependencies"
       if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install ninja-build libboost-all-dev openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers
+      run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev
 
     - name: Install ARM64 Components
       if: matrix.platform.name == 'ARM'
@@ -72,7 +73,7 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: cmake -E make_directory ${{github.workspace}}/build
 
-    - name: Configure CMake
+    - name: "🔧 Configure CMake"
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       shell: bash
@@ -82,13 +83,13 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       run: cmake -G Ninja $GITHUB_WORKSPACE ${{matrix.platform.flags}} ${{matrix.config.flags}} #${{matrix.arch.flags}}
 
-    - name: Build
+    - name: "🛠️ Build"
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>" --config $BUILD_TYPE
       run: ninja #cmake --build . --parallel
 
-    - name: Test
+    - name: "✅ Run Test"
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute tests defined by the CMake configuration.  
@@ -96,7 +97,7 @@ jobs:
       run: ctest -C $BUILD_TYPE
 
       # Build packages
-    - name: CPack
+    - name: "📦 Make CPack"
       if: matrix.config.name == 'Release'
       working-directory: ${{github.workspace}}/build
       shell: bash

@@ -4,15 +4,12 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
+      #- 'v*'
+
 #  create:
 #    tags:
 #    - 'v[0-9]+.[0-9]+.[0-9]+*'
 #https://github.community/t/start-a-github-workflow-on-a-tag-name-and-build-based-on-that-specific-tag/16992/2
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
-  CXX_COMPILER: clang++
-  C_COMPILER: clang
 
 
 jobs:
@@ -21,17 +18,17 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    name: Linux Clang Release Maker
+    name: "🚀 Release Maker"
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: "📥 Checkout Code"
       uses: actions/checkout@v2.2.0
       with:
         submodules: 'recursive'
         fetch-depth: 0
 
-    - name: Install Linux Dependencies
+    - name: "📥 Install Linux Dependencies"
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev
 
@@ -40,7 +37,7 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: cmake -E make_directory ${{github.workspace}}/build
 
-    - name: Configure CMake
+    - name: "🔧 Configure CMake"
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       shell: bash
@@ -50,13 +47,13 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       run: cmake -G Ninja $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_clang.cmake
 
-    - name: Build
+    - name: "🛠️ Build"
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>" --config $BUILD_TYPE
       run: ninja
 
-    - name: Test
+    - name: "✅ Run Test"
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute tests defined by the CMake configuration.  
@@ -64,7 +61,7 @@ jobs:
       run: ctest -C $BUILD_TYPE
 
       # Build packages
-    - name: CPack
+    - name: "📦 Make CPack"
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute cpack to build packages
@@ -73,6 +70,10 @@ jobs:
     - name: Get previous tag
       id: previoustag
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+    - name: Changelog
+      uses: scottbrenner/generate-changelog-action@master
+      id: Changelog
 
       # Create Draft Release
     - name: Create Draft Release
@@ -83,7 +84,8 @@ jobs:
       with:
         tag_name: ${{ steps.previoustag.outputs.tag }}
         release_name: Release Clang ${{ steps.previoustag.outputs.tag }} #${{ steps.tag_version.outputs.previous_tag }} #Release ${{ github.ref }} #Release ${{ steps.tag_version.outputs.new_tag }} #build-$(date +%Y%m%d-%H%M%S) #$(basename "${{ github.ref }}")
-        body: "OK"
+        body: |
+            ${{ steps.Changelog.outputs.changelog }}
         draft: false
         prerelease: false
     - name: Upload Release Assets
