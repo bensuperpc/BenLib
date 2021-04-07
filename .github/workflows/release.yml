@@ -71,13 +71,12 @@ jobs:
       # Execute cpack to build packages
       run: cpack
 
-      # Create Draft Release
-    - name: Create Draft Release
-      id: create_release
-      uses: actions/checkout@v1
-    - uses: ncipollo/release-action@v1
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        artifacts: "${{github.workspace}}/build/package/*"
-        body: "OK"
-        #tag: build-$(date +%Y%m%d-%H%M%S)
-        token: ${{ secrets.GITHUB_TOKEN }}
+        files: "${{github.workspace}}/build/package/*"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
