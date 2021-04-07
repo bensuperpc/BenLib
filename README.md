@@ -9,6 +9,10 @@
 
 [![Release Maker](https://github.com/Bensuperpc/BenLib/actions/workflows/release.yml/badge.svg)](https://github.com/Bensuperpc/BenLib/actions/workflows/release.yml)
 
+
+[![GitHub license](https://img.shields.io/github/license/Bensuperpc/BenLib)](https://github.com/Bensuperpc/BenLib/blob/master/LICENSE)
+
+
 # New Features !
 
   - AES and RSA encryption functions
