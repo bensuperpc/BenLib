@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
-    branches: 
-      - master
 #  create:
 #    tags:
 #    - 'v[0-9]+.[0-9]+.[0-9]+*'
@@ -29,9 +27,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2.2.0
-      #with:
-      #  submodules: 'recursive'
       with:
+        submodules: 'recursive'
         fetch-depth: 0
 
     - name: Install Linux Dependencies

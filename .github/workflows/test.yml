@@ -54,9 +54,10 @@ jobs:
         #  config: { name: ARM64 GCC, flags: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++}
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.2.0
       with:
         submodules: 'recursive'
+        fetch-depth: 0
 
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
