@@ -134,6 +134,7 @@ if (DOXYGEN_FOUND AND BUILD_DOCS_DOXYGEN)
     # USE_STAMP_FILE With file only
     #doxygen_add_docs(Doxygen ${SOURCE_LISTGLOB} ${DOXYGEN_INPUT_MDFILE} ALL USE_STAMP_FILE COMMENT "Generate pages")
     doxygen_add_docs(Doxygen ${DOXYGEN_INPUT_DIRECTORY} ALL COMMENT "Generate pages")
+    message(STATUS "GENERATE PAGE Dowygen")
 
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/html DESTINATION docs)
 else()
