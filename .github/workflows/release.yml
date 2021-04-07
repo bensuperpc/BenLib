@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
+    branches: 
+      - master
 #  create:
 #    tags:
 #    - 'v[0-9]+.[0-9]+.[0-9]+*'
@@ -72,7 +74,7 @@ jobs:
       # Create Draft Release
     - name: Create Draft Release
       id: create_release
-    - uses: actions/checkout@v1
+    #- uses: actions/checkout@v1
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "${{github.workspace}}/build/package/*"
