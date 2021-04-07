@@ -68,8 +68,13 @@ endif()
 
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
-set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
-find_package(CUDA 10.0)
+
+# Can fix some issues
+if(NOT CUDA_TOOLKIT_ROOT_DIR)
+    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
+endif()
+
+find_package(CUDA 10.0 QUIET)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
@@ -87,6 +92,7 @@ if (CUDA_FOUND)
     message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
+    find_package(CUDA 10.0)
 endif()
 
 #For clang CUDA

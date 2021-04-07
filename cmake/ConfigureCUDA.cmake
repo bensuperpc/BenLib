@@ -28,10 +28,16 @@
 #export LD_LIBRARY_PATH=/opt/cuda/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
 
 #set(CUTLASS_NATIVE_CUDA_INIT ON)
-#set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda")
 #CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES
 #CMAKE_CUDA_COMPILER
-set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
+#set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
+#set(CMAKE_CUDA_COMPILER /usr/local/cuda/bin/nvcc) 
+
+# Can fix some issues
+if(NOT CUDA_TOOLKIT_ROOT_DIR)
+    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
+endif()
+
 find_package(CUDA 10.0 QUIET)
 
 if (CUDA_FOUND)
@@ -46,6 +52,7 @@ if (CUDA_FOUND)
     message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
+    find_package(CUDA 10.0)
 endif()
 
 

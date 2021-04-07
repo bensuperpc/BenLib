@@ -15,6 +15,7 @@
 #  Source:      https://stackoverflow.com/questions/15036909/clang-how-to-list-supported-target-architectures                                                   #
 #               https://cmake.org/pipermail/cmake/2012-January/048429.html
 #               https://stackoverflow.com/questions/11423313/cmake-cross-compiling-c-flags-from-toolchain-file-ignored
+#               https://gist.github.com/chaorunrun/06ea22b51e5205bc41a0501d135d053f
 #                                                            #
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
@@ -41,10 +42,11 @@ set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=skylake")
 set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=skylake")
 set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=skylake")
 
-
 #set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES )
 #set(CMAKE_C_STANDARD_INCLUDE_DIRECTORIES )
 
+#CUDA
+set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM BOTH)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
