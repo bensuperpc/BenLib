@@ -70,18 +70,17 @@ endif()
 
 # Can fix some issues
 if(NOT CUDA_TOOLKIT_ROOT_DIR)
-    set(CUDA_TOOLKIT_ROOT_DIR "/usr") #;/opt/cuda;/usr/local/cuda")
+    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
 endif()
 
 find_package(CUDA 10.0 QUIET)
-#set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
+
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
     link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})
-    message(STATUS "CUDA_VERSION: ${CUDA_VERSION}")
     if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
         message(STATUS "CMAKE_CUDA_STANDARD: C++17")
-        set(CMAKE_CUDA_STANDARD 17)
+    set(CMAKE_CUDA_STANDARD 17)
     else()
         message(STATUS "CMAKE_CUDA_STANDARD: C++14")
         set(CMAKE_CUDA_STANDARD 14)
@@ -91,12 +90,13 @@ if (CUDA_FOUND)
     #set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
 #–default-stream per-thread
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
-    #message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
+    message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
+    message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
-    message(STATUS "CUDA_INCLUDE_DIRS: ${CUDA_INCLUDE_DIRS} CUDA_CUDART_LIBRARY: ${CUDA_CUDART_LIBRARY}")
     find_package(CUDA 10.0)
 endif()
+
 
 #For clang CUDA
 # --cuda-path=${CUDA_TOOLKIT_ROOT_DIR}
