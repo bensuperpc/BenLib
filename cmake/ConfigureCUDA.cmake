@@ -31,9 +31,9 @@
 #set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda")
 #CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES
 #CMAKE_CUDA_COMPILER
-
+set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 find_package(CUDA 10.0 QUIET)
-#set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
+
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
     link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})

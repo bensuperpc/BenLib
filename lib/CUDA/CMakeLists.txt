@@ -68,7 +68,8 @@ endif()
 
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
-find_package(CUDA 10.0 QUIET)
+set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
+find_package(CUDA 10.0)
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
