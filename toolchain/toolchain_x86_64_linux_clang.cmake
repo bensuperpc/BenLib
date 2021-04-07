@@ -13,7 +13,7 @@
 #  file: CMakeLists.txt                                      #
 #  CMake                                                     #
 #  Source:                                                   #
-#                                                            #  
+#                                                            #
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
