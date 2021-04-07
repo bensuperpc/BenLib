@@ -33,7 +33,7 @@ jobs:
 
     - name: "📥 Install Linux Dependencies"
       if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev doxygen
+      run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev doxygen graphviz
 
     - name: "✍🏽 Create Build Environment"
       # Some projects don't allow in-source building, so create a separate build directory
