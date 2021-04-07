@@ -69,7 +69,7 @@ target_link_libraries(class_binding ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 add_library(function_binding SHARED src/function_binding.cpp)
 set_target_properties(function_binding PROPERTIES PREFIX "") #Remove lib prefix
-target_link_libraries(function_binding ${Boost_LIBRARIES} $${PYTHON_LIBRARIES})
+target_link_libraries(function_binding ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 add_library(function_binding_c SHARED ${SRCS} ${HEADERS})
 set_target_properties(function_binding_c PROPERTIES PREFIX "") #Remove lib prefix
