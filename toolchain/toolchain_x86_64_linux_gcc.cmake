@@ -46,7 +46,7 @@ set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=skylake")
 #set(CMAKE_C_STANDARD_INCLUDE_DIRECTORIES )
 
 #CUDA
-set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
+set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr/local/cuda;/usr")
 
 set(CUDA_TARGET_CPU_ARCH ${CMAKE_SYSTEM_PROCESSOR})
 set(CUDA_TARGET_OS_VARIANT "linux")

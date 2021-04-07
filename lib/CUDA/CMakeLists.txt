@@ -73,7 +73,6 @@ if(NOT CUDA_TOOLKIT_ROOT_DIR)
 endif()
 
 find_package(CUDA 10.0 QUIET)
-message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
 #set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
@@ -91,7 +90,7 @@ if (CUDA_FOUND)
     #set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -g")
 #–default-stream per-thread
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
-    message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
+    #message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
     find_package(CUDA 10.0)
@@ -145,7 +144,7 @@ set(HEADERS
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda SHARED ${SRCS} ${HEADERS})
-
+cuda_add_executable
 
 #set_target_properties(my_cuda PROPERTIES PUBLIC_HEADER "${EDV_INCLUDE_FILES}")
 
@@ -216,18 +215,18 @@ set_target_properties(vec1d PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult vec2d_mult.c)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda m)
+    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda m cudart)
 else()
-    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda m)
+    target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda m cudart)
 endif()
 set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 set_target_properties(vec2d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_add vec2d_add.c)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda)
+    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda cudart)
 else()
-    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} my_cuda)
+    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} my_cuda cudart)
 endif()
 set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 set_target_properties(vec2d_add PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
