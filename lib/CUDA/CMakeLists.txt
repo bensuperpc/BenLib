@@ -31,6 +31,7 @@
 #           https://releases.llvm.org/6.0.0/docs/CompileCudaWithLLVM.html
 #           https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
 #           https://stackoverflow.com/questions/53256405/howto-pass-flag-to-nvcc-compiler-in-cmake
+#           https://github.com/Kitware/CMake/blob/master/Tests/Cuda/Complex/CMakeLists.txt
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -224,7 +225,7 @@ set_target_properties(vec2d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_add vec2d_add.c)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda cudart)
+    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda m cudart)
 else()
     target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} my_cuda cudart)
 endif()
@@ -233,7 +234,7 @@ set_target_properties(vec2d_add PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult2 vec2d_mult.cpp)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda cudart)
+    target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m cudart)
 else()
     target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} my_cuda cudart)
 endif()
@@ -242,7 +243,7 @@ set_target_properties(vec2d_mult2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF
 
 add_executable(vec2d_mult3 vec2d_mult3.cpp)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda cudart)
+    target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m cudart)
 else()
     target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} my_cuda cudart)
 endif()
@@ -251,7 +252,7 @@ set_target_properties(vec2d_mult3 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF
 
 add_executable(vec3d_mult vec3d_mult.cpp)
 if (OPENMP_FOUND)
-    target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda cudart)
+    target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m cudart)
 else()
     target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda cudart)
 endif()
@@ -260,7 +261,7 @@ set_target_properties(vec3d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec3d_mult2 vec3d_mult2.cpp)
 if (OPENMP_FOUND)
-    target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda cudart)
+    target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m cudart)
 else()
     target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} my_cuda cudart)
 endif()
