@@ -64,23 +64,16 @@ jobs:
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev
 
-    - name: Install ARM64 Components
+    - name: "📥 Install ARM64 Components"
       if: matrix.platform.name == 'ARM'
       run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
-    - name: Create Build Environment
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
+    - name: "✍🏽 Create Build Environment"
       run: cmake -E make_directory ${{github.workspace}}/build
 
     - name: "🔧 Configure CMake"
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
       shell: bash
       working-directory: ${{github.workspace}}/build
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       run: cmake -G Ninja $GITHUB_WORKSPACE ${{matrix.platform.flags}} ${{matrix.config.flags}} #${{matrix.arch.flags}}
 
     - name: "🛠️ Build"
@@ -92,8 +85,6 @@ jobs:
     - name: "✅ Run Test"
       working-directory: ${{github.workspace}}/build
       shell: bash
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C $BUILD_TYPE
 
       # Build packages
