@@ -144,7 +144,7 @@ set(HEADERS
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda SHARED ${SRCS} ${HEADERS})
-cuda_add_executable
+#cuda_add_executable
 
 #set_target_properties(my_cuda PROPERTIES PUBLIC_HEADER "${EDV_INCLUDE_FILES}")
 
