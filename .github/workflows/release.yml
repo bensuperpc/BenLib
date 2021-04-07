@@ -74,3 +74,10 @@ jobs:
       # Create Draft Release
     - name: Create Draft Release
       id: create_release
+      uses: actions/checkout@v1
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "${{github.workspace}}/build/package/*"
+        body: "OK"
+        #tag: build-$(date +%Y%m%d-%H%M%S)
+        token: ${{ secrets.GITHUB_TOKEN }}
