@@ -92,10 +92,15 @@ int main(int argc, char *argv[], char *envp[])
     // Declare point to function
     const std::vector<std::pair<const std::string, std::function<int(const int32_t *, size_t)>>> pointer_fn_map
     {
-        {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse},
-        {
+#ifdef __AVX__
+#    if (__AVX__)    
+        {"find_max_normal", &my::vector_avx::find_max_normal}, {"find_max_sse", &my::vector_avx::find_max_sse}
+    
+        ,{
             "find_max_avx", &my::vector_avx::find_max_avx
         }
+#    endif
+#    endif
 #ifdef __AVX512F__
 #    if (__AVX512F__)
         ,
