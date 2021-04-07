@@ -252,25 +252,6 @@ endif()
 set_property(TARGET vec2d_mult3 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 #set_target_properties(vec2d_mult3 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
-add_executable(vec3d_mult vec3d_mult.cpp)
-if (OPENMP_FOUND)
-    target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m)
-else()
-    target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda)
-endif()
-set_property(TARGET vec3d_mult PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(vec3d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
-
-add_executable(vec3d_mult2 vec3d_mult2.cpp)
-if (OPENMP_FOUND)
-    target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m)
-else()
-    target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} my_cuda)
-endif()
-set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(vec3d_mult2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
-
-
 set(EDV_PUBLIC_INCLUDE_DIRECTORIES      kernel/)
 set(EDV_PRIVATE_INCLUDE_DIRECTORIES     kernel/)
 target_include_directories(${PROJECT_NAME} PUBLIC ${EDV_PUBLIC_INCLUDE_DIRECTORIES})
@@ -282,8 +263,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${EDV_PRIVATE_INCLUDE_DIRECTO
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"
 )
-#vec2d_add
-install(TARGETS ${PROJECT_NAME} vec1d vec2d_mult vec2d_mult2 vec2d_mult3 vec3d_mult vec3d_mult2
+#vec2d_add vec2d_mult3 vec3d_mult vec3d_mult2
+install(TARGETS ${PROJECT_NAME} vec1d vec2d_mult vec2d_mult2 
 #   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
 #    CONFIGURATIONS Release
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
