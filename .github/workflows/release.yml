@@ -8,7 +8,9 @@ on:
       - 'build/**'
       - '**.md'
       - 'appveyor.yml'
-
+    tags:
+      - '*'
+#https://github.community/t/start-a-github-workflow-on-a-tag-name-and-build-based-on-that-specific-tag/16992/2
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
