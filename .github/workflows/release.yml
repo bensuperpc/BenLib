@@ -75,7 +75,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+      #if: startsWith(github.ref, 'refs/tags/')
       with:
         files: "${{github.workspace}}/build/package/*"
       env:
