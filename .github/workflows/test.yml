@@ -73,11 +73,6 @@ jobs:
       if: runner.os == 'Linux'
       run: sudo apt-get install nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc
 
-
-    - name: "📥 Install Nvidia Dependencies"
-      if: runner.os == 'Linux'
-      run: sudo ls /usr/share/
-
     - name: "📥 Install ARM64 Components"
       if: matrix.platform.name == 'ARM'
       run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
