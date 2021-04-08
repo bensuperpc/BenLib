@@ -36,8 +36,8 @@ jobs:
         platform:
         #- { name: Windows VS2017, os: windows-2016   }
         #- { name: Windows VS2019, os: windows-latest }
-        - { name: Linux GCC x86_64,      os: ubuntu-latest } #, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_gcc.cmake }
-        - { name: Linux Clang x86_64,    os: ubuntu-latest } #, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_clang.cmake }
+        - { name: Linux GCC x86_64,      os: ubuntu-latest, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_gcc.cmake }
+        - { name: Linux Clang x86_64,    os: ubuntu-latest, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_clang.cmake }
         #- { name: MacOS XCode,    os: macos-latest   }
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
