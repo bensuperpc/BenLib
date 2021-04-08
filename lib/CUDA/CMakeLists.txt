@@ -208,7 +208,7 @@ if(UNIX)
 endif()
 
 add_executable(vec1d vec1d.c)
-target_link_libraries(vec1d PRIVATE ${CUDA_LIBRARIES} my_cuda m)
+target_link_libraries(vec1d PRIVATE ${CUDA_LIBRARIES} my_cuda m cudart)
 set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 set_target_properties(vec1d PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
