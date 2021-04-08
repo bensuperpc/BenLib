@@ -277,9 +277,9 @@ if (OPENSSL_FOUND)
 endif()
 add_subdirectory(${lib_path}lib/std "src/lib/std")
 
-if (CUDA_FOUND)
+#if (CUDA_FOUND)
     add_subdirectory(${lib_path}lib/CUDA "src/lib/CUDA")
-endif()
+#endif()
 
 add_subdirectory(${lib_path}lib/python "src/lib/python")
 
