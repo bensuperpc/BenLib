@@ -74,7 +74,7 @@ jobs:
       run: sudo apt-get install nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc
 
 
-      - name: "📥 Install Nvidia Dependencies"
+    - name: "📥 Install Nvidia Dependencies"
       if: runner.os == 'Linux'
       run: sudo ls /usr/share/
 
