@@ -36,8 +36,8 @@ jobs:
         platform:
         #- { name: Windows VS2017, os: windows-2016   }
         #- { name: Windows VS2019, os: windows-latest }
-        - { name: Linux GCC x86_64,      os: ubuntu-latest, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_gcc.cmake }
-        - { name: Linux Clang x86_64,    os: ubuntu-latest, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_clang.cmake }
+        - { name: Linux GCC x86_64,      os: ubuntu-latest } #, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_gcc.cmake }
+        - { name: Linux Clang x86_64,    os: ubuntu-latest } #, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_clang.cmake }
         #- { name: MacOS XCode,    os: macos-latest   }
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
@@ -62,11 +62,21 @@ jobs:
 
     - name: "📥 Install Linux Dependencies"
       if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev doxygen doxygen-latex graphviz
+      run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev doxygen doxygen-latex graphviz
 
-    - name: "📥 Install Linux Dependencies"
+    - name: "📥 Install Nvidia Dependencies"
       if: runner.os == 'Linux'
-      run: sudo ls /usr/local
+      run: sudo apt-get install linux-headers-$(uname -r)
+      continue-on-error: true
+
+    - name: "📥 Install Nvidia Dependencies"
+      if: runner.os == 'Linux'
+      run: sudo apt-get install nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc
+
+
+      - name: "📥 Install Nvidia Dependencies"
+      if: runner.os == 'Linux'
+      run: sudo ls /usr/share/
 
     - name: "📥 Install ARM64 Components"
       if: matrix.platform.name == 'ARM'
