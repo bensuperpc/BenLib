@@ -49,7 +49,6 @@ project(my_cuda LANGUAGES CUDA CXX C)
 #    message(STATUS "CMAKE_CUDA_COMPILER: True")
 #endif()
 
-
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     # Top-level project
     set(CMAKE_CXX_STANDARD 17)
@@ -68,11 +67,16 @@ endif()
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 message(STATUS "BEGING: ${CUDA_TOOLKIT_ROOT_DIR} at ${CUDA_NVCC_EXECUTABLE} at ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
+#-- BEGING: /opt/cuda at /opt/cuda/bin/nvcc at /opt/cuda/targets/x86_64-linux/include at /opt/cuda/targets/x86_64-linux/lib/libcudart.so
+#OK /opt/cuda/lib64/libcudart_static.a;;Threads::Threads;dl;/usr/lib/librt.so
 
-find_package(CUDA 10.0)
+
+
+#find_package(CUDA 10.0)
 if (CUDA_FOUND)
-    include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
-    link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})
+
+    include_directories(${CUDA_INCLUDE_DIRS}) #${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS}
+    link_directories(${CUDA_LIBRARIES}) #${BLAS_LIBRARIES}
     if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
         message(STATUS "CMAKE_CUDA_STANDARD: C++17")
     set(CMAKE_CUDA_STANDARD 17)
@@ -89,7 +93,6 @@ if (CUDA_FOUND)
     message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY} at ${CUDA_LIBRARIES}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
-    find_package(CUDA 10.0)
 endif()
 #For clang CUDA
 # --cuda-path=${CUDA_TOOLKIT_ROOT_DIR}
@@ -176,7 +179,7 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
         >)
     target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
-
+target_compile_options(my_cuda PRIVATE "-fno-lto")
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(my_cuda PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
