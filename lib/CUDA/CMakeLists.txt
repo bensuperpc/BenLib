@@ -67,14 +67,9 @@ endif()
 
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
-
-# Can fix some issues
-#if(NOT CUDA_TOOLKIT_ROOT_DIR)
-#    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
-#endif()
+message(STATUS "BEGING: ${CUDA_TOOLKIT_ROOT_DIR} at ${CUDA_NVCC_EXECUTABLE} at ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
 
 find_package(CUDA 10.0)
-
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
     link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})
@@ -91,13 +86,11 @@ if (CUDA_FOUND)
 #–default-stream per-thread
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
     message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
-    message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
+    message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY} at ${CUDA_LIBRARIES}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
     find_package(CUDA 10.0)
 endif()
-
-
 #For clang CUDA
 # --cuda-path=${CUDA_TOOLKIT_ROOT_DIR}
 # -lcudart_static or -lcudart
@@ -160,7 +153,7 @@ include_directories("kernel/")
 
 #set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ")
     
-if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
+if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
     target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
         --threads 0 -Wall -Wextra -pipe #--std=c++14
         -Xptxas -O2 --default-stream per-thread
@@ -184,7 +177,6 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
     target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
 
-
 set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(my_cuda PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
@@ -195,7 +187,7 @@ endif()
 set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 #set_target_properties(my_cuda PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 #set_property
-#target_link_libraries(my_cuda PRIVATE ${CUDA_LIBRARIES})
+target_link_libraries(my_cuda PRIVATE ${CUDA_LIBRARIES})
 
 if(APPLE)
   # We need to add the path to the driver (libcuda.dylib) as an rpath, 
@@ -212,7 +204,7 @@ if(UNIX)
 endif()
 
 add_executable(vec1d vec1d.c)
-target_link_libraries(vec1d PRIVATE ${CUDA_LIBRARIES} my_cuda m) #cudart
+target_link_libraries(vec1d PRIVATE ${CUDA_LIBRARIES} my_cuda m)
 set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
 #set_target_properties(vec1d PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
