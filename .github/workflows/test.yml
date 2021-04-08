@@ -66,11 +66,6 @@ jobs:
 
     - name: "📥 Install Nvidia Dependencies"
       if: runner.os == 'Linux'
-      run: sudo apt-get install linux-headers-$(uname -r)
-      continue-on-error: true
-
-    - name: "📥 Install Nvidia Dependencies"
-      if: runner.os == 'Linux'
       run: sudo apt-get install nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc
 
     - name: "📥 Install ARM64 Components"
