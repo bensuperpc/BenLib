@@ -41,7 +41,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_CUDA_COMPILER "/opt/cuda/bin/nvcc")
 #set(CMAKE_CUDA_COMPILER_TARGET "")
-set(CMAKE_CUDA_STANDARD 14)
+set(CMAKE_CUDA_STANDARD 17)
 
 # If you change these flags, CMake will not rebuild with these flags
 set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=skylake")
