@@ -24,7 +24,7 @@ cd build
 #--build build
 #cmake build --trace-source="CMakeLists.txt"
 
-cmake -G Ninja $@ .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_TOOLCHAIN_FILE=../toolchain/toolchain_x86_64_linux_clang.cmake
+cmake -G Ninja $@ .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_TOOLCHAIN_FILE=../toolchain/manjaro/toolchain_x86_64_linux_clang.cmake
 #-d explain 
 ninja
 ctest --output-on-failure -j$(nproc) #--extra-verbose

@@ -204,7 +204,7 @@ include(ConfigureOpenGL)
 include(ConfigureOpenCL)
 
 #   ================    CUDA    ================
-include(ConfigureCUDA)
+#include(ConfigureCUDA)
 
 #   ================    VULKAN    ================
 include(ConfigureVulkan)

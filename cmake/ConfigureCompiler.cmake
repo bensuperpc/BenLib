@@ -36,17 +36,6 @@ set(BUILD_SHARED_LIBS "Build shared (dynamic) libraries" ON)
 set(CLANG_THREADSANIZER OFF)
 
 
-if(NOT CMAKE_C_COMPILER)
-    set(CMAKE_C_COMPILER /usr/bin/clang)
-#    set(CMAKE_C_COMPILER /usr/bin/gcc)
-endif()
-if(NOT CMAKE_CXX_COMPILER)
-    set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-#    set(CMAKE_CXX_COMPILER /usr/bin/g++)
-endif()
-
-option(BASE_X86_ARCH OFF)
-
 #Set the highest C++ standard supported by the compiler
 #set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_C_STANDARD 11)
@@ -158,6 +147,11 @@ set(CMAKE_C_FLAGS_MINSIZEREL     "${CMAKE_C_FLAGS_MINSIZEREL} -Os ${SEC_COMPILER
 set(CMAKE_C_FLAGS_DEBUG          "${CMAKE_C_FLAGS_DEBUG} -g3 -Og -ggdb3 -v") # Remove -v
 set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG}")
 
+
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_C_FLAGS                "${CMAKE_C_FLAGS} -march=native")
+endif()
+
 #=== CXX FLAGS ===
 #-Wold-style-cast -Wdouble-promotion -fstack-usage -Wpadded
 
@@ -186,6 +180,11 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL     "${CMAKE_CXX_FLAGS_MINSIZEREL} -Os ${SEC_COMP
 set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O3 ${SEC_COMPILER_REL} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -g3 -Og -ggdb3 -v") # Remove -v -pg
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG}")
+
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -march=native")
+endif()
+
 
 #gcov
 set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
