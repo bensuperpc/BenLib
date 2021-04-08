@@ -205,7 +205,7 @@ include(ConfigureOpenCL)
 
 #   ================    CUDA    ================
 #message(STATUS "include(ConfigureCUDA) CUDA_INCLUDE_DIRS: ${CUDA_INCLUDE_DIRS} CUDA_CUDART_LIBRARY: ${CUDA_CUDART_LIBRARY}")
-#include(ConfigureCUDA)
+include(ConfigureCUDA)
 
 #   ================    VULKAN    ================
 include(ConfigureVulkan)
@@ -277,9 +277,9 @@ if (OPENSSL_FOUND)
 endif()
 add_subdirectory(${lib_path}lib/std "src/lib/std")
 
-#if (CUDA_FOUND)
+if (CUDA_FOUND)
     add_subdirectory(${lib_path}lib/CUDA "src/lib/CUDA")
-#endif()
+endif()
 
 add_subdirectory(${lib_path}lib/python "src/lib/python")
 

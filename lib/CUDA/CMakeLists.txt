@@ -72,7 +72,6 @@ endif()
 #if(NOT CUDA_TOOLKIT_ROOT_DIR)
 #    set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
 #endif()
-
 find_package(CUDA 10.0 QUIET)
 message("CUDA_LIBRARIES ${CUDA_LIBRARIES}")
 if (CUDA_FOUND)
@@ -94,7 +93,6 @@ if (CUDA_FOUND)
     message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
-    find_package(CUDA 10.0)
 endif()
 
 
