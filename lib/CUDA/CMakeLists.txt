@@ -31,7 +31,6 @@
 #           https://releases.llvm.org/6.0.0/docs/CompileCudaWithLLVM.html
 #           https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
 #           https://stackoverflow.com/questions/53256405/howto-pass-flag-to-nvcc-compiler-in-cmake
-#           https://github.com/Kitware/CMake/blob/master/Tests/Cuda/Complex/CMakeLists.txt
 #  OS: ALL                                                   #
 #  CPU: ALL                                                  #
 #                                                            #
@@ -49,9 +48,10 @@ project(my_cuda LANGUAGES CUDA CXX C)
 #    message(STATUS "CMAKE_CUDA_COMPILER: True")
 #endif()
 
+
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     # Top-level project
-    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD 14)
     set(CMAKE_C_STANDARD 11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -march=native")
     set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
@@ -64,24 +64,18 @@ else()
     # Sub-level project
 endif()
 
+
+
 #   ================    CUDA    ================
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
-message(STATUS "BEGING: ${CUDA_TOOLKIT_ROOT_DIR} at ${CUDA_NVCC_EXECUTABLE} at ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
-#-- BEGING: /opt/cuda at /opt/cuda/bin/nvcc at /opt/cuda/targets/x86_64-linux/include at /opt/cuda/targets/x86_64-linux/lib/libcudart.so
-#OK /opt/cuda/lib64/libcudart_static.a;;Threads::Threads;dl;/usr/lib/librt.so
-
-
-
-#find_package(CUDA 10.0)
+find_package(CUDA 10.0 QUIET)
+#set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda")
 if (CUDA_FOUND)
-
-    include_directories(${CUDA_INCLUDE_DIRS}) #${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS}
-    link_directories(${CUDA_LIBRARIES}) #${BLAS_LIBRARIES}
+    include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
+    link_directories(${CUDA_LIBRARIES} ${BLAS_LIBRARIES})
     if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
-        message(STATUS "CMAKE_CUDA_STANDARD: C++17")
-    set(CMAKE_CUDA_STANDARD 17)
+        set(CMAKE_CUDA_STANDARD 17)
     else()
-        message(STATUS "CMAKE_CUDA_STANDARD: C++14")
         set(CMAKE_CUDA_STANDARD 14)
     endif()
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
@@ -90,10 +84,10 @@ if (CUDA_FOUND)
 #–default-stream per-thread
     message(STATUS "CUDA: FOUND on ${PROJECT_NAME}")
     message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
-    message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY} at ${CUDA_LIBRARIES}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
 endif()
+
 #For clang CUDA
 # --cuda-path=${CUDA_TOOLKIT_ROOT_DIR}
 # -lcudart_static or -lcudart
@@ -142,21 +136,21 @@ set(HEADERS
 
 #cuda_add_library(my_cuda STATIC ${SRCS} ${HEADERS} OPTIONS -arch sm_75)
 add_library(my_cuda SHARED ${SRCS} ${HEADERS})
-#cuda_add_executable
+
 
 #set_target_properties(my_cuda PROPERTIES PUBLIC_HEADER "${EDV_INCLUDE_FILES}")
 
 include_directories("kernel/")
 
-#if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
-#    target_compile_features(my_cuda PUBLIC cxx_std_17)
-#else()
-#    target_compile_features(my_cuda PUBLIC cxx_std_14)
-#endif()
+if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
+    target_compile_features(my_cuda PUBLIC cxx_std_17)
+else()
+    target_compile_features(my_cuda PUBLIC cxx_std_14)
+endif()
 
 #set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ")
     
-if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
+if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
     target_compile_options(my_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
         --threads 0 -Wall -Wextra -pipe #--std=c++14
         -Xptxas -O2 --default-stream per-thread
@@ -179,18 +173,6 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
         >)
     target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
-target_compile_options(my_cuda PRIVATE "-fno-lto")
-set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
-set_target_properties(my_cuda PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-# If support unity build, improve speed on headers
-if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
-	#target_precompile_headers(convert_utils PUBLIC ${HEADERS})
-endif()
-set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(my_cuda PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
-#set_property
-target_link_libraries(my_cuda PRIVATE ${CUDA_LIBRARIES})
 
 if(APPLE)
   # We need to add the path to the driver (libcuda.dylib) as an rpath, 
@@ -206,10 +188,25 @@ if(UNIX)
   set_property(TARGET my_cuda PROPERTY BUILD_RPATH ${CMAKE_CUDA_IMPLICIT_LINK_DIRECTORIES})
 endif()
 
+
+
+set_target_properties(my_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+set_target_properties(my_cuda PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(my_cuda PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+
+
+# If support unity build, improve speed on headers
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+	#target_precompile_headers(convert_utils PUBLIC ${HEADERS})
+endif()
+set_property(TARGET my_cuda PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(my_cuda PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+#target_link_libraries(my_cuda PRIVATE ${CUDA_LIBRARIES})
+
 add_executable(vec1d vec1d.c)
 target_link_libraries(vec1d PRIVATE ${CUDA_LIBRARIES} my_cuda m)
 set_property(TARGET vec1d PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(vec1d PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+set_target_properties(vec1d PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult vec2d_mult.c)
 if (OPENMP_FOUND)
@@ -218,34 +215,53 @@ else()
     target_link_libraries(vec2d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda m)
 endif()
 set_property(TARGET vec2d_mult PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(vec2d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+set_target_properties(vec2d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
-#add_executable(vec2d_add vec2d_add.c)
-#if (OPENMP_FOUND)
-#    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda m)
-#else()
-#    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} my_cuda)
-#endif()
-#set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(vec2d_add PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+add_executable(vec2d_add vec2d_add.c)
+if (OPENMP_FOUND)
+    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_C my_cuda)
+else()
+    target_link_libraries(vec2d_add PRIVATE ${CUDA_LIBRARIES} my_cuda)
+endif()
+set_property(TARGET vec2d_add PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec2d_add PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult2 vec2d_mult.cpp)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m)
+    target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
 else()
     target_link_libraries(vec2d_mult2 PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec2d_mult2 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(vec2d_mult2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+set_target_properties(vec2d_mult2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
 add_executable(vec2d_mult3 vec2d_mult3.cpp)
 if (OPENMP_FOUND)
-    target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda m)
+    target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
 else()
     target_link_libraries(vec2d_mult3 PRIVATE ${CUDA_LIBRARIES} my_cuda)
 endif()
 set_property(TARGET vec2d_mult3 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
-#set_target_properties(vec2d_mult3 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+set_target_properties(vec2d_mult3 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+
+add_executable(vec3d_mult vec3d_mult.cpp)
+if (OPENMP_FOUND)
+    target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
+else()
+    target_link_libraries(vec3d_mult PRIVATE ${CUDA_LIBRARIES} my_cuda)
+endif()
+set_property(TARGET vec3d_mult PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec3d_mult PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+
+add_executable(vec3d_mult2 vec3d_mult2.cpp)
+if (OPENMP_FOUND)
+    target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} OpenMP::OpenMP_CXX my_cuda)
+else()
+    target_link_libraries(vec3d_mult2 PRIVATE ${CUDA_LIBRARIES} my_cuda)
+endif()
+set_property(TARGET vec3d_mult2 PROPERTY CUDA_ARCHITECTURES 52 60 61 62 70 72 75)
+set_target_properties(vec3d_mult2 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+
 
 set(EDV_PUBLIC_INCLUDE_DIRECTORIES      kernel/)
 set(EDV_PRIVATE_INCLUDE_DIRECTORIES     kernel/)
@@ -258,8 +274,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${EDV_PRIVATE_INCLUDE_DIRECTO
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"
 )
-#vec2d_add vec2d_mult3 vec3d_mult vec3d_mult2
-install(TARGETS ${PROJECT_NAME} vec1d vec2d_mult vec2d_mult2 
+
+install(TARGETS ${PROJECT_NAME} vec1d vec2d_add vec2d_mult vec2d_mult2 vec2d_mult3 vec3d_mult vec3d_mult2
 #   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
 #    CONFIGURATIONS Release
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -268,27 +284,3 @@ install(TARGETS ${PROJECT_NAME} vec1d vec2d_mult vec2d_mult2
 #    PRIVATE_HEADER DESTINATION source
     PUBLIC_HEADER DESTINATION "include/${PROJECT_NAME}"
 )
-
-#install(TARGETS vec1d
-#  RUNTIME
-#  DESTINATION bin
-#  COMPONENT applications)
-
-
-#${CMAKE_INSTALL_INCLUDEDIR}
-#install(TARGETS my_cuda
-#        CONFIGURATIONS Debug
-#        RUNTIME DESTINATION Debug/bin)
-#install(TARGETS my_cuda
-#        CONFIGURATIONS Release
-#        RUNTIME DESTINATION Release/bin)
-
-#install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/kernel/matrix.tpp"
-#  DESTINATION include
-#  )
-#
-#install(
-#    DIRECTORY ${CMAKE_SOURCE_DIR}/include/
-#    DESTINATION include
-#    FILES_MATCHING PATTERN "*.h*")
-

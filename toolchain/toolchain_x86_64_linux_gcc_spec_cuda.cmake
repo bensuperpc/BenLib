@@ -28,13 +28,13 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 set(TOOLCHAIN "x86_64-linux-gnu")
 
-set(CMAKE_ASM_COMPILER "clang")
+set(CMAKE_ASM_COMPILER "gcc")
 set(CMAKE_ASM_COMPILER_TARGET ${TOOLCHAIN})
 
-set(CMAKE_C_COMPILER "clang")
+set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_C_COMPILER_TARGET ${TOOLCHAIN})
 
-set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_COMPILER_TARGET ${TOOLCHAIN})
 
 # If you change these flags, CMake will not rebuild with these flags
@@ -63,25 +63,21 @@ link_directories(${CUDA_LIBRARIES})
 
 #link_directories("${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs")
 
-#set(CUDA_CUDART_LIBRARY "${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/libcudart.so")
-#set(CUDA_cublas_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libcublas.so)
-#set(CUDA_cufft_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libcufft.so)
-#set(CUDA_nppc_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppc.so)
-#set(CUDA_nppial_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppial.so)
-#set(CUDA_nppicc_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppicc.so)
-#set(CUDA_nppicom_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppicom.so)
-#set(CUDA_nppidei_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppidei.so)
-#set(CUDA_nppif_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppif.so)
-#set(CUDA_nppig_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppig.so)
-#set(CUDA_nppim_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppim.so)
-#set(CUDA_nppist_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppist.so)
-#set(CUDA_nppisu_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppisu.so)
-#set(CUDA_nppitc_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppitc.so)
-#set(CUDA_npps_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnpps.so)
-
-
-
-#set( (missing: CUDA_INCLUDE_DIRS CUDA_CUDART_LIBRARY
+set(CUDA_CUDART_LIBRARY "${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/libcudart.so")
+set(CUDA_cublas_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libcublas.so)
+set(CUDA_cufft_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libcufft.so)
+set(CUDA_nppc_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppc.so)
+set(CUDA_nppial_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppial.so)
+set(CUDA_nppicc_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppicc.so)
+set(CUDA_nppicom_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppicom.so)
+set(CUDA_nppidei_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppidei.so)
+set(CUDA_nppif_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppif.so)
+set(CUDA_nppig_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppig.so)
+set(CUDA_nppim_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppim.so)
+set(CUDA_nppist_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppist.so)
+set(CUDA_nppisu_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppisu.so)
+set(CUDA_nppitc_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnppitc.so)
+set(CUDA_npps_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/targets/${CUDA_TARGET_PLATFORM_ARCH}/lib/stubs/libnpps.so)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)

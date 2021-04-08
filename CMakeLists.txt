@@ -277,8 +277,10 @@ if (OPENSSL_FOUND)
 endif()
 add_subdirectory(${lib_path}lib/std "src/lib/std")
 
-#if (CUDA_FOUND)
+#if (NOT CMAKE_TOOLCHAIN_FILE)
     add_subdirectory(${lib_path}lib/CUDA "src/lib/CUDA")
+#else()
+#    message(WARNING "${lib_path}lib/CUDA was disable due toolchain")
 #endif()
 
 add_subdirectory(${lib_path}lib/python "src/lib/python")
