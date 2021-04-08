@@ -205,7 +205,7 @@ include(ConfigureOpenCL)
 
 #   ================    CUDA    ================
 #message(STATUS "include(ConfigureCUDA) CUDA_INCLUDE_DIRS: ${CUDA_INCLUDE_DIRS} CUDA_CUDART_LIBRARY: ${CUDA_CUDART_LIBRARY}")
-include(ConfigureCUDA)
+#include(ConfigureCUDA)
 
 #   ================    VULKAN    ================
 include(ConfigureVulkan)
