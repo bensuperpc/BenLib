@@ -64,11 +64,6 @@ jobs:
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install ninja-build openssl libomp-dev libopencv-dev libssl-dev openssl libsfml-dev nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc freeglut3-dev qt5-default qtmultimedia5-dev qtbase5-dev-tools qtdeclarative5-dev mesa-common-dev libpcap-dev lld ocl-icd-opencl-dev ocl-icd-libopencl1 opencl-headers libboost-all-dev doxygen doxygen-latex graphviz
 
-    - name: "locate"
-      if: runner.os == 'Linux'
-      run: ls /usr && ls /opt && ls /usr/local && whereis nvcc && locate nvcc
-
-
     - name: "📥 Install ARM64 Components"
       if: matrix.platform.name == 'ARM'
       run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
