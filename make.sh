@@ -24,10 +24,10 @@ cd build
 #--build build
 #cmake build --trace-source="CMakeLists.txt"
 
-cmake -G Ninja $@ .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_TOOLCHAIN_FILE=../toolchain/manjaro/toolchain_x86_64_linux_clang.cmake
+cmake -G Ninja $@ .. -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_TOOLCHAIN_FILE=../toolchain/manjaro/toolchain_aarch64_linux_gcc.cmake
 #-d explain 
 ninja
-ctest --output-on-failure -j$(nproc) #--extra-verbose
+#ctest --output-on-failure -j$(nproc) #--extra-verbose
 #valgrind --tool=callgrind --collect-systime=msec --trace-children=no
 #cmake .. --graphviz=foo.dot
 #dot -Tpng -Gdpi=120 foo.dot -o foo.png

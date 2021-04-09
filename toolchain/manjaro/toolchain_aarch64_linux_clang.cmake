@@ -25,8 +25,8 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR x86_64)
-set(TOOLCHAIN "x86_64-linux-gnu")
+set(CMAKE_SYSTEM_PROCESSOR aarch64)
+set(TOOLCHAIN "aarch64-linux-eabi")
 
 set(CMAKE_ASM_COMPILER "/usr/bin/clang")
 set(CMAKE_ASM_COMPILER_TARGET ${TOOLCHAIN})
@@ -34,19 +34,38 @@ set(CMAKE_ASM_COMPILER_TARGET ${TOOLCHAIN})
 set(CMAKE_C_COMPILER "/usr/bin/clang")
 set(CMAKE_C_COMPILER_TARGET ${TOOLCHAIN})
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_EXTENSIONS OFF)
 
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 set(CMAKE_CXX_COMPILER_TARGET ${TOOLCHAIN})
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_CUDA_COMPILER "/opt/cuda/bin/nvcc")
 #set(CMAKE_CUDA_COMPILER_TARGET "")
 set(CMAKE_CUDA_STANDARD 17)
 
 # If you change these flags, CMake will not rebuild with these flags
-set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=skylake")
-set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=skylake")
-set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=skylake")
+set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72 -gcc-toolchain /usr/aarch64-linux-gnu")
+set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72 -gcc-toolchain /usr/aarch64-linux-gnu")
+set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72-gcc-toolchain /usr/aarch64-linux-gnu")
+
+
+#set(CMAKE_LINKER /usr/aarch64-linux-gnu/bin/ld CACHE STRING "Set the cross-compiler tool LD" FORCE)
+
+
+#set(CMAKE_FIND_ROOT_PATH "/usr/aarch64-linux-gnu")
+
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+#set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+#set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+
+
+
+#set(CMAKE_SYSROOT "/usr/aarch64-linux-gnu")
+
+#set(LLVM_TARGETS_TO_BUILD AArch64)
 
 #set(CMAKE_C_FLAGS "")
 #set(CMAKE_CXX_FLAGS "")

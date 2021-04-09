@@ -48,6 +48,13 @@ set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=skylake")
 set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=skylake")
 set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=skylake")
 
+#set(CMAKE_C_FLAGS "")
+#set(CMAKE_CXX_FLAGS "")
+
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" CACHE STRING "C flags")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CACHE STRING "C++ flags")
+
+
 set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
 set(CUDA_INCLUDE_DIRS "/opt/cuda/include")
 set(CUDA_TOOLKIT_INCLUDE "/opt/cuda/include")
@@ -73,8 +80,10 @@ set(CUDA_nppisu_LIBRARY "/opt/cuda/lib64/libnppisu.so")
 set(CUDA_nppitc_LIBRARY "/opt/cuda/lib64/libnppitc.so")
 set(CUDA_npps_LIBRARY "/opt/cuda/lib64/libnpps.so")
 
+#set(CMAKE_FIND_ROOT_PATH "")
+
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-
