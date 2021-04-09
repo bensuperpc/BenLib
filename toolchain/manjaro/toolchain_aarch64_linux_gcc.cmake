@@ -26,6 +26,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
+set(CMAKE_CROSSCOMPILING ON)
 set(TOOLCHAIN "aarch64-linux-gnu")
 
 set(CMAKE_ASM_COMPILER "/usr/bin/${TOOLCHAIN}-gcc")
@@ -33,20 +34,17 @@ set(CMAKE_ASM_COMPILER "/usr/bin/${TOOLCHAIN}-gcc")
 set(CMAKE_C_COMPILER "/usr/bin/${TOOLCHAIN}-gcc")
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_EXTENSIONS OFF)
+set(C_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_COMPILER "/usr/bin/${TOOLCHAIN}-g++")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-set(CMAKE_CUDA_COMPILER "/opt/cuda/bin/nvcc")
-#set(CMAKE_CUDA_COMPILER_TARGET "")
-set(CMAKE_CUDA_STANDARD 17)
-
+set(CXX_STANDARD_REQUIRED ON)
 
 # If you change these flags, CMake will not rebuild with these flags
 set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
-set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72 -std=c11")
-set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72 -std=c++20")
+set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
+set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
 
 #set(CMAKE_C_FLAGS "")
 #set(CMAKE_CXX_FLAGS "")
@@ -55,30 +53,7 @@ set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CACHE STRING "C++ flags")
 
 
-set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
-set(CUDA_INCLUDE_DIRS "/opt/cuda/include")
-set(CUDA_TOOLKIT_INCLUDE "/opt/cuda/include")
-set(CUDA_CUDART_LIBRARY "/opt/cuda/lib64/libcudart.so")
-set(CUDA_cublas_LIBRARY "/opt/cuda/lib64/libcublas.so")
-set(CUDA_LIBRARIES "/opt/cuda/lib64/libcudart_static.a;Threads::Threads;dl;/usr/lib/librt.so")
-set(CUDA_cudart_static_LIBRARY "/opt/cuda/lib64/libcudart_static.a")
-set(CUDA_cudadevrt_LIBRARY "/opt/cuda/lib64/libcudadevrt.a")
-set(CUDA_NVCC_EXECUTABLE "/opt/cuda/bin/nvcc")
-set(CUDA_SDK_ROOT_DIR "CUDA_SDK_ROOT_DIR-NOTFOUND")
-set(CUDA_SDK_SEARCH_PATH "CUDA_SDK_ROOT_DIR-NOTFOUND;/opt/cuda;/usr;/usr/local/cuda/local/NVSDK0.2;/opt/cuda;/usr;/usr/local/cuda/NVSDK0.2;/opt/cuda;/usr;/usr/local/cuda/NV_CUDA_SDK;/home/bensuperpc/NVIDIA_CUDA_SDK;/home/bensuperpc/NVIDIA_CUDA_SDK_MACOSX;/Developer/CUDA")
-set(CUDA_cufft_LIBRARY "/opt/cuda/lib64/libcufft.so")
-set(CUDA_nppc_LIBRARY "/opt/cuda/lib64/libnppc.so")
-set(CUDA_nppial_LIBRARY "/opt/cuda/lib64/libnppial.so")
-set(CUDA_nppicc_LIBRARY "/opt/cuda/lib64/libnppicc.so")
-set(CUDA_nppicom_LIBRARY "")
-set(CUDA_nppidei_LIBRARY "/opt/cuda/lib64/libnppidei.so")
-set(CUDA_nppif_LIBRARY "/opt/cuda/lib64/libnppif.so")
-set(CUDA_nppig_LIBRARY "/opt/cuda/lib64/libnppig.so")
-set(CUDA_nppim_LIBRARY "/opt/cuda/lib64/libnppim.so")
-set(CUDA_nppist_LIBRARY "/opt/cuda/lib64/libnppist.so")
-set(CUDA_nppisu_LIBRARY "/opt/cuda/lib64/libnppisu.so")
-set(CUDA_nppitc_LIBRARY "/opt/cuda/lib64/libnppitc.so")
-set(CUDA_npps_LIBRARY "/opt/cuda/lib64/libnpps.so")
+#set(CMAKE_SYSROOT "/usr/aarch64-linux-gnu")
 
 set(CMAKE_FIND_ROOT_PATH "/usr/aarch64-linux-gnu")
 

@@ -187,7 +187,11 @@ endif()
 
 
 #gcov
-set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
+
+if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
+endif()
 
 # Include to config Ninja
 include(ConfigureNinja)

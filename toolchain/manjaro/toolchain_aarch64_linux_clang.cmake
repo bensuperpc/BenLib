@@ -26,6 +26,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
+set(CMAKE_CROSSCOMPILING ON)
 set(TOOLCHAIN "aarch64-linux-eabi")
 
 set(CMAKE_ASM_COMPILER "/usr/bin/clang")

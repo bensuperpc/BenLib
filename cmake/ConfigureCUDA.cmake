@@ -38,7 +38,9 @@ if(NOT CUDA_TOOLKIT_ROOT_DIR)
     set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
 endif()
 
-find_package(CUDA 10.0 QUIET)
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    find_package(CUDA 10.0 QUIET)
+endif()
 
 if (CUDA_FOUND)
     include_directories(${CUDA_INCLUDE_DIRS} ${BLAS_INCLUDE_DIRS} ${CUDA_CUBLAS_DIRS})
@@ -59,7 +61,6 @@ if (CUDA_FOUND)
     message(STATUS "CUDA: ${CUDA_INCLUDE_DIRS} at ${CUDA_CUDART_LIBRARY}")
 else()
     message(STATUS "CUDA: NOT FOUND on ${PROJECT_NAME}")
-    find_package(CUDA 10.0)
 endif()
 
 

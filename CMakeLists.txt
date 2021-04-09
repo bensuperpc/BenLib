@@ -76,11 +76,11 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set(CMAKE_UNITY_BUILD ON)
 endif()
 # If enable tests
-option(BUILD_TESTING ON "If you want enable test, default: ON")
+set(BUILD_TESTING ON CACHE BOOL "If you want enable test, default: ON")
 # If enable coverage
-option(CODE_COVERAGE OFF "If you want enable coverage, default: OFF")
-option(BUILD_DOCS_DOXYGEN ON "If you want build Doc with Doxygen, default: ON")
-option(BUILD_ARDUINO ON "If you want build arduino lib, default: ON")
+set(CODE_COVERAGE OFF CACHE BOOL "If you want enable coverage, default: OFF")
+set(BUILD_DOCS_DOXYGEN ON CACHE BOOL "If you want build Doc with Doxygen, default: ON")
+set(BUILD_ARDUINO ON CACHE BOOL "If you want build arduino lib, default: ON")
 
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -175,6 +175,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 #   ================    OpenMP    ================
 include(ConfigureOpenMP)
 
+if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 #   ================    SFML    ================
 #set(SFML_ROOT "C:\\Project Files (x86)\\SFML")
 include(ConfigureSFML)
@@ -187,9 +188,7 @@ include(ConfigureSFML)
 
 #${OGRE_LIBRARIES}
 
-
 #   ================    Thread    ================
-
 
 #   ================    BOOST    ================
 include(ConfigureBoost)
@@ -204,7 +203,7 @@ include(ConfigureOpenGL)
 include(ConfigureOpenCL)
 
 #   ================    CUDA    ================
-#include(ConfigureCUDA)
+include(ConfigureCUDA)
 
 #   ================    VULKAN    ================
 include(ConfigureVulkan)
@@ -222,7 +221,7 @@ include(ConfigureQt)
 #set(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
 
 include(ConfigureCppCheck)
-
+endif()
 #   ================    Doxygen    ================
 include(ConfigureDoxygen)
 
@@ -248,11 +247,26 @@ add_subdirectory(${lib_path}lib/C/display "src/lib/C/display_c")
 add_subdirectory(${lib_path}lib/C/integer "src/lib/C/integer_c")
 
 # C++ libs
+add_subdirectory(${lib_path}lib/math "src/lib/math")
+
+add_subdirectory(${lib_path}lib/time "src/lib/time")
+
+add_subdirectory(${lib_path}lib/cpu "src/lib/cpu")
+
+add_subdirectory(${lib_path}lib/thread "src/lib/thread")
+
+add_subdirectory(${lib_path}lib/vector "src/lib/vector")
+
+add_subdirectory(${lib_path}lib/std "src/lib/std")
+
+add_subdirectory(${lib_path}lib/filesystem "src/lib/filesystem")
+
+
+if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+
 add_subdirectory(${lib_path}lib/convert_utils "src/lib/convert_utils")
 
 add_subdirectory(${lib_path}lib/texture "src/lib/texture")
-
-add_subdirectory(${lib_path}lib/math "src/lib/math")
 
 add_subdirectory(${lib_path}lib/utils/opencv "src/lib/utils/opencv")
 
@@ -260,27 +274,17 @@ add_subdirectory(${lib_path}lib/utils/opengl "src/lib/utils/opengl")
 
 #add_subdirectory(src/lib/utils/sfml "src/lib/utils/sfml")
 
-add_subdirectory(${lib_path}lib/time "src/lib/time")
-
-add_subdirectory(${lib_path}lib/cpu "src/lib/cpu")
-
-add_subdirectory(${lib_path}lib/vector "src/lib/vector")
-
-add_subdirectory(${lib_path}lib/thread "src/lib/thread")
-
-add_subdirectory(${lib_path}lib/filesystem "src/lib/filesystem")
-
 add_subdirectory(${lib_path}lib/string_lib "src/lib/string_lib")
+
 if (OPENSSL_FOUND)
     add_subdirectory(${lib_path}lib/crypto "src/lib/crypto")
 endif()
-add_subdirectory(${lib_path}lib/std "src/lib/std")
 
-#if (CUDA_FOUND)
-    add_subdirectory(${lib_path}lib/CUDA "src/lib/CUDA")
-#endif()
+add_subdirectory(${lib_path}lib/CUDA "src/lib/CUDA")
+
 
 add_subdirectory(${lib_path}lib/python "src/lib/python")
+endif()
 
 if(BUILD_ARDUINO)
     #add_subdirectory(${lib_path}lib/arduino "src/lib/arduino")
@@ -406,17 +410,21 @@ target_link_libraries(bench_find_max PRIVATE thread Threads::Threads vector math
 add_dependencies(bench_find_max thread vector math time)
 set_target_properties(bench_find_max PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
+
 add_executable(bench_pc ${BENCH_PC})
 target_link_libraries(bench_pc PRIVATE time vector)
 add_dependencies(bench_pc time vector)
 set_target_properties(bench_pc PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
+if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 add_executable(bench_crc32 ${BENCH_CRC32})
 if(OpenMP_CXX_FOUND)
     target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time OpenMP::OpenMP_CXX)
 else()
     target_link_libraries(bench_crc32 PRIVATE thread Threads::Threads vector my_crypto math time)
 endif()
+
+
 add_dependencies(bench_crc32 thread Threads::Threads vector my_crypto math time)
 set_target_properties(bench_crc32 PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
 
@@ -465,6 +473,7 @@ add_executable(parse_csv ${PARSE_CSV})
 target_link_libraries(parse_csv PRIVATE string_lib)
 add_dependencies(parse_csv string_lib)
 set_target_properties(parse_csv PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
+endif()
 
 if (OPENSSL_FOUND)
     add_executable(list_all_file_hash ${LIST_ALL_FILE_HASH})
@@ -503,7 +512,7 @@ endif()
 #   ================    TESTING     ================
 #   ================================================
 set(ENABLE_TESTS "Enable tests" ON)
-
+if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 if(Boost_FOUND AND ENABLE_TESTS)
     enable_testing()
     #Test getSchwarzschild
@@ -600,6 +609,7 @@ if(Boost_FOUND AND ENABLE_TESTS)
     target_link_libraries(${TEST_POWER} PRIVATE ${Boost_LIBRARIES} math)
     set_target_properties(${TEST_POWER} PROPERTIES AUTOUIC OFF AUTOMOC OFF AUTORCC OFF)
     add_test(NAME ${TEST_POWER} COMMAND ${TEST_POWER})
+endif()
 endif()
 #add_test(NAME ${TEST_POWER} COMMAND ${CMAKE_COMMAND} --build . --target ${TEST_POWER})
 
@@ -792,7 +802,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/tools/graph.py
 #  ARCHIVE
 #  DESTINATION lib
 #  COMPONENT libraries)
-
+if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 # ====== BIN ======
 install(TARGETS list_all_file_hash
   RUNTIME
@@ -921,7 +931,7 @@ if(ENABLE_TESTS)
     endif()
 
 endif()
-
+endif()
 #install(FILES mylib.h
 #  DESTINATION include
 #  COMPONENT headers)
