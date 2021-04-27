@@ -35,7 +35,7 @@ namespace my
 {
 namespace cpu
 {
-#if (__i386__ || __x86_64__ || _M_AMD64)
+#if defined(__i386__) || defined(__x86_64__) || defined(_M_AMD64)
 
 /**
  * @brief Return nbrs cycle cpu

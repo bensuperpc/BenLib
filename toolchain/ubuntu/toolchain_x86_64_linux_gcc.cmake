@@ -51,6 +51,7 @@ set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=skylake")
 
 set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
 set(CUDA_INCLUDE_DIRS "/usr/include")
+
 set(CUDA_TOOLKIT_INCLUDE "/usr/include")
 set(CUDA_CUDART_LIBRARY "/usr/lib/x86_64-linux-gnu/libcudart.so")
 set(CUDA_cublas_LIBRARY "/usr/lib/x86_64-linux-gnu/libcublas.so")
@@ -74,6 +75,8 @@ set(CUDA_nppisu_LIBRARY "/usr/lib/x86_64-linux-gnu/libnppisu.so")
 set(CUDA_nppitc_LIBRARY "/usr/lib/x86_64-linux-gnu/libnppitc.so")
 set(CUDA_npps_LIBRARY "/usr/lib/x86_64-linux-gnu/libnpps.so")
 
+#set(CMAKE_SYSROOT "/usr")
+#set(CMAKE_FIND_ROOT_PATH "/usr")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)

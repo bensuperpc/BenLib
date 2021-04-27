@@ -11,7 +11,7 @@
 
 #include "cpu.hpp"
 
-#if (__i386__ || __x86_64__ || _M_AMD64)
+#if defined(__i386__) || defined(__x86_64__) || defined(_M_AMD64)
 /*
 #    ifdef _WIN32
 uint64_t my::cpu::rdtsc()

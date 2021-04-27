@@ -6,13 +6,27 @@ RUN dnf upgrade -y --refresh && dnf install -y gcc boost opencv opencv-devel cma
     git freeglut-devel xorg-x11-apps libudev-devel libXrandr libXrandr-devel libX11 \
     qt5-qtbase-devel qt5-qtbase openal-soft vorbis-tools libvorbis openal-soft-devel openssl SFML-devel \
     boost-devel openssl-devel qt5-qtmultimedia-devel qt5-qtquickcontrols2-devel && dnf autoremove -y
-RUN dnf install -y qt5-qtmultimedia qt5-qtquickcontrols2 qt5-qtquickcontrols cppcheck
+RUN dnf install -y qt5-qtmultimedia qt5-qtquickcontrols2 qt5-qtquickcontrols cppcheck clang ccache lld doxygen graphviz
+RUN dnf install -y wget
+
+#RUN wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-fedora33-11-3-local-11.3.0_465.19.01-1.x86_64.rpm
+#RUN rpm -i cuda-repo-fedora33-11-3-local-11.3.0_465.19.01-1.x86_64.rpm
+#RUN dnf clean all
+#RUN dnf -y module install nvidia-driver:latest-dkms
+#RUN dnf -y install cuda
+
+RUN dnf -y install 'dnf-command(config-manager)'
+RUN dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora33/x86_64/cuda-fedora33.repo
+RUN dnf clean all
+RUN dnf -y module install nvidia-driver:latest-dkms
+RUN dnf -y install cuda
+
 
 ARG UNAME=testuser
 ARG UID=1000
 ARG GID=1000
-RUN groupadd -g $GID -o $UNAME && useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
-USER $UNAME
+#RUN groupadd -g $GID -o $UNAME && useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
+#USER $UNAME
 
 WORKDIR /usr/src/app
 CMD ./make.sh -DCMAKE_BUILD_TYPE=Release

@@ -200,7 +200,7 @@ include(ConfigureOpenCV)
 include(ConfigureOpenGL)
 
 #   ================    OPENCL    ================
-include(ConfigureOpenCL)
+#include(ConfigureOpenCL)
 
 #   ================    CUDA    ================
 include(ConfigureCUDA)

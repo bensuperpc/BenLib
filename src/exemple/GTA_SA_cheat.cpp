@@ -86,7 +86,11 @@
  */
 
 #include <algorithm> // for std::find
+
+#if __has_include("boost/crc.hpp")
 #include <boost/crc.hpp>
+#endif
+
 #include <cmath> // pow
 #include <cstring>
 #include <iomanip>  // setw

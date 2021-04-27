@@ -57,6 +57,9 @@ set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=skylake")
 
 set(CUDA_TOOLKIT_ROOT_DIR "/opt/cuda;/usr;/usr/local/cuda")
 set(CUDA_INCLUDE_DIRS "/opt/cuda/include")
+
+include_directories("${CUDA_INCLUDE_DIRS}")
+
 set(CUDA_TOOLKIT_INCLUDE "/opt/cuda/include")
 set(CUDA_CUDART_LIBRARY "/opt/cuda/lib64/libcudart.so")
 set(CUDA_cublas_LIBRARY "/opt/cuda/lib64/libcublas.so")

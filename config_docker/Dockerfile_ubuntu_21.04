@@ -4,14 +4,14 @@ FROM $IMAGE
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \ 
     && apt-get install -y --allow-unauthenticated \ 
-    libsfml-dev ninja-build libopencv-dev qml-module-qtquick-controls qml-module-qtquick-controls2 doxygen doxygen-latex graphviz ccache clang \ 
-    g++ build-essential cmake qt5-default qtmultimedia5-dev mesa-common-dev libpcap-dev libssl-dev cppcheck ocl-icd-libopencl1 opencl-headers \ 
+    libsfml-dev ninja-build libopencv-dev qml-module-qtquick-controls qml-module-qtquick-controls2 doxygen doxygen-latex graphviz ccache \ 
+    g++ build-essential cmake qtbase5-dev qtmultimedia5-dev mesa-common-dev libpcap-dev libssl-dev cppcheck ocl-icd-libopencl1 opencl-headers \ 
     freeglut3-dev libboost-all-dev qtbase5-dev-tools qtdeclarative5-dev libqt5multimedia5 openssl libomp-dev lld nvidia-cuda-dev nvidia-cuda-toolkit ocl-icd-opencl-dev \ 
     && apt clean -y \ 
     && apt autoclean -y \ 
     && apt autoremove -y \ 
     && rm -rf /var/lib/apt/lists/*
-  
+
 ARG UNAME=testuser
 ARG UID=1000
 ARG GID=1000
@@ -20,4 +20,4 @@ ARG GID=1000
 #USER $UNAME
 
 WORKDIR /usr/src/app
-CMD ./make.sh -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_clang.cmake
+CMD ./make.sh -DCMAKE_BUILD_TYPE=Release
