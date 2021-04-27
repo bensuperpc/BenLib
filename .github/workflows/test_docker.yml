@@ -27,7 +27,8 @@ jobs:
         container:
         #- { name: "Ubuntu 20.04",    image: "ubuntu:20.04", dockerfile: config_docker/Dockerfile_ubuntu }
         #- { name: "Ubuntu 20.10",    image: "ubuntu:20.10", dockerfile: config_docker/Dockerfile_ubuntu }
-        - { name: "Ubuntu 21.04",    image: "ubuntu:21.04", container_name: ubuntu_21_04, dockerfile: config_docker/Dockerfile_ubuntu_21.04 }
+        #- { name: "Ubuntu 21.04",    image: "ubuntu:21.04", container_name: ubuntu_21_04, dockerfile: config_docker/Dockerfile_ubuntu_21.04 }
+        - { name: "Ubuntu 22.04",    image: "ubuntu:21.04", container_name: ubuntu_22_04, dockerfile: config_docker/Dockerfile_ubuntu_22.04 }
         #- { name: "archlinux",    image: "archlinux", dockerfile: config_docker/Dockerfile_archlinux }
       
         config:
@@ -56,9 +57,9 @@ jobs:
 
     - name: "📥 Install Docker"
       run: sudo apt-get update && sudo apt-get install docker-compose
-#-f ${{ matrix.container.dockerfile }}
+
     - name: "🛠️ Build container"
-      run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
+      run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} -f ${{ matrix.container.dockerfile }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
 
     - name: "🏃‍♀️ Run container"
       run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=128m ben_lib_builder_${{ matrix.container.container_name }}
