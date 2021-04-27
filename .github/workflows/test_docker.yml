@@ -56,12 +56,18 @@ jobs:
         fetch-depth: 0
 
     - name: "📥 Install Docker"
-      run: sudo apt-get update && sudo apt-get install docker-compose
+      run: sudo apt-get update && sudo apt-get remove docker docker-engine docker.io containerd runc && sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+    
+    - name: "📥 Install Docker"
+      run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: "📥 Install Docker"
+      run: sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.io
+      
+
 
     - name: "🛠️ Build container"
       run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} -f ${{ matrix.container.dockerfile }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
 #--mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=128m
-    - name: "🏃‍♀️ Run container"
-      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly ben_lib_builder_${{ matrix.container.container_name }} ls -la /usr/src/app
     - name: "🏃‍♀️ Run container"
       run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app,readonly ben_lib_builder_${{ matrix.container.container_name }}
