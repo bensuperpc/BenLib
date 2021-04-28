@@ -25,19 +25,19 @@ jobs:
       fail-fast: false
       matrix:
         container:
-        #- { name: "Ubuntu 20.04",    image: "ubuntu:20.04", dockerfile: config_docker/Dockerfile_ubuntu }
-        #- { name: "Ubuntu 20.10",    image: "ubuntu:20.10", dockerfile: config_docker/Dockerfile_ubuntu }
+        - { name: "Ubuntu 20.04",    image: "ubuntu:20.04", dockerfile: config_docker/Dockerfile_ubuntu }
+        - { name: "Ubuntu 20.10",    image: "ubuntu:20.10", dockerfile: config_docker/Dockerfile_ubuntu }
         - { name: "Ubuntu 21.04",    image: "ubuntu:21.04", container_name: ubuntu_21_04, dockerfile: config_docker/Dockerfile_ubuntu_21.04 }
         #- { name: "archlinux",    image: "archlinux", dockerfile: config_docker/Dockerfile_archlinux }
       
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
-        #- { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
-        #- { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
-        #- { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
+        - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
+        - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
+        - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
 
         compiler:
-          #- { name: GCC }
+          - { name: GCC }
           - { name: Clang }
         
         arch:
