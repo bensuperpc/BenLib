@@ -212,7 +212,7 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
     target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
 
-if(CMAKE_CXX_STANDARD EQUAL 20)
+if(CMAKE_CXX_STANDARD EQUAL 17)
     target_compile_options(my_cuda PRIVATE "-fno-lto")
 endif()
 
