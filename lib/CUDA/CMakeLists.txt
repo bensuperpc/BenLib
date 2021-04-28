@@ -209,10 +209,10 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
         -gencode=arch=compute_75,code=compute_75
         # Ampere 80 and 86
         >)
-    target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
+    #target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
 
-if(CMAKE_CXX_STANDARD EQUAL 20)
+if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
     target_compile_options(my_cuda PRIVATE "-fno-lto")
 endif()
 
