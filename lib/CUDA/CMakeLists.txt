@@ -225,7 +225,7 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
     #target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
 
-if(CUDA_VERSION VERSION_GREATER_EQUAL "10.0")
+if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
     target_compile_options(my_cuda PRIVATE "-fno-lto")
 endif()
 
