@@ -125,6 +125,7 @@ else()
     message("set(CMAKE_CXX_COMPILER \"${CMAKE_CXX_COMPILER}\")")
     message("set(CMAKE_CUDA_COMPILER \"${CMAKE_CUDA_COMPILER}\")")
 endif()
+find_package(CUDA 10.0)
 
 if(CUDA_NVCC_EXECUTABLE AND NOT CUDA_VERSION)
   # Compute the version.
