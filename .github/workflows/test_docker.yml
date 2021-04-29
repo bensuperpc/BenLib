@@ -63,8 +63,6 @@ jobs:
     - name: "📥 Install Docker"
       run: sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.io
       
-
-
     - name: "🛠️ Build container"
       run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} -f ${{ matrix.container.dockerfile }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
 

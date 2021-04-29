@@ -126,6 +126,19 @@ else()
     message("set(CMAKE_CUDA_COMPILER \"${CMAKE_CUDA_COMPILER}\")")
 endif()
 
+if(CUDA_NVCC_EXECUTABLE AND NOT CUDA_VERSION)
+  # Compute the version.
+  execute_process (COMMAND ${CUDA_NVCC_EXECUTABLE} "--version" OUTPUT_VARIABLE NVCC_OUT)
+  string(REGEX REPLACE ".*release ([0-9]+)\\.([0-9]+).*" "\\1" CUDA_VERSION_MAJOR ${NVCC_OUT})
+  string(REGEX REPLACE ".*release ([0-9]+)\\.([0-9]+).*" "\\2" CUDA_VERSION_MINOR ${NVCC_OUT})
+  set(CUDA_VERSION "${CUDA_VERSION_MAJOR}.${CUDA_VERSION_MINOR}" CACHE STRING "Version of CUDA as computed from nvcc.")
+  mark_as_advanced(CUDA_VERSION)
+else()
+  # Need to set these based off of the cached value
+  string(REGEX REPLACE "([0-9]+)\\.([0-9]+).*" "\\1" CUDA_VERSION_MAJOR "${CUDA_VERSION}")
+  string(REGEX REPLACE "([0-9]+)\\.([0-9]+).*" "\\2" CUDA_VERSION_MINOR "${CUDA_VERSION}")
+endif()
+
 #For clang CUDA
 # --cuda-path=${CUDA_TOOLKIT_ROOT_DIR}
 # -lcudart_static or -lcudart
