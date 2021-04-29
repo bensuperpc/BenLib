@@ -132,7 +132,7 @@ if(CUDA_NVCC_EXECUTABLE AND NOT CUDA_VERSION)
   string(REGEX REPLACE ".*release ([0-9]+)\\.([0-9]+).*" "\\1" CUDA_VERSION_MAJOR ${NVCC_OUT})
   string(REGEX REPLACE ".*release ([0-9]+)\\.([0-9]+).*" "\\2" CUDA_VERSION_MINOR ${NVCC_OUT})
   set(CUDA_VERSION "${CUDA_VERSION_MAJOR}.${CUDA_VERSION_MINOR}" CACHE STRING "Version of CUDA as computed from nvcc.")
-  mark_as_advanced(CUDA_VERSION)
+  message("CUDA version: ${CUDA_VERSION}")
 else()
   # Need to set these based off of the cached value
   string(REGEX REPLACE "([0-9]+)\\.([0-9]+).*" "\\1" CUDA_VERSION_MAJOR "${CUDA_VERSION}")
@@ -225,7 +225,7 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
     #target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
 endif()
 
-if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
+if(CUDA_VERSION VERSION_GREATER_EQUAL "10.0")
     target_compile_options(my_cuda PRIVATE "-fno-lto")
 endif()
 
