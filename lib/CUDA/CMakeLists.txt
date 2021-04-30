@@ -223,9 +223,6 @@ if(CUDA_VERSION VERSION_GREATER_EQUAL "11.2")
         # Ampere 80 and 86
         >)
     #target_compile_options(my_cuda PRIVATE "-fno-lto") # Disable due issues
-endif()
-
-if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
     target_compile_options(my_cuda PRIVATE "-fno-lto")
 endif()
 

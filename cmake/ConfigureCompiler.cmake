@@ -224,7 +224,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=thread")
     #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10.0)
             #set(CMAKE_CXX_FLAGS                 " ${CMAKE_CXX_FLAGS} -fuse-ld=gold")
             #set(CMAKE_C_FLAGS                   " ${CMAKE_C_FLAGS} -fuse-ld=gold")
             # Linker
