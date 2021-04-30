@@ -32,8 +32,8 @@ jobs:
       
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
-        - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
-        - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
+        #- { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
+        #- { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
         - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
 
         compiler:
