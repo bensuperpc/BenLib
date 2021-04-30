@@ -20,4 +20,4 @@ ARG GID=1000
 #USER $UNAME
 
 WORKDIR /usr/src/app
-CMD ./make.sh -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_clang.cmake
+CMD ./make.sh -DCMAKE_BUILD_TYPE=Release

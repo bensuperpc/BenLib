@@ -28,7 +28,7 @@ jobs:
         - { name: "Ubuntu 20.04",    image: "ubuntu:20.04", container_name: ubuntu_20_04, dockerfile: config_docker/Dockerfile_ubuntu }
         - { name: "Ubuntu 20.10",    image: "ubuntu:20.10", container_name: ubuntu_20_10, dockerfile: config_docker/Dockerfile_ubuntu }
         - { name: "Ubuntu 21.04",    image: "ubuntu:21.04", container_name: ubuntu_21_04, dockerfile: config_docker/Dockerfile_ubuntu_21.04 }
-        - { name: "archlinux",       image: "archlinux",    container_name: archlinux,    dockerfile: config_docker/Dockerfile_archlinux }
+        #- { name: "archlinux",       image: "archlinux",    container_name: archlinux,    dockerfile: config_docker/Dockerfile_archlinux }
       
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
@@ -37,8 +37,8 @@ jobs:
         - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
 
         compiler:
-          - { name: GCC }
-          - { name: Clang }
+          - { name: GCC, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_gcc.cmake }
+          - { name: Clang, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_clang.cmake  }
         
         arch:
           - { name: x86_64 }
@@ -67,4 +67,4 @@ jobs:
       run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} -f ${{ matrix.container.dockerfile }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
 
     - name: "🏃‍♀️ Run container"
-      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=128m ben_lib_builder_${{ matrix.container.container_name }}
+      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=128m ben_lib_builder_${{ matrix.container.container_name }} ./make.sh ${{ matrix.config.flags }} ${{ matrix.compiler.flags }}
