@@ -187,10 +187,10 @@ endif()
 
 
 #gcov
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -fPIC -Wl,-z,now -Wl,-z,relro -Wl,--sort-common,--as-needed,--gc-sections,--strip-all,--allow-multiple-definition -Wl,-rpath,../lib -Wl,-rpath,../external/lib -Wl,-rpath,../../lib ")
 
 if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld -fPIC ")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
 endif()
 
 # Include to config Ninja
@@ -241,15 +241,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -fprofile-instr-generate -fcoverage-mapping")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10.2.0)
-        set(CMAKE_EXE_LINKER_FLAGS          " ${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
-        set(CMAKE_CXX_FLAGS                 " ${CMAKE_CXX_FLAGS} -fuse-ld=gold")
-        set(CMAKE_C_FLAGS                   " ${CMAKE_C_FLAGS} -fuse-ld=gold")
-    else()
-        set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -flto")
-        set(CMAKE_C_FLAGS                " ${CMAKE_C_FLAGS} -flto")
-        set(CMAKE_EXE_LINKER_FLAGS                " ${CMAKE_EXE_LINKER_FLAGS} -flto")
-    endif()
+    set(CMAKE_EXE_LINKER_FLAGS          " ${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
+    set(CMAKE_CXX_FLAGS                 " ${CMAKE_CXX_FLAGS} -fuse-ld=gold")
+    set(CMAKE_C_FLAGS                   " ${CMAKE_C_FLAGS} -fuse-ld=gold")
 
     if (CODE_COVERAGE OR CMAKE_BUILD_TYPE STREQUAL "Coverage")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
