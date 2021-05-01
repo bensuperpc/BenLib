@@ -37,8 +37,8 @@ jobs:
         - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
 
         compiler:
-          - { name: GCC, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_gcc.cmake }
-          - { name: Clang, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_clang.cmake  }
+          - { name: GCC, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_${{ matrix.arch.name }}_linux_gcc.cmake }
+          - { name: Clang, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_${{ matrix.arch.name }}_linux_clang.cmake  }
         
         arch:
           - { name: x86_64 }
