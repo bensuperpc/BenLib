@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    name: Docker ${{ matrix.container.name }} ${{ matrix.arch.name }} ${{ matrix.compiler.name }} ${{ matrix.lib_type.name }} ${{ matrix.config.name }}
+    name: Docker ${{ matrix.container.name }} ${{ matrix.toolchain.name }} ${{ matrix.lib_type.name }} ${{ matrix.config.name }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -36,13 +36,14 @@ jobs:
         - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
         - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
 
-        compiler:
-          - { name: GCC, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_gcc.cmake }
-          - { name: Clang, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/toolchain_x86_64_linux_clang.cmake  }
-        
-        arch:
-          - { name: x86_64 }
-          #- { name: aarch64 }
+        toolchain:
+          - { name: GCC x86_64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/x86_64/toolchain_x86_64_linux_gcc.cmake }
+          - { name: Clang x86_64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/x86_64/toolchain_x86_64_linux_clang.cmake  }
+          - { name: GCC aarch64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/aarch64/toolchain_aarch64_linux_gcc.cmake  }
+          #- { name: Clang aarch64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/aarch64/toolchain_aarch64_linux_clang.cmake  }
+        #arch:
+        #  - { name: x86_64 }
+        #  - { name: aarch64 }
         lib_type:
           - { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
           - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
@@ -67,4 +68,4 @@ jobs:
       run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} -f ${{ matrix.container.dockerfile }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
 
     - name: "🏃‍♀️ Run container"
-      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=256m ben_lib_builder_${{ matrix.container.container_name }} ./make.sh ${{ matrix.config.flags }} ${{ matrix.compiler.flags }} ${{ matrix.lib_type.flags }}
+      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=384m ben_lib_builder_${{ matrix.container.container_name }} ./make.sh ${{ matrix.config.flags }} ${{ matrix.toolchain.flags }} ${{ matrix.lib_type.flags }}
