@@ -37,8 +37,8 @@ if(SFML_FOUND)
 	set(SRCS ${SRCS} sfml_utils.cpp)
 	set(HEADERS ${HEADERS} sfml_utils.hpp)
 endif()
-#add_library(convert_utils_static STATIC ${SRCS} ${HEADERS})
-add_library(convert_utils SHARED ${SRCS} ${HEADERS})
+#add_library(convert_utils_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(convert_utils ${SRCS} ${HEADERS})
 
 target_include_directories(convert_utils PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -13,12 +13,12 @@ set(HEADERS
 	)
 
 #add_library(display_c_static STATIC ${SRCS} ${HEADERS})
-add_library(display_c SHARED ${SRCS} ${HEADERS})
+add_library(display_c ${SRCS} ${HEADERS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"
 )
-
+#SHARED
 install(TARGETS ${PROJECT_NAME} 
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # Nedd more 1 target

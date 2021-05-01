@@ -20,8 +20,8 @@ set(HEADERS
 	my_is_prime.h
 	)
 
-#add_library(integer_c_static STATIC ${SRCS} ${HEADERS})
-add_library(integer_c SHARED ${SRCS} ${HEADERS})
+#add_library(integer_c_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(integer_c ${SRCS} ${HEADERS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"

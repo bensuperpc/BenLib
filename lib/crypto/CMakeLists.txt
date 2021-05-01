@@ -27,8 +27,8 @@ set(HEADERS
     crypto_CRC32.hpp
     )
 
-#add_library(my_crypto_static STATIC ${SRCS} ${HEADERS})
-add_library(my_crypto SHARED ${SRCS} ${HEADERS})
+#add_library(my_crypto_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(my_crypto ${SRCS} ${HEADERS})
 target_link_libraries(my_crypto PRIVATE ssl crypto)
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(my_crypto PROPERTIES UNITY_BUILD ON)

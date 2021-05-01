@@ -10,8 +10,8 @@ set(HEADERS
 	cpu.hpp
 	)
 
-#add_library(math_static STATIC ${SRCS} ${HEADERS})
-add_library(cpu SHARED ${SRCS} ${HEADERS})
+#add_library(math_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(cpu ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(cpu PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(cpu PUBLIC ${HEADERS})

@@ -63,15 +63,15 @@ set(HEADERS
     )
 
 #Build libs
-add_library(class_binding SHARED src/class_binding.cpp)
+add_library(class_binding src/class_binding.cpp)
 set_target_properties(class_binding PROPERTIES PREFIX "") #Remove lib prefix
 target_link_libraries(class_binding ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
-add_library(function_binding SHARED src/function_binding.cpp)
+add_library(function_binding src/function_binding.cpp)
 set_target_properties(function_binding PROPERTIES PREFIX "") #Remove lib prefix
 target_link_libraries(function_binding ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
-add_library(function_binding_c SHARED ${SRCS} ${HEADERS})
+add_library(function_binding_c ${SRCS} ${HEADERS})
 set_target_properties(function_binding_c PROPERTIES PREFIX "") #Remove lib prefix
 target_link_libraries(function_binding_c ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 

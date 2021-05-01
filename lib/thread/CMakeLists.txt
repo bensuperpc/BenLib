@@ -15,7 +15,7 @@ set(HEADERS
 	
 
 #add_library(thread STATIC ${SRCS} ${HEADERS})
-add_library(thread SHARED ${SRCS} ${HEADERS})
+add_library(thread ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(thread PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(thread PUBLIC ${HEADERS})

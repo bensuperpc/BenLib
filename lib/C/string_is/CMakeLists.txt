@@ -20,8 +20,8 @@ set(HEADERS
 	my_str_isprintable.h
 	)
 
-#add_library(string_is_c_static STATIC ${SRCS} ${HEADERS})
-add_library(string_is_c SHARED ${SRCS} ${HEADERS})
+#add_library(string_is_c_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(string_is_c ${SRCS} ${HEADERS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"

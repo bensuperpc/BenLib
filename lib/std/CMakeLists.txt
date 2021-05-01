@@ -12,8 +12,8 @@ set(HEADERS
 	)
 	
 
-#add_library(filesystem_static STATIC ${SRCS} ${HEADERS})
-add_library(std SHARED ${SRCS} ${HEADERS})
+#add_library(filesystem_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(std ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(std PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(std PUBLIC ${HEADERS})

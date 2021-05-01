@@ -14,8 +14,8 @@ set(HEADERS
 	my_inv_two_str_pt.h
 	)
 
-#add_library(pointer_c_static STATIC ${SRCS} ${HEADERS})
-add_library(pointer_c SHARED ${SRCS} ${HEADERS})
+#add_library(pointer_c_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(pointer_c ${SRCS} ${HEADERS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"

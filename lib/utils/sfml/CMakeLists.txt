@@ -11,7 +11,7 @@ set(HEADERS
 	)
 
 #add_library(utils_sfml_static STATIC ${SRCS} ${HEADERS})
-add_library(utils_sfml SHARED ${SRCS} ${HEADERS})
+add_library(utils_sfml ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(utils_sfml PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(utils_sfml PUBLIC ${HEADERS})

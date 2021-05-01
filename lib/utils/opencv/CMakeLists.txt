@@ -11,7 +11,7 @@ set(HEADERS
 	)
 
 #add_library(utils_opencv_static STATIC ${SRCS} ${HEADERS})
-add_library(utils_opencv SHARED ${SRCS} ${HEADERS})
+add_library(utils_opencv ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(utils_opencv PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(utils_opencv PUBLIC ${HEADERS})

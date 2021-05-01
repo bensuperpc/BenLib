@@ -86,6 +86,7 @@ if (CMAKE_BUILD_TYPE)
     message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif()
 
+set(BUILD_SHARED_LIBS ON CACHE BOOL "If you want build shared lib")
 
 # Add Postfix for debug conf
 set(CMAKE_DEBUG_POSTFIX "_d")

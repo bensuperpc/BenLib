@@ -35,8 +35,8 @@ set(HEADERS
 	random.hpp
 	)
 
-#add_library(math_static STATIC ${SRCS} ${HEADERS})
-add_library(math SHARED ${SRCS} ${HEADERS})
+#add_library(math_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(math ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(math PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(math PUBLIC ${HEADERS})

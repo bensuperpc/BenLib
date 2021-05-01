@@ -30,8 +30,8 @@ set(HEADERS
 	)
 	
 
-#add_library(filesystem_static STATIC ${SRCS} ${HEADERS})
-add_library(filesystem SHARED ${SRCS} ${HEADERS})
+#add_library(filesystem_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(filesystem ${SRCS} ${HEADERS})
 target_link_libraries(filesystem ${Boost_LIBRARIES})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(filesystem PROPERTIES UNITY_BUILD ON)

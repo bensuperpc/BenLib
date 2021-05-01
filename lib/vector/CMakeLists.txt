@@ -14,7 +14,7 @@ set(HEADERS
 	)
 
 #add_library(math_static STATIC ${SRCS} ${HEADERS})
-add_library(vector SHARED ${SRCS} ${HEADERS})
+add_library(vector ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(vector PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(vector PUBLIC ${HEADERS})

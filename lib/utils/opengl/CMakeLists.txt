@@ -13,7 +13,7 @@ set(HEADERS
 	)
 
 #add_library(utilsutils_opengl_static STATIC ${SRCS} ${HEADERS})
-add_library(utils_opengl SHARED ${SRCS} ${HEADERS})
+add_library(utils_opengl ${SRCS} ${HEADERS})
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
     set_target_properties(utils_opengl PROPERTIES UNITY_BUILD ON)
 	#target_precompile_headers(utils_opengl PUBLIC ${HEADERS})

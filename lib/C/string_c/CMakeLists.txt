@@ -18,8 +18,8 @@ set(HEADERS
 	my_strllen.h
 	)
 
-#add_library(string_c_static STATIC ${SRCS} ${HEADERS})
-add_library(string_c SHARED ${SRCS} ${HEADERS})
+#add_library(string_c_static STATIC ${SRCS} ${HEADERS}) SHARED
+add_library(string_c ${SRCS} ${HEADERS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER "${HEADERS}"

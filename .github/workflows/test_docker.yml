@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    name: Docker ${{ matrix.container.name }} ${{ matrix.arch.name }} ${{ matrix.compiler.name }} ${{ matrix.config.name }}
+    name: Docker ${{ matrix.container.name }} ${{ matrix.arch.name }} ${{ matrix.compiler.name }} ${{ matrix.lib_type.name }} ${{ matrix.config.name }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -43,9 +43,9 @@ jobs:
         arch:
           - { name: x86_64 }
           #- { name: aarch64 }
-
-        #- { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
-        #- { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
+        lib_type:
+          - { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
+          - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
     steps:
     - name: "📥 Checkout Code"
@@ -67,4 +67,4 @@ jobs:
       run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} -f ${{ matrix.container.dockerfile }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
 
     - name: "🏃‍♀️ Run container"
-      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=256m ben_lib_builder_${{ matrix.container.container_name }} ./make.sh ${{ matrix.config.flags }} ${{ matrix.compiler.flags }}
+      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=256m ben_lib_builder_${{ matrix.container.container_name }} ./make.sh ${{ matrix.config.flags }} ${{ matrix.compiler.flags }} ${{ matrix.lib_type.flags }}
