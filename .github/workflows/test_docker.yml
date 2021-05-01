@@ -33,7 +33,7 @@ jobs:
         config:
         - { name: Release, flags: -DCMAKE_BUILD_TYPE=Release }
         - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
-        #- { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
+        - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
         - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
 
         compiler:
@@ -67,4 +67,4 @@ jobs:
       run: sudo docker build -t ben_lib_builder_${{ matrix.container.container_name }} -f ${{ matrix.container.dockerfile }} . --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg IMAGE=${{ matrix.container.image }}
 
     - name: "🏃‍♀️ Run container"
-      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=128m ben_lib_builder_${{ matrix.container.container_name }} ./make.sh ${{ matrix.config.flags }} ${{ matrix.compiler.flags }}
+      run: sudo docker run --rm --name ben_lib_builder_tmp_${{ matrix.container.container_name }} --mount type=bind,source="$(pwd)",destination=/usr/src/app --mount type=tmpfs,destination=/usr/src/app/build,tmpfs-size=256m ben_lib_builder_${{ matrix.container.container_name }} ./make.sh ${{ matrix.config.flags }} ${{ matrix.compiler.flags }}
