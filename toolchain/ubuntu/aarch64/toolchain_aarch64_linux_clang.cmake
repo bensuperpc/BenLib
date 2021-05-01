@@ -45,9 +45,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # If you change these flags, CMake will not rebuild with these flags
-#set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
-#set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
-#set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
+set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
+set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
+set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
 
 #set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(CMAKE_C_COMPILER_FORCED ON)
@@ -64,11 +64,11 @@ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PA
 #--gcc-toolchain=${GCC_PREFIX}
 
 
-if (${CMAKE_VERSION} VERSION_EQUAL "3.6.0" OR ${CMAKE_VERSION} VERSION_GREATER "3.6")
-    set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
-else()
-    set(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nosys.specs")
-endif()
+#if (${CMAKE_VERSION} VERSION_EQUAL "3.6.0" OR ${CMAKE_VERSION} VERSION_GREATER "3.6")
+#    set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+#else()
+#    set(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nosys.specs")
+#endif()
 
 
 #set(LLVM_TARGETS_TO_BUILD AArch64)
