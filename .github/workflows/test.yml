@@ -27,7 +27,7 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} #${{ matrix.arch.name }}
+    name: ${{ matrix.platform.name }} ${{ matrix.lib_type.name }} ${{ matrix.config.name }} #${{ matrix.arch.name }}
     runs-on: ${{ matrix.platform.os }}
 
     strategy:
@@ -44,8 +44,9 @@ jobs:
         - { name: MinSizeRel, flags: -DCMAKE_BUILD_TYPE=MinSizeRel }
         - { name: Debug, flags: -DCMAKE_BUILD_TYPE=Debug }
         - { name: Coverage, flags: -DCMAKE_BUILD_TYPE=Coverage }
-        #- { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
-        #- { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
+        lib_type:
+        - { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
+        - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
         #arch:
         #- { name: ARM64, flags: -DCMAKE_BUILD_TYPE=Coverage }
@@ -78,7 +79,7 @@ jobs:
     - name: "🔧 Configure CMake"
       shell: bash
       working-directory: ${{github.workspace}}/build
-      run: cmake -G Ninja $GITHUB_WORKSPACE ${{matrix.platform.flags}} ${{matrix.config.flags}} #${{matrix.arch.flags}}
+      run: cmake -G Ninja $GITHUB_WORKSPACE ${{matrix.platform.flags}} ${{ matrix.lib_type.flags }} ${{matrix.config.flags}} #${{matrix.arch.flags}}
 
     - name: "🛠️ Build"
       working-directory: ${{github.workspace}}/build
