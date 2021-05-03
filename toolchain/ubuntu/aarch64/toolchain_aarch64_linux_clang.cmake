@@ -45,22 +45,25 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # If you change these flags, CMake will not rebuild with these flags
-set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
-set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
-set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72")
+set(CMAKE_ASM_FLAGS_INIT " ${CMAKE_ASM_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72 --sysroot=${CMAKE_FIND_ROOT_PATH} --gcc-toolchain=/usr/aarch64-linux-gnu/bin")
+set(CMAKE_C_FLAGS_INIT " ${CMAKE_C_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72 --sysroot=${CMAKE_FIND_ROOT_PATH} --gcc-toolchain=/usr/aarch64-linux-gnu/bin")
+set(CMAKE_CXX_FLAGS_INIT " ${CMAKE_CXX_FLAGS_INIT} -march=armv8-a -mtune=cortex-a72 --sysroot=${CMAKE_FIND_ROOT_PATH} --gcc-toolchain=/usr/aarch64-linux-gnu/bin")
+#-I/usr/aarch64-linux-gnu/include/c++/10.3.0
+#include_directories("/usr/aarch64-linux-gnu/include/c++/10.3.0/")
 
 #set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(CMAKE_C_COMPILER_FORCED ON)
 set(CMAKE_CXX_COMPILER_FORCED ON)
 set(CMAKE_CUDA_COMPILER_FORCED ON)
 
+
 #set(CMAKE_LINKER /usr/aarch64-linux-gnu/bin/ld CACHE STRING "Set the cross-compiler tool LD" FORCE)
 
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
-set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
-set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+#set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
+#set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "" FORCE)
 #--gcc-toolchain=${GCC_PREFIX}
 
 
@@ -79,7 +82,7 @@ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} --sysroot=${CMAKE_FIND_ROOT_PA
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" CACHE STRING "C flags")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CACHE STRING "C++ flags")
 
-set(CMAKE_SYSROOT "/usr/aarch64-linux-gnu")
+#set(CMAKE_SYSROOT "/usr/aarch64-linux-gnu")
 set(CMAKE_FIND_ROOT_PATH "/usr/aarch64-linux-gnu")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
