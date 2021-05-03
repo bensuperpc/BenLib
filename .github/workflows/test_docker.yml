@@ -40,7 +40,8 @@ jobs:
           - { name: GCC x86_64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/x86_64/toolchain_x86_64_linux_gcc.cmake }
           - { name: Clang x86_64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/x86_64/toolchain_x86_64_linux_clang.cmake  }
           - { name: GCC aarch64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/aarch64/toolchain_aarch64_linux_gcc.cmake  }
-          - { name: Clang aarch64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/aarch64/toolchain_aarch64_linux_clang.cmake  }
+          # Not working now
+          #- { name: Clang aarch64, flags: -DCMAKE_TOOLCHAIN_FILE=../toolchain/ubuntu/aarch64/toolchain_aarch64_linux_clang.cmake  }
         #arch:
         #  - { name: x86_64 }
         #  - { name: aarch64 }

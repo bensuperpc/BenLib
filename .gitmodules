@@ -4,3 +4,6 @@
 [submodule "lib/ArduinoLinux"]
 	path = lib/ArduinoLinux
 	url = https://github.com/Bensuperpc/ArduinoLinux.git
+[submodule "dockcross"]
+	path = dockcross
+	url = https://github.com/dockcross/dockcross.git
