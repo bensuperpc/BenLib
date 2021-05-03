@@ -173,7 +173,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections ${WARNINGS_COMPILER_CXX} -pipe")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs")
+    set(CMAKE_CXX_FLAGS                " ${CMAKE_CXX_FLAGS} -lstdc++fs -v")
 endif()
 
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "${CMAKE_CXX_FLAGS_MINSIZEREL} -Os ${SEC_COMPILER_REL} -DNDEBUG")
