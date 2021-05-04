@@ -6,4 +6,4 @@
 	url = https://github.com/Bensuperpc/ArduinoLinux.git
 [submodule "dockcross"]
 	path = dockcross
-	url = https://github.com/Bensuperpc/dockcross.git
+	url = https://github.com/dockcross/dockcross.git
