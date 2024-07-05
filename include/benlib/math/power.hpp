@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _POWER_HPP_
-#define _POWER_HPP_
+#ifndef BENLIB_MATH_POWER_HPP_
+#define BENLIB_MATH_POWER_HPP_
 namespace benlib {
 namespace math {
 /**
@@ -23,12 +23,12 @@ namespace math {
  */
 template <typename T>
 auto power(const T& nb, const long int& p) -> T {
-  if (p < 0)
-    return (0);
-  if (p != 0)
-    return (nb * power(nb, p - 1));
-  else
-    return 1;
+    if (p < 0)
+        return (0);
+    if (p != 0)
+        return (nb * power(nb, p - 1));
+    else
+        return 1;
 }
 
 /**
@@ -41,7 +41,7 @@ auto power(const T& nb, const long int& p) -> T {
  */
 template <typename T>
 auto isPowerOfTwo(const T& x) -> bool {
-  return x && (!(x & (x - 1)));
+    return x && (!(x & (x - 1)));
 }
 }  // namespace math
 }  // namespace benlib

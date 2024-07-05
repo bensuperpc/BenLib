@@ -17,22 +17,20 @@
 namespace schwarzschild = benlib::math::schwarzschild;
 
 TEST(getSchwarzschild, basic_double_1) {
-  auto data1 =
-      static_cast<long int>(schwarzschild::getSchwarzschild<double>(SUN_MASS));
-  auto data2 = static_cast<long int>(2953);
+    auto data1 = static_cast<long int>(schwarzschild::getSchwarzschild<double>(SUN_MASS));
+    auto data2 = static_cast<long int>(2953);
 
-  EXPECT_EQ(data1, data2);
+    EXPECT_EQ(data1, data2);
 }
 
 TEST(getSchwarzschild, basic_double_2) {
-  auto data1 =
-      static_cast<long int>(schwarzschild::getSchwarzschild<double>(0));
-  auto data2 = static_cast<long int>(0);
+    auto data1 = static_cast<long int>(schwarzschild::getSchwarzschild<double>(0));
+    auto data2 = static_cast<long int>(0);
 
-  EXPECT_EQ(data1, data2);
+    EXPECT_EQ(data1, data2);
 }
 
 auto main(int argc, char** argv) -> int {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

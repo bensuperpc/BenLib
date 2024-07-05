@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef FLOAT_HPP_
-#define FLOAT_HPP_
+#ifndef BENLIB_MATH_FLOAT_HPP_
+#define BENLIB_MATH_FLOAT_HPP_
 
 #include <cmath>
 #include <limits>
@@ -32,14 +32,12 @@ namespace fp {
  */
 
 template <typename T, bool relative = true>
-static constexpr auto areEqual(T f1, T f2) ->
-    typename std::enable_if<std::is_floating_point<T>::value, bool>::type {
-  if constexpr (relative) {
-    return (std::fabs(f1 - f2) <= std::numeric_limits<T>::epsilon() *
-                                      std::fmax(std::fabs(f1), std::fabs(f2)));
-  } else {
-    return (std::fabs(f1 - f2) <= std::numeric_limits<T>::epsilon());
-  }
+static constexpr auto areEqual(T f1, T f2) -> typename std::enable_if<std::is_floating_point<T>::value, bool>::type {
+    if constexpr (relative) {
+        return (std::fabs(f1 - f2) <= std::numeric_limits<T>::epsilon() * std::fmax(std::fabs(f1), std::fabs(f2)));
+    } else {
+        return (std::fabs(f1 - f2) <= std::numeric_limits<T>::epsilon());
+    }
 }
 
 }  // namespace fp

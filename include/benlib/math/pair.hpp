@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _PAIR_HPP_
-#define _PAIR_HPP_
+#ifndef BENLIB_MATH_PAIR_HPP_
+#define BENLIB_MATH_PAIR_HPP_
 #include <cstdint>
 namespace benlib {
 namespace math {
@@ -26,8 +26,8 @@ namespace math {
  * @return false
  */
 template <typename T>
-auto is_odd(const T& nbr) -> bool {
-  return static_cast<bool>(nbr & 1);
+auto isOdd(const T& nbr) -> bool {
+    return static_cast<bool>(nbr & 1);
 }
 
 /**
@@ -41,8 +41,8 @@ auto is_odd(const T& nbr) -> bool {
  * @return false
  */
 template <typename T>
-auto is_even(const T& nbr) -> bool {
-  return !static_cast<bool>(nbr & 1);
+auto isEven(const T& nbr) -> bool {
+    return !isOdd(nbr);
 }
 }  // namespace math
 }  // namespace benlib

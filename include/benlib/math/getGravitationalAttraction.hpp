@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef GETGRAVITATIONATTRACTION_HPP
-#define GETGRAVITATIONATTRACTION_HPP
+#ifndef BENLIB_MATH_GETGRAVITATIONATTRACTION_HPP
+#define BENLIB_MATH_GETGRAVITATIONATTRACTION_HPP
 
 #include "../common/constant.hpp"
 
@@ -34,7 +34,7 @@ namespace ga {
  */
 template <typename T>
 auto getGravitationalAttraction(const T& m1, const T& m2, const T& d) -> T {
-  return (CONSTANTE_G * m1 * m2) / d;
+    return (CONSTANTE_G * m1 * m2) / d;
 }
 }  // namespace ga
 }  // namespace math

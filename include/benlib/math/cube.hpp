@@ -1,38 +1,35 @@
 /**
- * @file sphere.hpp
+ * @file cube.hpp
  * @author Bensuperpc (bensuperpc@gmail.com)
- * @brief sphere header
+ * @brief cube header
  * @version 1.0.0
- * @date 2021-04-01
+ * @date 2025-07-05
  *
  * MIT License
  *
  */
-#ifndef BENLIB_MATH_SPHERE_HPP_
-#define BENLIB_MATH_SPHERE_HPP_
+#ifndef BENLIB_MATH_CUBE_HPP_
+#define BENLIB_MATH_CUBE_HPP_
 
 #include "../common/constant.hpp"
 
-#if __cplusplus == 202002L
-#include <numbers>
-#endif
 namespace benlib {
 
 namespace math {
 
-namespace sphere {
+namespace cube {
 /**
  * @brief
  *
- * @ingroup Math_sphere
+ * @ingroup Math_cube
  *
  * @tparam T
  * @param r
  * @return T
  */
 template <typename T>
-T sphereVolume(const T& r) {
-    return (4.0 / 3.0) * PI * (r * r * r);
+T cubeVolume(const T& w, const T& h, const T& l) {
+    return w * h * l;
 }
 
 /**
@@ -45,11 +42,11 @@ T sphereVolume(const T& r) {
  * @return T
  */
 template <typename T>
-T sphereSurface(const T& r) {
-    return (4.0 * PI * r);
+T cubeSurface(const T& w, const T& h, const T& l) {
+    return 2 * (w * h + h * l + l * w);
 }
 
-}  // namespace sphere
+}  // namespace cube
 }  // namespace math
 }  // namespace benlib
 

@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef CYLINDER_HPP_
-#define CYLINDER_HPP_
+#ifndef BENLIB_MATH_CYLINDER_HPP_
+#define BENLIB_MATH_CYLINDER_HPP_
 
 #include "../common/constant.hpp"
 
@@ -31,7 +31,7 @@ namespace cylinder {
  */
 template <typename T>
 auto cylinderSurface(const T& r, const T& h) -> T {
-  return 2.0 * PI * r * r + 2.0 * PI * r * h;
+    return 2.0 * PI * r * r + 2.0 * PI * r * h;
 }
 
 /**
@@ -46,7 +46,7 @@ auto cylinderSurface(const T& r, const T& h) -> T {
  */
 template <typename T>
 auto cylinderVolume(const T& r, const T& h) -> T {
-  return h * PI * r * r;
+    return h * PI * r * r;
 }
 }  // namespace cylinder
 }  // namespace math

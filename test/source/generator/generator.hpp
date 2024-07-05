@@ -74,15 +74,13 @@ class Generator {
                                               const uint32_t size_y,
                                               const uint32_t size_z);
     /*
-    std::unique_ptr<Chunk> generateChunk(const int32_t chunk_x, const int32_t chunk_y, const int32_t chunk_z, const bool generate_3d_terrain);
+    std::unique_ptr<Chunk> generateChunk(const int32_t chunk_x, const int32_t
+    chunk_y, const int32_t chunk_z, const bool generate_3d_terrain);
 
-    [[nodiscard]] std::vector<std::unique_ptr<Chunk>> generateChunks(const int32_t begin_chunk_x,
-                                                                     const int32_t begin_chunk_y,
-                                                                     const int32_t begin_chunk_z,
-                                                                     const uint32_t size_x,
-                                                                     const uint32_t size_y,
-                                                                     const uint32_t size_z,
-                                                                     const bool generate_3d_terrain);
+    [[nodiscard]] std::vector<std::unique_ptr<Chunk>> generateChunks(const int32_t
+    begin_chunk_x, const int32_t begin_chunk_y, const int32_t begin_chunk_z, const
+    uint32_t size_x, const uint32_t size_y, const uint32_t size_z, const bool
+    generate_3d_terrain);
 
     std::vector<Block> generate2d(const int32_t begin_x,
                                   const int32_t begin_y,

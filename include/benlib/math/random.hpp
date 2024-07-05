@@ -14,8 +14,8 @@
 *https://stackoverflow.com/questions/14638739/generating-a-random-double-between-a-range-of-values
 */
 
-#ifndef RANDOM_HPP_
-#define RANDOM_HPP_
+#ifndef BENLIB_MATH_RANDOM_HPP_
+#define BENLIB_MATH_RANDOM_HPP_
 
 #include <algorithm>
 #include <array>
@@ -53,19 +53,18 @@ namespace rand {
  */
 template <typename T, bool mersenne_64 = true>
 auto random(const T& fMin, const T& fMax) -> T {
-  typedef typename std::conditional<mersenne_64 == true, std::mt19937_64,
-                                    std::mt19937>::type random_engine;
-  random_engine rng;
-  std::random_device rnd_device;
-  rng.seed(rnd_device());
+    typedef typename std::conditional<mersenne_64 == true, std::mt19937_64, std::mt19937>::type random_engine;
+    random_engine rng;
+    std::random_device rnd_device;
+    rng.seed(rnd_device());
 
-  if constexpr (std::is_integral<T>::value) {
-    std::uniform_int_distribution<T> dist(fMin, fMax);
-    return dist(rng);
-  } else /*if (std::is_floating_point<T>::value)*/ {
-    std::uniform_real_distribution<T> dist(fMin, fMax);
-    return dist(rng);
-  }
+    if constexpr (std::is_integral<T>::value) {
+        std::uniform_int_distribution<T> dist(fMin, fMax);
+        return dist(rng);
+    } else /*if (std::is_floating_point<T>::value)*/ {
+        std::uniform_real_distribution<T> dist(fMin, fMax);
+        return dist(rng);
+    }
 }
 
 /**
@@ -78,7 +77,7 @@ auto random(const T& fMin, const T& fMax) -> T {
  */
 template <typename T, bool mersenne_64 = true>
 auto random(T& var, const T& fMin, const T& fMax) -> void {
-  var = random<T, mersenne_64>(fMin, fMax);
+    var = random<T, mersenne_64>(fMin, fMax);
 }
 
 /**
@@ -97,9 +96,9 @@ auto random(std::vector<T>& vec, const T& lower, const T& upper) -> void {
 #pragma omp parallel for schedule(auto)
 #endif
 #endif
-  for (typename std::vector<T>::size_type i = 0; i != vec.size(); i++) {
-    vec[i] = random<T, mersenne_64>(lower, upper);
-  }
+    for (typename std::vector<T>::size_type i = 0; i != vec.size(); i++) {
+        vec[i] = random<T, mersenne_64>(lower, upper);
+    }
 }
 
 /**
@@ -110,8 +109,7 @@ auto random(std::vector<T>& vec, const T& lower, const T& upper) -> void {
  * @param upper
  */
 template <typename T, bool mersenne_64 = true>
-auto random(T* arr, const std::size_t& S, const T& lower, const T& upper)
-    -> void {
+auto random(T* arr, const std::size_t& S, const T& lower, const T& upper) -> void {
 #if defined(_OPENMP)
 #ifdef _MSC_VER
 #pragma omp parallel for schedule(static)
@@ -119,9 +117,9 @@ auto random(T* arr, const std::size_t& S, const T& lower, const T& upper)
 #pragma omp parallel for schedule(auto)
 #endif
 #endif
-  for (std::size_t i = 0; i != S; i++) {
-    arr[i] = random<T, mersenne_64>(lower, upper);
-  }
+    for (std::size_t i = 0; i != S; i++) {
+        arr[i] = random<T, mersenne_64>(lower, upper);
+    }
 }
 
 }  // namespace rand

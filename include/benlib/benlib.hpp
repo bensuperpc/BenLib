@@ -8,8 +8,7 @@
 
 #include <string>
 
-static inline std::string get_benlib()
-{
+static inline std::string get_benlib() {
     return "benlib";
 }
 

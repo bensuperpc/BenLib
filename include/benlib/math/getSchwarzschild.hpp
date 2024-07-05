@@ -8,8 +8,8 @@
  * MIT License
  *
  */
-#ifndef GETSCHWARZCHILD_HPP_
-#define GETSCHWARZCHILD_HPP_
+#ifndef BENLIB_MATH_GETSCHWARZCHILD_HPP_
+#define BENLIB_MATH_GETSCHWARZCHILD_HPP_
 
 #include <cmath>
 
@@ -28,7 +28,7 @@ namespace schwarzschild {
  */
 template <typename T>
 auto getSchwarzschild(const T& masse) -> T {
-  return (masse > 0) ? (2.0 * CONSTANTE_G * masse) / (pow(LIGHT_SPEED, 2)) : 0;
+    return (masse > 0) ? (2.0 * CONSTANTE_G * masse) / (pow(LIGHT_SPEED, 2)) : 0;
 }
 }  // namespace schwarzschild
 }  // namespace math
