@@ -13,9 +13,6 @@
 
 #include "../common/constant.hpp"
 
-#if __cplusplus == 202002L
-#include <numbers>
-#endif
 namespace benlib {
 
 namespace math {
@@ -31,7 +28,7 @@ namespace sphere {
  * @return T
  */
 template <typename T>
-T sphereVolume(const T& r) {
+static constexpr T sphereVolume(const T& r) {
     return (4.0 / 3.0) * PI * (r * r * r);
 }
 
@@ -45,7 +42,7 @@ T sphereVolume(const T& r) {
  * @return T
  */
 template <typename T>
-T sphereSurface(const T& r) {
+static constexpr T sphereSurface(const T& r) {
     return (4.0 * PI * r);
 }
 

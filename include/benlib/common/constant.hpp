@@ -12,7 +12,7 @@
 #ifndef CONSTANT_HPP_
 #define CONSTANT_HPP_
 
-#if __cplusplus == 202002L
+#if __cplusplus >= 202002L
 #include <numbers>
 #endif
 

@@ -30,7 +30,7 @@ namespace cylinder {
  * @return T
  */
 template <typename T>
-auto cylinderSurface(const T& r, const T& h) -> T {
+static constexpr T cylinderSurface(const T& r, const T& h) {
     return 2.0 * PI * r * r + 2.0 * PI * r * h;
 }
 
@@ -45,7 +45,7 @@ auto cylinderSurface(const T& r, const T& h) -> T {
  * @return T
  */
 template <typename T>
-auto cylinderVolume(const T& r, const T& h) -> T {
+static constexpr auto cylinderVolume(const T& r, const T& h) -> T {
     return h * PI * r * r;
 }
 }  // namespace cylinder

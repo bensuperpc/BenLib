@@ -31,7 +31,7 @@ namespace fp {
  * @return false
  */
 
-template <typename T, bool relative = true>
+template <FloatingPointType T, bool relative = true>
 static constexpr auto areEqual(T f1, T f2) -> typename std::enable_if<std::is_floating_point<T>::value, bool>::type {
     if constexpr (relative) {
         return (std::fabs(f1 - f2) <= std::numeric_limits<T>::epsilon() * std::fmax(std::fabs(f1), std::fabs(f2)));

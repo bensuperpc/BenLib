@@ -48,6 +48,14 @@ TEST(areEqual, basic_double_2) {
     EXPECT_EQ(result, false);
 }
 
+TEST(areEqual, basic_long_double_1) {
+    long double data1 = 1.5f;
+    long double data2 = 1.5f;
+    bool result = benlib::math::fp::areEqual<long double>(data1, data2);
+
+    EXPECT_EQ(result, true);
+}
+
 auto main(int argc, char** argv) -> int {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

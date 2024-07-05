@@ -12,7 +12,7 @@
 #ifndef CONCEPT_HPP_
 #define CONCEPT_HPP_
 
-#if __cplusplus == 202002L
+#if __cplusplus >= 202002L
 
 #include <concepts>
 
@@ -30,6 +30,9 @@ concept SignedType = std::is_signed<Type>::value;
 
 template <typename Type>
 concept UnsignedType = std::is_unsigned<Type>::value;
+
+template <typename Type>
+concept BooleanType = std::is_same<Type, bool>::value;
 
 #endif
 
