@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-#include "constant.hpp"
+#include "../common/constant.hpp"
 namespace benlib {
 namespace math {
 namespace schwarzschild {

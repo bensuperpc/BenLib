@@ -11,8 +11,8 @@
 
 #include "benlib/math/getSchwarzschild.hpp"
 
+#include "benlib/math/../common/constant.hpp"
 #include "gtest/gtest.h"
-#include "benlib/math/constant.hpp"
 
 namespace schwarzschild = benlib::math::schwarzschild;
 

@@ -11,7 +11,7 @@
 #ifndef SPHERE_HPP_
 #define SPHERE_HPP_
 
-#include "constant.hpp"
+#include "../common/constant.hpp"
 
 #if __cplusplus == 202002L
 #include <numbers>

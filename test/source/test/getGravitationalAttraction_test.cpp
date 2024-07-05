@@ -11,12 +11,13 @@
 
 #include "benlib/math/getGravitationalAttraction.hpp"
 
+#include "benlib/math/../common/constant.hpp"
 #include "gtest/gtest.h"
-#include "benlib/math/constant.hpp"
 
 TEST(getSchwarzschild, basic_double_1) {
   auto data1 = static_cast<long int>(
-      benlib::math::ga::getGravitationalAttraction<double>(10000, 20000, 30000));
+      benlib::math::ga::getGravitationalAttraction<double>(10000, 20000,
+                                                           30000));
   auto data2 = static_cast<long int>(0);
 
   EXPECT_EQ(data1, data2);

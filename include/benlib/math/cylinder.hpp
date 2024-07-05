@@ -12,7 +12,7 @@
 #ifndef CYLINDER_HPP_
 #define CYLINDER_HPP_
 
-#include "constant.hpp"
+#include "../common/constant.hpp"
 
 namespace benlib {
 namespace math {

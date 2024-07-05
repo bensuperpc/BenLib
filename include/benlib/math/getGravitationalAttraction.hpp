@@ -12,7 +12,7 @@
 #ifndef GETGRAVITATIONATTRACTION_HPP
 #define GETGRAVITATIONATTRACTION_HPP
 
-#include "constant.hpp"
+#include "../common/constant.hpp"
 
 namespace benlib {
 namespace math {
