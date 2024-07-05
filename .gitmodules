@@ -1,9 +1,0 @@
-[submodule "theme/doxygen-awesome-css"]
-	path = theme/doxygen-awesome-css
-	url = https://github.com/jothepro/doxygen-awesome-css.git
-[submodule "lib/ArduinoLinux"]
-	path = lib/ArduinoLinux
-	url = https://github.com/Bensuperpc/ArduinoLinux.git
-[submodule "dockcross"]
-	path = dockcross
-	url = https://github.com/Bensuperpc/dockcross.git
