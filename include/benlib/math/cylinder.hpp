@@ -30,7 +30,7 @@ namespace cylinder {
  * @return T
  */
 template <typename T>
-static constexpr T cylinderSurface(const T& r, const T& h) {
+static constexpr T cylinderSurface(const T& r, const T& h) noexcept {
     return 2.0 * PI * r * r + 2.0 * PI * r * h;
 }
 
@@ -45,9 +45,10 @@ static constexpr T cylinderSurface(const T& r, const T& h) {
  * @return T
  */
 template <typename T>
-static constexpr auto cylinderVolume(const T& r, const T& h) -> T {
+static constexpr auto cylinderVolume(const T& r, const T& h) noexcept -> T {
     return h * PI * r * r;
 }
+
 }  // namespace cylinder
 }  // namespace math
 }  // namespace benlib

@@ -12,6 +12,7 @@
 #ifndef BENLIB_MATH_GETGRAVITATIONATTRACTION_HPP
 #define BENLIB_MATH_GETGRAVITATIONATTRACTION_HPP
 
+#include "../common/concept.hpp"
 #include "../common/constant.hpp"
 
 namespace benlib {
@@ -32,8 +33,8 @@ namespace ga {
  * @param d
  * @return T
  */
-template <typename T>
-auto getGravitationalAttraction(const T& m1, const T& m2, const T& d) -> T {
+template <ArithmeticType T>
+auto getGravitationalAttraction(const T& m1, const T& m2, const T& d) noexcept -> T {
     return (CONSTANTE_G * m1 * m2) / d;
 }
 }  // namespace ga

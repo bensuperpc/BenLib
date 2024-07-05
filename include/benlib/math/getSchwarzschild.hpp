@@ -13,7 +13,9 @@
 
 #include <cmath>
 
+#include "../common/concept.hpp"
 #include "../common/constant.hpp"
+
 namespace benlib {
 namespace math {
 namespace schwarzschild {
@@ -26,9 +28,9 @@ namespace schwarzschild {
  * @param masse
  * @return T
  */
-template <typename T>
-auto getSchwarzschild(const T& masse) -> T {
-    return (masse > 0) ? (2.0 * CONSTANTE_G * masse) / (pow(LIGHT_SPEED, 2)) : 0;
+template <ArithmeticType T>
+auto getSchwarzschild(const T& masse) noexcept -> T {
+    return (masse > 0) ? (2.0 * CONSTANTE_G * masse) / (std::pow(LIGHT_SPEED, 2)) : 0;
 }
 }  // namespace schwarzschild
 }  // namespace math

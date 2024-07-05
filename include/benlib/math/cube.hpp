@@ -28,7 +28,7 @@ namespace cube {
  * @return T
  */
 template <typename T>
-static constexpr T cubeVolume(const T& w, const T& h, const T& l) {
+static constexpr T cubeVolume(const T& w, const T& h, const T& l) noexcept {
     return w * h * l;
 }
 
@@ -42,7 +42,7 @@ static constexpr T cubeVolume(const T& w, const T& h, const T& l) {
  * @return T
  */
 template <typename T>
-static constexpr T cubeSurface(const T& w, const T& h, const T& l) {
+static constexpr T cubeSurface(const T& w, const T& h, const T& l) noexcept {
     return 2 * (w * h + h * l + l * w);
 }
 

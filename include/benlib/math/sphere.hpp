@@ -28,7 +28,7 @@ namespace sphere {
  * @return T
  */
 template <typename T>
-static constexpr T sphereVolume(const T& r) {
+static constexpr T sphereVolume(const T& r) noexcept {
     return (4.0 / 3.0) * PI * (r * r * r);
 }
 
@@ -42,7 +42,7 @@ static constexpr T sphereVolume(const T& r) {
  * @return T
  */
 template <typename T>
-static constexpr T sphereSurface(const T& r) {
+static constexpr T sphereSurface(const T& r) noexcept {
     return (4.0 * PI * r);
 }
 
