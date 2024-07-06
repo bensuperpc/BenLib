@@ -8,8 +8,8 @@
  * MIT License
  *
  */
-#ifndef BENLIB_MATH_ANGLE_HPP_
-#define BENLIB_MATH_ANGLE_HPP_
+#ifndef BENLIB_MATH_GEOMETRY_ANGLE_HPP_
+#define BENLIB_MATH_GEOMETRY_ANGLE_HPP_
 
 #include <cmath>
 #include "../../common/concept.hpp"

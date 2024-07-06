@@ -8,14 +8,16 @@
  * MIT License
  *
  */
-#ifndef BENLIB_MATH_SPHERE_HPP_
-#define BENLIB_MATH_SPHERE_HPP_
+#ifndef BENLIB_MATH_GEOMETRY_SPHERE_HPP_
+#define BENLIB_MATH_GEOMETRY_SPHERE_HPP_
 
-#include "../common/constant.hpp"
+#include "../../common/constant.hpp"
 
 namespace benlib {
 
 namespace math {
+
+namespace geometry {
 
 namespace sphere {
 /**
@@ -47,6 +49,7 @@ static constexpr T sphereSurface(const T& r) noexcept {
 }
 
 }  // namespace sphere
+}  // namespace geometry
 }  // namespace math
 }  // namespace benlib
 

@@ -8,14 +8,16 @@
  * MIT License
  *
  */
-#ifndef BENLIB_MATH_CUBE_HPP_
-#define BENLIB_MATH_CUBE_HPP_
+#ifndef BENLIB_MATH_GEOMETRY_CUBE_HPP_
+#define BENLIB_MATH_GEOMETRY_CUBE_HPP_
 
-#include "../common/constant.hpp"
+#include "../../common/constant.hpp"
 
 namespace benlib {
 
 namespace math {
+
+namespace geometry {
 
 namespace cube {
 /**
@@ -51,6 +53,7 @@ static constexpr T cubeSurface(const T& width, const T& height, const T& length)
 }
 
 }  // namespace cube
+}  // namespace geometry
 }  // namespace math
 }  // namespace benlib
 

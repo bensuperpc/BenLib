@@ -8,14 +8,16 @@
  * MIT License
  *
  */
-#ifndef BENLIB_MATH_TRIANGLE_HPP_
-#define BENLIB_MATH_TRIANGLE_HPP_
+#ifndef BENLIB_MATH_GEOMETRY_TRIANGLE_HPP_
+#define BENLIB_MATH_GEOMETRY_TRIANGLE_HPP_
 
-#include "../common/constant.hpp"
+#include "../../common/constant.hpp"
 
 namespace benlib {
 
 namespace math {
+
+namespace geometry {
 
 namespace triangle {
 
@@ -49,6 +51,7 @@ static constexpr T triangleSurface(const T& b, const T& h) noexcept {
 }
 
 }  // namespace triangle
+}  // namespace geometry
 }  // namespace math
 }  // namespace benlib
 

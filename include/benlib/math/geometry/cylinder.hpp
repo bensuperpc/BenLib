@@ -9,13 +9,16 @@
  *
  */
 
-#ifndef BENLIB_MATH_CYLINDER_HPP_
-#define BENLIB_MATH_CYLINDER_HPP_
+#ifndef BENLIB_MATH_GEOMETRY_CYLINDER_HPP_
+#define BENLIB_MATH_GEOMETRY_CYLINDER_HPP_
 
-#include "../common/constant.hpp"
+#include "../../common/constant.hpp"
 
 namespace benlib {
+    
 namespace math {
+
+namespace geometry {
 
 namespace cylinder {
 
@@ -50,6 +53,7 @@ static constexpr auto cylinderVolume(const T& r, const T& h) noexcept -> T {
 }
 
 }  // namespace cylinder
+}  // namespace geometry
 }  // namespace math
 }  // namespace benlib
 

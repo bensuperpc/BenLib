@@ -8,8 +8,8 @@
  * MIT License
  *
  */
-#ifndef BENLIB_MATH_DISTANCE_HPP_
-#define BENLIB_MATH_DISTANCE_HPP_
+#ifndef BENLIB_MATH_GEOMETRY_DISTANCE_HPP_
+#define BENLIB_MATH_GEOMETRY_DISTANCE_HPP_
 
 #include <cmath>
 #include "../../common/concept.hpp"
