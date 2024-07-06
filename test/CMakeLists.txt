@@ -18,7 +18,7 @@ function(test_bench_generator TEST_BENCH_NAME IS_TEST ADD_TO_TEST)
   set(SOURCES
     "source/generator/generator.cpp"
     )
-  
+
   set(HEADERS
     "source/generator/generator.hpp"
     )
@@ -90,6 +90,7 @@ if(NOT WIN32)
   test_bench_generator(cylinder_test true true)
   test_bench_generator(power_test true true)
   test_bench_generator(sphere_test true true)
+  test_bench_generator(angle_test true true)
   test_bench_generator(float_test true true)
   test_bench_generator(random_test true true)
 endif()

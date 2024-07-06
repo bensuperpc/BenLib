@@ -36,14 +36,14 @@ TEST(sphereVolume, basic_uint64_t_3) {
 
 TEST(sphereSurface, basic_uint64_t_1) {
     auto data1 = benlib::math::sphere::sphereSurface<uint64_t>(10000);
-    auto data2 = static_cast<uint64_t>(125663);
+    auto data2 = static_cast<uint64_t>(1256637061);
 
     EXPECT_EQ(data1, data2);
 }
 
 TEST(sphereSurface, basic_uint64_t_2) {
     auto data1 = benlib::math::sphere::sphereSurface<uint64_t>(151);
-    auto data2 = static_cast<uint64_t>(1897);
+    auto data2 = static_cast<uint64_t>(286525);
 
     EXPECT_EQ(data1, data2);
 }

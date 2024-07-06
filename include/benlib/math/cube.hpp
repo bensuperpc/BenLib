@@ -24,12 +24,14 @@ namespace cube {
  * @ingroup Math_cube
  *
  * @tparam T
- * @param r
+ * @param width
+ * @param height
+ * @param length
  * @return T
  */
 template <typename T>
-static constexpr T cubeVolume(const T& w, const T& h, const T& l) noexcept {
-    return w * h * l;
+static constexpr T cubeVolume(const T& width, const T& height, const T& length) noexcept {
+    return width * height * length;
 }
 
 /**
@@ -38,12 +40,14 @@ static constexpr T cubeVolume(const T& w, const T& h, const T& l) noexcept {
  * @ingroup Math_sphere
  *
  * @tparam T
- * @param r
+ * @param width
+ * @param height
+ * @param length
  * @return T
  */
 template <typename T>
-static constexpr T cubeSurface(const T& w, const T& h, const T& l) noexcept {
-    return 2 * (w * h + h * l + l * w);
+static constexpr T cubeSurface(const T& width, const T& height, const T& length) noexcept {
+    return 2 * (width * height + height * length + length * width);
 }
 
 }  // namespace cube
