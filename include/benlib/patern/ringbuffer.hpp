@@ -3,7 +3,7 @@
  * @author Bensuperpc (bensuperpc@gmail.com)
  * @brief
  * @version 1.0.0
- * @date 2021-04-01
+ * @date 2024-07-06
  *
  * MIT License
  *
@@ -20,14 +20,14 @@ namespace benlib {
 namespace patern {
 
 template <typename T>
-class RingBuffer final {
+class RingBuffer {
    public:
     explicit RingBuffer() = delete;
     explicit RingBuffer(size_t size) {
         _maxSize = size;
         _container = std::deque<T>(_maxSize);
     }
-    ~RingBuffer() { _container.clear(); }
+    virtual ~RingBuffer() { _container.clear(); }
     size_t size() const noexcept { return _container.size(); }
     void pushBack(T& element) {
         if (_container.size() >= _maxSize) {
