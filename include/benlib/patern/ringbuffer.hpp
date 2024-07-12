@@ -14,8 +14,6 @@
 
 #include <deque>
 
-#include "../common/concept.hpp"
-
 namespace benlib {
 namespace patern {
 
