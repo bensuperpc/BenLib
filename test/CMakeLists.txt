@@ -16,11 +16,9 @@ endif()
 function(test_bench_generator TEST_BENCH_NAME IS_TEST ADD_TO_TEST)
 
   set(SOURCES
-    "source/generator/generator.cpp"
     )
 
   set(HEADERS
-    "source/generator/generator.hpp"
     )
 
   if (IS_TEST)
@@ -37,13 +35,13 @@ function(test_bench_generator TEST_BENCH_NAME IS_TEST ADD_TO_TEST)
   endif()
 
   target_link_libraries("${TEST_BENCH_NAME}" PRIVATE benlib::benlib)
-  target_link_libraries("${TEST_BENCH_NAME}" PRIVATE raylib)
-  target_link_libraries("${TEST_BENCH_NAME}" PRIVATE FastNoise2)
+  #target_link_libraries("${TEST_BENCH_NAME}" PRIVATE raylib)
+  #target_link_libraries("${TEST_BENCH_NAME}" PRIVATE FastNoise2)
   #target_link_libraries("${TEST_BENCH_NAME}" PRIVATE spdlog::spdlog nlohmann_json::nlohmann_json)
 
-  #if (OpenMP_FOUND OR OpenMP_CXX_FOUND)
-  #  target_link_libraries("${TEST_BENCH_NAME}" PRIVATE OpenMP::OpenMP_CXX)
-  #endif()
+  if (OpenMP_FOUND OR OpenMP_CXX_FOUND)
+    target_link_libraries("${TEST_BENCH_NAME}" PRIVATE OpenMP::OpenMP_CXX)
+  endif()
 
   set_target_properties("${TEST_BENCH_NAME}"
     PROPERTIES
@@ -68,21 +66,24 @@ endfunction()
 # ---- Tests ----
 
 if(NOT WIN32)
-  include(../cmake/lib/gtest.cmake)
-  include(../cmake/lib/benchmark.cmake)
+  #include(../cmake/lib/gtest.cmake)
+  #include(../cmake/lib/benchmark.cmake)
   #include(../cmake/lib/openmp.cmake)
-  include(../cmake/lib/raygui.cmake)
+  #include(../cmake/lib/raygui.cmake)
+  add_subdirectory(../external/googletest external/googletest)
+  set(BENCHMARK_ENABLE_WERROR OFF)
+  add_subdirectory(../external/benchmark external/benchmark)
 
-  include(../cmake/lib/raylib.cmake)
-  include(../cmake/lib/fast_noise2.cmake)
+  #include(../cmake/lib/raylib.cmake)
+  #include(../cmake/lib/fast_noise2.cmake)
   #include(../cmake/lib/spdlog.cmake)
   #include(../cmake/lib/json.cmake)
-  include(../cmake/utile/ccache.cmake)
+  include(../cmake/utile/sccache.cmake)
 
   include_directories(source)
 
   test_bench_generator(benlib_test true true)
-  test_bench_generator(benlib_bench false true)
+  #test_bench_generator(benlib_bench false false)
 
 
   test_bench_generator(getSchwarzschild_test true true)
@@ -93,6 +94,8 @@ if(NOT WIN32)
   test_bench_generator(angle_test true true)
   test_bench_generator(float_test true true)
   test_bench_generator(random_test true true)
+  test_bench_generator(keyword_test true true)
+  test_bench_generator(gettersetter_test true true)
 endif()
 
 # ---- End-of-file commands ----

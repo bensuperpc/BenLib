@@ -30,7 +30,7 @@ class Repository {
 
    public:
     virtual ~Repository() { Repository<parentType>::_data.remove(static_cast<parentType*>(this)); }
-    static inline std::list<parentType*>& getData() { return Repository<parentType>::_data; }
+    static inline std::list<parentType*>& data() { return Repository<parentType>::_data; }
     static inline void clear() { Repository<parentType>::_data.clear(); }
 };
 
