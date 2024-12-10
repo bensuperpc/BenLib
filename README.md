@@ -5,6 +5,7 @@ Fast and easy to use standalone header only 2D benlib library in C++20.
 # Features
 
 * [x] Math lib
+* [x] Filesystem lib
 
 # How to use it
 
