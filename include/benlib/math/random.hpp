@@ -73,19 +73,6 @@ auto random(const T& fMin, const T& fMax) -> T {
  * @tparam T
  * @param lower
  * @param upper
- * @return T
- */
-template <typename T, bool mersenne_64 = true>
-auto random(T& var, const T& fMin, const T& fMax) -> void {
-    var = random<T, mersenne_64>(fMin, fMax);
-}
-
-/**
- * @brief
- *
- * @tparam T
- * @param lower
- * @param upper
  */
 template <typename T, bool mersenne_64 = true>
 auto random(std::vector<T>& vec, const T& lower, const T& upper) -> void {

@@ -15,7 +15,7 @@
 #include <cmath>
 #include <limits>
 
-#include "../common/concept.hpp"
+#include <benlib/common/concept.hpp>
 
 namespace benlib {
 namespace math {

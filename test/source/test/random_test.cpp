@@ -57,7 +57,7 @@ TEST(random, basic_int_3) {
     auto max = 100;
     auto result = -1;
 
-    benlib::math::rand::random<int, false>(result, min, max);
+    result = benlib::math::rand::random<int, false>(min, max);
     EXPECT_IN_RANGE(result, min, max);
 }
 
@@ -95,7 +95,7 @@ TEST(random, basic_float_3) {
 
     float result = -1.0;
 
-    benlib::math::rand::random<float, false>(result, min, max);
+    result = benlib::math::rand::random<float, false>(min, max);
     EXPECT_IN_RANGE(result, min, max);
 }
 
