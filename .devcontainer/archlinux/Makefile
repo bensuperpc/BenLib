@@ -12,21 +12,16 @@
 #//////////////////////////////////////////////////////////////
 
 # Base image
-BASE_IMAGE_REGISTRY := docker.io
 BASE_IMAGE_NAME := archlinux
 BASE_IMAGE_TAGS := base
+BASE_IMAGE_REGISTRY := docker.io
 
 # Output docker image
 PROJECT_NAME := benlib
 AUTHOR := bensuperpc
 REGISTRY := docker.io
-WEB_SITE := bensuperpc.org
-
 IMAGE_VERSION := 1.0.0
-
-# Docker config
-DOCKER_DRIVER := --load
-# --push
+WEB_SITE := bensuperpc.org
 
 # Max CPU and memory
 CPUS := 8.0
@@ -38,8 +33,6 @@ BUILD_CPU_SHARES := 1024
 BUILD_MEMORY := 16GB
 
 TEST_CMD := ls
-
-ARCH_LIST := linux/amd64
-
+RUN_CMD :=
 
 include DockerImage.mk

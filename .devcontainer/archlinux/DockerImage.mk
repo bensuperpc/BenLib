@@ -1,7 +1,7 @@
 #//////////////////////////////////////////////////////////////
 #//                                                          //
-#//  docker-benlib, 2023                                     //
-#//  Created: 04 February, 2023                              //
+#//  docker, 2021                                            //
+#//  Created: 30, May, 2021                                  //
 #//  Modified: 16 June, 2024                                 //
 #//  file: -                                                 //
 #//  -                                                       //
@@ -31,11 +31,19 @@ else
 	OUTPUT_IMAGE := $(IMAGE_PATH)/$(IMAGE_NAME)
 endif
 
+TEST_CMD := ls
+RUN_CMD := 
+
 # Docker config
 DOCKERFILE := Dockerfile
 DOCKER_EXEC := docker
-DOCKER_DRIVER := --load
+PROGRESS_OUTPUT := plain
+
 # --push
+DOCKER_DRIVER := --load
+ARCH_LIST := linux/amd64
+comma:= ,
+PLATFORMS := $(subst $() $(),$(comma),$(ARCH_LIST))
 
 # Max CPU and memory
 CPUS := 8.0
@@ -46,13 +54,9 @@ TMPFS_SIZE := 4GB
 BUILD_CPU_SHARES := 1024
 BUILD_MEMORY := 16GB
 
-TEST_CMD := ls
-
-PROGRESS_OUTPUT := plain
-
-ARCH_LIST := linux/amd64
-comma:= ,
-PLATFORMS := $(subst $() $(),$(comma),$(ARCH_LIST))
+# Security
+CAP_DROP := # --cap-drop ALL
+CAP_ADD := # --cap-add SYS_PTRACE
 
 # Git config
 GIT_SHA := $(shell git rev-parse HEAD)
@@ -61,20 +65,27 @@ GIT_ORIGIN := $(shell git config --get remote.origin.url)
 DATE := $(shell date -u +"%Y%m%d")
 UUID := $(shell uuidgen)
 
-USER := $(shell whoami)
-UID := $(shell id -u ${USER})
-GID := $(shell id -g ${USER})
+CURRENT_USER := $(shell whoami)
+UID := $(shell id -u ${CURRENT_USER})
+GID := $(shell id -g ${CURRENT_USER})
+USERNAME := user
 
-.PHONY: all test push pull run
-
+.PHONY: all
 all: $(addsuffix .test,$(BASE_IMAGE_TAGS))
 
+.PHONY: build
 build: $(BASE_IMAGE_TAGS)
 
+.PHONY: test
 test: $(addsuffix .test,$(BASE_IMAGE_TAGS))
 
+.PHONY: run
+run: $(addsuffix .run,$(BASE_IMAGE_TAGS))
+
+.PHONY: run
 push: $(addsuffix .push,$(BASE_IMAGE_TAGS))
 
+.PHONY: pull
 pull: $(addsuffix .pull,$(BASE_IMAGE_TAGS))
 
 .PHONY: $(BASE_IMAGE_TAGS)
@@ -89,7 +100,7 @@ $(BASE_IMAGE_TAGS): $(Dockerfile)
 		--build-arg BUILD_DATE=$(DATE) --build-arg DOCKER_IMAGE=$(BASE_IMAGE_REGISTRY)/$(BASE_IMAGE_NAME):$@ \
 		--build-arg IMAGE_VERSION=$(IMAGE_VERSION) --build-arg PROJECT_NAME=$(PROJECT_NAME) \
 		--build-arg VCS_REF=$(GIT_SHA) --build-arg VCS_URL=$(GIT_ORIGIN) \
-		--build-arg AUTHOR=$(AUTHOR) --build-arg URL=$(WEB_SITE) \
+		--build-arg AUTHOR=$(AUTHOR) --build-arg URL=$(WEB_SITE) --build-arg USERNAME=$(USERNAME) \
 		$(DOCKER_DRIVER)
 
 .SECONDEXPANSION:
@@ -98,27 +109,26 @@ $(addsuffix .build,$(BASE_IMAGE_TAGS)): $$(basename $$@)
 .SECONDEXPANSION:
 $(addsuffix .test,$(BASE_IMAGE_TAGS)): $$(basename $$@)
 	$(DOCKER_EXEC) run --rm \
-		--security-opt no-new-privileges --read-only --user $(UID):$(GID) \
+		--security-opt no-new-privileges --read-only $(CAP_DROP) $(CAP_ADD) --user $(UID):$(GID) \
 		--mount type=bind,source=$(shell pwd),target=/work --workdir /work \
 		--mount type=tmpfs,target=/tmp,tmpfs-mode=1777,tmpfs-size=$(TMPFS_SIZE) \
 		--platform $(PLATFORMS) \
 		--cpus $(CPUS) --cpu-shares $(CPU_SHARES) --memory $(MEMORY) --memory-reservation $(MEMORY_RESERVATION) \
 		--name $(IMAGE_NAME)-$(BASE_IMAGE_NAME)-$(basename $@)-$(DATE)-$(GIT_SHA)-$(UUID) \
-		$(REGISTRY)/$(OUTPUT_IMAGE):$(BASE_IMAGE_NAME)-$(basename $@)-$(IMAGE_VERSION)-$(DATE)-$(GIT_SHA) \
-		$(TEST_CMD)
-
-#--cap-drop ALL --cap-add SYS_PTRACE	  --device=/dev/kvm
+		$(REGISTRY)/$(OUTPUT_IMAGE):$(BASE_IMAGE_NAME)-$(basename $@)-$(IMAGE_VERSION)-$(DATE)-$(GIT_SHA) $(TEST_CMD)
 
 .SECONDEXPANSION:
 $(addsuffix .run,$(BASE_IMAGE_TAGS)): $$(basename $$@)
-	$(DOCKER_EXEC) run -it \
-		--security-opt no-new-privileges --read-only --user $(UID):$(GID) \
+	$(DOCKER_EXEC) run --rm -it \
+		--security-opt no-new-privileges --read-only $(CAP_DROP) $(CAP_ADD) --user $(UID):$(GID) \
 		--mount type=bind,source=$(shell pwd),target=/work --workdir /work \
 		--mount type=tmpfs,target=/tmp,tmpfs-mode=1777,tmpfs-size=$(TMPFS_SIZE) \
 		--platform $(PLATFORMS) \
 		--cpus $(CPUS) --cpu-shares $(CPU_SHARES) --memory $(MEMORY) --memory-reservation $(MEMORY_RESERVATION) \
 		--name $(IMAGE_NAME)-$(BASE_IMAGE_NAME)-$(basename $@)-$(DATE)-$(GIT_SHA)-$(UUID) \
-		$(REGISTRY)/$(OUTPUT_IMAGE):$(BASE_IMAGE_NAME)-$(basename $@)-$(IMAGE_VERSION)-$(DATE)-$(GIT_SHA)
+		$(REGISTRY)/$(OUTPUT_IMAGE):$(BASE_IMAGE_NAME)-$(basename $@)-$(IMAGE_VERSION)-$(DATE)-$(GIT_SHA) $(RUN_CMD)
+
+#--device=/dev/kvm
 
 .SECONDEXPANSION:
 $(addsuffix .push,$(BASE_IMAGE_TAGS)): $$(basename $$@)
@@ -151,10 +161,7 @@ purge: clean
 
 .PHONY: update
 update:
-#   Update all docker image
 	$(foreach tag,$(BASE_IMAGE_TAGS),$(DOCKER_EXEC) pull $(BASE_IMAGE_NAME):$(tag);)
-#   Update all submodules to latest
-	git submodule update --init --recursive --remote
 
 # https://github.com/linuxkit/linuxkit/tree/master/pkg/binfmt
 .PHONY: qemu

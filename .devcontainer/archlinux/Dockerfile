@@ -29,6 +29,7 @@ RUN pacman -Syu --noconfirm && pacman -S --noconfirm \
 
 WORKDIR /work
 
+# Final image
 FROM base AS final
 
 ARG BUILD_DATE=""
@@ -67,8 +68,10 @@ WORKDIR /work
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-ARG USERNAME=bensuperpc
+ARG USERNAME=user
 RUN useradd -m "${USERNAME}"
+# Add color to bash
+RUN echo PS1="'\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '" >> "/home/${USERNAME}/.bashrc"
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/bin/bash" ]
+CMD [ "/bin/bash" , "-l" ]
