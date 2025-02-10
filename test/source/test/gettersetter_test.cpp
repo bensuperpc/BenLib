@@ -21,8 +21,8 @@ public:
     }
     ~GetterSetterClass() {
     }
-    GETTERSETTER(int, Value, _value);
-    GETTERSETTER(std::string, Name, _name);
+    GETTERSETTER(int, Value, _value)
+    GETTERSETTER(std::string, Name, _name)
 };
 
 TEST(GetterSetter, Basic_1) {

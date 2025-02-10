@@ -23,13 +23,18 @@ class Repository {
     static inline std::list<parentType*> _data;
 
    protected:
+    Repository(const Repository&) = delete;
+    Repository& operator=(const Repository&) = delete;
+
     explicit Repository() {
-        static_assert(std::is_base_of<Repository, parentType>::value, "parentType must be a child of Repository");
+        static_assert(std::is_base_of_v<Repository<parentType>, parentType>, "parentType must inherit from Repository<parentType>");
         Repository<parentType>::_data.push_back(static_cast<parentType*>(this));
     }
 
    public:
-    virtual ~Repository() { Repository<parentType>::_data.remove(static_cast<parentType*>(this)); }
+    virtual ~Repository() {
+        Repository<parentType>::_data.remove(static_cast<parentType*>(this)); 
+    }
     static inline std::list<parentType*>& data() { return Repository<parentType>::_data; }
     static inline void clear() { Repository<parentType>::_data.clear(); }
 };

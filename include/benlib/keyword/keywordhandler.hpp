@@ -17,32 +17,28 @@
 #include <string>
 #include <unordered_map>
 
-class KeywordHandler
-{
+class KeywordHandler {
 
 public:
     KeywordHandler() {}
-    ~KeywordHandler() {}
+    virtual ~KeywordHandler() = default;
 
     // Add signal with keyword and function
     template <typename... Args>
-    void addKeyword(std::string keyword, void(*func)(Args...))
-    {
-        keywordmap.insert(std::make_pair(keyword, std::any(std::function<void(Args...)>(func))));
+    void addKeyword(std::string keyword, void(*func)(Args...)) {
+        _keywordmap.insert(std::make_pair(keyword, std::any(std::function<void(Args...)>(func))));
     }
 
     // Add signal with keyword and function
     template <typename... Args>
-    void addKeyword(std::string keyword, std::function<void(Args...)> func)
-    {
-        keywordmap.insert(std::make_pair(keyword, std::any(func)));
+    void addKeyword(std::string keyword, std::function<void(Args...)> func) {
+        _keywordmap.insert(std::make_pair(keyword, std::any(func)));
     }
 
     // Call all signals with same keyword and arguments
     template <typename... Args>
-    void callKeyword(std::string keyword, Args... args)
-    {
-        auto range = keywordmap.equal_range(keyword);
+    void callKeyword(std::string keyword, Args... args) {
+        auto range = _keywordmap.equal_range(keyword);
         for (auto it = range.first; it != range.second; ++it)
         {
             if (it->second.type() != typeid(std::function<void(Args...)>))
@@ -55,15 +51,14 @@ public:
     }
 
     // Remove all signals with same keyword
-    std::size_t removeKeyword(std::string keyword)
-    {
-        return keywordmap.erase(keyword);
+    std::size_t removeKeyword(std::string keyword) {
+        return _keywordmap.erase(keyword);
     }
 
     // Remove all signals with same keyword and same arguments
     template <typename... Args>
     void removeKeyword(std::string keyword, Args... args) {
-        auto range = keywordmap.equal_range(keyword);
+        auto range = _keywordmap.equal_range(keyword);
         for (auto it = range.first; it != range.second; ++it)
         {
             if (it->second.type() != typeid(std::function<void(Args...)>))
@@ -73,24 +68,21 @@ public:
 
             if (std::any_cast<std::function<void(Args...)>>(it->second) == std::function<void(Args...)>(args...))
             {
-                keywordmap.erase(it);
+                _keywordmap.erase(it);
             }
         }
     }
 
-    void removeAllSignal()
-    {
-        keywordmap.clear();
+    void removeAllSignal() {
+        _keywordmap.clear();
     }
 
-    std::unordered_multimap<std::string, std::any>& data()
-    {
-        return keywordmap;
+    std::unordered_multimap<std::string, std::any>& data() {
+        return _keywordmap;
     }
 
-private:
-    std::unordered_multimap<std::string, std::any> keywordmap;
-
+protected:
+    std::unordered_multimap<std::string, std::any> _keywordmap;
 };
 
 #endif  // BENLIB_KEYWORD_KEYWORDHANDLER_HPP_

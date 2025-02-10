@@ -25,8 +25,9 @@ class RingBuffer {
         _maxSize = size;
         _container = std::deque<T>(_maxSize);
     }
-    virtual ~RingBuffer() { _container.clear(); }
+    virtual ~RingBuffer() = default;
     size_t size() const noexcept { return _container.size(); }
+
     void pushBack(T& element) {
         if (_container.size() >= _maxSize) {
             _container.erase(_container.begin());
