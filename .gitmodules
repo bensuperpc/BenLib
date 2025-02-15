@@ -7,3 +7,9 @@
 [submodule "external/thread-pool"]
 	path = external/thread-pool
 	url = git@github.com:bshoshany/thread-pool.git
+[submodule "external/raylib"]
+	path = external/raylib
+	url = git@github.com:raysan5/raylib.git
+[submodule "external/raylib-cpp"]
+	path = external/raylib-cpp
+	url = git@github.com:RobLoach/raylib-cpp.git

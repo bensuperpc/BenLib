@@ -106,6 +106,7 @@ if(NOT WIN32)
   test_bench_generator(random_test true true)
   test_bench_generator(keyword_test true true)
   test_bench_generator(gettersetter_test true true)
+  test_bench_generator(scheduler_test true true)
 endif()
 
 # ---- End-of-file commands ----

@@ -9,11 +9,15 @@ if(PROJECT_IS_TOP_LEVEL)
   find_package(benlib REQUIRED)
 endif()
 
+add_subdirectory(../external/raylib external/raylib)
+add_subdirectory(../external/raylib-cpp external/raylib-cpp)
+
 add_custom_target(run-examples)
 
 function(add_example NAME)
   add_executable("${NAME}" "${NAME}.cpp")
   target_link_libraries("${NAME}" PRIVATE benlib::benlib)
+  target_link_libraries("${NAME}" PRIVATE raylib raylib_cpp)
   target_compile_features("${NAME}" PRIVATE cxx_std_20)
   add_custom_target("run_${NAME}" COMMAND "${NAME}" VERBATIM)
   add_dependencies("run_${NAME}" "${NAME}")
@@ -24,5 +28,6 @@ add_example(basic_example)
 add_example(patern_repository)
 add_example(basic_fast_example)
 add_example(bench_example)
+add_example(raylib_test)
 
 add_folders(Example)
