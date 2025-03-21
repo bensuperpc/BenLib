@@ -25,6 +25,7 @@ function(add_example NAME)
 endfunction()
 
 add_example(basic_example)
+add_example(basic_anti_cheat)
 add_example(patern_repository)
 add_example(basic_fast_example)
 add_example(bench_example)
