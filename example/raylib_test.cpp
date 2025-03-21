@@ -1,27 +1,30 @@
 #include "raylib-cpp.hpp"
 
-#include <cmath>  // NOLINT
-
+#include <stdlib.h>
 #include "benlib/patern/scheduler.hpp"
 
-#include "gtest/gtest.h"
+#define MAX_ENEMIES 50000
+#define MAX_BATCH_ELEMENTS 16384
+
+typedef struct Enemies {
+    raylib::Vector2 position;
+    Color color;
+} Enemies;
 
 class BasicApp : public benlib::patern::App {
-public:
-    BasicApp() : _window(raylib::Window()) {
-    }
+   public:
+    BasicApp() : _window(raylib::Window()), _camera(raylib::Camera2D({0, 0}, {0, 0}, 0.0f, 1.0f)) {}
 
     ~BasicApp() {
         _window.Close();
+        free(enemies);
     }
 
     void init() {
         SetTraceLogLevel(LOG_ALL);
-        _window.Init(screenWidth, screenHeight, "raylib [shapes] example - collision area");
+        _window.Init(screenWidth, screenHeight, "raylib test");
+        // raylib::SetConfigFlags(FLAG_MSAA_4X_HINT);
         _window.SetTargetFPS(60);
-
-        boxA = raylib::Rectangle(10, _window.GetHeight() / 2 - 50, 200, 100);
-        boxB = raylib::Rectangle(GetScreenWidth() / 2 - 30, _window.GetHeight() / 2 - 30, 60, 60);
     }
 
     void update() override {
@@ -33,96 +36,99 @@ public:
         if (_window.ShouldClose()) {
             exit(0);
         }
-
+        updateKey();
         updateData();
         updateVisual();
     }
 
     void updateData() {
-        if (!pause)
-            boxA.x += boxASpeedX;
+        _camera.target = Vector2Add(playerPosition, (Vector2){20, 20});
+        _camera.offset = (Vector2){screenWidth / 2, screenHeight / 2};
+        for (int i = 0; i < enemiesCount; i++) {
+            raylib::Vector2 delta = Vector2Subtract(playerPosition, enemies[i].position);
+            float distance = Vector2Length(delta);
+            if (distance > 20) {
+                delta = Vector2Scale(delta, (1.0f / distance) * 2.5f);
+                enemies[i].position = Vector2Add(enemies[i].position, delta);
+            }
+        }
+    }
 
-        // Bounce box on x screen limits
-        if (((boxA.x + boxA.width) >= GetScreenWidth()) || (boxA.x <= 0))
-            boxASpeedX *= -1;
+    void updateKey() {
+        float wheel = GetMouseWheelMove();
+        raylib::Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), _camera);
+        if (wheel != 0) {
+            _camera.offset = GetMousePosition();
+            _camera.target = mouseWorldPos;
+            _camera.zoom = Clamp(expf(logf(_camera.zoom) + 0.2f * wheel), 0.125f, 64.0f);
+        }
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            for (int i = 0; i < 100; i++) {
+                if (enemiesCount < MAX_ENEMIES) {
+                    enemies[enemiesCount].position = mouseWorldPos;
+                    enemies[enemiesCount].color = (Color){GetRandomValue(50, 240), GetRandomValue(80, 240), GetRandomValue(100, 240), 255};
+                    enemiesCount++;
+                }
+            }
+        }
 
-        // Update player-controlled-box (box02)
-        boxB.x = GetMouseX() - boxB.width / 2;
-        boxB.y = GetMouseY() - boxB.height / 2;
+        if (IsKeyPressed(KEY_R)) {
+            enemiesCount = 0;
+        }
 
-        // Make sure Box B does not go out of move area limits
-        if ((boxB.x + boxB.width) >= _window.GetWidth())
-            boxB.x = _window.GetWidth() - boxB.width;
-        else if (boxB.x <= 0)
-            boxB.x = 0;
-
-        if ((boxB.y + boxB.height) >= _window.GetHeight())
-            boxB.y = _window.GetHeight() - boxB.height;
-        else if (boxB.y <= screenUpperLimit)
-            boxB.y = screenUpperLimit;
-
-        // Check boxes collision
-        collision = boxA.CheckCollision(boxB);
-
-        // Get collision rectangle (only on collision)
-        if (collision)
-            boxCollision = boxA.GetCollision(boxB);
-
-        // Pause Box A movement
-        if (IsKeyPressed(KEY_SPACE))
-            pause = !pause;
+        if (IsKeyDown(KEY_RIGHT)) {
+            playerPosition.x += 6.0f;
+        }
+        if (IsKeyDown(KEY_LEFT)) {
+            playerPosition.x -= 6.0f;
+        }
+        if (IsKeyDown(KEY_DOWN)) {
+            playerPosition.y += 6.0f;
+        } else if (IsKeyDown(KEY_UP)) {
+            playerPosition.y -= 6.0f;
+        }
     }
 
     void updateVisual() {
         _window.BeginDrawing();
-
         _window.ClearBackground(RAYWHITE);
 
-        DrawRectangle(0, 0, screenWidth, screenUpperLimit, collision ? RED : BLACK);
+        _camera.BeginMode();
 
-        boxA.Draw(GOLD);
-        boxB.Draw(BLUE);
-
-        if (collision) {
-            // Draw collision area
-            boxCollision.Draw(LIME);
-
-            // Draw collision message
-            raylib::DrawText("COLLISION!", GetScreenWidth() / 2 - MeasureText("COLLISION!", 20) / 2, screenUpperLimit / 2 - 10, 20, BLACK);
-
-            // Draw collision area
-            raylib::DrawText(TextFormat("Collision Area: %i", (int)boxCollision.width * (int)boxCollision.height), GetScreenWidth() / 2 - 100,
-                             screenUpperLimit + 10, 20, BLACK);
+        DrawRectangle(-5, -5, screenWidth + 5, screenHeight + 5, GRAY);
+        for (int i = 0; i < enemiesCount; i++) {
+            DrawRectangle(enemies[i].position.x, enemies[i].position.y, 10, 10, enemies[i].color);
         }
 
-        _window.DrawFPS(10, 10);
+        DrawCircleV(Vector2AddValue(playerPosition, 5.0f), 20, RED);
+        _camera.EndMode();
 
+        DrawText(TextFormat("enemies: %i", enemiesCount), 120, 10, 20, GREEN);
+
+        DrawCircleV(GetMousePosition(), 4, DARKGRAY);
+        //DrawTextEx(GetFontDefault(), TextFormat("[%i, %i]", GetMouseX(), GetMouseY()), Vector2Add(GetMousePosition(), (Vector2){-44, -24}), 20, 2, BLACK);
+
+        _window.DrawFPS(10, 10);
         _window.EndDrawing();
     }
 
-    private:
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+   private:
+    const int screenWidth = 1280;
+    const int screenHeight = 720;
     raylib::Window _window;
-
-    raylib::Rectangle boxA;
-    int boxASpeedX = 4;
-    raylib::Rectangle boxB;
-    raylib::Rectangle boxCollision;
-
-    int screenUpperLimit = 40;
-
-    bool pause = false;
-    bool collision = false;
-
     bool isInitialized = false;
+    raylib::Camera2D _camera = raylib::Camera2D({0, 0}, {0, 0}, 0.0f, 1.0f);
+
+    Enemies* enemies = (Enemies*)malloc(MAX_ENEMIES * sizeof(Enemies));
+    int enemiesCount = 0;
+    raylib::Vector2 playerPosition = {200, 200};
 };
 
 int main(void) {
-
     benlib::patern::Scheduler scheduler;
 
     auto app = std::make_shared<BasicApp>();
+    scheduler.setUpdateFrequency(std::chrono::milliseconds(1));
 
     scheduler.addApp(app);
 
