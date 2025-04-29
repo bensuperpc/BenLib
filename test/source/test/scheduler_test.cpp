@@ -9,11 +9,11 @@
  *
  */
 
-#include "benlib/patern/scheduler.hpp"
+#include "benlib/pattern/scheduler.hpp"
 
 #include "gtest/gtest.h"
 
-class BasicApp : public benlib::patern::App {
+class BasicApp : public benlib::pattern::App {
 public:
     BasicApp() = default;
     ~BasicApp() = default;
@@ -31,7 +31,7 @@ public:
 };
 
 TEST(Scheduler, basic_1) {
-    benlib::patern::Scheduler scheduler;
+    benlib::pattern::Scheduler scheduler;
 
     std::shared_ptr<BasicApp> app = std::make_shared<BasicApp>();
     
@@ -49,7 +49,7 @@ TEST(Scheduler, basic_1) {
 }
 
 TEST(Scheduler, basic_2) {
-    benlib::patern::Scheduler scheduler;
+    benlib::pattern::Scheduler scheduler;
 
     std::vector<std::shared_ptr<BasicApp>> apps;
     for (int i = 0; i < 10; i++) {

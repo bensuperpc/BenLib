@@ -20,9 +20,10 @@
 #include <algorithm>
 #include <chrono>
 #include <shared_mutex>
+#include <iostream>
 
 namespace benlib {
-namespace patern {
+namespace pattern {
 
 class App {
 public:
@@ -69,7 +70,7 @@ class Scheduler {
     void start() {
         if (!_running.load() && !_thread.joinable()) {
             _running.store(true);
-            _thread = std::thread(&Scheduler::runner, this);
+            _thread = std::jthread(&Scheduler::runner, this);
             return;
         }
     }
@@ -93,11 +94,11 @@ class Scheduler {
 
     std::vector<std::shared_ptr<App>> _apps;
     std::atomic<bool> _running = false;
-    std::thread _thread;
+    std::jthread _thread;
     std::shared_mutex _mutex;
     std::chrono::milliseconds _updateFrequency = std::chrono::milliseconds(10);
 };
 
-}  // namespace patern
+}  // namespace pattern
 }  // namespace benlib
 #endif

@@ -15,7 +15,7 @@
 #include <deque>
 
 namespace benlib {
-namespace patern {
+namespace pattern {
 
 template <typename T>
 class RingBuffer {
@@ -82,6 +82,6 @@ class RingBuffer {
     std::deque<T>::size_type _maxSize = 0;
 };
 
-}  // namespace patern
+}  // namespace pattern
 }  // namespace benlib
 #endif

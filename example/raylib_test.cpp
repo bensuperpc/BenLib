@@ -1,7 +1,7 @@
 #include "raylib-cpp.hpp"
 
 #include <stdlib.h>
-#include "benlib/patern/scheduler.hpp"
+#include "benlib/pattern/scheduler.hpp"
 
 #define MAX_ENEMIES 50000
 #define MAX_BATCH_ELEMENTS 16384
@@ -11,7 +11,7 @@ typedef struct Enemies {
     Color color;
 } Enemies;
 
-class BasicApp : public benlib::patern::App {
+class BasicApp : public benlib::pattern::App {
    public:
     BasicApp() : _window(raylib::Window()), _camera(raylib::Camera2D({0, 0}, {0, 0}, 0.0f, 1.0f)) {}
 
@@ -50,6 +50,8 @@ class BasicApp : public benlib::patern::App {
             if (distance > 20) {
                 delta = Vector2Scale(delta, (1.0f / distance) * 2.5f);
                 enemies[i].position = Vector2Add(enemies[i].position, delta);
+            } else {
+                enemies[i].position = Vector2Add(enemies[i].position, (Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)});
             }
         }
     }
@@ -63,7 +65,7 @@ class BasicApp : public benlib::patern::App {
             _camera.zoom = Clamp(expf(logf(_camera.zoom) + 0.2f * wheel), 0.125f, 64.0f);
         }
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
                 if (enemiesCount < MAX_ENEMIES) {
                     enemies[enemiesCount].position = mouseWorldPos;
                     enemies[enemiesCount].color = (Color){GetRandomValue(50, 240), GetRandomValue(80, 240), GetRandomValue(100, 240), 255};
@@ -125,7 +127,7 @@ class BasicApp : public benlib::patern::App {
 };
 
 int main(void) {
-    benlib::patern::Scheduler scheduler;
+    benlib::pattern::Scheduler scheduler;
 
     auto app = std::make_shared<BasicApp>();
     scheduler.setUpdateFrequency(std::chrono::milliseconds(1));

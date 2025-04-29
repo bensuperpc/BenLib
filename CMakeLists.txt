@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 include(cmake/prelude.cmake)
 
@@ -15,6 +15,8 @@ include(cmake/variables.cmake)
 
 # ---- Declare library ----
 
+include_directories(external/thread-pool/include)
+
 add_library(benlib_benlib INTERFACE)
 add_library(benlib::benlib ALIAS benlib_benlib)
 
@@ -29,7 +31,7 @@ target_include_directories(
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
 )
 
-target_compile_features(benlib_benlib INTERFACE cxx_std_20)
+target_compile_features(benlib_benlib INTERFACE cxx_std_23)
 
 # ---- Install rules ----
 

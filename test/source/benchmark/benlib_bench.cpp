@@ -4,7 +4,6 @@
 #include <vector>
 
 #include <benchmark/benchmark.h>
-#include "benlib/benlib.hpp"
 #include "generator/generator.hpp"
 
 static constexpr int64_t multiplier = 4;
