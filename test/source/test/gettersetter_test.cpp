@@ -9,7 +9,7 @@
  *
  */
 
-#include "benlib/patern/gettersetter.hpp"
+#include "benlib/pattern/gettersetter.hpp"
 
 #include "gtest/gtest.h"
 

@@ -15,7 +15,7 @@
 #include <list>
 
 namespace benlib {
-namespace patern {
+namespace pattern {
 
 template <typename parentType>
 class Repository {
@@ -39,6 +39,6 @@ class Repository {
     static inline void clear() { Repository<parentType>::_data.clear(); }
 };
 
-}  // namespace patern
+}  // namespace pattern
 }  // namespace benlib
 #endif

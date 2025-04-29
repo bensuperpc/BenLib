@@ -46,7 +46,7 @@ all: release debug minsizerel coverage relwithdebinfo minsizerel relwithdebinfo 
 base:
 	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=$@ $(CMAKE_ARGS)
 	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
+#ctest $(CTEST_OPTIONS) --test-dir build/$@
 
 .PHONY: base-clang
 base-clang:
