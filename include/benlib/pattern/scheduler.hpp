@@ -34,7 +34,7 @@ public:
 
 class Scheduler {
    public:
-    explicit Scheduler() : _running(false), _updateFrequency(std::chrono::milliseconds(10)) {
+    explicit Scheduler() : _running(false), _updateDelayFrequency(std::chrono::milliseconds(10)) {
         start();
     }
     virtual ~Scheduler() {
@@ -51,9 +51,9 @@ class Scheduler {
         _apps.erase(std::remove(_apps.begin(), _apps.end(), app), _apps.end());
     }
 
-    void setUpdateFrequency(std::chrono::milliseconds updateFrequency) {
+    void setDelayFrequency(std::chrono::milliseconds updateDelayFrequency) {
         std::unique_lock<std::shared_mutex> lock(_mutex);
-        _updateFrequency = updateFrequency;
+        _updateDelayFrequency = updateDelayFrequency;
     }
 
     bool isRunning() const {
@@ -82,7 +82,7 @@ class Scheduler {
     private:
     void runner() {
         while (_running.load()) {
-            std::this_thread::sleep_for(_updateFrequency);
+            std::this_thread::sleep_for(_updateDelayFrequency);
             {
                 std::unique_lock<std::shared_mutex> lock(_mutex);
                 for (auto& app : _apps) {
@@ -96,7 +96,7 @@ class Scheduler {
     std::atomic<bool> _running = false;
     std::jthread _thread;
     std::shared_mutex _mutex;
-    std::chrono::milliseconds _updateFrequency = std::chrono::milliseconds(10);
+    std::chrono::milliseconds _updateDelayFrequency = std::chrono::milliseconds(10);
 };
 
 }  // namespace pattern

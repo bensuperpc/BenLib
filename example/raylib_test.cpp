@@ -130,7 +130,7 @@ int main(void) {
     benlib::pattern::Scheduler scheduler;
 
     auto app = std::make_shared<BasicApp>();
-    scheduler.setUpdateFrequency(std::chrono::milliseconds(1));
+    scheduler.setDelayFrequency(std::chrono::milliseconds(1));
 
     scheduler.addApp(app);
 

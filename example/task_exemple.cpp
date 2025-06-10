@@ -99,7 +99,7 @@ class MyApp : public benlib::pattern::ITasker<int>, public benlib::pattern::ITas
 int main() {
     benlib::pattern::Scheduler scheduler;
     BS::thread_pool<BS::tp::priority> threadPool(4);
-    scheduler.setUpdateFrequency(std::chrono::milliseconds(50));
+    scheduler.setDelayFrequency(std::chrono::milliseconds(50));
     auto handler = std::make_shared<benlib::pattern::TaskHandler>(threadPool);
     scheduler.addApp(handler);
     MyApp app(*handler);

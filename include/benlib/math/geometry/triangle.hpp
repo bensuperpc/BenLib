@@ -46,7 +46,7 @@ static constexpr T triangleSurface(const T& a, const T& b, const T& c) noexcept 
  * @return T
  */
 template <typename T>
-static constexpr T triangleSurface(const T& b, const T& h) noexcept {
+static constexpr T triangleRectangleSurface(const T& b, const T& h) noexcept {
     return (b * h) / 2;
 }
 
