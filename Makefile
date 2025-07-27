@@ -1,11 +1,4 @@
 #//////////////////////////////////////////////////////////////
-#//   ____                                                   //
-#//  | __ )  ___ _ __  ___ _   _ _ __   ___ _ __ _ __   ___  //
-#//  |  _ \ / _ \ '_ \/ __| | | | '_ \ / _ \ '__| '_ \ / __| //
-#//  | |_) |  __/ | | \__ \ |_| | |_) |  __/ |  | |_) | (__  //
-#//  |____/ \___|_| |_|___/\__,_| .__/ \___|_|  | .__/ \___| //
-#//                             |_|             |_|          //
-#//////////////////////////////////////////////////////////////
 #//                                                          //
 #//  sandbox, 2023                               //
 #//  Created: 04, June, 2021                                 //
@@ -18,7 +11,7 @@
 #//                                                          //
 #//////////////////////////////////////////////////////////////
 
-PROJECT_NAME := world_of_blocks
+PROJECT_NAME := benlib
 
 PARALLEL := 1
 
@@ -28,63 +21,25 @@ PROJECT_ROOT := .
 CTEST_TIMEOUT := 1500
 CTEST_OPTIONS := --output-on-failure --timeout $(CTEST_TIMEOUT) --parallel $(PARALLEL) --verbose
 
-#-DRUN_HAVE_STD_REGEX=1
 CMAKE_ARGS := -DHAVE_STD_REGEX=ON
 
-# LANG := en
-# LANG=$(LANG)
-# -Werror=float-equal
+
+TARGET := dev debug release sanitize minsizerel
 
 .PHONY: build
-build: base
+build: release
 
 .PHONY: all
 all: release debug minsizerel coverage relwithdebinfo minsizerel relwithdebinfo release-clang \
 	debug-clang base base-clang sanitize sanitize-clang gprof $(DOCKCROSS_IMAGE) docker valgrind gdb
 
-.PHONY: base
-base:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=$@ $(CMAKE_ARGS)
-	cmake --build build/$@
-#ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-.PHONY: base-clang
-base-clang:
+.PHONY: ${TARGET}
+${TARGET}:
 	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=$@ $(CMAKE_ARGS)
 	cmake --build build/$@
 	ctest $(CTEST_OPTIONS) --test-dir build/$@
 
-.PHONY: base-debug
-base-debug:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=$@ $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-.PHONY: release
-release:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=base -DCMAKE_BUILD_TYPE=Release $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-.PHONY: release-clang
-release-clang:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=base -DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-.PHONY: debug
-debug:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=dev -DCMAKE_BUILD_TYPE=Debug $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-.PHONY: debug-clang
-debug-clang:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=dev -DCMAKE_BUILD_TYPE=Debug \
-	-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
+# MinSizeRel RelWithDebInfo
 
 .PHONY: coverage
 coverage:
@@ -92,30 +47,6 @@ coverage:
 	cmake --build build/$@
 	ctest $(CTEST_OPTIONS) --test-dir build/$@
 	cmake --build build/$@ --target $@
-
-.PHONY: sanitize
-sanitize:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=ci-sanitize $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-sanitize-clang:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=ci-sanitize \
-	-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-.PHONY: minsizerel
-minsizerel:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=dev -DCMAKE_BUILD_TYPE=MinSizeRel $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
-
-.PHONY: relwithdebinfo
-relwithdebinfo:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=dev -DCMAKE_BUILD_TYPE=RelWithDebInfo $(CMAKE_ARGS)
-	cmake --build build/$@
-	ctest $(CTEST_OPTIONS) --test-dir build/$@
 
 .PHONY: gprof
 gprof:

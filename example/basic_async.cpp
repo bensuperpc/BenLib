@@ -292,7 +292,7 @@ std::string encryptMessage(EVP_PKEY* publicKey, const std::string& message) {
         EVP_PKEY_free(eph);
         return "";
     }
-    BUF_MEM* bptr;
+    BUF_MEM* bptr = nullptr;
     BIO_get_mem_ptr(bio, &bptr);
     std::vector<unsigned char> ephpub(bptr->data, bptr->data + bptr->length);
     BIO_free_all(bio);

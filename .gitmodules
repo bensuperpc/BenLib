@@ -1,9 +1,3 @@
-[submodule "external/benchmark"]
-	path = external/benchmark
-	url = git@github.com:google/benchmark.git
-[submodule "external/googletest"]
-	path = external/googletest
-	url = git@github.com:google/googletest.git
 [submodule "external/thread-pool"]
 	path = external/thread-pool
 	url = git@github.com:bshoshany/thread-pool.git
@@ -13,3 +7,6 @@
 [submodule "external/raylib-cpp"]
 	path = external/raylib-cpp
 	url = git@github.com:RobLoach/raylib-cpp.git
+[submodule "external/nlohmann_json"]
+	path = external/nlohmann_json
+	url = https://github.com/nlohmann/json.git

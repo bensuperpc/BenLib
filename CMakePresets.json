@@ -22,6 +22,22 @@
       }
     },
     {
+      "name": "gcc-compiler",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "clang-compiler",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
       "name": "dev-mode",
       "hidden": true,
       "inherits": "cmake-pedantic",
@@ -33,16 +49,16 @@
       "name": "cppcheck",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_CPPCHECK": "cppcheck;--inline-suppr",
-        "CMAKE_C_CPPCHECK": "cppcheck;--inline-suppr"
+        "CMAKE_CXX_CPPCHECK": "cppcheck;--inline-suppr;--suppress=*:${sourceDir}/external/*",
+        "CMAKE_C_CPPCHECK": "cppcheck;--inline-suppr;$--suppress=*:${sourceDir}/external/*"
       }
     },
     {
       "name": "clang-tidy",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--header-filter=^${sourceDir}/",
-        "CMAKE_C_CLANG_TIDY": "clang-tidy;--header-filter=^${sourceDir}/"
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--header-filter='^(?!.*(third_party|external)).*'",
+        "CMAKE_C_CLANG_TIDY": "clang-tidy;--header-filter='^(?!.*(third_party|external)).*'"
       }
     },
     {
@@ -77,6 +93,27 @@
       }
     },
     {
+      "name": "flags-gcc-clang-coverage",
+      "hidden": true,
+      "cacheVariables": {
+        "ENABLE_COVERAGE": "ON",
+        "CMAKE_BUILD_TYPE": "Coverage",
+        "CMAKE_CXX_FLAGS_COVERAGE": "-O0 -g3 --coverage -fkeep-inline-functions -fkeep-static-functions",
+        "CMAKE_C_FLAGS_COVERAGE": "-O0 -g3 --coverage",
+        "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
+        "CMAKE_SHARED_LINKER_FLAGS_COVERAGE": "--coverage"
+      }
+    },
+    {
+      "name": "flags-gcc-clang-sanitize",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Sanitize",
+        "CMAKE_CXX_FLAGS_SANITIZE": "-Og -U_FORTIFY_SOURCE -g3 -fsanitize=address,undefined,leak -fno-omit-frame-pointer -fno-common",
+        "CMAKE_C_FLAGS_SANITIZE": "-Og -U_FORTIFY_SOURCE -g3"
+      }
+    },
+    {
       "name": "flags-msvc",
       "description": "Note that all the flags after /W4 are required for MSVC to conform to the language standard",
       "hidden": true,
@@ -96,7 +133,7 @@
       }
     },
     {
-      "name": "flags-debugger",
+      "name": "flags-gcc-clang-debugger",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "-O0 -g3 -ggdb3 -Wall -Wextra -Wpedantic -pg",
@@ -104,120 +141,39 @@
       }
     },
     {
-      "name": "ci-cuda",
-      "description": "This preset makes sure the project actually builds with at least the specified standard",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_CUDA_STANDARD": "17",
-        "CMAKE_CUDA_STANDARD_REQUIRED": "ON",
-        "CMAKE_CUDA_EXTENSIONS": "OFF"
-      }
-    },
-    {
-      "name": "ci-linux",
-      "generator": "Unix Makefiles",
-      "hidden": true,
-      "inherits": ["flags-gcc-clang", "ci-std", "ci-cuda", "flags-cuda"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "ci-darwin",
-      "generator": "Unix Makefiles",
-      "hidden": true,
-      "inherits": ["flags-appleclang", "ci-std"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "ci-base",
-      "generator": "Unix Makefiles",
-      "hidden": true,
-      "inherits": ["ci-std", "flags-gcc-clang", "dev-mode", "flags-cuda", "ci-cuda"]
-    },
-    {
-      "name": "ci-win64",
-      "inherits": ["flags-msvc", "ci-std"],
-      "generator": "Visual Studio 17 2022",
-      "architecture": "x64",
-      "hidden": true
-    },
-    {
       "name": "coverage-linux",
       "binaryDir": "${sourceDir}/build/coverage",
-      "inherits": "ci-linux",
-      "hidden": true,
+      "inherits": ["ci-linux", "dev-mode", "flags-gcc-clang-coverage"],
       "cacheVariables": {
-        "ENABLE_COVERAGE": "ON",
-        "CMAKE_BUILD_TYPE": "Coverage",
-        "CMAKE_CXX_FLAGS_COVERAGE": "-O0 -g3 --coverage -fkeep-inline-functions -fkeep-static-functions",
-        "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
-        "CMAKE_SHARED_LINKER_FLAGS_COVERAGE": "--coverage"
+        "COVERAGE_HTML_COMMAND": "",
+        "COVERAGE_TRACE_COMMAND": ""
       }
     },
     {
-      "name": "ci-coverage",
-      "inherits": ["coverage-linux", "dev-mode"],
-      "cacheVariables": {
-        "COVERAGE_HTML_COMMAND": ""
-      }
-    },
-    {
-      "name": "ci-sanitize",
+      "name": "sanitize-linux",
       "binaryDir": "${sourceDir}/build/sanitize",
-      "inherits": ["ci-linux", "dev-mode"],
+      "inherits": ["ci-linux", "dev-mode", "flags-gcc-clang-sanitize"],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Sanitize",
-        "CMAKE_CXX_FLAGS_SANITIZE": "-Og -U_FORTIFY_SOURCE -g3 -fsanitize=address,undefined,leak -fno-omit-frame-pointer -fno-common",
-        "CMAKE_C_FLAGS_SANITIZE": "-Og -U_FORTIFY_SOURCE -g3"
+        "ENABLE_SANITIZERS": "ON"
       },
       "environment": {
         "ASAN_OPTIONS": "strict_string_checks=1 detect_stack_use_after_return=1 check_initialization_order=1 strict_init_order=1 detect_leaks=1",
         "UBSAN_OPTIONS": "print_stacktrace=1"
-      }
-    },
-    {
-      "name": "ci-build",
-      "binaryDir": "${sourceDir}/build",
+      },
       "hidden": true
     },
     {
-      "name": "base",
-      "binaryDir": "${sourceDir}/build/base",
-      "inherits": ["ci-base"],
-      "hidden": false,
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "base-clang",
-      "binaryDir": "${sourceDir}/build/base-clang",
-      "inherits": ["ci-base"],
-      "hidden": false,
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_C_COMPILER": "clang",
-        "CMAKE_CXX_COMPILER": "clang++"
-      }
-    },
-    {
       "name": "gprof",
-      "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/build/gprof",
-      "inherits": ["ci-std", "flags-debugger", "dev-mode"],
-      "hidden": false,
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
+      "generator": "Unix Makefiles",
+      "inherits": ["ci-std", "flags-gcc-clang-debugger", "dev-mode"],
+      "hidden": false
     },
     {
       "name": "debugger",
-      "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/build/debugger",
-      "inherits": ["ci-std", "flags-debugger", "dev-mode"],
+      "generator": "Unix Makefiles",
+      "inherits": ["ci-std", "flags-gcc-clang-debugger", "dev-mode"],
       "hidden": false,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
@@ -230,6 +186,82 @@
       "cacheVariables": {
         "BUILD_MCSS_DOCS": "ON"
       }
+    },
+    {
+      "name": "dev-linux",
+      "binaryDir": "${sourceDir}/build/dev-linux",
+      "inherits": ["dev-common", "ci-linux"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "dev-darwin",
+      "binaryDir": "${sourceDir}/build/dev-darwin",
+      "inherits": ["dev-common", "ci-darwin"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "dev-win64",
+      "binaryDir": "${sourceDir}/build/dev-win64",
+      "inherits": ["dev-common", "ci-win64"],
+      "environment": {
+        "UseMultiToolTask": "true",
+        "EnforceProcessCountAcrossBuilds": "true"
+      }
+    },
+    {
+      "name": "ci-linux",
+      "generator": "Unix Makefiles",
+      "hidden": true,
+      "inherits": ["flags-gcc-clang", "ci-std"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "ci-darwin",
+      "generator": "Unix Makefiles",
+      "hidden": true,
+      "inherits": ["flags-appleclang", "ci-std"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "ci-win64",
+      "inherits": ["flags-msvc", "ci-std"],
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "hidden": true
+    },
+    {
+      "name": "ci-cuda",
+      "description": "This preset makes sure the project actually builds with at least the specified standard",
+      "inherits": ["flags-cuda"],
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CUDA_STANDARD": "17",
+        "CMAKE_CUDA_STANDARD_REQUIRED": "ON",
+        "CMAKE_CUDA_EXTENSIONS": "OFF"
+      }
+    },
+    {
+      "name": "ci-build",
+      "binaryDir": "${sourceDir}/build",
+      "hidden": true
+    },
+    {
+      "name": "ci-coverage",
+      "inherits": ["ci-build", "coverage-linux", "dev-mode"]
+    },
+    {
+      "name": "ci-sanitize",
+      "inherits": ["ci-build", "sanitize-linux", "dev-mode"]
     },
     {
       "name": "ci-macos",

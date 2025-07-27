@@ -1,0 +1,23 @@
+{
+  "name": "Debian C/C++ + DB Dev",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "C_Cpp.clang_format_style": "Google",
+        "extensions": [
+          "ms-vscode.cpptools",
+          "ms-vscode.cpptools-extension-pack",
+          "ms-vscode.cmake-tools",
+          "redhat.vscode-yaml"
+        ]
+      }
+    }
+  },
+  "remoteUser": "dev"
+}

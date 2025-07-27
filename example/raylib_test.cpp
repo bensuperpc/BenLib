@@ -43,7 +43,7 @@ class BasicApp : public benlib::pattern::App {
 
     void updateData() {
         _camera.target = Vector2Add(playerPosition, (Vector2){20, 20});
-        _camera.offset = (Vector2){screenWidth / 2, screenHeight / 2};
+        _camera.offset = (Vector2){static_cast<float>(screenWidth / 2), static_cast<float>(screenHeight / 2)};
         for (int i = 0; i < enemiesCount; i++) {
             raylib::Vector2 delta = Vector2Subtract(playerPosition, enemies[i].position);
             float distance = Vector2Length(delta);
@@ -51,7 +51,7 @@ class BasicApp : public benlib::pattern::App {
                 delta = Vector2Scale(delta, (1.0f / distance) * 2.5f);
                 enemies[i].position = Vector2Add(enemies[i].position, delta);
             } else {
-                enemies[i].position = Vector2Add(enemies[i].position, (Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)});
+                enemies[i].position = Vector2Add(enemies[i].position, (Vector2){static_cast<float>(GetRandomValue(-1, 1)), static_cast<float>(GetRandomValue(-1, 1))});
             }
         }
     }
@@ -68,7 +68,8 @@ class BasicApp : public benlib::pattern::App {
             for (int i = 0; i < 10; i++) {
                 if (enemiesCount < MAX_ENEMIES) {
                     enemies[enemiesCount].position = mouseWorldPos;
-                    enemies[enemiesCount].color = (Color){GetRandomValue(50, 240), GetRandomValue(80, 240), GetRandomValue(100, 240), 255};
+                    enemies[enemiesCount].color = (Color){static_cast<unsigned char>(GetRandomValue(50, 240)), 
+                        static_cast<unsigned char>(GetRandomValue(80, 240)), static_cast<unsigned char>(GetRandomValue(100, 240)), 255};
                     enemiesCount++;
                 }
             }

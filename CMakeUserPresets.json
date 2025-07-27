@@ -7,31 +7,9 @@
   },
   "configurePresets": [
     {
-      "name": "dev-linux",
-      "binaryDir": "${sourceDir}/build/dev-linux",
-      "inherits": ["dev-common", "ci-linux"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-      }
-    },
-    {
-      "name": "dev-darwin",
-      "binaryDir": "${sourceDir}/build/dev-darwin",
-      "inherits": ["dev-common", "ci-darwin"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-      }
-    },
-    {
-      "name": "dev-win64",
-      "binaryDir": "${sourceDir}/build/dev-win64",
-      "inherits": ["dev-common", "ci-win64"],
-      "environment": {
-        "UseMultiToolTask": "true",
-        "EnforceProcessCountAcrossBuilds": "true"
-      }
+      "name": "base",
+      "binaryDir": "${sourceDir}/build/dev",
+      "inherits": "dev-linux"
     },
     {
       "name": "dev",
@@ -41,7 +19,17 @@
     {
       "name": "dev-coverage",
       "binaryDir": "${sourceDir}/build/coverage",
-      "inherits": ["dev-mode", "coverage-linux"]
+      "inherits": ["coverage-linux"]
+    },
+    {
+      "name": "dev-sanitize",
+      "binaryDir": "${sourceDir}/build/sanitize",
+      "inherits": ["dev-mode", "sanitize-linux"]
+    },
+    {
+      "name": "release",
+      "binaryDir": "${sourceDir}/build/release",
+      "inherits": "ci-ubuntu"
     }
   ],
   "buildPresets": [

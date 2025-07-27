@@ -1,0 +1,16 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-debian:stable-slim}
+        USER_UID: ${USER_UID}
+        USER_GID: ${USER_GID}
+    network_mode: host
+    env_file: .env
+    volumes:
+      - ..:/workspace:cached
+    tmpfs:
+      - /workspace/build:rw,nosuid,exec,size=16g,uid=${USER_UID},gid=${USER_GID}
+    command: sleep infinity

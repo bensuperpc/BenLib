@@ -47,9 +47,9 @@ if (NOT benchmark_FOUND)
         ""
         CACHE STRING "" FORCE)
 
-    set(CMAKE_CXX_FLAGS_COVERAGE
-        ""
-        CACHE STRING "" FORCE)
+    #set(CMAKE_CXX_FLAGS_COVERAGE
+    #    ""
+    #    CACHE STRING "" FORCE)
 
     set(CMAKE_REQUIRED_FLAGS
         ""

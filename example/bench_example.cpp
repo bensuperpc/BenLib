@@ -45,8 +45,8 @@ void arrayAddABC(const std::vector<T>& A, const std::vector<T>& B, std::vector<T
 }
 
 int main() {
-    constexpr std::size_t attempts = std::pow(2, 12);
-    constexpr std::size_t SIZE = std::pow(2, 12);
+    std::size_t attempts = std::pow(2, 12);
+    std::size_t SIZE = std::pow(2, 12);
     volatile int8_t vectorAvalue = 1;
     volatile int8_t vectorBvalue = 2;
     volatile int8_t vectorCvalue = 0;
