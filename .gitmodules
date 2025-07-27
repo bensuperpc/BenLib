@@ -13,3 +13,6 @@
 [submodule "external/raylib-cpp"]
 	path = external/raylib-cpp
 	url = git@github.com:RobLoach/raylib-cpp.git
+[submodule "external/nlohmann_json"]
+	path = external/nlohmann_json
+	url = https://github.com/nlohmann/json.git
