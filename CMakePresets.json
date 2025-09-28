@@ -257,7 +257,8 @@
     },
     {
       "name": "ci-coverage",
-      "inherits": ["ci-build", "coverage-linux", "dev-mode"]
+      "binaryDir": "${sourceDir}/build",
+      "inherits": ["coverage-linux", "dev-mode"]
     },
     {
       "name": "ci-sanitize",

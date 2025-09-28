@@ -40,6 +40,10 @@ concept UnsignedType = std::is_unsigned<Type>::value;
 template <typename Type>
 concept BooleanType = std::is_same<Type, bool>::value;
 
+#else
+
+#error "This header requires C++20 or later"
+
 #endif
 
 #endif
