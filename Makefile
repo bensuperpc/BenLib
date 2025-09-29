@@ -25,6 +25,7 @@ CMAKE_ARGS := -DHAVE_STD_REGEX=ON
 
 
 TARGET := dev debug release sanitize minsizerel
+SPECIAL_TARGETS := coverage
 
 .PHONY: build
 build: release
@@ -35,15 +36,16 @@ all: release debug minsizerel coverage relwithdebinfo minsizerel relwithdebinfo 
 
 .PHONY: ${TARGET}
 ${TARGET}:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=$@ $(CMAKE_ARGS)
+	cmake -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=$@ $(CMAKE_ARGS)
 	cmake --build build/$@
 	ctest $(CTEST_OPTIONS) --test-dir build/$@
 
 # MinSizeRel RelWithDebInfo
 
-.PHONY: coverage
-coverage:
-	cmake -B build/$@ -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=dev-coverage -DCMAKE_BUILD_TYPE=Coverage $(CMAKE_ARGS)
+#-B build/$@ 
+.PHONY: ${SPECIAL_TARGETS}
+${SPECIAL_TARGETS}:
+	cmake -S $(PROJECT_ROOT) -G $(GENERATOR) --preset=$@ $(CMAKE_ARGS)
 	cmake --build build/$@
 	ctest $(CTEST_OPTIONS) --test-dir build/$@
 	cmake --build build/$@ --target $@

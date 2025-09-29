@@ -40,11 +40,6 @@ jobs:
     needs: [lint]
 
     runs-on: ubuntu-24.04
-
-    # To enable coverage, delete the last line from the conditional below and
-    # edit the "<name>" placeholder to your GitHub name.
-    # If you do not wish to use codecov, then simply delete this job from the
-    # workflow.
     if: github.repository_owner == 'bensuperpc'
 
     steps:
@@ -65,7 +60,6 @@ jobs:
       run: cmake --build build/coverage -j 4
 
     - name: Test
-#      working-directory: build/coverage
       run: ctest --test-dir build/coverage --output-on-failure --no-tests=error --repeat until-fail:10 --schedule-random --parallel 1
 
     - name: Process coverage info

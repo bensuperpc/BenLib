@@ -97,9 +97,8 @@
       "hidden": true,
       "cacheVariables": {
         "ENABLE_COVERAGE": "ON",
-        "CMAKE_BUILD_TYPE": "Coverage",
-        "CMAKE_CXX_FLAGS_COVERAGE": "-O0 -g3 --coverage -fkeep-inline-functions -fkeep-static-functions",
-        "CMAKE_C_FLAGS_COVERAGE": "-O0 -g3 --coverage",
+        "CMAKE_CXX_FLAGS": "-O0 -g3 --coverage -fno-inline -fno-inline-small-functions -fno-default-inline",
+        "CMAKE_C_FLAGS": "-O0 -g3 --coverage -fno-inline -fno-inline-small-functions -fno-default-inline",
         "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
         "CMAKE_SHARED_LINKER_FLAGS_COVERAGE": "--coverage"
       }
@@ -108,9 +107,8 @@
       "name": "flags-gcc-clang-sanitize",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Sanitize",
-        "CMAKE_CXX_FLAGS_SANITIZE": "-Og -U_FORTIFY_SOURCE -g3 -fsanitize=address,undefined,leak -fno-omit-frame-pointer -fno-common",
-        "CMAKE_C_FLAGS_SANITIZE": "-Og -U_FORTIFY_SOURCE -g3"
+        "CMAKE_CXX_FLAGS": "-Og -U_FORTIFY_SOURCE -g3 -fsanitize=address,undefined,leak -fno-omit-frame-pointer -fno-common",
+        "CMAKE_C_FLAGS": "-Og -U_FORTIFY_SOURCE -g3"
       }
     },
     {
@@ -143,16 +141,19 @@
     {
       "name": "coverage-linux",
       "binaryDir": "${sourceDir}/build/coverage",
-      "inherits": ["ci-linux", "dev-mode", "flags-gcc-clang-coverage"],
+      "inherits": ["dev-mode", "ci-std", "flags-gcc-clang-coverage"],
+      "generator": "Unix Makefiles",
       "cacheVariables": {
         "COVERAGE_HTML_COMMAND": "",
-        "COVERAGE_TRACE_COMMAND": ""
+        "COVERAGE_TRACE_COMMAND": "",
+        "ENABLE_COVERAGE": "ON"
       }
     },
     {
       "name": "sanitize-linux",
       "binaryDir": "${sourceDir}/build/sanitize",
-      "inherits": ["ci-linux", "dev-mode", "flags-gcc-clang-sanitize"],
+      "generator": "Unix Makefiles",
+      "inherits": ["dev-mode", "ci-std", "flags-gcc-clang-sanitize"],
       "cacheVariables": {
         "ENABLE_SANITIZERS": "ON"
       },
@@ -163,14 +164,14 @@
       "hidden": true
     },
     {
-      "name": "gprof",
+      "name": "gprof-linux",
       "binaryDir": "${sourceDir}/build/gprof",
       "generator": "Unix Makefiles",
       "inherits": ["ci-std", "flags-gcc-clang-debugger", "dev-mode"],
       "hidden": false
     },
     {
-      "name": "debugger",
+      "name": "debugger-linux",
       "binaryDir": "${sourceDir}/build/debugger",
       "generator": "Unix Makefiles",
       "inherits": ["ci-std", "flags-gcc-clang-debugger", "dev-mode"],
@@ -257,8 +258,7 @@
     },
     {
       "name": "ci-coverage",
-      "binaryDir": "${sourceDir}/build",
-      "inherits": ["coverage-linux", "dev-mode"]
+      "inherits": ["coverage-linux"]
     },
     {
       "name": "ci-sanitize",

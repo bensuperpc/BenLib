@@ -9,12 +9,13 @@ set(
     --exclude "${PROJECT_SOURCE_DIR}/external/*"
     --exclude "${PROJECT_SOURCE_DIR}/test/*"
     --exclude "${PROJECT_SOURCE_DIR}/example/*"
+    --exclude "${PROJECT_SOURCE_DIR}/build/*"
     --decisions --calls
     --fail-under-line "10"
     --fail-under-branch "10"
     --fail-under-decision "10"
     --fail-under-function "10"
-    --html-theme "green"
+    --html-theme "github.blue"
     --html --html-details --output "${PROJECT_BINARY_DIR}/coverage.html"
     CACHE STRING
     "; separated command to generate a coverage report for the 'coverage' target"

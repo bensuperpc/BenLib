@@ -17,9 +17,8 @@
       "inherits": "dev-linux"
     },
     {
-      "name": "dev-coverage",
-      "binaryDir": "${sourceDir}/build/coverage",
-      "inherits": ["coverage-linux"]
+      "name": "coverage",
+      "inherits": ["ci-coverage"]
     },
     {
       "name": "dev-sanitize",

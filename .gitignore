@@ -9,3 +9,6 @@ prefix/
 CMakeLists.txt.user
 compile_commands.json
 venv/*
+*.html
+*.css
+*.gcov

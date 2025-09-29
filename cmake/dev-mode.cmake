@@ -15,6 +15,11 @@ if(ENABLE_COVERAGE)
   include(cmake/coverage.cmake)
 endif()
 
+option(ENABLE_SANITIZERS "Enable Address/Undefined/Memory Sanitizers" OFF)
+if(ENABLE_SANITIZERS)
+#  include(cmake/sanitize.cmake)
+endif()
+
 include(cmake/lint-targets.cmake)
 include(cmake/spell-targets.cmake)
 
