@@ -34,6 +34,7 @@ add_example(bench_example)
 add_example(task_exemple)
 add_example(raylib_test)
 add_example(basic_async)
+add_example(no_dym_alloc_example)
 add_example(beacons)
 
 add_folders(Example)

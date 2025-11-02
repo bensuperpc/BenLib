@@ -24,40 +24,40 @@
 #endif
 
 #if __cplusplus < 202002L
-/// Define Pi (Double)
+// Pi (Double)
 #define PI 3.141592653589793238462643383279502884L
 #else
 #define PI std::numbers::pi
 #endif
 
-/// Define Pi (Float)
+// Pi (Float)
 #define F_PI 3.14159265358979323846F
 
-/// Define light speed constant (in m/s)
+// light speed constant (in m/s)
 #define LIGHT_SPEED 299792458
 
-/// Define Gravitational constant
+// Gravitational constant
 #define CONSTANTE_G 6.67408e-11
 
-/// Define Earth mass (in Kg)
+// Earth mass (in Kg)
 #define EARTH_MASS 5.972e24
 
-/// Define Sun mass (in Kg)
+// Sun mass (in Kg)
 #define SUN_MASS 1.98847e30
 
-/// Define Jupiter mass (in Kg)
+// Jupiter mass (in Kg)
 #define JUPITER_MASS 1.89813e27
 
-/// Define Earth-Sun distance (in m)
+// Earth-Sun distance (in m)
 #define EARTH_SUN_DISTANCE 149597870e3
 
-/// Define Earth radius (in m)
+// Earth radius (in m)
 #define EARTH_RADIUS 6.3781 * 10e6
 
-/// Define Moon radius (in m)
+// Moon radius (in m)
 #define MOON_RADIUS 1737.4e3
 
-/// Define SAGITTARIUS mass (in m)
+// SAGITTARIUS mass (in m)
 #define SAGITTARIUS_A_STAR 4.154e6 * SUN_MASS
 
 #endif

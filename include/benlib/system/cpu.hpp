@@ -29,7 +29,7 @@ namespace benlib {
 namespace system {
 namespace cpu {
 
-    uint64_t rdtsc() noexcept
+uint64_t rdtsc() noexcept
     {
         #if defined(__x86_64__) || defined(__i386__)
         // x86_64 and i386 architecture
@@ -48,6 +48,11 @@ namespace cpu {
         // ARM32 architecture
         uint32_t val;
         asm volatile("mrc p15, 0, %0, c9, c13, 0" : "=r"(val));
+        return val;
+        // Risc-V architecture
+        #elif defined(__riscv)
+        uint64_t val;
+        asm volatile("rdcycle %0" : "=r"(val));
         return val;
         #endif
     }

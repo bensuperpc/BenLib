@@ -12,8 +12,8 @@
 #ifndef BENLIB_MATH_GETGRAVITATIONATTRACTION_HPP
 #define BENLIB_MATH_GETGRAVITATIONATTRACTION_HPP
 
-#include "../common/concept.hpp"
-#include "../common/constant.hpp"
+#include "benlib/common/concept.hpp"
+#include "benlib/common/constant.hpp"
 
 namespace benlib {
 namespace math {
